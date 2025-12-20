@@ -304,3 +304,80 @@ function togglePricing() {
         yearlyLabel.classList.replace('text-white', 'text-gray-500');
     }
 }
+
+
+//// for the faq 
+function toggleFaq(btn) {
+    const parent = btn.parentElement;
+    const answer = btn.nextElementSibling;
+    const icon = btn.querySelector('.fa-plus');
+    
+    // Toggle current answer
+    const isHidden = answer.classList.contains('hidden');
+    
+    // Close all other answers (Optional: Remove if you want multiple open)
+    document.querySelectorAll('.faq-answer').forEach(el => el.classList.add('hidden'));
+    document.querySelectorAll('.fa-plus').forEach(el => el.classList.remove('rotate-45'));
+
+    if (isHidden) {
+        answer.classList.remove('hidden');
+        icon.classList.add('rotate-45');
+    }
+}
+
+
+//// for the newsletter
+function handleSubscription(btn) {
+    const originalContent = btn.innerHTML;
+    const form = btn.closest('form');
+    const emailInput = form.querySelector('input[type="email"]');
+
+    // Reset border
+    emailInput.style.borderColor = '';
+
+    // Basic Validation
+    if (!emailInput.value.trim() || !emailInput.value.includes('@')) {
+        emailInput.style.borderColor = '#ef4444'; // Red border on error
+        return;
+    }
+
+    // 1. Show loading state
+    btn.disabled = true;
+    btn.innerHTML = `
+        <span class="flex items-center justify-center gap-2">
+            <i class="fas fa-circle-notch animate-spin"></i> ENCRYPTING...
+        </span>
+    `;
+
+    // 2. Send to real backend
+    const formData = new FormData();
+    formData.append('email', emailInput.value.trim().toLowerCase());
+    formData.append('source', 'Newsletter'); // This sends to Newsletter tab
+
+    fetch('https://script.google.com/macros/s/AKfycbxNtAK6ToRg_J7USn9fNsoTGKGYpX2TkLEcGoddErh9IVRuv2ULYNn9xYgID46tBpSP/exec', {
+        method: 'POST',
+        mode: 'no-cors',
+        body: formData
+    })
+    .then(() => {
+        // Success: Show modal
+        const modal = document.getElementById('successModal');
+        modal.classList.remove('hidden');
+
+        // Clear input
+        emailInput.value = '';
+    })
+    .catch(() => {
+        alert("Transmission failed. Please try again.");
+    })
+    .finally(() => {
+        // Always restore button
+        btn.disabled = false;
+        btn.innerHTML = originalContent;
+    });
+}
+
+function closeNewsletterModal() {
+    const modal = document.getElementById('successModal');
+    modal.classList.add('hidden');
+}

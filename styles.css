@@ -394,3 +394,28 @@ body {
 .italic {
     font-family: 'Georgia', serif; /* Or any elegant serif for the quotes */
 }
+
+/* FAQ Enhanced Styling */
+.faq-btn {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.faq-item:hover .faq-btn {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.1);
+}
+
+/* Custom Icon Pulse */
+.faq-item:hover i.fas[class*="fa-"] {
+    filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.8));
+    transform: scale(1.1);
+}
+
+/* Animation for showing/hiding */
+.faq-answer {
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
