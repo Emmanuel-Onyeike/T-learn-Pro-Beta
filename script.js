@@ -228,3 +228,79 @@ window.switchTab = (tabId) => {
     document.getElementById(`content-${tabId}`).classList.remove('hidden');
     document.getElementById(`btn-${tabId}`).classList.add('active');
 };
+
+
+///// for the Nxxt lab
+document.querySelectorAll('.group').forEach((card, index) => {
+    card.addEventListener('mouseenter', () => {
+        // Make the core spin faster when focusing on a lab step
+        const core = document.querySelector('.neural-core-container');
+        core.style.transition = 'transform 0.5s ease';
+        core.style.transform = 'scale(1.1)';
+        
+        // Increase orbital speeds
+        document.querySelectorAll('.orbit-ring').forEach(ring => {
+            ring.style.animationDuration = '4s';
+        });
+    });
+
+    card.addEventListener('mouseleave', () => {
+        const core = document.querySelector('.neural-core-container');
+        core.style.transform = 'scale(1)';
+        
+        // Return to idle speeds
+        document.querySelector('.animate-spin-slow').style.animationDuration = '15s';
+        document.querySelector('.animate-reverse-spin').style.animationDuration = '10s';
+    });
+});
+
+// Simulate the "Enter Laboratory" button click
+const labBtn = document.querySelector('button');
+if(labBtn) {
+    labBtn.addEventListener('click', () => {
+        labBtn.innerText = "INITIALIZING...";
+        labBtn.classList.add('animate-pulse');
+        
+        setTimeout(() => {
+            labBtn.innerText = "ACCESS GRANTED";
+            labBtn.style.backgroundColor = "#22c55e"; // Green for success
+            labBtn.style.borderColor = "#22c55e";
+        }, 1500);
+    });
+}
+
+//// for the pricing 
+let isYearly = false;
+
+function togglePricing() {
+    isYearly = !isYearly;
+    
+    // UI Elements
+    const toggleBall = document.getElementById('toggleBall');
+    const studentPrice = document.getElementById('studentPrice');
+    const proPrice = document.getElementById('proPrice');
+    const studentPeriod = document.getElementById('studentPeriod');
+    const proPeriod = document.getElementById('proPeriod');
+    const monthlyLabel = document.getElementById('monthlyLabel');
+    const yearlyLabel = document.getElementById('yearlyLabel');
+
+    if (isYearly) {
+        // Switch to Yearly
+        toggleBall.style.transform = "translateX(32px)";
+        studentPrice.innerText = "₦60,000";
+        proPrice.innerText = "₦120,000";
+        studentPeriod.innerText = "/ Year";
+        proPeriod.innerText = "/ Year";
+        yearlyLabel.classList.replace('text-gray-500', 'text-white');
+        monthlyLabel.classList.replace('text-white', 'text-gray-500');
+    } else {
+        // Switch to Monthly
+        toggleBall.style.transform = "translateX(0px)";
+        studentPrice.innerText = "₦7,000";
+        proPrice.innerText = "₦14,000";
+        studentPeriod.innerText = "/ Month";
+        proPeriod.innerText = "/ Month";
+        monthlyLabel.classList.replace('text-gray-500', 'text-white');
+        yearlyLabel.classList.replace('text-white', 'text-gray-500');
+    }
+}

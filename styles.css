@@ -244,3 +244,153 @@ body {
     0%, 100% { opacity: 1; transform: scale(1); }
     50% { opacity: 0.5; transform: scale(0.95); }
 }
+
+
+
+/* --- NXXT LAB CORE STYLES --- */
+
+/* Central Hub & Scanner */
+.neural-core-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@keyframes scanline {
+    0% { transform: translateY(-100%); }
+    100% { transform: translateY(200%); }
+}
+
+.animate-scan {
+    animation: scanline 2.5s linear infinite;
+    background: linear-gradient(to bottom, transparent, rgba(59, 130, 246, 0.5), transparent);
+}
+
+/* Orbital Rings Animation */
+@keyframes spin-slow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes reverse-spin {
+    from { transform: rotate(360deg); }
+    to { transform: rotate(0deg); }
+}
+
+.animate-spin-slow {
+    animation: spin-slow 15s linear infinite;
+}
+
+.animate-reverse-spin {
+    animation: reverse-spin 10s linear infinite;
+}
+
+/* Floating Data Nodes */
+.data-node {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    filter: blur(1px);
+    box-shadow: 0 0 10px currentColor;
+}
+
+.node-1 { top: -120px; left: 60px; animation: float-alt 5s infinite ease-in-out; color: #60a5fa; }
+.node-2 { bottom: 80px; right: -100px; animation: float-alt 6s infinite ease-in-out reverse; color: #3b82f6; }
+.node-3 { top: 40px; left: -140px; animation: float-alt 7s infinite ease-in-out 1s; color: rgba(255,255,255,0.4); }
+
+@keyframes float-alt {
+    0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.3; }
+    50% { transform: translate(15px, -25px) scale(1.5); opacity: 1; }
+}
+
+/* Card Interaction */
+.group:hover {
+    background: rgba(255, 255, 255, 0.05);
+    transform: translateX(10px);
+}
+
+
+/* FIXED: Student Card Pulse & Shimmer */
+
+/* 1. The subtle moving light around the border */
+.pricing-card.scale-105 {
+    position: relative;
+    background: #050b1d; /* Solid background to ensure visibility */
+    z-index: 20;
+}
+
+/* 2. Replace the disappearing beam with a Glow Effect */
+.pricing-card.scale-105::before {
+    content: "";
+    position: absolute;
+    inset: -2px; /* This creates the thin border effect */
+    background: linear-gradient(90deg, #3b82f6, #60a5fa, #3b82f6);
+    background-size: 200% 100%;
+    animation: border-glow 3s linear infinite;
+    z-index: -1;
+    border-radius: 3rem;
+}
+
+@keyframes border-glow {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 200% 0%; }
+}
+
+/* 3. The Shimmer for all cards */
+.pricing-card::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(
+        to right,
+        transparent,
+        rgba(255, 255, 255, 0.05),
+        transparent
+    );
+    transform: skewX(-25deg);
+    transition: none;
+}
+
+.pricing-card:hover::after {
+    left: 150%;
+    transition: 0.7s;
+}
+
+
+/* TESTIMONIAL SPECIFIC STYLES */
+
+/* Subtle card hover elevation */
+.md\:col-span-7, .md\:col-span-5, .md\:col-span-4, .md\:col-span-8 {
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.group:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+/* User Initials Glow */
+.rounded-full[class*="bg-"] {
+    position: relative;
+    z-index: 1;
+}
+
+.rounded-full[class*="bg-"]::after {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: inherit;
+    background: inherit;
+    filter: blur(8px);
+    opacity: 0.4;
+    z-index: -1;
+}
+
+/* Quote Mark Font */
+.italic {
+    font-family: 'Georgia', serif; /* Or any elegant serif for the quotes */
+}
