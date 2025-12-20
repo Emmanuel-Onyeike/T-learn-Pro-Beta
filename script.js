@@ -335,13 +335,13 @@ function handleSubscription(btn) {
     // Reset border
     emailInput.style.borderColor = '';
 
-    // Basic Validation
+    // Validation
     if (!emailInput.value.trim() || !emailInput.value.includes('@')) {
-        emailInput.style.borderColor = '#ef4444'; // Red border on error
+        emailInput.style.borderColor = '#ef4444';
         return;
     }
 
-    // 1. Show loading state
+    // Loading state
     btn.disabled = true;
     btn.innerHTML = `
         <span class="flex items-center justify-center gap-2">
@@ -349,29 +349,28 @@ function handleSubscription(btn) {
         </span>
     `;
 
-    // 2. Send to real backend
+    // Send to backend with Newsletter source
     const formData = new FormData();
     formData.append('email', emailInput.value.trim().toLowerCase());
-    formData.append('source', 'Newsletter'); // This sends to Newsletter tab
+    formData.append('source', 'Newsletter'); // Important for separate tab
 
     fetch('https://script.google.com/macros/s/AKfycbxNtAK6ToRg_J7USn9fNsoTGKGYpX2TkLEcGoddErh9IVRuv2ULYNn9xYgID46tBpSP/exec', {
         method: 'POST',
-        mode: 'no-cors',
+        mode: 'no-cors',  // This fixes the CORS block
         body: formData
     })
     .then(() => {
-        // Success: Show modal
+        // Success - show modal
         const modal = document.getElementById('successModal');
         modal.classList.remove('hidden');
-
-        // Clear input
         emailInput.value = '';
     })
-    .catch(() => {
-        alert("Transmission failed. Please try again.");
+    .catch((err) => {
+        console.error(err);
+        alert("Transmission failed. Check connection and try again.");
     })
     .finally(() => {
-        // Always restore button
+        // Restore button
         btn.disabled = false;
         btn.innerHTML = originalContent;
     });
