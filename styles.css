@@ -1,0 +1,212 @@
+/* --- BASE CONFIGURATION --- */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
+
+:root {
+    --brand-blue: #2563eb;
+    --brand-blue-hover: #3b82f6;
+    --bg-dark: #020617;
+    --glass-bg: rgba(3, 8, 22, 0.8);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-dark);
+    color: white;
+    line-height: 1.5;
+}
+
+/* --- TACTICAL NAVIGATION --- */
+.nav-link {
+    position: relative;
+    transition: color 0.3s ease;
+}
+
+/* The blue underline that grows from the left */
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0%;
+    height: 1.5px;
+    background: var(--brand-blue-hover);
+    transition: width 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.nav-link:hover::after {
+    width: 100%;
+}
+
+/* --- HEADER MORPHING (SCROLL EFFECT) --- */
+.header-scrolled {
+    background: var(--glass-bg);
+    backdrop-filter: blur(15px);
+    padding: 0.8rem 1.5rem !important; /* Slightly thinner when scrolling */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+/* --- BUTTON ARCHITECTURE --- */
+
+/* Login Button: Transparent -> Blue Glow Border */
+.btn-login {
+    border: 1px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.btn-login:hover {
+    color: white;
+    border-color: rgba(59, 130, 246, 0.5);
+    background: rgba(59, 130, 246, 0.05);
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.15);
+}
+
+/* Get Started Button: Solid Blue -> Ghost Blue Text */
+.btn-started {
+    border: 1px solid var(--brand-blue);
+    background-color: var(--brand-blue);
+    box-shadow: 0 4px 15px rgba(37, 99, 235, 0.2);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-started:hover {
+    background-color: transparent;
+    color: var(--brand-blue-hover);
+    box-shadow: 0 0 25px rgba(37, 99, 235, 0.25);
+    border-color: var(--brand-blue-hover);
+}
+
+/* --- BRANDING ELEMENTS --- */
+.logo-ring {
+    transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.group:hover .logo-ring {
+    transform: rotate(180deg);
+    border-color: var(--brand-blue-hover);
+}
+
+/* --- UTILITIES --- */
+::selection {
+    background-color: rgba(37, 99, 235, 0.3);
+    color: white;
+}
+
+/* Custom Scrollbar for Chrome/Safari */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-dark);
+}
+
+::-webkit-scrollbar-thumb {
+    background: #1e293b;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--brand-blue);
+}
+
+
+/* Outlined "Experience" Styling */
+.outline-text {
+    color: transparent;
+    -webkit-text-stroke: 1.5px white; /* Outlines every letter in white */
+    transition: -webkit-text-stroke 0.3s ease;
+}
+
+.outline-text:hover {
+    -webkit-text-stroke: 1.5px #3b82f6;
+}
+
+/* Hero Button: Blue -> Transparent Hover */
+.btn-hero-start:hover {
+    background-color: transparent;
+    color: #3b82f6;
+    box-shadow: 0 0 30px rgba(37, 99, 235, 0.1);
+}
+
+/* Typing Cursor Effect */
+#typingText::after {
+    content: '|';
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    50% { opacity: 0; }
+}
+
+/* --- T LEARN PRO: MODULE TAB STYLING --- */
+
+/* Vertical Button Container */
+.tab-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 1.5rem;
+    border-radius: 1.25rem;
+    border: 1px solid transparent;
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    color: #475569; /* Muted gray for inactive */
+}
+
+/* Active State: Blue Glow & Border */
+.tab-btn.active {
+    background: rgba(37, 99, 235, 0.08);
+    border-color: rgba(37, 99, 235, 0.4);
+    color: white;
+    box-shadow: 0 10px 30px -10px rgba(37, 99, 235, 0.2);
+}
+
+.tab-btn.active .icon-box {
+    background: rgba(37, 99, 235, 0.2);
+    color: #3b82f6;
+}
+
+/* Hover State for Inactive Buttons */
+.tab-btn:hover:not(.active) {
+    background: rgba(255, 255, 255, 0.03);
+    border-color: rgba(255, 255, 255, 0.1);
+    color: #94a3b8;
+}
+
+/* Content Entrance Animation */
+.tab-content {
+    animation: terminalEntrance 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes terminalEntrance {
+    from { 
+        opacity: 0; 
+        transform: translateY(15px) scale(0.98); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0) scale(1); 
+    }
+}
+
+/* --- HERO SPECIFIC: OUTLINE TEXT --- */
+.outline-text {
+    color: transparent;
+    -webkit-text-stroke: 1.2px white;
+    transition: all 0.3s ease;
+}
+
+.outline-text:hover {
+    -webkit-text-stroke: 1.2px #3b82f6;
+    filter: drop-shadow(0 0 10px rgba(59, 130, 246, 0.3));
+}

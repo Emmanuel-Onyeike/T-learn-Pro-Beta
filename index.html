@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>T Learn Pro | Beta Phase</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/png" href="Logo.jpeg" />
+</head>
+<body class="bg-[#020617] text-white selection:bg-blue-500/30 overflow-x-hidden">
+
+    <div id="mobileSidebar" class="fixed inset-y-0 left-0 w-[280px] bg-[#030816] z-[200] transform -translate-x-full transition-transform duration-500 ease-in-out border-r border-white/5 backdrop-blur-xl">
+        <div class="p-8 flex flex-col h-full">
+            <div class="flex items-center justify-between mb-12">
+                <span class="text-xs font-black uppercase tracking-[0.3em] text-blue-500">Menu</span>
+                <button id="closeMenu" class="text-gray-500 hover:text-white transition-colors">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            
+            <nav class="flex flex-col gap-8">
+                <a href="#pricing" class="mobile-nav-link text-lg font-black italic uppercase tracking-tighter hover:text-blue-500">Pricing</a>
+                <a href="#about" class="mobile-nav-link text-lg font-black italic uppercase tracking-tighter hover:text-blue-500">About</a>
+                <a href="#dashboard" class="mobile-nav-link text-lg font-black italic uppercase tracking-tighter hover:text-blue-500">Dashboard</a>
+            </nav>
+
+            <div class="mt-auto flex flex-col gap-4">
+                <button class="w-full py-4 rounded-xl text-[10px] font-black uppercase tracking-widest border border-white/10 text-white">Login</button>
+                <button class="w-full py-4 rounded-xl text-[10px] font-black uppercase tracking-widest bg-blue-600 text-white shadow-lg shadow-blue-600/20">Get Started</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="sidebarOverlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[150] hidden opacity-0 transition-opacity duration-500"></div>
+
+    <header id="mainHeader" class="fixed top-0 left-0 w-full z-[100] transition-all duration-300 px-6 py-5">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            
+            <div class="flex items-center gap-3 group cursor-pointer">
+                <div class="relative w-10 h-10 flex items-center justify-center">
+                    <div class="logo-ring absolute inset-0 rounded-full border-2 border-blue-500/20 group-hover:border-blue-500 transition-all duration-500"></div>
+                    <div class="w-8 h-8 rounded-full overflow-hidden border border-white/10">
+                        <img src="Logo.jpeg" alt="T Learn Pro Logo" class="w-full h-full object-cover">
+                    </div>
+                </div>
+                <div class="flex flex-col">
+                    <h1 class="text-white font-black italic tracking-tighter text-xl leading-none uppercase">T LEARN <span class="text-blue-500">PRO</span></h1>
+                    <span class="text-[7px] text-blue-500/60 font-black uppercase tracking-[0.4em] mt-0.5">Tech Nxxt</span>
+                </div>
+            </div>
+
+            <nav class="hidden lg:flex items-center gap-12">
+                <a href="#pricing" class="nav-link text-[10px] font-black uppercase tracking-[0.25em] text-gray-400 hover:text-white">Pricing</a>
+                <a href="#about" class="nav-link text-[10px] font-black uppercase tracking-[0.25em] text-gray-400 hover:text-white">About</a>
+                <a href="#dashboard" class="nav-link text-[10px] font-black uppercase tracking-[0.25em] text-gray-400 hover:text-white">Dashboard</a>
+            </nav>
+
+            <div class="flex items-center gap-4">
+                <div class="hidden sm:flex items-center gap-4">
+                    <button class="btn-login px-7 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest text-gray-400">Login</button>
+                    <button class="btn-started px-7 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest text-white bg-blue-600">Get Started</button>
+                </div>
+                
+                <button id="openMenu" class="lg:hidden w-10 h-10 flex items-center justify-center text-white bg-white/5 rounded-lg border border-white/10 active:scale-90 transition-transform">
+                    <i class="fas fa-bars-staggered"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+  <main class="pt-32 md:pt-48 pb-20 overflow-hidden">
+    <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center mb-32">
+        
+        <div class="flex flex-col items-start text-left space-y-6 md:space-y-8 order-2 lg:order-1">
+            <h1 class="text-5xl sm:text-6xl md:text-8xl font-black italic tracking-tighter uppercase leading-[0.95] md:leading-[0.9]">
+                Explore <br>
+                <span class="text-blue-500">Educate</span> <br>
+                <span class="outline-text">Experience</span>
+            </h1>
+            
+            <p class="text-gray-400 text-base md:text-xl font-medium max-w-lg leading-relaxed">
+                Unlock the next generation of tactical learning. Architecture designed for speed, precision, and the elite mindset of Tech Nxxt.
+            </p>
+
+            <button class="btn-hero-start w-full sm:w-auto px-10 py-4 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] text-white bg-blue-600 border border-blue-600 transition-all duration-300 shadow-xl shadow-blue-600/20">
+                Get Started
+            </button>
+        </div>
+
+        <div class="relative bg-white/5 border border-white/5 rounded-[2.5rem] md:rounded-[3rem] p-4 md:p-8 aspect-square flex flex-col justify-end overflow-hidden order-1 lg:order-2 shadow-2xl group">
+            <div id="dynamicIconContainer" class="absolute inset-0 z-0 flex items-center justify-center">
+                <i id="rotatingIcon" class="fas fa-satellite-dish text-[12rem] md:text-[18rem] text-blue-500/10 transition-all duration-1000 transform scale-100 group-hover:scale-110"></i>
+            </div>
+            
+            <div class="relative z-10 bg-[#030816]/90 backdrop-blur-xl p-6 rounded-2xl border border-white/10 shadow-2xl">
+                <p id="typingText" class="text-[11px] md:text-xs font-bold text-blue-400 uppercase tracking-[0.2em] min-h-[3.5em] leading-relaxed">
+                    </p>
+                <div class="flex gap-2 mt-4">
+                    <div id="dot1" class="w-1.5 h-1.5 rounded-full bg-blue-500 transition-all duration-500 shadow-[0_0_8px_#3b82f6]"></div>
+                    <div id="dot2" class="w-1.5 h-1.5 rounded-full bg-white/10 transition-all duration-500"></div>
+                    <div id="dot3" class="w-1.5 h-1.5 rounded-full bg-white/10 transition-all duration-500"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="dashboard" class="max-w-7xl mx-auto px-6 py-24 border-t border-white/5">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+            
+            <div class="lg:col-span-4 flex flex-col gap-3 bg-[#030816]/50 p-6 rounded-[2.5rem] border border-white/5 backdrop-blur-xl h-fit">
+                <div class="mb-6 px-4">
+                    <h3 class="text-[10px] font-black uppercase tracking-[0.5em] text-blue-500">Core Modules</h3>
+                    <p class="text-[9px] text-gray-600 uppercase font-bold mt-1">Operational Selection</p>
+                </div>
+                
+                <button onclick="switchTab('collab')" id="btn-collab" class="tab-btn active group">
+                    <div class="flex items-center gap-4">
+                        <div class="icon-box w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center group-hover:bg-blue-500/10 transition-colors">
+                            <i class="fas fa-handshake text-xs"></i>
+                        </div>
+                        <span class="text-[11px] font-black uppercase tracking-widest">Collab</span>
+                    </div>
+                    <i class="fas fa-chevron-right text-[8px] opacity-0 group-hover:opacity-100 transition-all"></i>
+                </button>
+
+                <button onclick="switchTab('team')" id="btn-team" class="tab-btn group">
+                    <div class="flex items-center gap-4">
+                        <div class="icon-box w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center group-hover:bg-blue-500/10 transition-colors">
+                            <i class="fas fa-users-gear text-xs"></i>
+                        </div>
+                        <span class="text-[11px] font-black uppercase tracking-widest">Team</span>
+                    </div>
+                    <i class="fas fa-chevron-right text-[8px] opacity-0 group-hover:opacity-100 transition-all"></i>
+                </button>
+
+                <button onclick="switchTab('ai')" id="btn-ai" class="tab-btn group">
+                    <div class="flex items-center gap-4">
+                        <div class="icon-box w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center group-hover:bg-blue-500/10 transition-colors">
+                            <i class="fas fa-brain text-xs"></i>
+                        </div>
+                        <span class="text-[11px] font-black uppercase tracking-widest">Nxxt AI</span>
+                    </div>
+                    <i class="fas fa-chevron-right text-[8px] opacity-0 group-hover:opacity-100 transition-all"></i>
+                </button>
+
+                <button onclick="switchTab('learn')" id="btn-learn" class="tab-btn group">
+                    <div class="flex items-center gap-4">
+                        <div class="icon-box w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center group-hover:bg-blue-500/10 transition-colors">
+                            <i class="fas fa-graduation-cap text-xs"></i>
+                        </div>
+                        <span class="text-[11px] font-black uppercase tracking-widest">Learn</span>
+                    </div>
+                    <i class="fas fa-chevron-right text-[8px] opacity-0 group-hover:opacity-100 transition-all"></i>
+                </button>
+            </div>
+
+            <div class="lg:col-span-8 bg-[#030816] rounded-[2.5rem] border border-white/10 p-8 md:p-12 min-h-[450px] relative overflow-hidden shadow-2xl flex flex-col justify-center">
+                
+                <div id="content-collab" class="tab-content space-y-6">
+                    <div class="inline-block px-3 py-1 rounded-md bg-blue-500/10 border border-blue-500/20 text-[9px] font-black uppercase tracking-widest text-blue-400 uppercase">Sync Active</div>
+                    <h2 class="text-4xl md:text-5xl font-black italic uppercase tracking-tighter">Global <span class="text-blue-500">Collaboration</span></h2>
+                    <p class="text-gray-400 text-sm md:text-base leading-relaxed max-w-lg">Real-time workspace for 70+ elite members. Share intelligence, sync project nodes, and deploy collective strategies.</p>
+                    <div class="flex gap-4 pt-4">
+                        <div class="h-1 flex-1 bg-blue-500/20 rounded-full overflow-hidden"><div class="h-full bg-blue-500 w-3/4 animate-pulse"></div></div>
+                        <div class="h-1 flex-1 bg-white/5 rounded-full"></div>
+                        <div class="h-1 flex-1 bg-white/5 rounded-full"></div>
+                    </div>
+                </div>
+
+                <div id="content-team" class="tab-content hidden space-y-6">
+                    <div class="inline-block px-3 py-1 rounded-md bg-purple-500/10 border border-purple-500/20 text-[9px] font-black uppercase tracking-widest text-purple-400 uppercase">Squad Matrix</div>
+                    <h2 class="text-4xl md:text-5xl font-black italic uppercase tracking-tighter">Squad <span class="text-blue-500">Management</span></h2>
+                    <p class="text-gray-400 text-sm md:text-base leading-relaxed max-w-lg">Assign tactical roles and monitor team performance. The Tech Nxxt hierarchy allows for seamless command and control.</p>
+                    <div class="flex items-center gap-4">
+                        <div class="px-4 py-2 bg-white/5 border border-white/5 rounded-lg text-[10px] font-bold text-gray-500 uppercase tracking-widest">72 Units Active</div>
+                        <div class="px-4 py-2 bg-white/5 border border-white/5 rounded-lg text-[10px] font-bold text-gray-500 uppercase tracking-widest">Admin Access</div>
+                    </div>
+                </div>
+
+                <div id="content-ai" class="tab-content hidden space-y-6">
+                    <div class="inline-block px-3 py-1 rounded-md bg-green-500/10 border border-green-500/20 text-[9px] font-black uppercase tracking-widest text-green-400 uppercase">Neural Link Stable</div>
+                    <h2 class="text-4xl md:text-5xl font-black italic uppercase tracking-tighter">Nxxt <span class="text-blue-500">AI Engine</span></h2>
+                    <p class="text-gray-400 text-sm md:text-base leading-relaxed max-w-lg">Leverage our custom-tuned LLM for technical problem solving. AI-driven insights to accelerate your learning curve.</p>
+                    <div class="p-4 bg-black/40 rounded-xl border border-white/5">
+                        <code class="text-blue-400 text-[10px] font-mono leading-relaxed">
+                            [SYSTEM]: Analyzing patterns... <br>
+                            [OUTPUT]: 43% efficiency increase detected.
+                        </code>
+                    </div>
+                </div>
+
+                <div id="content-learn" class="tab-content hidden space-y-6">
+                    <div class="inline-block px-3 py-1 rounded-md bg-yellow-500/10 border border-yellow-500/20 text-[9px] font-black uppercase tracking-widest text-yellow-400 uppercase">Intel Archive</div>
+                    <h2 class="text-4xl md:text-5xl font-black italic uppercase tracking-tighter">Elite <span class="text-blue-500">Curriculum</span></h2>
+                    <p class="text-gray-400 text-sm md:text-base leading-relaxed max-w-lg">Dive into high-fidelity courses designed for Tech Pro mastery. Master architecture and tactical execution.</p>
+                    <button class="w-fit px-8 py-3 bg-blue-600 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-transparent border border-blue-600 transition-all">Launch Intel Console</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</main>
+
+    <script src="script.js"></script>
+</body>
+</html>
