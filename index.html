@@ -111,8 +111,8 @@
             
             <div class="lg:col-span-4 flex flex-col gap-3 bg-[#030816]/50 p-6 rounded-[2.5rem] border border-white/5 backdrop-blur-xl h-fit">
                 <div class="mb-6 px-4">
-                    <h3 class="text-[10px] font-black uppercase tracking-[0.5em] text-blue-500">Core Modules</h3>
-                    <p class="text-[9px] text-gray-600 uppercase font-bold mt-1">Operational Selection</p>
+                    <h3 class="text-[10px] font-black uppercase tracking-[0.5em] text-blue-500">T Learn Pro </h3>
+                    <p class="text-[9px] text-gray-600 uppercase font-bold mt-1">Features</p>
                 </div>
                 
                 <button onclick="switchTab('collab')" id="btn-collab" class="tab-btn active group">
@@ -158,46 +158,196 @@
 
             <div class="lg:col-span-8 bg-[#030816] rounded-[2.5rem] border border-white/10 p-8 md:p-12 min-h-[450px] relative overflow-hidden shadow-2xl flex flex-col justify-center">
                 
-                <div id="content-collab" class="tab-content space-y-6">
-                    <div class="inline-block px-3 py-1 rounded-md bg-blue-500/10 border border-blue-500/20 text-[9px] font-black uppercase tracking-widest text-blue-400 uppercase">Sync Active</div>
-                    <h2 class="text-4xl md:text-5xl font-black italic uppercase tracking-tighter">Global <span class="text-blue-500">Collaboration</span></h2>
-                    <p class="text-gray-400 text-sm md:text-base leading-relaxed max-w-lg">Real-time workspace for 70+ elite members. Share intelligence, sync project nodes, and deploy collective strategies.</p>
-                    <div class="flex gap-4 pt-4">
-                        <div class="h-1 flex-1 bg-blue-500/20 rounded-full overflow-hidden"><div class="h-full bg-blue-500 w-3/4 animate-pulse"></div></div>
-                        <div class="h-1 flex-1 bg-white/5 rounded-full"></div>
-                        <div class="h-1 flex-1 bg-white/5 rounded-full"></div>
-                    </div>
-                </div>
+  <div id="content-collab" class="tab-content space-y-8 relative z-10">
+    <div class="flex items-center justify-between">
+        <div class="inline-block px-3 py-1 rounded-md bg-blue-500/10 border border-blue-500/20 text-[9px] font-black uppercase tracking-widest text-blue-400 uppercase">Pro Network: Encrypted</div>
+        <div class="text-[9px] font-bold text-gray-600 uppercase tracking-widest">Sync Rate: 100%</div>
+    </div>
 
-                <div id="content-team" class="tab-content hidden space-y-6">
-                    <div class="inline-block px-3 py-1 rounded-md bg-purple-500/10 border border-purple-500/20 text-[9px] font-black uppercase tracking-widest text-purple-400 uppercase">Squad Matrix</div>
-                    <h2 class="text-4xl md:text-5xl font-black italic uppercase tracking-tighter">Squad <span class="text-blue-500">Management</span></h2>
-                    <p class="text-gray-400 text-sm md:text-base leading-relaxed max-w-lg">Assign tactical roles and monitor team performance. The Tech Nxxt hierarchy allows for seamless command and control.</p>
-                    <div class="flex items-center gap-4">
-                        <div class="px-4 py-2 bg-white/5 border border-white/5 rounded-lg text-[10px] font-bold text-gray-500 uppercase tracking-widest">72 Units Active</div>
-                        <div class="px-4 py-2 bg-white/5 border border-white/5 rounded-lg text-[10px] font-bold text-gray-500 uppercase tracking-widest">Admin Access</div>
-                    </div>
-                </div>
+    <h2 class="text-4xl md:text-5xl font-black italic uppercase tracking-tighter text-white">Pro <span class="text-blue-500">Collaboration</span></h2>
+    
+    <div class="flex flex-col gap-4">
+        <div class="flex items-center justify-between p-4 bg-white/5 border border-white/5 rounded-2xl group hover:border-blue-500/30 transition-all cursor-pointer shadow-lg">
+            <div class="flex items-center gap-4">
+                <div class="w-2 h-2 rounded-full bg-blue-500 node-active shadow-[0_0_10px_#3b82f6]"></div>
+                <span class="text-[10px] font-black uppercase tracking-widest text-white">Knowledge Sync</span>
+            </div>
+            <span class="text-[9px] font-bold text-blue-400">ACTIVE</span>
+        </div>
 
-                <div id="content-ai" class="tab-content hidden space-y-6">
-                    <div class="inline-block px-3 py-1 rounded-md bg-green-500/10 border border-green-500/20 text-[9px] font-black uppercase tracking-widest text-green-400 uppercase">Neural Link Stable</div>
-                    <h2 class="text-4xl md:text-5xl font-black italic uppercase tracking-tighter">Nxxt <span class="text-blue-500">AI Engine</span></h2>
-                    <p class="text-gray-400 text-sm md:text-base leading-relaxed max-w-lg">Leverage our custom-tuned LLM for technical problem solving. AI-driven insights to accelerate your learning curve.</p>
-                    <div class="p-4 bg-black/40 rounded-xl border border-white/5">
-                        <code class="text-blue-400 text-[10px] font-mono leading-relaxed">
-                            [SYSTEM]: Analyzing patterns... <br>
-                            [OUTPUT]: 43% efficiency increase detected.
-                        </code>
-                    </div>
-                </div>
+        <div class="flex items-center justify-between p-4 bg-white/5 border border-white/5 rounded-2xl opacity-40 grayscale group hover:opacity-100 hover:grayscale-0 transition-all cursor-pointer">
+            <div class="flex items-center gap-4">
+                <div class="w-2 h-2 rounded-full bg-gray-500"></div>
+                <span class="text-[10px] font-black uppercase tracking-widest text-gray-400 group-hover:text-white transition-colors">Peer Node 02</span>
+            </div>
+            <span class="text-[9px] font-bold text-gray-500">STANDBY</span>
+        </div>
+    </div>
 
-                <div id="content-learn" class="tab-content hidden space-y-6">
-                    <div class="inline-block px-3 py-1 rounded-md bg-yellow-500/10 border border-yellow-500/20 text-[9px] font-black uppercase tracking-widest text-yellow-400 uppercase">Intel Archive</div>
-                    <h2 class="text-4xl md:text-5xl font-black italic uppercase tracking-tighter">Elite <span class="text-blue-500">Curriculum</span></h2>
-                    <p class="text-gray-400 text-sm md:text-base leading-relaxed max-w-lg">Dive into high-fidelity courses designed for Tech Pro mastery. Master architecture and tactical execution.</p>
-                    <button class="w-fit px-8 py-3 bg-blue-600 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-transparent border border-blue-600 transition-all">Launch Intel Console</button>
-                </div>
+    <div class="space-y-4 pt-4 border-t border-white/5">
+        <p class="text-gray-400 text-sm md:text-base leading-relaxed max-w-lg">
+            Mastery isn't achieved in a vacuum. To reach the top of your field, you must engage with a 
+            <span class="text-white font-bold">high-performance network</span>. 
+            T Learn Pro provides the infrastructure for you to connect with industry leaders, share tactical insights, and synchronize your learning path with the best in the business.
+        </p>
+        <p class="text-[11px] font-black uppercase tracking-[0.2em] text-blue-500 leading-tight">
+            Learn from the best to become the best. <br>
+            <span class="text-gray-500">Connect to the hub. Accelerate your career trajectory.</span>
+        </p>
+    </div>
+</div>
 
+
+              <div id="content-team" class="tab-content hidden space-y-8 relative z-10">
+    <div class="flex items-center justify-between">
+        <div class="inline-block px-3 py-1 rounded-md bg-purple-500/10 border border-purple-500/20 text-[9px] font-black uppercase tracking-widest text-purple-400 uppercase">Team Architect</div>
+        <div class="text-[9px] font-bold text-gray-600 uppercase tracking-widest">Network Status: Ready</div>
+    </div>
+
+    <h2 class="text-4xl md:text-5xl font-black italic uppercase tracking-tighter text-white">Team <span class="text-blue-500">Creation</span></h2>
+    
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="flex flex-col gap-2 p-4 bg-white/5 border border-white/5 rounded-2xl group hover:border-blue-500/30 transition-all">
+            <span class="text-[9px] font-bold text-gray-500 uppercase tracking-widest">Team Capacity</span>
+            <div class="flex items-center justify-between">
+                <span class="text-xl font-black italic text-white">UP TO 50</span>
+                <i class="fas fa-users text-blue-500 text-xs"></i>
+            </div>
+        </div>
+
+        <div class="flex flex-col gap-2 p-4 bg-white/5 border border-white/5 rounded-2xl group hover:border-blue-500/30 transition-all">
+            <span class="text-[9px] font-bold text-gray-500 uppercase tracking-widest">Project Control</span>
+            <div class="flex items-center justify-between">
+                <span class="text-xl font-black italic text-white">OWNER</span>
+                <i class="fas fa-shield-halved text-blue-500 text-xs"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="space-y-4 pt-4 border-t border-white/5">
+        <p class="text-gray-400 text-sm md:text-base leading-relaxed max-w-lg">
+            Take control of your learning journey by building your own 
+            <span class="text-white font-bold">Project Team</span>. 
+            T Learn Pro allows you to invite peers, assign specific roles, and manage shared goals. Whether it's a study group or a startup initiative, you provide the vision—we provide the infrastructure.
+        </p>
+        <p class="text-[11px] font-black uppercase tracking-[0.2em] text-blue-500 leading-tight">
+            Lead the collective. Drive the progress. <br>
+            <span class="text-gray-500">Initialize your team today and scale your impact.</span>
+        </p>
+    </div>
+</div>
+
+
+
+             <div id="content-ai" class="tab-content hidden space-y-8 relative z-10">
+    <div class="flex items-center justify-between">
+        <div class="inline-block px-3 py-1 rounded-md bg-green-500/10 border border-green-500/20 text-[9px] font-black uppercase tracking-widest text-green-400 uppercase">Multi-Stack Engine</div>
+        <div class="text-[9px] font-bold text-gray-600 uppercase tracking-widest">Compiler: Online</div>
+    </div>
+
+    <h2 class="text-4xl md:text-5xl font-black italic uppercase tracking-tighter text-white">Nxxt <span class="text-blue-500">AI Engine</span></h2>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        
+        <div class="p-5 bg-black/40 rounded-2xl border border-white/5 flex flex-col gap-3 group hover:border-blue-500/40 transition-all">
+            <div class="flex items-center justify-between border-b border-white/5 pb-2">
+                <div class="flex items-center gap-2">
+                    <i class="fab fa-react text-blue-400 text-[10px]"></i>
+                    <span class="text-[8px] font-black uppercase tracking-[0.2em] text-gray-400">Frontend (React)</span>
+                </div>
+                <div class="w-1 h-1 rounded-full bg-blue-500 animate-pulse"></div>
+            </div>
+            <code class="text-[9px] md:text-xs font-mono text-blue-200 leading-relaxed">
+                <span class="text-purple-400">const</span> NxxtCard = ({ data }) => {<br>
+                &nbsp;&nbsp;<span class="text-purple-400">return</span> (<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&lt;<span class="text-blue-400">div</span> className="p-4"&gt;<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{data.name}<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&lt;/<span class="text-blue-400">div</span>&gt;<br>
+                &nbsp;&nbsp;);<br>
+                };
+            </code>
+        </div>
+
+        <div class="p-5 bg-black/40 rounded-2xl border border-white/5 flex flex-col gap-3 group hover:border-yellow-500/40 transition-all">
+            <div class="flex items-center justify-between border-b border-white/5 pb-2">
+                <div class="flex items-center gap-2">
+                    <i class="fab fa-python text-yellow-500 text-[10px]"></i>
+                    <span class="text-[8px] font-black uppercase tracking-[0.2em] text-gray-400">Backend (Python)</span>
+                </div>
+                <div class="w-1 h-1 rounded-full bg-yellow-500 animate-pulse"></div>
+            </div>
+            <code class="text-[9px] md:text-xs font-mono text-yellow-100 leading-relaxed">
+                <span class="text-purple-400">def</span> sync_nxxt_node(node_id):<br>
+                &nbsp;&nbsp;status = nxxt.verify(node_id)<br>
+                &nbsp;&nbsp;<span class="text-purple-400">if</span> status == <span class="text-green-400">"READY"</span>:<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-purple-400">return</span> f<span class="text-green-400">"Node {node_id} Online"</span><br>
+                &nbsp;&nbsp;<span class="text-purple-400">return</span> <span class="text-red-400">None</span>
+            </code>
+        </div>
+
+    </div>
+
+    <div class="space-y-4 pt-4 border-t border-white/5">
+        <p class="text-gray-400 text-sm md:text-base leading-relaxed max-w-lg">
+            The Nxxt AI Engine is a comprehensive 
+            <span class="text-white font-bold">multi-language specialist</span>. 
+            From styling with CSS and building reactive components in JavaScript to architecting scalable backends in Python and C++, our AI understands the syntax and the strategy behind every line of code.
+        </p>
+        <p class="text-[11px] font-black uppercase tracking-[0.2em] text-blue-500 leading-tight">
+            Universal Syntax Support. <br>
+            <span class="text-gray-500">Master any stack. Solve any technical bottleneck.</span>
+        </p>
+    </div>
+</div>
+
+
+               <div id="content-learn" class="tab-content hidden space-y-8 relative z-10">
+    <div class="flex items-center justify-between">
+        <div class="inline-block px-3 py-1 rounded-md bg-yellow-500/10 border border-yellow-500/20 text-[9px] font-black uppercase tracking-widest text-yellow-400 uppercase">Education Hub</div>
+        <div class="text-[9px] font-bold text-gray-600 uppercase tracking-widest">Modules: 420+ Complete</div>
+    </div>
+
+    <h2 class="text-4xl md:text-5xl font-black italic uppercase tracking-tighter text-white">Advanced <span class="text-blue-500">Curriculum</span></h2>
+    
+    <div class="bg-black/40 rounded-2xl border border-white/5 p-5 space-y-4 group hover:border-blue-500/30 transition-all">
+        <div class="flex justify-between items-end">
+            <div class="space-y-1">
+                <span class="text-[8px] font-black uppercase tracking-widest text-gray-500">Current Path</span>
+                <p class="text-xs font-bold text-white uppercase tracking-wider">Full-Stack System Architecture</p>
+            </div>
+            <span class="text-[10px] font-black text-blue-500">85%</span>
+        </div>
+        
+        <div class="flex gap-1 h-1.5">
+            <div class="flex-[3] bg-blue-600 rounded-full shadow-[0_0_8px_rgba(37,99,235,0.4)]"></div>
+            <div class="flex-[1] bg-blue-600/40 rounded-full"></div>
+            <div class="flex-[1] bg-white/5 rounded-full"></div>
+        </div>
+
+        <div class="grid grid-cols-3 gap-2 pt-2">
+            <div class="text-[7px] font-black uppercase tracking-tighter text-gray-600"><i class="fas fa-check text-green-500 mr-1"></i> Syntax</div>
+            <div class="text-[7px] font-black uppercase tracking-tighter text-gray-600"><i class="fas fa-check text-green-500 mr-1"></i> Logic</div>
+            <div class="text-[7px] font-black uppercase tracking-tighter text-blue-500 animate-pulse"><i class="fas fa-circle-notch fa-spin mr-1"></i> Scaling</div>
+        </div>
+    </div>
+
+    <div class="space-y-4 pt-4 border-t border-white/5">
+        <p class="text-gray-400 text-sm md:text-base leading-relaxed max-w-lg">
+            Elevate your technical authority with high-fidelity courses designed for 
+            <span class="text-white font-bold">Pro-level mastery</span>. 
+            The T Learn Pro curriculum bridges the gap between basic coding and complex system execution, providing you with the blueprints to build, scale, and lead in the modern tech landscape.
+        </p>
+        
+        <div class="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+            <button class="px-8 py-3 bg-blue-600 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-transparent border border-blue-600 transition-all active:scale-95 shadow-lg shadow-blue-600/20">
+                Resume Learning
+            </button>
+            <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
+                <i class="fas fa-bolt text-yellow-500 mr-2"></i> Next up: PYTHON ADVANCED MODULE
+            </p>
+        </div>
+    </div>
+</div>
             </div>
         </div>
     </div>

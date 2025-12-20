@@ -208,3 +208,23 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log(`[SYSTEM]: Module ${tabId.toUpperCase()} engaged.`);
     };
 });
+
+
+/// for the collab
+
+window.switchTab = (tabId) => {
+    const display = document.querySelector('.lg\\:col-span-8');
+    
+    // Add a momentary flash/glitch effect to the background
+    display.style.backgroundColor = 'rgba(59, 130, 246, 0.05)';
+    setTimeout(() => {
+        display.style.backgroundColor = '#030816';
+    }, 100);
+
+    // ... (rest of your existing switchTab code)
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    
+    document.getElementById(`content-${tabId}`).classList.remove('hidden');
+    document.getElementById(`btn-${tabId}`).classList.add('active');
+};
