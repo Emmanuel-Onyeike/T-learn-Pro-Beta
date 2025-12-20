@@ -329,8 +329,7 @@ function toggleFaq(btn) {
 //// for the newsletter
 function handleSubscription(btn) {
     const originalContent = btn.innerHTML;
-    const form = btn.closest('form');
-    const emailInput = form.querySelector('input[type="email"]');
+    const emailInput = document.getElementById('newsletterEmailInput');
 
     // Reset border
     emailInput.style.borderColor = '';
@@ -349,34 +348,29 @@ function handleSubscription(btn) {
         </span>
     `;
 
-    // Send to backend with Newsletter source
+    // Send to backend
     const formData = new FormData();
     formData.append('email', emailInput.value.trim().toLowerCase());
-    formData.append('source', 'Newsletter'); // Important for separate tab
+    formData.append('source', 'Newsletter');
 
     fetch('https://script.google.com/macros/s/AKfycbxNtAK6ToRg_J7USn9fNsoTGKGYpX2TkLEcGoddErh9IVRuv2ULYNn9xYgID46tBpSP/exec', {
         method: 'POST',
-        mode: 'no-cors',  // This fixes the CORS block
+        mode: 'no-cors',
         body: formData
     })
     .then(() => {
-        // Success - show modal
-        const modal = document.getElementById('successModal');
-        modal.classList.remove('hidden');
+        document.getElementById('successModal').classList.remove('hidden');
         emailInput.value = '';
     })
-    .catch((err) => {
-        console.error(err);
-        alert("Transmission failed. Check connection and try again.");
+    .catch(() => {
+        alert("Transmission failed. Try again.");
     })
     .finally(() => {
-        // Restore button
         btn.disabled = false;
         btn.innerHTML = originalContent;
     });
 }
 
 function closeNewsletterModal() {
-    const modal = document.getElementById('successModal');
-    modal.classList.add('hidden');
+    document.getElementById('successModal').classList.add('hidden');
 }
