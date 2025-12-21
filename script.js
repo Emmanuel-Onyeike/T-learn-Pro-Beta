@@ -345,22 +345,27 @@ function handleSubscription(btn) {
         </span>
     `;
 
-    const params = new URLSearchParams();
-    params.append('email', emailInput.value.trim().toLowerCase());
-    params.append('source', 'Newsletter');
+    // Send as JSON string with text/plain header (reliable for GAS)
+    const payload = {
+        email: emailInput.value.trim().toLowerCase(),
+        source: 'Newsletter'
+    };
 
-    const url = 'https://script.google.com/macros/s/AKfycbxNtAK6ToRg_J7USn9fNsoTGKGYpX2TkLEcGoddErh9IVRuv2ULYNn9xYgID46tBpSP/exec?' + params.toString();
-
-    fetch(url, {
-        method: 'GET',
-        mode: 'no-cors'
+    fetch('https://script.google.com/macros/s/AKfycbxNtAK6ToRg_J7USn9fNsoTGKGYpX2TkLEcGoddErh9IVRuv2ULYNn9xYgID46tBpSP/exec', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'text/plain;charset=utf-8'
+        },
+        body: JSON.stringify(payload),
+        redirect: 'follow'
     })
     .then(() => {
         document.getElementById('successModal').classList.remove('hidden');
         emailInput.value = '';
     })
-    .catch(() => {
-        alert("Check connection and try again.");
+    .catch((err) => {
+        console.error(err);
+        alert("Transmission failed. Try again.");
     })
     .finally(() => {
         btn.disabled = false;
