@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation | T Learn Pro</title>
+    <link rel="icon" type="image/png" href="Logo.jpeg" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;900&display=swap');
+        body { background: #020617; color: white; font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
+        .doc-card:hover { border-color: #3b82f6; background: rgba(59, 130, 246, 0.05); }
+        /* Active state for navigation */
+        .nav-link:hover { color: #3b82f6; border-left: 2px solid #3b82f6; padding-left: 1rem; transition: all 0.3s; }
+    </style>
+</head>
+<body class="pt-32 pb-40">
+    <nav class="fixed top-0 w-full z-50 bg-[#020617]/90 backdrop-blur-xl border-b border-white/5 py-6 px-8 flex justify-between items-center">
+        <div class="flex items-center gap-3">
+            <img src="Logo.jpeg" class="w-8 h-8 rounded-lg border border-blue-500/30">
+            <a href="index.html" class="text-xl font-black italic uppercase">T Learn <span class="text-blue-500">Pro</span></a>
+        </div>
+        <div class="hidden md:flex gap-8 text-[10px] font-black uppercase tracking-widest text-gray-500">
+            <a href="#welcome" class="hover:text-white transition-all">Welcome</a>
+            <a href="#architecture" class="hover:text-white transition-all">Architecture</a>
+            <a href="#security" class="hover:text-white transition-all">Security</a>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-16">
+        <aside class="lg:col-span-3 h-fit sticky top-40 space-y-10">
+            <div>
+                <h4 class="text-blue-500 text-[10px] font-black uppercase tracking-[0.3em] mb-6">Introduction</h4>
+                <ul class="space-y-4 text-[11px] font-bold text-gray-500 uppercase tracking-widest">
+                    <li><a href="#welcome" class="nav-link block">Welcome Node</a></li>
+                    <li><a href="#vision" class="nav-link block">Our Vision</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-blue-500 text-[10px] font-black uppercase tracking-[0.3em] mb-6">Technical Core</h4>
+                <ul class="space-y-4 text-[11px] font-bold text-gray-500 uppercase tracking-widest">
+                    <li><a href="#frontend" class="nav-link block">Frontend Systems</a></li>
+                    <li><a href="#backend" class="nav-link block">Backend Logic</a></li>
+                    <li><a href="#security" class="nav-link block">Security Protocols</a></li>
+                </ul>
+            </div>
+        </aside>
+
+        <main class="lg:col-span-9 space-y-32">
+            
+            <section id="welcome">
+                <h1 class="text-7xl font-black italic uppercase tracking-tighter mb-8">Central <span class="text-blue-500">Intelligence///</span></h1>
+                <p class="text-xl text-gray-400 leading-relaxed mb-10">This documentation serves as the primary knowledge base for all T Learn Pro students. It contains the engineering blueprints defined by <span class="text-white">Zuby</span> and the Tech Nxxt team.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="p-8 bg-white/5 border border-white/10 rounded-[2rem] doc-card transition-all">
+                        <i class="fas fa-bolt text-blue-500 text-2xl mb-6"></i>
+                        <h3 class="text-white font-black uppercase italic mb-2">Fast Track Init</h3>
+                        <p class="text-xs text-gray-500 leading-relaxed">Initialize your local environment in under 5 minutes using our proprietary student CLI tools.</p>
+                    </div>
+                    <div class="p-8 bg-white/5 border border-white/10 rounded-[2rem] doc-card transition-all">
+                        <i class="fas fa-microchip text-blue-500 text-2xl mb-6"></i>
+                        <h3 class="text-white font-black uppercase italic mb-2">Lab Connection</h3>
+                        <p class="text-xs text-gray-500 leading-relaxed">Securely connect your terminal to our remote learning clusters for real-time coding practice.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="vision">
+                <h2 class="text-4xl font-black italic uppercase mb-8 pb-4 border-b border-white/5">Our <span class="text-blue-500 text-2xl">Vision</span></h2>
+                <p class="text-gray-400 text-sm leading-loose mb-6">T Learn Pro was founded to bridge the gap between theoretical computer science and elite-level industry performance. Our vision is to empower the next generation of African engineers with the tools used by the world's most advanced software firms.</p>
+                <div class="bg-blue-600/5 p-8 rounded-3xl border border-blue-500/20">
+                    <p class="text-white font-bold italic">"We don't just teach syntax; we build architects." — T Learn Pro Engineering</p>
+                </div>
+            </section>
+
+            <section id="architecture">
+                <h2 class="text-4xl font-black italic uppercase mb-8 pb-4 border-b border-white/5">System <span class="text-blue-500 text-2xl">Architecture</span></h2>
+                
+                <div id="frontend" class="mb-12">
+                    <h4 class="text-white font-black uppercase text-sm mb-4">Module 01: Frontend Systems</h4>
+                    <p class="text-gray-400 text-sm leading-loose mb-6">Mastering React, Tailwind, and Framer Motion to create high-performance, dark-mode terminal interfaces that look and feel like elite software.</p>
+                </div>
+
+                <div id="backend">
+                    <h4 class="text-white font-black uppercase text-sm mb-4">Module 02: Backend Logic</h4>
+                    <p class="text-gray-400 text-sm leading-loose mb-6">Using Node.js and Rust to build scalable API gateways. Learn how to handle thousands of concurrent student requests with zero latency.</p>
+                    <code class="block bg-black p-6 rounded-xl text-blue-400 text-xs font-mono border border-white/5">
+                        // System Handshake Protocol<br>
+                        tlp.connect({<br>
+                        &nbsp;&nbsp;auth: 'student_token',<br>
+                        &nbsp;&nbsp;cluster: 'Lagos_Node_01'<br>
+                        });
+                    </code>
+                </div>
+            </section>
+
+            <section id="security">
+                <h2 class="text-4xl font-black italic uppercase mb-8 pb-4 border-b border-white/5">Security <span class="text-blue-500 text-2xl">Protocols</span></h2>
+                <p class="text-gray-400 text-sm leading-loose mb-6">Safety is paramount. All student data is encrypted using AES-256. Learn how to protect your own applications from common vulnerabilities like SQL Injection and XSS.</p>
+                <div class="flex gap-4">
+                    <div class="px-6 py-3 bg-white/5 rounded-full border border-white/10 text-[9px] font-black uppercase text-green-500">SSL Encrypted</div>
+                    <div class="px-6 py-3 bg-white/5 rounded-full border border-white/10 text-[9px] font-black uppercase text-blue-500">OAuth 2.0 Ready</div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div class="fixed bottom-8 left-1/2 -translate-x-1/2 bg-black/80 backdrop-blur-md border border-white/10 px-8 py-4 rounded-2xl z-50 flex gap-8 items-center">
+        <span class="text-[9px] font-black uppercase text-gray-500 tracking-widest mr-4">Direct Access:</span>
+        <a href="api.html" class="text-[9px] font-black uppercase text-white hover:text-blue-500 transition-all">API Access</a>
+        <a href="bug bounty.html" class="text-[9px] font-black uppercase text-white hover:text-red-500 transition-all">Bug Bounty</a>
+        <a href="open source.html" class="text-[9px] font-black uppercase text-white hover:text-blue-500 transition-all">Open Source</a>
+    </div>
+
+    <script>
+        // Smooth scroll implementation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    e.preventDefault();
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 120, // Adjusted for the fixed nav
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+    
+</body>
+</html>

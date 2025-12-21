@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dev Console | T Learn Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+        <link rel="icon" type="image/png" href="Logo.jpeg" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
+        body { background-color: #010413; color: #cbd5e1; font-family: 'Inter', sans-serif; }
+        .console-font { font-family: 'JetBrains Mono', monospace; }
+        .cursor-blink { animation: blink 1s infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <nav class="border-b border-white/5 bg-[#010413]/80 backdrop-blur-md sticky top-0 z-50 px-8 py-4">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-4">
+                <span class="text-white font-black uppercase italic tracking-tighter">T Learn <span class="text-blue-500 text-xs">Console v4.0</span></span>
+            </div>
+            <div class="flex items-center gap-6">
+                <div class="flex items-center gap-2 text-[9px] font-black uppercase text-green-500">
+                    <span class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span> Terminal Connected
+                </div>
+                <a href="index.html" class="text-[10px] font-black uppercase text-gray-500 hover:text-white transition-all">Disconnect</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="p-8 max-w-7xl mx-auto">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            
+            <div class="lg:col-span-8 space-y-6">
+                <div class="flex justify-between items-end mb-4">
+                    <h1 class="text-4xl font-black italic uppercase text-white tracking-tighter">Active <span class="text-blue-500">Deployments///</span></h1>
+                    <button class="px-6 py-2 bg-blue-600 rounded-lg text-[10px] font-black uppercase text-white hover:bg-white hover:text-black transition-all">+ New Project</button>
+                </div>
+
+                <div class="p-6 bg-white/[0.02] border border-white/10 rounded-2xl hover:border-blue-500/50 transition-all flex items-center justify-between group">
+                    <div class="flex items-center gap-6">
+                        <div class="w-12 h-12 bg-blue-600/10 rounded-xl flex items-center justify-center border border-blue-500/20">
+                            <i class="fas fa-microchip text-blue-500"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-white font-black uppercase text-sm italic group-hover:text-blue-400 transition-all">Nxxt_Auth_Module</h4>
+                            <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest mt-1">Status: production-ready / Port: 3000</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4">
+                        <button class="p-2 text-gray-500 hover:text-white"><i class="fas fa-terminal"></i></button>
+                        <button class="p-2 text-gray-500 hover:text-red-500"><i class="fas fa-stop-circle"></i></button>
+                    </div>
+                </div>
+
+                <div class="p-6 bg-white/[0.02] border border-white/10 rounded-2xl hover:border-blue-500/50 transition-all flex items-center justify-between group">
+                    <div class="flex items-center gap-6">
+                        <div class="w-12 h-12 bg-blue-600/10 rounded-xl flex items-center justify-center border border-blue-500/20">
+                            <i class="fas fa-database text-blue-500"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-white font-black uppercase text-sm italic group-hover:text-blue-400 transition-all">Cloud_Storage_Node</h4>
+                            <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest mt-1">Status: re-indexing / Port: 8080</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4">
+                        <button class="p-2 text-gray-500 hover:text-white"><i class="fas fa-terminal"></i></button>
+                        <button class="p-2 text-gray-500 hover:text-red-500"><i class="fas fa-stop-circle"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lg:col-span-4">
+                <div class="bg-black border border-white/10 rounded-3xl h-[600px] flex flex-col overflow-hidden">
+                    <div class="p-4 border-b border-white/10 flex justify-between items-center bg-white/[0.02]">
+                        <span class="text-[10px] font-black uppercase tracking-widest text-blue-500 italic">System_Logs_CLI</span>
+                        <div class="flex gap-1.5">
+                            <div class="w-2 h-2 rounded-full bg-red-500/50"></div>
+                            <div class="w-2 h-2 rounded-full bg-yellow-500/50"></div>
+                            <div class="w-2 h-2 rounded-full bg-green-500/50"></div>
+                        </div>
+                    </div>
+                    <div class="p-6 console-font text-[11px] space-y-3 overflow-y-auto">
+                        <p class="text-gray-500">[14:02:11] <span class="text-green-500">INIT</span> Loading Tech Nxxt Core...</p>
+                        <p class="text-gray-500">[14:02:15] <span class="text-blue-500">INFO</span> Authenticating admin@zuby.dev</p>
+                        <p class="text-gray-500">[14:02:18] <span class="text-green-500">AUTH</span> Success. Handshake established.</p>
+                        <p class="text-gray-500">[14:03:01] <span class="text-yellow-500">WARN</span> Node NG-01 approaching 80% load.</p>
+                        <p class="text-white">> root@nxxt_term: <span class="cursor-blink">_</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>

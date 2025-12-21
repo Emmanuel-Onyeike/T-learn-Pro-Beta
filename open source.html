@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Open Source | T Learn Pro</title>
+    <link rel="icon" type="image/png" href="Logo.jpeg" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;900&display=swap');
+        body { background: #020617; color: white; font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
+        .repo-card:hover { transform: translateY(-10px); border-color: #3b82f6; box-shadow: 0 0 30px rgba(59, 130, 246, 0.1); }
+        .modal-active { display: flex !important; animation: modalIn 0.3s ease-out; }
+        @keyframes modalIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+    </style>
+</head>
+<body class="pt-32 pb-40">
+
+    <nav class="fixed top-0 w-full z-50 bg-[#020617]/90 backdrop-blur-xl border-b border-white/5 py-6 px-8 flex justify-between items-center">
+        <div class="flex items-center gap-3">
+            <img src="Logo.jpeg" class="w-8 h-8 rounded-lg border border-blue-500/30">
+            <a href="index.html" class="text-xl font-black italic uppercase">T Learn <span class="text-blue-500">Pro</span></a>
+        </div>
+        <div class="flex gap-6">
+            <a href="index.html" class="text-[10px] font-black uppercase text-gray-500 hover:text-white transition-all tracking-widest">Dashboard</a>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="mb-20">
+            <span class="text-blue-500 text-[10px] font-black uppercase tracking-[0.5em] mb-4 block underline underline-offset-8">Public Engineering Labs</span>
+            <h1 class="text-8xl font-black italic uppercase text-white mb-6 tracking-tighter">Open <span class="text-blue-500">Source///</span></h1>
+            <p class="text-gray-500 text-sm font-black uppercase tracking-[0.4em] max-w-3xl leading-relaxed">
+                T Learn Pro believes in radical transparency. We open-source our core UI components and grading kernels to empower the Nigerian developer ecosystem.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-32">
+            <div class="p-10 bg-white/[0.02] border border-white/5 rounded-[3rem] repo-card transition-all group flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-start mb-8">
+                        <i class="fab fa-github text-4xl text-gray-700 group-hover:text-blue-500 transition-colors"></i>
+                        <span class="text-[9px] font-black uppercase text-green-500 bg-green-500/10 px-3 py-1 rounded">v1.2.0 Stable</span>
+                    </div>
+                    <h3 class="text-2xl font-black italic uppercase text-white mb-4">Nxxt_UI_Lib</h3>
+                    <p class="text-xs text-gray-500 uppercase font-bold tracking-widest leading-loose mb-10">The atomic design system used to build T Learn Pro. Fully responsive and optimized for dark-mode engineering suites.</p>
+                </div>
+                <div>
+                    <div class="flex gap-6 mb-8">
+                        <div class="text-[10px] font-black uppercase text-gray-500"><i class="fas fa-star mr-2 text-blue-500"></i> 1.4k</div>
+                        <div class="text-[10px] font-black uppercase text-gray-500"><i class="fas fa-code-branch mr-2 text-blue-500"></i> 240</div>
+                    </div>
+                    <button onclick="handleAction('Forking Nxxt_UI_Lib...')" class="w-full py-4 border border-white/10 rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-white hover:text-black transition-all">Clone Repository</button>
+                </div>
+            </div>
+
+            <div class="p-10 bg-white/[0.02] border border-white/5 rounded-[3rem] repo-card transition-all group flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-start mb-8">
+                        <i class="fas fa-terminal text-4xl text-gray-700 group-hover:text-blue-500 transition-colors"></i>
+                        <span class="text-[9px] font-black uppercase text-blue-500 bg-blue-500/10 px-3 py-1 rounded">Beta Access</span>
+                    </div>
+                    <h3 class="text-2xl font-black italic uppercase text-white mb-4">Grader_Kernel</h3>
+                    <p class="text-xs text-gray-500 uppercase font-bold tracking-widest leading-loose mb-10">The high-performance Rust engine that evaluates student code. Help us optimize the test-case runner.</p>
+                </div>
+                <div>
+                    <div class="flex gap-6 mb-8">
+                        <div class="text-[10px] font-black uppercase text-gray-500"><i class="fas fa-star mr-2 text-blue-500"></i> 890</div>
+                    </div>
+                    <button onclick="handleAction('Requesting Access to Kernel...')" class="w-full py-4 border border-white/10 rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-white hover:text-black transition-all">Request Contributor Access</button>
+                </div>
+            </div>
+
+            <div class="lg:col-span-1 p-10 bg-blue-600 rounded-[3rem] flex flex-col justify-center items-center text-center shadow-[0_20px_40px_rgba(37,99,235,0.3)]">
+                <div class="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mb-6">
+                    <i class="fas fa-users text-3xl text-white"></i>
+                </div>
+                <h3 class="text-white font-black uppercase italic text-3xl mb-4">Join The Team</h3>
+                <p class="text-blue-100 text-[10px] font-black uppercase tracking-widest mb-8 leading-relaxed">Submit your pull requests and help us build the future of Nigerian tech education.</p>
+                <button onclick="handleAction('Redirecting to Pull Requests...')" class="w-full py-5 bg-white text-black text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-black hover:text-white transition-all shadow-xl">Submit Pull Request</button>
+            </div>
+        </div>
+
+        <div class="bg-white/[0.02] border border-white/10 rounded-[4rem] p-16">
+            <h2 class="text-4xl font-black italic uppercase mb-16 text-center">Contributor <span class="text-blue-500">Roadmap///</span></h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+                <div class="space-y-4">
+                    <span class="text-blue-500 font-black text-xl">STEP 01</span>
+                    <h4 class="text-white font-black uppercase text-xs">Fork & Setup</h4>
+                    <p class="text-gray-500 text-[10px] font-bold uppercase tracking-widest leading-loose">Clone the repository and initialize the Tech Nxxt local environment.</p>
+                </div>
+                <div class="space-y-4">
+                    <span class="text-blue-500 font-black text-xl">STEP 02</span>
+                    <h4 class="text-white font-black uppercase text-xs">Issue Selection</h4>
+                    <p class="text-gray-500 text-[10px] font-bold uppercase tracking-widest leading-loose">Pick an open issue from our public Trello or GitHub project board.</p>
+                </div>
+                <div class="space-y-4">
+                    <span class="text-blue-500 font-black text-xl">STEP 03</span>
+                    <h4 class="text-white font-black uppercase text-xs">Dev & Test</h4>
+                    <p class="text-gray-500 text-[10px] font-bold uppercase tracking-widest leading-loose">Write your code and ensure it passes the T Learn Pro unit tests.</p>
+                </div>
+                <div class="space-y-4">
+                    <span class="text-blue-500 font-black text-xl">STEP 04</span>
+                    <h4 class="text-white font-black uppercase text-xs">Merge & Credit</h4>
+                    <p class="text-gray-500 text-[10px] font-bold uppercase tracking-widest leading-loose">Get your code merged and earn "Contributor" status on your profile.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="osModal" class="fixed inset-0 z-[100] hidden items-center justify-center px-6">
+        <div class="absolute inset-0 bg-[#020617]/95 backdrop-blur-xl" onclick="closeModal()"></div>
+        <div class="bg-[#050b1d] border border-blue-500/30 w-full max-w-md rounded-[2.5rem] p-10 relative z-10 text-center shadow-[0_0_50px_rgba(59,130,246,0.2)]">
+            <div id="modalIcon" class="w-20 h-20 bg-blue-600/10 border border-blue-500/20 rounded-full flex items-center justify-center mx-auto mb-6 text-blue-500 text-2xl">
+                <i class="fas fa-code-branch"></i>
+            </div>
+            <h3 id="modalTitle" class="text-2xl font-black italic uppercase text-white mb-2">Syncing Data</h3>
+            <p id="modalBody" class="text-gray-500 text-[10px] font-bold uppercase tracking-widest leading-relaxed mb-8">Establishing connection to Tech Nxxt repositories...</p>
+            <button onclick="closeModal()" class="w-full py-4 bg-white text-black text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-blue-600 hover:text-white transition-all">Acknowledge</button>
+        </div>
+    </div>
+
+    <script>
+        const modal = document.getElementById('osModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalBody = document.getElementById('modalBody');
+
+        function openModal(title, body) {
+            modalTitle.innerText = title;
+            modalBody.innerText = body;
+            modal.classList.add('modal-active');
+        }
+
+        function closeModal() {
+            modal.classList.remove('modal-active');
+        }
+
+        function handleAction(processText) {
+            openModal('Process Initiated', processText);
+            // Simulate redirect/action
+            setTimeout(() => {
+                if(processText.includes('Forking')) {
+                    openModal('Success', 'Repository has been successfully forked to your account profile.');
+                } else if(processText.includes('Requesting')) {
+                    openModal('Request Sent', 'Your contributor request is under review by the T Learn Pro core team.');
+                }
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
