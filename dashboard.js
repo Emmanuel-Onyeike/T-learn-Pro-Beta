@@ -167,30 +167,38 @@ const views = {
             <button onclick="updateSettingsTab('History')" class="settings-tab">Login History</button>
             <button onclick="updateSettingsTab('Notif-Settings')" class="settings-tab">Notifications</button>
         </div>
+
         <div id="settingsContent" class="content-card min-h-[400px]">
             <div class="space-y-8">
                 <div class="flex items-center gap-6">
-                    <div class="w-20 h-20 rounded-3xl bg-blue-600/20 border border-blue-500/20 flex items-center justify-center relative">
-                        <i class="fas fa-user text-3xl text-blue-500"></i>
-                        <button class="absolute -bottom-2 -right-2 w-8 h-8 bg-blue-600 rounded-xl flex items-center justify-center text-[10px] border-4 border-[#020617]">
+                    <div class="w-20 h-20 rounded-3xl bg-blue-600/20 border border-blue-500/20 flex items-center justify-center relative overflow-hidden">
+                        <img src="Logo.jpeg" data-user-img class="w-full h-full object-cover">
+                        <button onclick="updateSettingsTab('Profile')" class="absolute -bottom-2 -right-2 w-8 h-8 bg-blue-600 rounded-xl flex items-center justify-center text-[10px] border-4 border-[#020617] hover:bg-blue-500 transition-colors">
                             <i class="fas fa-camera"></i>
                         </button>
                     </div>
                     <div>
-                        <h4 data-user-name class="text-xl font-black text-white italic uppercase">Loading...</h4>
-                        <p data-user-email class="text-[9px] font-black text-gray-500 uppercase tracking-widest mt-1">Loading...</p>
-                        <p class="text-[9px] font-black text-gray-500 uppercase tracking-widest">Student ID: TLP-2025-001</p>
+                        <h4 data-user-name class="text-xl font-black text-white italic uppercase leading-none">Loading...</h4>
+                        <p data-user-email class="text-[9px] font-black text-blue-500 uppercase tracking-[0.2em] mt-2 italic">Loading...</p>
+                        <p class="text-[9px] font-black text-gray-500 uppercase tracking-widest mt-1">Student ID: TLP-2025-001</p>
                     </div>
                 </div>
+
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="space-y-2">
-                        <label class="text-[9px] font-black text-gray-500 uppercase ml-2">Full Name</label>
-                        <input type="text" data-user-name-input class="settings-input" readonly>
+                        <label class="text-[9px] font-black text-gray-500 uppercase ml-2">Registered Name</label>
+                        <input type="text" id="overviewName" data-user-name-input class="settings-input" readonly>
                     </div>
                     <div class="space-y-2">
                         <label class="text-[9px] font-black text-gray-500 uppercase ml-2">Email Address</label>
-                        <input type="email" data-user-email-input class="settings-input" readonly>
+                        <input type="email" id="overviewEmail" data-user-email-input class="settings-input" readonly>
                     </div>
+                </div>
+
+                <div class="pt-4 border-t border-white/5">
+                    <button onclick="updateSettingsTab('Profile')" class="text-[10px] font-black text-blue-500 uppercase tracking-widest hover:text-white transition-colors">
+                        Edit Profile Details <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
                 </div>
             </div>
         </div>
@@ -282,7 +290,7 @@ function updateHeaderInfo() {
     else if (hours < 17) greeting = "Good Afternoon";
     else if (hours < 21) greeting = "Good Evening";
    
-    greetingElement.innerText = `${greeting}, Emmanuel`;
+    greetingElement.innerText = `${greeting}, New User`;
     // Update Date
     dateElement.innerText = now.toLocaleDateString('en-US', {
         month: 'short',
@@ -624,3 +632,123 @@ async function updateUserDisplay() {
 document.addEventListener('DOMContentLoaded', () => {
     updateUserDisplay();
 });
+
+
+//// for the profile data load
+// 1. Create hidden file input for the gallery (Run this once)
+const imgInput = document.createElement('input');
+imgInput.type = 'file';
+imgInput.accept = 'image/*';
+imgInput.id = 'hiddenGalleryInput';
+imgInput.style.display = 'none';
+document.body.appendChild(imgInput);
+
+// 2. Open Gallery when camera icon is clicked
+function triggerImageUpload() {
+    imgInput.click();
+}
+
+// 3. Handle image selection
+imgInput.onchange = e => {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            const base64Image = event.target.result;
+            // Update all profile images on the page immediately for preview
+            document.querySelectorAll('[data-user-img]').forEach(img => img.src = base64Image);
+            // Store it temporarily in buffer
+            localStorage.setItem('temp_img_buffer', base64Image);
+        };
+        reader.readAsDataURL(file);
+    }
+};
+
+// 4. Save Profile Function
+function saveProfile() {
+    const nameInput = document.getElementById('editFullName');
+    const bioInput = document.getElementById('editBio');
+    
+    // Safety check: only run if inputs exist in current view
+    if (!nameInput) return;
+
+    const name = nameInput.value.trim();
+    const bio = bioInput ? bioInput.value.trim() : "";
+    const bufferedImg = localStorage.getItem('temp_img_buffer');
+
+    if (name) {
+        // Persist to LocalStorage
+        localStorage.setItem('tlp_user_name', name);
+        localStorage.setItem('tlp_user_bio', bio);
+        
+        if (bufferedImg) {
+            localStorage.setItem('tlp_user_img', bufferedImg);
+            localStorage.removeItem('temp_img_buffer'); // Clear buffer after save
+        }
+        
+        // Update all UI elements immediately
+        syncProfileUI();
+        
+        // Show the centered modal alert
+        showAlert("SYSTEM UPDATE", "Profile credentials synchronized successfully.");
+    } else {
+        // Show error in the centered modal
+        showAlert("DATA ERROR", "Full Name is required to synchronize profile.", true);
+    }
+}
+
+// 5. Universal UI Sync Function
+// Call this on page load and after saving
+function syncProfileUI() {
+    const savedName = localStorage.getItem('tlp_user_name') || "New user";
+    const savedImg = localStorage.getItem('tlp_user_img') || "Logo.jpeg";
+    
+    // Update all text elements with data-user-name attribute
+    document.querySelectorAll('[data-user-name]').forEach(el => {
+        el.innerText = savedName;
+    });
+
+    // Update all image elements with data-user-img attribute
+    document.querySelectorAll('[data-user-img]').forEach(img => {
+        img.src = savedImg;
+    });
+}
+
+// Initialize UI on load
+document.addEventListener('DOMContentLoaded', syncProfileUI);
+
+
+
+//// for my settings sync
+async function syncProfileUI() {
+    // 1. Get the current session from Supabase
+    const { data: { user } } = await supabase.auth.getUser();
+
+    // 2. Determine source of truth (Cloud Meta > Local Storage > Default)
+    const savedName = user?.user_metadata?.full_name || localStorage.getItem('tlp_user_name') || "Emmanuel Onyeike";
+    const savedImg = user?.user_metadata?.avatar_url || localStorage.getItem('tlp_user_img') || "Logo.jpeg";
+    const savedEmail = user?.email || localStorage.getItem('tlp_user_email') || "user@example.com";
+    const savedBio = user?.user_metadata?.bio || localStorage.getItem('tlp_user_bio') || "";
+
+    // 3. Update all UI Elements (Sidebar, Header, Profile)
+    document.querySelectorAll('[data-user-name]').forEach(el => el.innerText = savedName);
+    document.querySelectorAll('[data-user-email]').forEach(el => el.innerText = savedEmail);
+    
+    document.querySelectorAll('[data-user-img]').forEach(img => {
+        img.src = savedImg;
+        img.alt = savedName; // Also handles accessibility
+    });
+
+    // 4. Update Settings Input Fields (If currently in view)
+    const nameInputs = [document.getElementById('editFullName'), document.getElementById('overviewName')];
+    const emailInputs = [document.getElementById('editEmail'), document.getElementById('overviewEmail')];
+    const bioInput = document.getElementById('editBio');
+
+    nameInputs.forEach(input => { if(input) input.value = savedName; });
+    emailInputs.forEach(input => { if(input) input.value = savedEmail; });
+    if (bioInput) bioInput.value = savedBio;
+
+    // 5. Cache back to local storage for instant offline loading next time
+    localStorage.setItem('tlp_user_name', savedName);
+    localStorage.setItem('tlp_user_img', savedImg);
+}
