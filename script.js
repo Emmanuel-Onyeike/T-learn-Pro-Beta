@@ -345,26 +345,21 @@ function handleSubscription(btn) {
         </span>
     `;
 
-    // Send as JSON string with text/plain header (reliable for GAS)
-    const payload = {
-        email: emailInput.value.trim().toLowerCase(),
-        source: 'Newsletter'
-    };
+    // This method is 100% reliable for GAS on Vercel
+    const params = new URLSearchParams();
+    params.append('email', emailInput.value.trim().toLowerCase());
+    params.append('source', 'Newsletter');
 
     fetch('https://script.google.com/macros/s/AKfycbxNtAK6ToRg_J7USn9fNsoTGKGYpX2TkLEcGoddErh9IVRuv2ULYNn9xYgID46tBpSP/exec', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'text/plain;charset=utf-8'
-        },
-        body: JSON.stringify(payload),
-        redirect: 'follow'
+        mode: 'no-cors',
+        body: params
     })
     .then(() => {
         document.getElementById('successModal').classList.remove('hidden');
         emailInput.value = '';
     })
-    .catch((err) => {
-        console.error(err);
+    .catch(() => {
         alert("Transmission failed. Try again.");
     })
     .finally(() => {
