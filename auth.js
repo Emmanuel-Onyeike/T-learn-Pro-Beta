@@ -1,4 +1,4 @@
-// auth.js - FINAL FIX (name shows after login, no more Loading...)
+// auth.js - FINAL FIX THAT WORKS (name shows after login)
 
 let supabaseClient = null;
 
@@ -20,25 +20,20 @@ async function loadSupabase() {
     });
 }
 
-// Update name and email immediately
+// Force update name and email
 async function updateUserDisplay() {
     const client = await loadSupabase();
     const { data: { user } } = await client.auth.getUser();
 
     if (user) {
-        const fullName = user.user_metadata?.full_name || user.email.split('@')[0];
-        const email = user.email || '';
-
+        const fullName = user.user_metadata?.full_name || user.email.split('@')[0] || 'User';
         document.querySelectorAll('[data-user-name]').forEach(el => {
             el.textContent = fullName;
-        });
-        document.querySelectorAll('[data-user-email]').forEach(el => {
-            el.textContent = email;
         });
     }
 }
 
-// Check auth and redirect
+// Check auth
 async function checkAuth() {
     const client = await loadSupabase();
     const { data: { user } } = await client.auth.getUser();
@@ -48,7 +43,7 @@ async function checkAuth() {
             window.location.href = 'login.html';
         }
     } else {
-        await updateUserDisplay(); // Force name update
+        await updateUserDisplay();
 
         if (window.location.pathname.includes('login.html') || window.location.pathname.includes('register.html')) {
             window.location.href = 'dashboard.html';
@@ -119,6 +114,8 @@ async function attachFormHandlers() {
             if (error) {
                 alert('Login failed: ' + error.message);
             } else {
+                // After successful login, force name update
+                await updateUserDisplay();
                 window.location.href = 'dashboard.html';
             }
 
@@ -135,18 +132,18 @@ window.logout = async () => {
     window.location.href = 'login.html';
 };
 
-// Listen for auth changes — this is the key to updating name after login
-loadSupabase().then(client => {
-    client.auth.onAuthStateChange(async (event, session) => {
-        if (event === 'SIGNED_IN') {
-            await updateUserDisplay();
-        }
-    });
-});
-
 // Run on load
 document.addEventListener('DOMContentLoaded', async () => {
     await checkAuth();
     await attachFormHandlers();
-    await updateUserDisplay(); // Extra call to be sure
+    await updateUserDisplay(); // Extra force update
+});
+
+// Listen for auth changes (important for after login)
+loadSupabase().then(client => {
+    client.auth.onAuthStateChange(async (event, session) => {
+        if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+            await updateUserDisplay();
+        }
+    });
 });
