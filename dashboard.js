@@ -55,8 +55,8 @@ const views = {
                     <i class="fas fa-layer-group text-green-500"></i>
                 </div>
                 <div>
-                    <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Team Level</p>
-                    <h3 class="text-3xl font-black text-white mt-1">0</h3>
+                    <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest"> Level</p>
+                    <h3 class="text-3xl font-black text-white mt-1">000</h3>
                 </div>
             </div>
             <i class="fas fa-chart-line absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-green-500/[0.05] transition-all"></i>
