@@ -21,7 +21,6 @@ const views = {
             </div>
         </div>
     `,
-
     'Lessons': `
         <div class="content-card">
             <h3 class="text-2xl font-black text-white italic uppercase mb-6">Course Curriculum</h3>
@@ -33,7 +32,6 @@ const views = {
                 </div>
         </div>
     `,
-
 'Projects': `
     <div class="space-y-8 animate-in">
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -45,7 +43,6 @@ const views = {
                 <i class="fas fa-plus mr-2"></i> New Project
             </button>
         </div>
-
         <div class="border-2 border-dashed border-white/5 rounded-3xl py-20 flex flex-col items-center justify-center text-center">
             <div class="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center mb-6">
                 <i class="fas fa-code-branch text-3xl text-gray-700"></i>
@@ -54,7 +51,7 @@ const views = {
             <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest mt-2 max-w-[250px] leading-relaxed">
                 Your repository is empty. Start a new project to see it managed here.
             </p>
-            
+           
             <div class="mt-8 flex gap-3">
                 <div class="px-4 py-2 bg-white/5 rounded-lg border border-white/5 text-[8px] font-black text-gray-500 uppercase">
                     Select All
@@ -64,7 +61,6 @@ const views = {
                 </div>
             </div>
         </div>
-
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div class="p-4 bg-white/5 border border-white/5 rounded-2xl">
                 <i class="fas fa-info-circle text-blue-500 mb-3"></i>
@@ -78,35 +74,30 @@ const views = {
             </div>
         </div>
     </div>`,
-
     'Leaderboard': `
         <div class="content-card">
             <h3 class="text-2xl font-black text-white italic uppercase">Global Ranking</h3>
             <p class="text-gray-500 text-[10px] font-bold uppercase mt-2">See how you rank against other students.</p>
         </div>
     `,
-
     'Collaboration': `
         <div class="content-card">
             <h3 class="text-2xl font-black text-white italic uppercase">Find Partners</h3>
             <p class="text-gray-500 text-[10px] font-bold uppercase mt-2">Connect with students on shared projects.</p>
         </div>
     `,
-
     'Team': `
         <div class="content-card">
             <h3 class="text-2xl font-black text-white italic uppercase">Your Squad</h3>
             <p class="text-gray-500 text-[10px] font-bold uppercase mt-2">Manage team roles and performance.</p>
         </div>
     `,
-
     'Inbox': `
         <div class="content-card">
             <h3 class="text-2xl font-black text-white italic uppercase">Messages</h3>
             <p class="text-gray-500 text-[10px] font-bold uppercase mt-2">Notifications and Direct Messages.</p>
         </div>
     `,
-
     'Nxxt AI': `
         <div class="content-card min-h-[400px] flex flex-col justify-between">
             <div>
@@ -118,14 +109,12 @@ const views = {
             </div>
         </div>
     `,
-
     'Nxxt Lab': `
         <div class="content-card">
             <h3 class="text-2xl font-black text-white italic uppercase">The Lab</h3>
             <p class="text-gray-500 text-[10px] font-bold uppercase mt-2">Experimental tools and beta software access.</p>
         </div>
     `,
-
     'Side Hustle Hub': `
         <div class="content-card">
             <h3 class="text-2xl font-black text-white italic uppercase">Freelance Marketplace</h3>
@@ -142,14 +131,13 @@ const views = {
         <p class="text-gray-500 text-[10px] font-black uppercase tracking-[0.3em] mb-8 leading-relaxed">
             You have 1 new transmission <br> from the T Learn Pro system
         </p>
-        
+       
         <div class="space-y-4 mb-8">
             <div class="p-4 bg-white/5 border border-white/5 rounded-2xl text-left">
                 <p class="text-[8px] font-black text-blue-500 uppercase mb-1">Welcome</p>
                 <p class="text-white text-[11px] font-bold">Your account is active, Emmanuel. Start your first lesson today!</p>
             </div>
         </div>
-
         <button onclick="updateView('Overview')" class="w-full py-5 bg-white/5 border border-white/10 rounded-2xl font-black uppercase text-[10px] tracking-widest text-white hover:bg-white hover:text-black transition-all">
             Clear All Alerts
         </button>
@@ -163,14 +151,12 @@ const views = {
             <button class="w-full py-5 bg-green-600 rounded-2xl font-black uppercase text-[10px] tracking-widest">Withdraw Funds</button>
         </div>
     `,
-
     'Pricing': `
         <div class="content-card">
             <h3 class="text-2xl font-black text-white italic uppercase">Subscriptions</h3>
             <p class="text-gray-500 text-[10px] font-bold uppercase mt-2">Manage your T Learn Pro membership.</p>
         </div>
     `,
-
 'Settings': `
     <div class="animate-in">
         <div class="flex items-center gap-4 overflow-x-auto no-scrollbar pb-6 mb-8 border-b border-white/5 scroll-smooth">
@@ -181,7 +167,6 @@ const views = {
             <button onclick="updateSettingsTab('History')" class="settings-tab">Login History</button>
             <button onclick="updateSettingsTab('Notif-Settings')" class="settings-tab">Notifications</button>
         </div>
-
         <div id="settingsContent" class="content-card min-h-[400px]">
             <div class="space-y-8">
                 <div class="flex items-center gap-6">
@@ -197,7 +182,6 @@ const views = {
                         <p class="text-[9px] font-black text-gray-500 uppercase tracking-widest">Student ID: TLP-2025-001</p>
                     </div>
                 </div>
-
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="space-y-2">
                         <label class="text-[9px] font-black text-gray-500 uppercase ml-2">Full Name</label>
@@ -218,10 +202,10 @@ const views = {
 function updateView(viewName) {
     const title = document.getElementById('viewTitle');
     const container = document.getElementById('dynamicContent');
-    
+   
     container.style.opacity = '0';
     container.style.transform = 'translateY(10px)';
-    
+   
     setTimeout(() => {
         title.innerText = viewName;
         container.innerHTML = views[viewName] || `
@@ -233,23 +217,19 @@ function updateView(viewName) {
         `;
         container.style.opacity = '1';
         container.style.transform = 'translateY(0px)';
-        
+       
         // Update sidebar and bottom nav active states
         document.querySelectorAll('.nav-item').forEach(item => {
             item.classList.toggle('active', item.innerText.includes(viewName));
         });
     }, 200);
 }
-
 // Initial Setup
 const d = new Date();
-document.getElementById('currentDate').innerText = d.toLocaleDateString('en-US', { 
-    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' 
+document.getElementById('currentDate').innerText = d.toLocaleDateString('en-US', {
+    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
 });
-
 updateView('Overview');
-
-
  //// for the meun toggle
  // Function to open the Mobile Menu
 function openFullMenu() {
@@ -258,17 +238,14 @@ function openFullMenu() {
     const drawer = document.getElementById('menuDrawer');
     const mobileNav = document.getElementById('mobileNavLinks');
     const desktopNav = document.querySelector('#sidebar nav').innerHTML;
-
     // 1. Copy desktop links to mobile drawer if empty
     mobileNav.innerHTML = desktopNav;
-
     // 2. Show the modal
     modal.classList.remove('invisible');
     setTimeout(() => {
         overlay.classList.add('opacity-100');
         drawer.classList.add('translate-x-0');
     }, 10);
-
     // 3. Make sure links inside mobile menu also close the menu when clicked
     const links = mobileNav.querySelectorAll('a');
     links.forEach(link => {
@@ -278,61 +255,51 @@ function openFullMenu() {
         });
     });
 }
-
 // Function to close the Mobile Menu
 function closeFullMenu() {
     const modal = document.getElementById('mobileMenu');
     const overlay = document.getElementById('menuOverlay');
     const drawer = document.getElementById('menuDrawer');
-
     overlay.classList.remove('opacity-100');
     drawer.classList.remove('translate-x-0');
-    
+   
     setTimeout(() => {
         modal.classList.add('invisible');
     }, 300);
 }
-
 // Close menu if clicking the overlay
 document.getElementById('menuOverlay').addEventListener('click', closeFullMenu);
-
 ///// for the date and time
 function updateHeaderInfo() {
     const greetingElement = document.getElementById('greetingText');
     const dateElement = document.getElementById('currentDate');
     const now = new Date();
     const hours = now.getHours();
-    
+   
     // Determine Greeting
     let greeting = "Good Night";
     if (hours < 12) greeting = "Good Morning";
     else if (hours < 17) greeting = "Good Afternoon";
     else if (hours < 21) greeting = "Good Evening";
-    
+   
     greetingElement.innerText = `${greeting}, Emmanuel`;
-
     // Update Date
-    dateElement.innerText = now.toLocaleDateString('en-US', { 
-        month: 'short', 
-        day: 'numeric', 
-        year: 'numeric' 
+    dateElement.innerText = now.toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric'
     });
 }
-
 // 3. Run on load
 updateHeaderInfo();
 // Optional: Update every minute to keep greeting accurate
 setInterval(updateHeaderInfo, 60000);
-
-
 //// for the settings tabs
-
-
-  function updateSettingsTab(tabId) { // <-- FIXED: was tabName, now tabId
+  function updateSettingsTab(tabId) {
     let tabName = tabId; // <-- FIXED: declared with let
 
     const container = document.getElementById('settingsContent');
-    
+   
     // Update active tab button style
     document.querySelectorAll('.settings-tab').forEach(btn => {
         // This ensures the button stays blue when clicked
@@ -340,7 +307,6 @@ setInterval(updateHeaderInfo, 60000);
         const target = tabName.toLowerCase().replace('notif-settings', 'notifications');
         btn.classList.toggle('active', btnText.includes(target) || target.includes(btnText));
     });
-
     const tabs = {
        'Profile': `
     <div class="space-y-8 animate-in">
@@ -358,7 +324,6 @@ setInterval(updateHeaderInfo, 60000);
                 <p class="text-[10px] font-black text-blue-500 uppercase tracking-widest mt-2">Node Level: Beginner</p>
             </div>
         </div>
-
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div class="space-y-2">
                 <label class="text-[9px] font-black text-gray-500 uppercase ml-2">Full Name</label>
@@ -373,7 +338,6 @@ setInterval(updateHeaderInfo, 60000);
                 <textarea id="editBio" class="settings-input min-h-[100px] py-4" placeholder="Tell us about your coding journey..."></textarea>
             </div>
         </div>
-
         <button onclick="saveProfile()" class="w-full md:w-auto px-12 py-4 bg-blue-600 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-blue-700 transition-all">
             Save Profile
         </button>
@@ -398,7 +362,6 @@ setInterval(updateHeaderInfo, 60000);
                 </div>
                 <button class="w-full md:w-auto px-12 py-4 bg-white/5 border border-white/10 rounded-2xl text-[10px] font-black uppercase tracking-widest">Update Security</button>
             </div>`,
-
    'Projects': `
     <div class="space-y-8 animate-in">
         <div class="space-y-6">
@@ -406,14 +369,13 @@ setInterval(updateHeaderInfo, 60000);
                 <h3 class="text-xl font-black text-white italic uppercase tracking-tighter">Project Management</h3>
                 <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest mt-1">Manage and bulk delete your projects</p>
             </div>
-
             <div class="relative group">
                 <i class="fas fa-search absolute left-5 top-1/2 -translate-y-1/2 text-gray-600 group-focus-within:text-blue-500 transition-colors"></i>
-                <input type="text" 
-                       placeholder="SEARCH REPOSITORY BY NAME, TAG, OR TECH STACK..." 
+                <input type="text"
+                       placeholder="SEARCH REPOSITORY BY NAME, TAG, OR TECH STACK..."
                        class="w-full bg-white/5 border border-white/10 rounded-2xl py-5 pl-14 pr-6 text-[10px] font-black text-white placeholder-gray-700 uppercase tracking-widest outline-none focus:border-blue-500/50 focus:bg-blue-500/5 transition-all">
             </div>
-            
+           
             <div class="flex items-center gap-3">
                 <button class="px-5 py-2 bg-white/5 rounded-lg border border-white/5 text-[8px] font-black text-gray-500 uppercase hover:text-white transition-colors">
                     Select All
@@ -423,7 +385,6 @@ setInterval(updateHeaderInfo, 60000);
                 </button>
             </div>
         </div>
-
         <div id="projectContainer" class="min-h-[300px] flex flex-col items-center justify-center text-center border-2 border-dashed border-white/5 rounded-[2rem] px-6">
             <div class="w-16 h-16 bg-blue-600/5 rounded-2xl flex items-center justify-center mb-6 rotate-3">
                 <i class="fas fa-folder-open text-2xl text-blue-500/20"></i>
@@ -434,7 +395,6 @@ setInterval(updateHeaderInfo, 60000);
                 <span class="text-blue-500/50">Awaiting your first deployment.</span>
             </p>
         </div>
-
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div class="p-6 bg-[#030816] border border-white/5 rounded-[1.5rem] flex items-center gap-5">
                 <div class="w-10 h-10 bg-blue-500/10 rounded-xl flex items-center justify-center text-blue-500">
@@ -456,7 +416,6 @@ setInterval(updateHeaderInfo, 60000);
             </div>
         </div>
     </div>`,
-
 'Billing': `
     <div class="space-y-8 animate-in">
         <div class="content-card bg-blue-600/5 border-blue-500/10 text-center py-10">
@@ -469,10 +428,9 @@ setInterval(updateHeaderInfo, 60000);
                 Upgrade to Pro
             </button>
         </div>
-
         <div class="space-y-4">
             <h3 class="text-xl font-black text-white italic uppercase tracking-tighter">Billing History</h3>
-            
+           
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-separate border-spacing-y-2">
                     <thead>
@@ -496,7 +454,6 @@ setInterval(updateHeaderInfo, 60000);
                 </table>
             </div>
         </div>
-
         <div class="p-6 bg-[#030816] border border-white/5 rounded-2xl flex items-center justify-between opacity-50">
             <div class="flex items-center gap-4">
                 <div class="w-12 h-8 bg-white/5 rounded border border-white/10 flex items-center justify-center">
@@ -511,7 +468,6 @@ setInterval(updateHeaderInfo, 60000);
         </div>
     </div>
 `,
-
     'History': `
     <div class="space-y-8 animate-in">
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -524,7 +480,6 @@ setInterval(updateHeaderInfo, 60000);
                 <p id="liveHistoryClock" class="text-[10px] text-white font-black uppercase italic mt-1">Loading...</p>
             </div>
         </div>
-
         <div class="border-2 border-dashed border-white/5 rounded-[2rem] py-20 flex flex-col items-center justify-center text-center">
             <div class="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center mb-6">
                 <i class="fas fa-shield-virus text-2xl text-gray-800"></i>
@@ -534,27 +489,24 @@ setInterval(updateHeaderInfo, 60000);
                 Security logs are currently clear. Your login activity will appear here once the system validates your next session.
             </p>
         </div>
-
         <div class="p-6 bg-[#030816] border border-white/5 rounded-2xl">
             <div class="flex items-center gap-4 text-orange-500 mb-2">
                 <i class="fas fa-exclamation-triangle text-xs"></i>
                 <p class="text-[10px] font-black uppercase">Security Protocol</p>
             </div>
             <p class="text-[9px] text-gray-500 font-bold uppercase leading-relaxed">
-                T Learn Pro tracks IP addresses and device fingerprints to protect your Xt Pay wallet from unauthorized access. 
+                T Learn Pro tracks IP addresses and device fingerprints to protect your Xt Pay wallet from unauthorized access.
                 If you see a login you don't recognize, terminate it immediately.
             </p>
         </div>
     </div>
 `,
-
        'Notif-Settings': `
     <div class="space-y-8 animate-in">
         <div>
             <h3 class="text-xl font-black text-white italic uppercase tracking-tighter">Notifications Control</h3>
             <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest mt-1">Configure how the system communicates with you</p>
         </div>
-
         <div class="space-y-4">
             <div class="flex items-center justify-between p-6 bg-white/5 border border-white/5 rounded-2xl">
                 <div>
@@ -565,7 +517,6 @@ setInterval(updateHeaderInfo, 60000);
                     <div class="toggle-dot"></div>
                 </button>
             </div>
-
             <div class="flex items-center justify-between p-6 bg-white/5 border border-white/5 rounded-2xl">
                 <div>
                     <span class="text-[10px] font-black text-white uppercase block">Collaboration Alerts</span>
@@ -575,7 +526,6 @@ setInterval(updateHeaderInfo, 60000);
                     <div class="toggle-dot"></div>
                 </button>
             </div>
-
             <div class="flex items-center justify-between p-6 bg-white/5 border border-white/5 rounded-2xl">
                 <div>
                     <span class="text-[10px] font-black text-white uppercase block">Security & Login Alerts</span>
@@ -589,26 +539,22 @@ setInterval(updateHeaderInfo, 60000);
     </div>
 `
     };
-
     container.innerHTML = tabs[tabName] || `<div class="py-20 text-center text-gray-500 font-black uppercase text-[10px] tracking-[0.2em] italic">${tabName} module is under construction</div>`;
-
     // FIXED: Load toggle states when opening Notif-Settings
     if (tabName === 'Notif-Settings') {
         setTimeout(loadToggleStates, 50);
     }
 }
-
-
 //// for the login history
 // Add this to your general script to handle the clock in the history tab
 function startHistoryClock() {
     const clockElement = document.getElementById('liveHistoryClock');
     if (clockElement) {
         const now = new Date();
-        clockElement.innerText = now.toLocaleString('en-US', { 
-            hour: '2-digit', 
-            minute: '2-digit', 
-            second: '2-digit', 
+        clockElement.innerText = now.toLocaleString('en-US', {
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
             hour12: true,
             day: 'numeric',
             month: 'short'
@@ -617,15 +563,12 @@ function startHistoryClock() {
 }
 // Update clock every second
 setInterval(startHistoryClock, 1000);
-
-
-
 /// for the notification toggles
 // Function to handle toggles and save to LocalStorage
 function toggleSwitch(id) {
     const btn = document.getElementById(id);
     const isOff = !btn.classList.contains('on');
-    
+   
     if (isOff) {
         btn.classList.add('on');
         localStorage.setItem(id, 'true');
@@ -634,7 +577,6 @@ function toggleSwitch(id) {
         localStorage.setItem(id, 'false');
     }
 }
-
 // Function to load the saved states whenever the Settings tab is opened
 function loadToggleStates() {
     const toggles = ['emailNotif', 'collabNotif', 'securityNotif'];
@@ -650,18 +592,13 @@ function loadToggleStates() {
         }
     });
 }
-
-
-
 //// for the sync function
 async function saveProfile() {
     const client = await getClient();
     const fullName = document.getElementById('editFullName').value.trim();
-
     const { error } = await client.auth.updateUser({
         data: { full_name: fullName }
     });
-
     if (error) {
         alert('Update failed: ' + error.message);
     } else {
@@ -669,3 +606,21 @@ async function saveProfile() {
         loadProfileData(); // refresh display
     }
 }
+
+// FIXED: Update user name after login (from auth.js)
+async function updateUserDisplay() {
+    const client = await loadSupabase();
+    const { data: { user } } = await client.auth.getUser();
+
+    if (user) {
+        const fullName = user.user_metadata?.full_name || user.email.split('@')[0];
+        document.querySelectorAll('[data-user-name]').forEach(el => {
+            el.textContent = fullName;
+        });
+    }
+}
+
+// Call updateUserDisplay on page load and after login
+document.addEventListener('DOMContentLoaded', () => {
+    updateUserDisplay();
+});
