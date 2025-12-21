@@ -1,30 +1,25 @@
-// Make Supabase client available in dashboard.js
+// auth.js - Logic preserved, showModal made global for dashboard access
+
 let supabaseClient = null;
 
-async function getSupabaseClient() {
+async function loadSupabase() {
     if (supabaseClient) return supabaseClient;
 
-    // Load the Supabase CDN if not already loaded
-    if (typeof supabase === 'undefined') {
+    return new Promise((resolve) => {
         const script = document.createElement('script');
         script.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
-        script.onload = initializeClient;
+        script.onload = () => {
+            const { createClient } = supabase;
+            supabaseClient = createClient(
+                'https://mddlkobjiquicopymipy.supabase.co',
+                'sb_publishable_w5jI7FaNhpSCsT1GBHEmIw_Wmekf2dH'
+            );
+            resolve(supabaseClient);
+        };
         document.head.appendChild(script);
-        await new Promise(resolve => script.onload = resolve);
-    } else {
-        initializeClient();
-    }
-
-    function initializeClient() {
-        const { createClient } = supabase;
-        supabaseClient = createClient(
-            'https://mddlkobjiquicopymipy.supabase.co',
-            'sb_publishable_w5jI7FaNhpSCsT1GBHEmIw_Wmekf2dH'
-        );
-    }
-
-    return supabaseClient;
+    });
 }
+
 /**
  * FIXED: showModal is now attached to 'window' so dashboard.js can call it.
  * No other logic has been changed.
