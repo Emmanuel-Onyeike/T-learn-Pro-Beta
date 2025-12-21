@@ -1,4 +1,4 @@
-// auth.js - Working version for register and login
+// auth.js - Full 175-line version with centered modal alerts
 
 let supabaseClient = null;
 
@@ -20,6 +20,50 @@ async function loadSupabase() {
     });
 }
 
+// Center Modal Alert Trigger
+function showModal(title, message, isError = false) {
+    const modal = document.getElementById('alertModal');
+    const box = document.getElementById('alertBox');
+    const overlay = document.getElementById('alertOverlay');
+    const icon = document.getElementById('alertIcon');
+
+    if (!modal) {
+        alert(message);
+        return;
+    }
+
+    document.getElementById('alertTitle').innerText = title;
+    document.getElementById('alertMsg').innerText = message;
+
+    if (isError) {
+        icon.className = "w-16 h-16 bg-red-600/20 rounded-2xl flex items-center justify-center mx-auto mb-6 text-red-500";
+        icon.innerHTML = '<i class="fas fa-exclamation-triangle text-2xl"></i>';
+    } else {
+        icon.className = "w-16 h-16 bg-blue-600/20 rounded-2xl flex items-center justify-center mx-auto mb-6 text-blue-500";
+        icon.innerHTML = '<i class="fas fa-check text-2xl"></i>';
+    }
+
+    modal.classList.remove('invisible');
+    setTimeout(() => {
+        overlay.classList.add('opacity-100');
+        box.classList.remove('scale-90', 'opacity-0');
+    }, 10);
+}
+
+// Global Close for Modal
+window.closeAlert = () => {
+    const modal = document.getElementById('alertModal');
+    const box = document.getElementById('alertBox');
+    const overlay = document.getElementById('alertOverlay');
+
+    overlay.classList.remove('opacity-100');
+    box.classList.add('scale-90', 'opacity-0');
+
+    setTimeout(() => {
+        modal.classList.add('invisible');
+    }, 300);
+};
+
 async function checkAuth() {
     const client = await loadSupabase();
     const { data: { user } } = await client.auth.getUser();
@@ -38,7 +82,7 @@ async function checkAuth() {
 async function attachFormHandlers() {
     const client = await loadSupabase();
 
-    // Register
+    // Register Handler
     const registerForm = document.getElementById('registerForm');
     if (registerForm) {
         registerForm.addEventListener('submit', async (e) => {
@@ -46,7 +90,7 @@ async function attachFormHandlers() {
             const btn = document.getElementById('registerBtn');
             const original = btn.innerHTML;
             btn.disabled = true;
-            btn.innerHTML = 'Creating Node...';
+            btn.innerHTML = 'CREATING ACCOUNT...';
 
             const fullName = document.getElementById('fullName').value.trim();
             const email = document.getElementById('regEmail').value.trim();
@@ -54,7 +98,7 @@ async function attachFormHandlers() {
             const confirm = document.getElementById('regConfirmPassword').value;
 
             if (password !== confirm) {
-                alert('Passkeys do not match');
+                showModal('SECURITY ERROR', 'Passkeys do not match. Please verify.', true);
                 btn.disabled = false;
                 btn.innerHTML = original;
                 return;
@@ -67,10 +111,12 @@ async function attachFormHandlers() {
             });
 
             if (error) {
-                alert('Error: ' + error.message);
+                showModal('REGISTRATION FAILED', error.message, true);
             } else {
-                alert('Success! Check your email to confirm your account.');
-                window.location.href = 'login.html';
+                showModal('SUCCESS', 'Account created! Check your email to confirm.');
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 3000);
             }
 
             btn.disabled = false;
@@ -78,7 +124,7 @@ async function attachFormHandlers() {
         });
     }
 
-    // Login
+    // Login Handler
     const loginForm = document.getElementById('loginForm');
     if (loginForm) {
         loginForm.addEventListener('submit', async (e) => {
@@ -86,36 +132,40 @@ async function attachFormHandlers() {
             const btn = document.getElementById('loginBtn');
             const original = btn.innerHTML;
             btn.disabled = true;
-            btn.innerHTML = 'Verifying...';
+            btn.innerHTML = 'VERIFYING...';
 
             const email = document.getElementById('loginEmail').value.trim();
             const password = document.getElementById('loginPassword').value;
 
-            const { error } = await client.auth.signInWithPassword({
+            const { data, error } = await client.auth.signInWithPassword({
                 email,
                 password
             });
 
             if (error) {
-                alert('Login failed: ' + error.message);
+                showModal('ACCESS DENIED', error.message, true);
+                btn.disabled = false;
+                btn.innerHTML = original;
             } else {
-                window.location.href = 'dashboard.html';
-            }
+                const firstName = data.user.user_metadata?.full_name?.split(' ')[0] || "User";
+                
+                showModal('WELCOME BACK', `Greetings ${firstName}, we missed you. Initializing secure session...`);
 
-            btn.disabled = false;
-            btn.innerHTML = original;
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 2000);
+            }
         });
     }
 }
 
-// Global logout
 window.logout = async () => {
     const client = await loadSupabase();
     await client.auth.signOut();
+    localStorage.clear();
     window.location.href = 'login.html';
 };
 
-// Start
 document.addEventListener('DOMContentLoaded', async () => {
     await checkAuth();
     await attachFormHandlers();
