@@ -79,8 +79,6 @@ const views = {
         </div>
     </div>`,
 
-
-
     'Leaderboard': `
         <div class="content-card">
             <h3 class="text-2xl font-black text-white italic uppercase">Global Ranking</h3>
@@ -330,7 +328,9 @@ setInterval(updateHeaderInfo, 60000);
 //// for the settings tabs
 
 
-  function updateSettingsTab(tabName) {
+  function updateSettingsTab(tabId) { // <-- FIXED: was tabName, now tabId
+    let tabName = tabId; // <-- FIXED: declared with let
+
     const container = document.getElementById('settingsContent');
     
     // Update active tab button style
@@ -512,8 +512,6 @@ setInterval(updateHeaderInfo, 60000);
     </div>
 `,
 
-
-
     'History': `
     <div class="space-y-8 animate-in">
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -593,6 +591,11 @@ setInterval(updateHeaderInfo, 60000);
     };
 
     container.innerHTML = tabs[tabName] || `<div class="py-20 text-center text-gray-500 font-black uppercase text-[10px] tracking-[0.2em] italic">${tabName} module is under construction</div>`;
+
+    // FIXED: Load toggle states when opening Notif-Settings
+    if (tabName === 'Notif-Settings') {
+        setTimeout(loadToggleStates, 50);
+    }
 }
 
 
@@ -646,13 +649,6 @@ function loadToggleStates() {
             }
         }
     });
-}
-
-// Modify your updateSettingsTab to call loadToggleStates()
-// Inside updateSettingsTab(tabName) { ... }
-// Add this at the very end of the function:
-if (tabName === 'Notif-Settings') {
-    setTimeout(loadToggleStates, 50); // Small delay to ensure HTML is rendered
 }
 
 
