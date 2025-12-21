@@ -73,7 +73,7 @@ async function checkAuth() {
 
     if (!user) {
         if (!window.location.pathname.includes('login.html') && !window.location.pathname.includes('register.html')) {
-            window.location.href = 'login.html';
+            window.location.href = 'Login.html';
         }
     } else {
         if (window.location.pathname.includes('login.html') || window.location.pathname.includes('register.html')) {
