@@ -1,4 +1,4 @@
-// auth.js - FINAL WORKING VERSION (name shows after login)
+// auth.js - FINAL FIX (name shows after login, no more Loading...)
 
 let supabaseClient = null;
 
@@ -20,8 +20,8 @@ async function loadSupabase() {
     });
 }
 
-// Update name and email in dashboard
-async function updateUserInfo() {
+// Update name and email immediately
+async function updateUserDisplay() {
     const client = await loadSupabase();
     const { data: { user } } = await client.auth.getUser();
 
@@ -29,12 +29,9 @@ async function updateUserInfo() {
         const fullName = user.user_metadata?.full_name || user.email.split('@')[0];
         const email = user.email || '';
 
-        // Update name
         document.querySelectorAll('[data-user-name]').forEach(el => {
             el.textContent = fullName;
         });
-
-        // Update email (if you have places with data-user-email)
         document.querySelectorAll('[data-user-email]').forEach(el => {
             el.textContent = email;
         });
@@ -51,7 +48,7 @@ async function checkAuth() {
             window.location.href = 'login.html';
         }
     } else {
-        await updateUserInfo(); // This updates the name
+        await updateUserDisplay(); // Force name update
 
         if (window.location.pathname.includes('login.html') || window.location.pathname.includes('register.html')) {
             window.location.href = 'dashboard.html';
@@ -59,11 +56,10 @@ async function checkAuth() {
     }
 }
 
-// Form handlers (register & login)
+// Form handlers
 async function attachFormHandlers() {
     const client = await loadSupabase();
 
-    // Register
     const registerForm = document.getElementById('registerForm');
     if (registerForm) {
         registerForm.addEventListener('submit', async (e) => {
@@ -103,7 +99,6 @@ async function attachFormHandlers() {
         });
     }
 
-    // Login
     const loginForm = document.getElementById('loginForm');
     if (loginForm) {
         loginForm.addEventListener('submit', async (e) => {
@@ -133,29 +128,25 @@ async function attachFormHandlers() {
     }
 }
 
+// Global logout
+window.logout = async () => {
+    const client = await loadSupabase();
+    await client.auth.signOut();
+    window.location.href = 'login.html';
+};
+
+// Listen for auth changes — this is the key to updating name after login
+loadSupabase().then(client => {
+    client.auth.onAuthStateChange(async (event, session) => {
+        if (event === 'SIGNED_IN') {
+            await updateUserDisplay();
+        }
+    });
+});
+
 // Run on load
 document.addEventListener('DOMContentLoaded', async () => {
     await checkAuth();
     await attachFormHandlers();
-});
-
-// Listen for auth changes (important — updates name after login)
-supabaseClient?.auth.onAuthStateChange(async (event, session) => {
-    if (event === 'SIGNED_IN' || event === 'USER_UPDATED') {
-        await updateUserInfo();
-    }
-});
-
-
-// Listen for auth changes (this fires after login)
-const { data: listener } = supabase.auth.onAuthStateChange(async (event, session) => {
-    if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'USER_UPDATED') {
-        const { data: { user } } = await supabase.auth.getUser();
-        if (user) {
-            const fullName = user.user_metadata?.full_name || user.email.split('@')[0];
-            document.querySelectorAll('[data-user-name]').forEach(el => {
-                el.textContent = fullName;
-            });
-        }
-    }
+    await updateUserDisplay(); // Extra call to be sure
 });
