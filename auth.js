@@ -1,25 +1,28 @@
-// auth.js - Clean, no duplicate declaration error
+// auth.js - Final working version (no errors)
 
-// Dynamically load Supabase only once
-let supabase;
+let supabaseClient = null;
 
 async function loadSupabase() {
-    if (supabase) return supabase;
+    if (supabaseClient) return supabaseClient;
 
-    const script = document.createElement('script');
-    script.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
-    document.head.appendChild(script);
+    // Create and load the Supabase script
+    return new Promise((resolve) => {
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+        script.onload = () => {
+            const supabaseUrl = 'https://mddlkobjiquicopymipy.supabase.co';
+            const supabaseKey = 'sb_publishable_w5jI7FaNhpSCsT1GBHEmIw_Wmekf2dH';
 
-    await new Promise(resolve => script.onload = resolve);
-
-    const supabaseUrl = 'https://mddlkobjiquicopymipy.supabase.co';
-    const supabaseKey = 'sb_publishable_w5jI7FaNhpSCsT1GBHEmIw_Wmekf2dH';
-
-    supabase = Supabase.createClient(supabaseUrl, supabaseKey);
-    return supabase;
+            supabaseClient = Supabase.createClient(supabaseUrl, supabaseKey);
+            resolve(supabaseClient);
+        };
+        script.onerror = () => {
+            alert('Failed to load Supabase. Check internet connection.');
+        };
+        document.head.appendChild(script);
+    });
 }
 
-// Check auth and update name
 async function checkAuth() {
     const client = await loadSupabase();
     const { data: { user } } = await client.auth.getUser();
@@ -40,7 +43,6 @@ async function checkAuth() {
     }
 }
 
-// Attach form handlers
 async function attachFormHandlers() {
     const client = await loadSupabase();
 
@@ -75,7 +77,7 @@ async function attachFormHandlers() {
             if (error) {
                 alert('Error: ' + error.message);
             } else {
-                alert('Success! Check your email to confirm.');
+                alert('Success! Check your email to confirm your account.');
                 window.location.href = 'login.html';
             }
 
@@ -121,8 +123,8 @@ window.logout = async () => {
     window.location.href = 'login.html';
 };
 
-// Run on load
+// Run everything
 document.addEventListener('DOMContentLoaded', async () => {
     await checkAuth();
-    attachFormHandlers();
+    await attachFormHandlers();
 });
