@@ -349,20 +349,16 @@ function handleSubscription(btn) {
     params.append('email', emailInput.value.trim().toLowerCase());
     params.append('source', 'Newsletter');
 
-    fetch('https://script.google.com/macros/s/AKfycbxNtAK6ToRg_J7USn9fNsoTGKGYpX2TkLEcGoddErh9IVRuv2ULYNn9xYgID46tBpSP/exec', {
-        method: 'POST',
-        mode: 'no-cors',
-        body: params,
-        redirect: 'follow'
+    fetch('https://script.google.com/macros/s/AKfycbxNtAK6ToRg_J7USn9fNsoTGKGYpX2TkLEcGoddErh9IVRuv2ULYNn9xYgID46tBpSP/exec?' + params.toString(), {
+        method: 'GET',  // GET avoids CORS preflight completely
+        mode: 'no-cors'
     })
     .then(() => {
-        // Success (data saved + email sent)
         document.getElementById('successModal').classList.remove('hidden');
         emailInput.value = '';
     })
-    .catch((error) => {
-        console.error('Fetch error:', error);
-        alert("Transmission failed. Check console for details.");
+    .catch(() => {
+        alert("Check connection and try again.");
     })
     .finally(() => {
         btn.disabled = false;
