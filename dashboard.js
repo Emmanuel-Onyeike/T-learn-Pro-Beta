@@ -1,26 +1,196 @@
+const ActivityEngine = {
+    track() {
+        const today = new Date().toISOString().split('T')[0];
+        setInterval(() => {
+            let log = JSON.parse(localStorage.getItem('user_node_activity') || '{}');
+            log[today] = (log[today] || 0) + 1; // Tracks seconds
+            localStorage.setItem('user_node_activity', JSON.stringify(log));
+        }, 1000);
+    },
+    
+    // Decides box thickness based on time spent
+    getBoxClass(date) {
+        const log = JSON.parse(localStorage.getItem('user_node_activity') || '{}');
+        const seconds = log[date] || 0;
+        if (seconds === 0) return 'bg-white/[0.03]'; // No activity
+        if (seconds < 60) return 'bg-green-900';    // < 1 min
+        if (seconds < 600) return 'bg-green-700';   // < 10 mins
+        if (seconds < 1800) return 'bg-green-500';  // < 30 mins
+        return 'bg-green-400';                      // Long stay
+    }
+};
+ActivityEngine.track(); 
 const views = {
-    'Overview': `
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div class="content-card">
-                <p class="text-[9px] font-black text-blue-500 uppercase tracking-widest mb-4">Course Progress</p>
-                <h3 class="text-2xl font-black text-white italic mb-6">FULLSTACK DEV</h3>
-                <div class="w-full h-2 bg-white/5 rounded-full overflow-hidden">
-                    <div class="w-[40%] h-full bg-blue-600"></div>
+'Overview': `
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 md:gap-6 animate-in">
+        <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-blue-500/30 transition-all">
+            <div class="flex items-center gap-4 relative z-10">
+                <div class="w-12 h-12 bg-blue-600/10 rounded-2xl flex items-center justify-center border border-blue-500/20">
+                    <i class="fas fa-code-branch text-blue-500"></i>
                 </div>
-                <p class="mt-4 text-[10px] font-bold text-gray-500">40% COMPLETED</p>
+                <div>
+                    <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Projects</p>
+                    <h3 class="text-3xl font-black text-white mt-1">0</h3>
+                </div>
             </div>
-            <div class="content-card text-center">
-                 <p class="text-[9px] font-black text-green-500 uppercase tracking-widest mb-4">Total Balance</p>
-                 <h3 class="text-3xl font-black text-white italic mb-2">₦0.00</h3>
-                 <button class="mt-4 text-[8px] border border-white/10 px-4 py-2 rounded-lg uppercase font-black hover:bg-white hover:text-black transition-all">Go to Xt Pay</button>
+            <i class="fas fa-project-diagram absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-blue-500/[0.05] transition-all"></i>
+        </div>
+
+        <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-purple-500/30 transition-all">
+            <div class="flex items-center gap-4 relative z-10">
+                <div class="w-12 h-12 bg-purple-600/10 rounded-2xl flex items-center justify-center border border-purple-500/20">
+                    <i class="fas fa-hands-helping text-purple-500"></i>
+                </div>
+                <div>
+                    <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Collabs</p>
+                    <h3 class="text-3xl font-black text-white mt-1">0</h3>
+                </div>
             </div>
-            <div class="content-card">
-                <p class="text-[9px] font-black text-orange-500 uppercase tracking-widest mb-4">Upcoming</p>
-                <h3 class="text-xl font-black text-white italic mb-2">Team Sync</h3>
-                <p class="text-[10px] font-bold text-gray-500 uppercase">Tomorrow @ 10:00 AM</p>
+            <i class="fas fa-users-cog absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-purple-500/[0.05] transition-all"></i>
+        </div>
+
+        <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-green-500/30 transition-all">
+            <div class="flex items-center gap-4 relative z-10">
+                <div class="w-12 h-12 bg-green-600/10 rounded-2xl flex items-center justify-center border border-green-500/20">
+                    <i class="fas fa-layer-group text-green-500"></i>
+                </div>
+                <div>
+                    <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Team Level</p>
+                    <h3 class="text-3xl font-black text-white mt-1">0</h3>
+                </div>
+            </div>
+            <i class="fas fa-chart-line absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-green-500/[0.05] transition-all"></i>
+        </div>
+
+        <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-orange-500/30 transition-all">
+            <div class="flex items-center gap-4 relative z-10">
+                <div class="w-12 h-12 bg-orange-600/10 rounded-2xl flex items-center justify-center border border-orange-500/20">
+                    <i class="fas fa-medal text-orange-500"></i>
+                </div>
+                <div>
+                    <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Rank</p>
+                    <h3 class="text-3xl font-black text-white mt-1">0</h3>
+                </div>
+            </div>
+            <i class="fas fa-crown absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-orange-500/[0.05] transition-all"></i>
+        </div>
+
+        <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-blue-400/30 transition-all">
+            <div class="flex items-center gap-4 relative z-10">
+                <div class="w-12 h-12 bg-blue-400/10 rounded-2xl flex items-center justify-center border border-blue-400/20">
+                    <i class="fas fa-graduation-cap text-blue-400"></i>
+                </div>
+                <div>
+                    <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Semester</p>
+                    <h3 class="text-3xl font-black text-white mt-1">0</h3>
+                </div>
+            </div>
+            <i class="fas fa-graduation-cap absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-blue-400/[0.05] transition-all"></i>
+        </div>
+
+        <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-red-500/30 transition-all">
+            <div class="flex items-center gap-4 relative z-10">
+                <div class="w-12 h-12 bg-red-600/10 rounded-2xl flex items-center justify-center border border-red-500/20">
+                    <i class="fas fa-fire text-red-500"></i>
+                </div>
+                <div>
+                    <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">CP Score</p>
+                    <h3 class="text-3xl font-black text-white mt-1">0</h3>
+                </div>
+            </div>
+            <i class="fas fa-terminal absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-red-500/[0.05] transition-all"></i>
+        </div>
+    </div>
+
+    <div class="mt-8 bg-[#050b1d] border border-white/5 p-8 rounded-[2.5rem] relative overflow-hidden">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+            <div>
+                <h3 class="text-lg font-black text-white italic uppercase tracking-tighter"> Activity</h3>
+                <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest mt-1">Tracking session </p>
+            </div>
+            <div class="flex gap-2">
+                <button class="px-4 py-2 bg-blue-600 rounded-lg text-[9px] font-black uppercase tracking-widest text-white shadow-lg shadow-blue-600/20">2025</button>
             </div>
         </div>
-    `,
+
+        <div class="overflow-x-auto pb-4 no-scrollbar">
+            <div class="inline-grid grid-rows-7 grid-flow-col gap-1.5 min-w-[850px]">
+                ${(() => {
+                    const currentYear = 2025;
+                    const start = new Date(currentYear, 0, 1);
+                    let boxes = '';
+                    for (let i = 0; i < 365; i++) {
+                        const d = new Date(start);
+                        d.setDate(d.getDate() + i);
+                        const dateStr = d.toISOString().split('T')[0];
+                        // Removed the backslashes here
+                        const thickness = ActivityEngine.getBoxClass(dateStr);
+                        boxes += `<div class="w-3 h-3 rounded-sm ${thickness} transition-all duration-500 cursor-pointer" title="${dateStr}"></div>`;
+                    }
+                    return boxes;
+                })()}
+            </div>
+        </div>
+
+        <div class="flex justify-between items-center mt-4">
+            <p class="text-[8px] text-gray-600 font-bold uppercase tracking-widest italic">Density increases with page engagement time</p>
+            <div class="flex items-center gap-2">
+                <span class="text-[8px] text-gray-600 font-bold uppercase tracking-widest">Low</span>
+                <div class="flex gap-1">
+                    <div class="w-2.5 h-2.5 rounded-sm bg-white/[0.03]"></div>
+                    <div class="w-2.5 h-2.5 rounded-sm bg-green-900"></div>
+                    <div class="w-2.5 h-2.5 rounded-sm bg-green-700"></div>
+                    <div class="w-2.5 h-2.5 rounded-sm bg-green-500"></div>
+                    <div class="w-2.5 h-2.5 rounded-sm bg-green-400"></div>
+                </div>
+                <span class="text-[8px] text-gray-600 font-bold uppercase tracking-widest">Elite</span>
+            </div>
+        </div>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mt-8">
+        <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-emerald-500/30 transition-all">
+            <div class="flex items-center gap-4 relative z-10">
+                <div class="w-12 h-12 bg-emerald-600/10 rounded-2xl flex items-center justify-center border border-emerald-500/20">
+                    <i class="fas fa-briefcase text-emerald-500"></i>
+                </div>
+                <div>
+                    <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Active Jobs</p>
+                    <h3 class="text-3xl font-black text-white mt-1">0</h3>
+                </div>
+            </div>
+            <i class="fas fa-search-dollar absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-emerald-500/[0.05] transition-all"></i>
+        </div>
+
+       <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-yellow-500/30 transition-all">
+            <div class="flex items-center gap-4 relative z-10">
+                <div class="w-12 h-12 bg-yellow-600/10 rounded-2xl flex items-center justify-center border border-yellow-500/20">
+                    <i class="fas fa-star text-yellow-500"></i>
+                </div>
+                <div>
+                    <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">XT Points</p>
+                    <h3 class="text-3xl font-black text-white mt-1">0 <span class="text-xs text-yellow-500/50 uppercase">XP</span></h3>
+                </div>
+            </div>
+            <i class="fas fa-trophy absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-yellow-500/[0.05] transition-all"></i>
+        </div>
+
+        <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-indigo-500/30 transition-all">
+            <div class="flex items-center gap-4 relative z-10">
+                <div class="w-12 h-12 bg-indigo-600/10 rounded-2xl flex items-center justify-center border border-indigo-500/20">
+                    <i class="fas fa-cloud-upload-alt text-indigo-500"></i>
+                </div>
+                <div>
+                    <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Cloud Deploys</p>
+                    <h3 class="text-3xl font-black text-white mt-1">0</h3>
+                </div>
+            </div>
+            <i class="fas fa-server absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-indigo-500/[0.05] transition-all"></i>
+        </div>
+    </div>
+`,
+
+
+
     'Lessons': `
         <div class="content-card">
             <h3 class="text-2xl font-black text-white italic uppercase mb-6">Course Curriculum</h3>
@@ -824,3 +994,7 @@ document.addEventListener('DOMContentLoaded', syncProfileUI);
 // Event Listeners
 
 
+
+
+
+//// for the overvie activity page
