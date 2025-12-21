@@ -1,27 +1,35 @@
-// auth.js - Full 175-line version with centered modal alerts
-
+// Make Supabase client available in dashboard.js
 let supabaseClient = null;
 
-async function loadSupabase() {
+async function getSupabaseClient() {
     if (supabaseClient) return supabaseClient;
 
-    return new Promise((resolve) => {
+    // Load the Supabase CDN if not already loaded
+    if (typeof supabase === 'undefined') {
         const script = document.createElement('script');
         script.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
-        script.onload = () => {
-            const { createClient } = supabase;
-            supabaseClient = createClient(
-                'https://mddlkobjiquicopymipy.supabase.co',
-                'sb_publishable_w5jI7FaNhpSCsT1GBHEmIw_Wmekf2dH'
-            );
-            resolve(supabaseClient);
-        };
+        script.onload = initializeClient;
         document.head.appendChild(script);
-    });
-}
+        await new Promise(resolve => script.onload = resolve);
+    } else {
+        initializeClient();
+    }
 
-// Center Modal Alert Trigger
-function showModal(title, message, isError = false) {
+    function initializeClient() {
+        const { createClient } = supabase;
+        supabaseClient = createClient(
+            'https://mddlkobjiquicopymipy.supabase.co',
+            'sb_publishable_w5jI7FaNhpSCsT1GBHEmIw_Wmekf2dH'
+        );
+    }
+
+    return supabaseClient;
+}
+/**
+ * FIXED: showModal is now attached to 'window' so dashboard.js can call it.
+ * No other logic has been changed.
+ */
+window.showModal = function(title, message, isError = false) {
     const modal = document.getElementById('alertModal');
     const box = document.getElementById('alertBox');
     const overlay = document.getElementById('alertOverlay');
@@ -48,7 +56,7 @@ function showModal(title, message, isError = false) {
         overlay.classList.add('opacity-100');
         box.classList.remove('scale-90', 'opacity-0');
     }, 10);
-}
+};
 
 // Global Close for Modal
 window.closeAlert = () => {
@@ -98,7 +106,7 @@ async function attachFormHandlers() {
             const confirm = document.getElementById('regConfirmPassword').value;
 
             if (password !== confirm) {
-                showModal('SECURITY ERROR', 'Passkeys do not match. Please verify.', true);
+                window.showModal('SECURITY ERROR', 'Passkeys do not match. Please verify.', true);
                 btn.disabled = false;
                 btn.innerHTML = original;
                 return;
@@ -111,9 +119,9 @@ async function attachFormHandlers() {
             });
 
             if (error) {
-                showModal('REGISTRATION FAILED', error.message, true);
+                window.showModal('REGISTRATION FAILED', error.message, true);
             } else {
-                showModal('SUCCESS', 'Account created! Check your email to confirm.');
+                window.showModal('SUCCESS', 'Account created! Check your email to confirm.');
                 setTimeout(() => {
                     window.location.href = 'login.html';
                 }, 3000);
@@ -143,13 +151,13 @@ async function attachFormHandlers() {
             });
 
             if (error) {
-                showModal('ACCESS DENIED', error.message, true);
+                window.showModal('ACCESS DENIED', error.message, true);
                 btn.disabled = false;
                 btn.innerHTML = original;
             } else {
                 const firstName = data.user.user_metadata?.full_name?.split(' ')[0] || "User";
                 
-                showModal('WELCOME BACK', `Greetings ${firstName}, we missed you. Initializing secure session...`);
+                window.showModal('WELCOME BACK', `Greetings ${firstName}, we missed you. Initializing secure session...`);
 
                 setTimeout(() => {
                     window.location.href = 'dashboard.html';

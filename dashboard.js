@@ -316,20 +316,21 @@ setInterval(updateHeaderInfo, 60000);
         btn.classList.toggle('active', btnText.includes(target) || target.includes(btnText));
     });
     const tabs = {
-       'Profile': `
+'Profile': `
     <div class="space-y-8 animate-in">
         <div class="flex items-center gap-6 mb-8">
             <div class="relative">
                 <div class="w-24 h-24 rounded-3xl bg-blue-600/20 border-2 border-blue-500/20 flex items-center justify-center overflow-hidden">
-                    <i class="fas fa-user text-5xl text-blue-500/50"></i>
+                    <img src="Logo.jpeg" data-user-img class="w-full h-full object-cover hidden">
+                    <i id="defaultUserIcon" class="fas fa-user text-5xl text-blue-500/50"></i>
                 </div>
-                <div class="absolute -bottom-2 -right-2 bg-blue-600 w-8 h-8 rounded-xl flex items-center justify-center border-4 border-[#020617] cursor-pointer">
+                <div onclick="triggerImageUpload()" class="absolute -bottom-2 -right-2 bg-blue-600 w-8 h-8 rounded-xl flex items-center justify-center border-4 border-[#020617] cursor-pointer hover:bg-blue-500 transition-all">
                     <i class="fas fa-camera text-[10px]"></i>
                 </div>
             </div>
             <div>
                 <h3 data-user-name class="text-2xl font-black text-white italic uppercase leading-none">Loading...</h3>
-                <p class="text-[10px] font-black text-blue-500 uppercase tracking-widest mt-2">Node Level: Beginner</p>
+                <p class="text-[10px] font-black text-blue-500 uppercase tracking-widest mt-2">Level: Beginner</p>
             </div>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -634,121 +635,192 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-//// for the profile data load
-// 1. Create hidden file input for the gallery (Run this once)
-const imgInput = document.createElement('input');
-imgInput.type = 'file';
-imgInput.accept = 'image/*';
-imgInput.id = 'hiddenGalleryInput';
-imgInput.style.display = 'none';
-document.body.appendChild(imgInput);
+//// SUPABASE CLIENT FOR DASHBOARD.JS
+let supabaseClient = null;
 
-// 2. Open Gallery when camera icon is clicked
+async function getSupabaseClient() {
+    if (supabaseClient) return supabaseClient;
+
+    return new Promise((resolve) => {
+        if (typeof supabase !== 'undefined') {
+            const { createClient } = supabase;
+            supabaseClient = createClient(
+                'https://mddlkobjiquicopymipy.supabase.co',
+                'sb_publishable_w5jI7FaNhpSCsT1GBHEmIw_Wmekf2dH'
+            );
+            resolve(supabaseClient);
+            return;
+        }
+
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+        script.onload = () => {
+            const { createClient } = supabase;
+            supabaseClient = createClient(
+                'https://mddlkobjiquicopymipy.supabase.co',
+                'sb_publishable_w5jI7FaNhpSCsT1GBHEmIw_Wmekf2dH'
+            );
+            resolve(supabaseClient);
+        };
+        script.onerror = () => {
+            alert("Failed to load Supabase. Check your connection.");
+        };
+        document.head.appendChild(script);
+    });
+}
+
+/**
+ * 1. GALLERY SYSTEM (CAMERA ICON)
+ */
 function triggerImageUpload() {
+    let imgInput = document.getElementById('hiddenGalleryInput');
+    if (!imgInput) {
+        imgInput = document.createElement('input');
+        imgInput.type = 'file';
+        imgInput.accept = 'image/*';
+        imgInput.id = 'hiddenGalleryInput';
+        imgInput.style.display = 'none';
+        document.body.appendChild(imgInput);
+
+        imgInput.onchange = async (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const base64Image = event.target.result;
+                    // Immediate preview
+                    document.querySelectorAll('[data-user-img]').forEach(img => {
+                        img.src = base64Image;
+                        img.classList.remove('hidden');
+                        img.parentElement.querySelector('#defaultUserIcon')?.classList.add('hidden');
+                    });
+                    localStorage.setItem('temp_img_buffer', base64Image);
+                };
+                reader.readAsDataURL(file);
+            }
+        };
+    }
     imgInput.click();
 }
 
-// 3. Handle image selection
-imgInput.onchange = e => {
-    const file = e.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(event) {
-            const base64Image = event.target.result;
-            // Update all profile images on the page immediately for preview
-            document.querySelectorAll('[data-user-img]').forEach(img => img.src = base64Image);
-            // Store it temporarily in buffer
-            localStorage.setItem('temp_img_buffer', base64Image);
-        };
-        reader.readAsDataURL(file);
-    }
-};
+/**
+ * 2. UI SYNC (Loads from Supabase → Shows on Dashboard)
+ */
+async function syncProfileUI() {
+    const client = await getSupabaseClient();
+    const { data: { user } } = await client.auth.getUser();
 
-// 4. Save Profile Function
-function saveProfile() {
+    let savedName = "New User";
+    let savedImg = "Logo.jpeg";
+    let savedBio = "";
+
+    if (user) {
+        savedName = user.user_metadata?.full_name || user.email.split('@')[0];
+        savedImg = user.user_metadata?.avatar_url || "Logo.jpeg";
+        savedBio = user.user_metadata?.bio || "";
+    }
+
+    // Update all name places
+    document.querySelectorAll('[data-user-name]').forEach(el => el.textContent = savedName);
+
+    // Update all image places
+    document.querySelectorAll('[data-user-img]').forEach(img => {
+        img.src = savedImg;
+        if (savedImg !== "Logo.jpeg") {
+            img.classList.remove('hidden');
+            img.parentElement.querySelector('#defaultUserIcon')?.classList.add('hidden');
+        }
+    });
+
+    // Fill inputs
     const nameInput = document.getElementById('editFullName');
     const bioInput = document.getElementById('editBio');
-    
-    // Safety check: only run if inputs exist in current view
+    if (nameInput) nameInput.value = (savedName === "New User") ? "" : savedName;
+    if (bioInput) bioInput.value = savedBio;
+
+    // Fallback localStorage (for offline)
+    localStorage.setItem('tlp_user_name', savedName);
+    localStorage.setItem('tlp_user_img', savedImg);
+    localStorage.setItem('tlp_user_bio', savedBio);
+}
+
+/**
+ * 3. SAVE PROFILE (Uploads Image + Syncs to Supabase)
+ */
+async function saveProfile() {
+    // FORCE REFRESH SESSION
+    const client = await getSupabaseClient();
+    const { data: { user }, error: refreshError } = await client.auth.getUser();
+    if (refreshError || !user) {
+        alert("Session expired. Please log in again.");
+        window.location.href = 'login.html';
+        return;
+    }
+
+    const nameInput = document.getElementById('editFullName');
+    const bioInput = document.getElementById('editBio');
+    const saveBtn = event.currentTarget;
+
     if (!nameInput) return;
 
-    const name = nameInput.value.trim();
-    const bio = bioInput ? bioInput.value.trim() : "";
+    const newName = nameInput.value.trim();
+    const newBio = bioInput ? bioInput.value.trim() : "";
     const bufferedImg = localStorage.getItem('temp_img_buffer');
 
-    if (name) {
-        // Persist to LocalStorage
-        localStorage.setItem('tlp_user_name', name);
-        localStorage.setItem('tlp_user_bio', bio);
-        
-        if (bufferedImg) {
-            localStorage.setItem('tlp_user_img', bufferedImg);
-            localStorage.removeItem('temp_img_buffer'); // Clear buffer after save
+    if (!newName) {
+        alert("DATA ERROR: A name is required.");
+        return;
+    }
+
+    const originalText = saveBtn.innerText;
+    saveBtn.innerText = "SYNCING...";
+    saveBtn.disabled = true;
+
+    try {
+        let avatarUrl = localStorage.getItem('tlp_user_img') || "Logo.jpeg";
+
+        if (bufferedImg && bufferedImg.startsWith('data:image')) {
+            const fileExt = bufferedImg.split(';')[0].split('/')[1] || 'png';
+            const fileName = `${user.id}.${fileExt}`;
+            const blob = await (await fetch(bufferedImg)).blob();
+
+            const { error: uploadError } = await client.storage
+                .from('avatars')
+                .upload(fileName, blob, { upsert: true });
+
+            if (uploadError && uploadError.statusCode !== 409) throw uploadError;
+
+            avatarUrl = client.storage.from('avatars').getPublicUrl(fileName).data.publicUrl;
         }
-        
-        // Update all UI elements immediately
-        syncProfileUI();
-        
-        // Show the centered modal alert
-        showAlert("SYSTEM UPDATE", "Profile credentials synchronized successfully.");
-    } else {
-        // Show error in the centered modal
-        showAlert("DATA ERROR", "Full Name is required to synchronize profile.", true);
+
+        const { error } = await client.auth.updateUser({
+            data: {
+                full_name: newName,
+                bio: newBio,
+                avatar_url: avatarUrl
+            }
+        });
+
+        if (error) throw error;
+
+        localStorage.setItem('tlp_user_name', newName);
+        localStorage.setItem('tlp_user_bio', newBio);
+        localStorage.setItem('tlp_user_img', avatarUrl);
+        localStorage.removeItem('temp_img_buffer');
+
+        await syncProfileUI();
+        alert("SUCCESS: Profile synced across all devices!");
+
+    } catch (err) {
+        alert("SYNC ERROR: " + err.message);
+    } finally {
+        saveBtn.innerText = originalText;
+        saveBtn.disabled = false;
     }
 }
 
-// 5. Universal UI Sync Function
-// Call this on page load and after saving
-function syncProfileUI() {
-    const savedName = localStorage.getItem('tlp_user_name') || "New user";
-    const savedImg = localStorage.getItem('tlp_user_img') || "Logo.jpeg";
-    
-    // Update all text elements with data-user-name attribute
-    document.querySelectorAll('[data-user-name]').forEach(el => {
-        el.innerText = savedName;
-    });
-
-    // Update all image elements with data-user-img attribute
-    document.querySelectorAll('[data-user-img]').forEach(img => {
-        img.src = savedImg;
-    });
-}
-
-// Initialize UI on load
+// Run on page load
 document.addEventListener('DOMContentLoaded', syncProfileUI);
+// Event Listeners
 
 
-
-//// for my settings sync
-async function syncProfileUI() {
-    // 1. Get the current session from Supabase
-    const { data: { user } } = await supabase.auth.getUser();
-
-    // 2. Determine source of truth (Cloud Meta > Local Storage > Default)
-    const savedName = user?.user_metadata?.full_name || localStorage.getItem('tlp_user_name') || "Emmanuel Onyeike";
-    const savedImg = user?.user_metadata?.avatar_url || localStorage.getItem('tlp_user_img') || "Logo.jpeg";
-    const savedEmail = user?.email || localStorage.getItem('tlp_user_email') || "user@example.com";
-    const savedBio = user?.user_metadata?.bio || localStorage.getItem('tlp_user_bio') || "";
-
-    // 3. Update all UI Elements (Sidebar, Header, Profile)
-    document.querySelectorAll('[data-user-name]').forEach(el => el.innerText = savedName);
-    document.querySelectorAll('[data-user-email]').forEach(el => el.innerText = savedEmail);
-    
-    document.querySelectorAll('[data-user-img]').forEach(img => {
-        img.src = savedImg;
-        img.alt = savedName; // Also handles accessibility
-    });
-
-    // 4. Update Settings Input Fields (If currently in view)
-    const nameInputs = [document.getElementById('editFullName'), document.getElementById('overviewName')];
-    const emailInputs = [document.getElementById('editEmail'), document.getElementById('overviewEmail')];
-    const bioInput = document.getElementById('editBio');
-
-    nameInputs.forEach(input => { if(input) input.value = savedName; });
-    emailInputs.forEach(input => { if(input) input.value = savedEmail; });
-    if (bioInput) bioInput.value = savedBio;
-
-    // 5. Cache back to local storage for instant offline loading next time
-    localStorage.setItem('tlp_user_name', savedName);
-    localStorage.setItem('tlp_user_img', savedImg);
-}
