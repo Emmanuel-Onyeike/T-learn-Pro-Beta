@@ -349,8 +349,10 @@ function handleSubscription(btn) {
     params.append('email', emailInput.value.trim().toLowerCase());
     params.append('source', 'Newsletter');
 
-    fetch('https://script.google.com/macros/s/AKfycbxNtAK6ToRg_J7USn9fNsoTGKGYpX2TkLEcGoddErh9IVRuv2ULYNn9xYgID46tBpSP/exec?' + params.toString(), {
-        method: 'GET',  // GET avoids CORS preflight completely
+    const url = 'https://script.google.com/macros/s/AKfycbxNtAK6ToRg_J7USn9fNsoTGKGYpX2TkLEcGoddErh9IVRuv2ULYNn9xYgID46tBpSP/exec?' + params.toString();
+
+    fetch(url, {
+        method: 'GET',
         mode: 'no-cors'
     })
     .then(() => {
