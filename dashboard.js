@@ -195,6 +195,7 @@ const views = {
                     </div>
                     <div>
                         <h4 data-user-name class="text-xl font-black text-white italic uppercase">Loading...</h4>
+                        <p data-user-email class="text-[9px] font-black text-gray-500 uppercase tracking-widest mt-1">Loading...</p>
                         <p class="text-[9px] font-black text-gray-500 uppercase tracking-widest">Student ID: TLP-2025-001</p>
                     </div>
                 </div>
@@ -202,17 +203,17 @@ const views = {
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="space-y-2">
                         <label class="text-[9px] font-black text-gray-500 uppercase ml-2">Full Name</label>
-                        <input type="text" value="Name" class="settings-input" readonly>
+                        <input type="text" data-user-name-input class="settings-input" readonly>
                     </div>
                     <div class="space-y-2">
                         <label class="text-[9px] font-black text-gray-500 uppercase ml-2">Email Address</label>
-                        <input type="email" value="emmanuel@example.com" class="settings-input" readonly>
+                        <input type="email" data-user-email-input class="settings-input" readonly>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-`
+`,
 };
 
 // SYSTEM LOGIC - DON'T CHANGE THIS PART
@@ -341,37 +342,43 @@ setInterval(updateHeaderInfo, 60000);
     });
 
     const tabs = {
-        'Profile': `
-            <div class="space-y-8 animate-in">
-                <div class="flex items-center gap-6 mb-8">
-                    <div class="relative">
-                        <img src="Logo.jpeg" class="w-24 h-24 rounded-3xl object-cover border-2 border-blue-500/20 shadow-2xl shadow-blue-500/10">
-                        <div class="absolute -bottom-2 -right-2 bg-blue-600 w-8 h-8 rounded-xl flex items-center justify-center border-4 border-[#020617] cursor-pointer">
-                            <i class="fas fa-camera text-[10px]"></i>
-                        </div>
-                    </div>
-                    <div>
-                        <h3 data-user-name class="text-2xl font-black text-white italic uppercase leading-none">Loading...</h3>
-                        <p class="text-[10px] font-black text-blue-500 uppercase tracking-widest mt-2">Node Level: Beginner</p>
-                    </div>
+       'Profile': `
+    <div class="space-y-8 animate-in">
+        <div class="flex items-center gap-6 mb-8">
+            <div class="relative">
+                <div class="w-24 h-24 rounded-3xl bg-blue-600/20 border-2 border-blue-500/20 flex items-center justify-center overflow-hidden">
+                    <i class="fas fa-user text-5xl text-blue-500/50"></i>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="space-y-2">
-                        <label class="text-[9px] font-black text-gray-500 uppercase ml-2">Full Name</label>
-                        <input type="text" value="Emmanuel Onyeike" class="settings-input">
-                    </div>
-                    <div class="space-y-2">
-                        <label class="text-[9px] font-black text-gray-500 uppercase ml-2">Email</label>
-                        <input type="email" value="emmanuel@example.com" class="settings-input">
-                    </div>
-                    <div class="space-y-2 md:col-span-2">
-                        <label class="text-[9px] font-black text-gray-500 uppercase ml-2">Bio</label>
-                        <textarea class="settings-input min-h-[100px] py-4" placeholder="Tell us about your coding journey..."></textarea>
-                    </div>
+                <div class="absolute -bottom-2 -right-2 bg-blue-600 w-8 h-8 rounded-xl flex items-center justify-center border-4 border-[#020617] cursor-pointer">
+                    <i class="fas fa-camera text-[10px]"></i>
                 </div>
-                <button class="w-full md:w-auto px-12 py-4 bg-blue-600 rounded-2xl text-[10px] font-black uppercase tracking-widest">Save Profile</button>
-            </div>`,
+            </div>
+            <div>
+                <h3 data-user-name class="text-2xl font-black text-white italic uppercase leading-none">Loading...</h3>
+                <p class="text-[10px] font-black text-blue-500 uppercase tracking-widest mt-2">Node Level: Beginner</p>
+            </div>
+        </div>
 
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="space-y-2">
+                <label class="text-[9px] font-black text-gray-500 uppercase ml-2">Full Name</label>
+                <input type="text" id="editFullName" class="settings-input">
+            </div>
+            <div class="space-y-2">
+                <label class="text-[9px] font-black text-gray-500 uppercase ml-2">Email</label>
+                <input type="email" id="editEmail" class="settings-input" readonly>
+            </div>
+            <div class="space-y-2 md:col-span-2">
+                <label class="text-[9px] font-black text-gray-500 uppercase ml-2">Bio</label>
+                <textarea id="editBio" class="settings-input min-h-[100px] py-4" placeholder="Tell us about your coding journey..."></textarea>
+            </div>
+        </div>
+
+        <button onclick="saveProfile()" class="w-full md:w-auto px-12 py-4 bg-blue-600 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-blue-700 transition-all">
+            Save Profile
+        </button>
+    </div>
+`,
         'Security': `
             <div class="space-y-8 animate-in">
                 <h3 class="text-xl font-black text-white italic uppercase tracking-tighter">Security Credentials</h3>
@@ -646,4 +653,23 @@ function loadToggleStates() {
 // Add this at the very end of the function:
 if (tabName === 'Notif-Settings') {
     setTimeout(loadToggleStates, 50); // Small delay to ensure HTML is rendered
+}
+
+
+
+//// for the sync function
+async function saveProfile() {
+    const client = await getClient();
+    const fullName = document.getElementById('editFullName').value.trim();
+
+    const { error } = await client.auth.updateUser({
+        data: { full_name: fullName }
+    });
+
+    if (error) {
+        alert('Update failed: ' + error.message);
+    } else {
+        alert('Profile saved!');
+        loadProfileData(); // refresh display
+    }
 }
