@@ -331,16 +331,13 @@ function handleSubscription(btn) {
     const originalContent = btn.innerHTML;
     const emailInput = document.getElementById('newsletterEmailInput');
 
-    // Reset border
     emailInput.style.borderColor = '';
 
-    // Validation
     if (!emailInput.value.trim() || !emailInput.value.includes('@')) {
         emailInput.style.borderColor = '#ef4444';
         return;
     }
 
-    // Loading state
     btn.disabled = true;
     btn.innerHTML = `
         <span class="flex items-center justify-center gap-2">
@@ -348,29 +345,30 @@ function handleSubscription(btn) {
         </span>
     `;
 
-    // Send to backend
-    const formData = new FormData();
-    formData.append('email', emailInput.value.trim().toLowerCase());
-    formData.append('source', 'Newsletter');
+    // Send as JSON string with text/plain header (reliable for GAS)
+    const payload = {
+        email: emailInput.value.trim().toLowerCase(),
+        source: 'Newsletter'
+    };
 
     fetch('https://script.google.com/macros/s/AKfycbxNtAK6ToRg_J7USn9fNsoTGKGYpX2TkLEcGoddErh9IVRuv2ULYNn9xYgID46tBpSP/exec', {
         method: 'POST',
-        mode: 'no-cors',
-        body: formData
+        headers: {
+            'Content-Type': 'text/plain;charset=utf-8'
+        },
+        body: JSON.stringify(payload),
+        redirect: 'follow'
     })
     .then(() => {
         document.getElementById('successModal').classList.remove('hidden');
         emailInput.value = '';
     })
-    .catch(() => {
+    .catch((err) => {
+        console.error(err);
         alert("Transmission failed. Try again.");
     })
     .finally(() => {
         btn.disabled = false;
         btn.innerHTML = originalContent;
     });
-}
-
-function closeNewsletterModal() {
-    document.getElementById('successModal').classList.add('hidden');
 }
