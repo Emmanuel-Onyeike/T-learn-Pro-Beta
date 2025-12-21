@@ -1,20 +1,25 @@
-// auth.js - FINAL WORKING VERSION (no errors, guaranteed)
+// auth.js - FINAL VERSION (works with CDN global 'supabase')
 
-let supabase = null;
+let supabaseClient = null;
 
-function initSupabase() {
-    if (supabase) return supabase;
+async function getClient() {
+    if (supabaseClient) return supabaseClient;
+
+    // Wait for the global 'supabase' from CDN
+    while (typeof supabase === 'undefined') {
+        await new Promise(resolve => setTimeout(resolve, 100));
+    }
 
     const supabaseUrl = 'https://mddlkobjiquicopymipy.supabase.co';
     const supabaseKey = 'sb_publishable_w5jI7FaNhpSCsT1GBHEmIw_Wmekf2dH';
 
-    supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
-    return supabase;
+    const { createClient } = supabase;
+    supabaseClient = createClient(supabaseUrl, supabaseKey);
+    return supabaseClient;
 }
 
-// Check auth
 async function checkAuth() {
-    const client = initSupabase();
+    const client = await getClient();
     const { data: { user } } = await client.auth.getUser();
 
     if (!user) {
@@ -33,9 +38,8 @@ async function checkAuth() {
     }
 }
 
-// Attach form handlers
 async function attachFormHandlers() {
-    const client = initSupabase();
+    const client = await getClient();
 
     // Register
     const registerForm = document.getElementById('registerForm');
@@ -109,21 +113,18 @@ async function attachFormHandlers() {
 
 // Global logout
 window.logout = async () => {
-    const client = initSupabase();
+    const client = await getClient();
     await client.auth.signOut();
     window.location.href = 'login.html';
 };
 
-// Load Supabase CDN and run everything
+// Load CDN and start
 document.addEventListener('DOMContentLoaded', () => {
     const script = document.createElement('script');
     script.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
-    script.onload = () => {
-        checkAuth();
-        attachFormHandlers();
-    };
-    script.onerror = () => {
-        alert('Failed to load authentication system. Check connection.');
+    script.onload = async () => {
+        await checkAuth();
+        await attachFormHandlers();
     };
     document.head.appendChild(script);
 });
