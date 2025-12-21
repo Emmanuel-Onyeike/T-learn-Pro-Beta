@@ -345,7 +345,6 @@ function handleSubscription(btn) {
         </span>
     `;
 
-    // This method is 100% reliable for GAS on Vercel
     const params = new URLSearchParams();
     params.append('email', emailInput.value.trim().toLowerCase());
     params.append('source', 'Newsletter');
@@ -353,14 +352,17 @@ function handleSubscription(btn) {
     fetch('https://script.google.com/macros/s/AKfycbxNtAK6ToRg_J7USn9fNsoTGKGYpX2TkLEcGoddErh9IVRuv2ULYNn9xYgID46tBpSP/exec', {
         method: 'POST',
         mode: 'no-cors',
-        body: params
+        body: params,
+        redirect: 'follow'
     })
     .then(() => {
+        // Success (data saved + email sent)
         document.getElementById('successModal').classList.remove('hidden');
         emailInput.value = '';
     })
-    .catch(() => {
-        alert("Transmission failed. Try again.");
+    .catch((error) => {
+        console.error('Fetch error:', error);
+        alert("Transmission failed. Check console for details.");
     })
     .finally(() => {
         btn.disabled = false;
