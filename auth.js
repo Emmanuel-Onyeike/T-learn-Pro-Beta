@@ -1,4 +1,4 @@
-// auth.js - FINAL FIX THAT WORKS (name shows after login)
+// auth.js - Working version for register and login
 
 let supabaseClient = null;
 
@@ -20,20 +20,6 @@ async function loadSupabase() {
     });
 }
 
-// Force update name and email
-async function updateUserDisplay() {
-    const client = await loadSupabase();
-    const { data: { user } } = await client.auth.getUser();
-
-    if (user) {
-        const fullName = user.user_metadata?.full_name || user.email.split('@')[0] || 'User';
-        document.querySelectorAll('[data-user-name]').forEach(el => {
-            el.textContent = fullName;
-        });
-    }
-}
-
-// Check auth
 async function checkAuth() {
     const client = await loadSupabase();
     const { data: { user } } = await client.auth.getUser();
@@ -43,18 +29,16 @@ async function checkAuth() {
             window.location.href = 'login.html';
         }
     } else {
-        await updateUserDisplay();
-
         if (window.location.pathname.includes('login.html') || window.location.pathname.includes('register.html')) {
             window.location.href = 'dashboard.html';
         }
     }
 }
 
-// Form handlers
 async function attachFormHandlers() {
     const client = await loadSupabase();
 
+    // Register
     const registerForm = document.getElementById('registerForm');
     if (registerForm) {
         registerForm.addEventListener('submit', async (e) => {
@@ -85,7 +69,7 @@ async function attachFormHandlers() {
             if (error) {
                 alert('Error: ' + error.message);
             } else {
-                alert('Success! Check your email to confirm.');
+                alert('Success! Check your email to confirm your account.');
                 window.location.href = 'login.html';
             }
 
@@ -94,6 +78,7 @@ async function attachFormHandlers() {
         });
     }
 
+    // Login
     const loginForm = document.getElementById('loginForm');
     if (loginForm) {
         loginForm.addEventListener('submit', async (e) => {
@@ -114,8 +99,6 @@ async function attachFormHandlers() {
             if (error) {
                 alert('Login failed: ' + error.message);
             } else {
-                // After successful login, force name update
-                await updateUserDisplay();
                 window.location.href = 'dashboard.html';
             }
 
@@ -132,18 +115,8 @@ window.logout = async () => {
     window.location.href = 'login.html';
 };
 
-// Run on load
+// Start
 document.addEventListener('DOMContentLoaded', async () => {
     await checkAuth();
     await attachFormHandlers();
-    await updateUserDisplay(); // Extra force update
-});
-
-// Listen for auth changes (important for after login)
-loadSupabase().then(client => {
-    client.auth.onAuthStateChange(async (event, session) => {
-        if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
-            await updateUserDisplay();
-        }
-    });
 });
