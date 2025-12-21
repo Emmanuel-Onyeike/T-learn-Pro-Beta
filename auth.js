@@ -145,3 +145,17 @@ supabaseClient?.auth.onAuthStateChange(async (event, session) => {
         await updateUserInfo();
     }
 });
+
+
+// Listen for auth changes (this fires after login)
+const { data: listener } = supabase.auth.onAuthStateChange(async (event, session) => {
+    if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'USER_UPDATED') {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+            const fullName = user.user_metadata?.full_name || user.email.split('@')[0];
+            document.querySelectorAll('[data-user-name]').forEach(el => {
+                el.textContent = fullName;
+            });
+        }
+    }
+});
