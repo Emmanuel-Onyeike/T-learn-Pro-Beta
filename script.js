@@ -329,11 +329,13 @@ function toggleFaq(btn) {
 //// for the newsletter
 function handleSubscription(btn) {
     const originalContent = btn.innerHTML;
-    const emailInput = btn.closest('form').querySelector('input');
+    const form = btn.closest('form');
+    const emailInput = form.querySelector('input');
 
     // Basic Validation
     if(!emailInput.value.includes('@')) {
-        emailInput.style.borderColor = '#ef4444'; // Red for error
+        emailInput.style.borderColor = '#ef4444';
+        emailInput.classList.add('animate-shake'); // Optional: add a shake animation
         return;
     }
 
@@ -345,16 +347,16 @@ function handleSubscription(btn) {
         </span>
     `;
 
-    // 2. Simulate System Delay (1.5 seconds)
+    // 2. Simulate System Delay
     setTimeout(() => {
-        // Show Modal
         const modal = document.getElementById('successModal');
         modal.classList.remove('hidden');
         
-        // Reset Button
+        // Reset state
         btn.disabled = false;
         btn.innerHTML = originalContent;
-        emailInput.value = ''; // Clear input
+        emailInput.value = '';
+        emailInput.style.borderColor = 'rgba(255,255,255,0.1)';
     }, 1500);
 }
 
@@ -362,3 +364,8 @@ function closeModal() {
     const modal = document.getElementById('successModal');
     modal.classList.add('hidden');
 }
+
+// Close on ESC key for Elite UX
+document.addEventListener('keydown', (e) => {
+    if (e.key === "Escape") closeModal();
+});
