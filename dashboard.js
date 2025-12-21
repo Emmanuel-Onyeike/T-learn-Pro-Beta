@@ -153,3 +153,50 @@ document.getElementById('currentDate').innerText = d.toLocaleDateString('en-US',
 });
 
 updateView('Overview');
+
+
+ //// for the meun toggle
+ // Function to open the Mobile Menu
+function openFullMenu() {
+    const modal = document.getElementById('mobileMenu');
+    const overlay = document.getElementById('menuOverlay');
+    const drawer = document.getElementById('menuDrawer');
+    const mobileNav = document.getElementById('mobileNavLinks');
+    const desktopNav = document.querySelector('#sidebar nav').innerHTML;
+
+    // 1. Copy desktop links to mobile drawer if empty
+    mobileNav.innerHTML = desktopNav;
+
+    // 2. Show the modal
+    modal.classList.remove('invisible');
+    setTimeout(() => {
+        overlay.classList.add('opacity-100');
+        drawer.classList.add('translate-x-0');
+    }, 10);
+
+    // 3. Make sure links inside mobile menu also close the menu when clicked
+    const links = mobileNav.querySelectorAll('a');
+    links.forEach(link => {
+        link.addEventListener('click', () => {
+            // Give it a small delay so the user sees the click before closing
+            setTimeout(closeFullMenu, 300);
+        });
+    });
+}
+
+// Function to close the Mobile Menu
+function closeFullMenu() {
+    const modal = document.getElementById('mobileMenu');
+    const overlay = document.getElementById('menuOverlay');
+    const drawer = document.getElementById('menuDrawer');
+
+    overlay.classList.remove('opacity-100');
+    drawer.classList.remove('translate-x-0');
+    
+    setTimeout(() => {
+        modal.classList.add('invisible');
+    }, 300);
+}
+
+// Close menu if clicking the overlay
+document.getElementById('menuOverlay').addEventListener('click', closeFullMenu);

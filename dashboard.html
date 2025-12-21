@@ -76,7 +76,28 @@
                 </div>
             </div>
         </header>
+<div id="mobileMenu" class="fixed inset-0 z-[200] invisible">
+    <div id="menuOverlay" class="absolute inset-0 bg-[#020617]/90 backdrop-blur-md opacity-0 transition-opacity duration-300"></div>
+    
+    <div id="menuDrawer" class="absolute inset-y-0 left-0 w-[80%] max-w-sm bg-[#030816] border-r border-white/5 p-8 transform -translate-x-full transition-transform duration-300 ease-out flex flex-col">
+        <div class="flex items-center justify-between mb-12">
+            <div class="flex items-center gap-3">
+                <img src="Logo.jpeg" class="w-8 h-8 rounded-lg">
+                <h2 class="text-lg font-black tracking-tighter text-white">MENU</h2>
+            </div>
+            <button onclick="closeFullMenu()" class="text-gray-500 hover:text-white">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
 
+        <nav id="mobileNavLinks" class="flex-1 space-y-4 overflow-y-auto no-scrollbar pb-10">
+            </nav>
+
+        <div class="mt-auto pt-6 border-t border-white/5 text-center">
+             <p class="text-[8px] font-black text-gray-700 uppercase tracking-widest">T Learn Pro v1.0</p>
+        </div>
+    </div>
+</div>
         <div id="dynamicContent" class="space-y-8 animate-in">
             </div>
     </main>
@@ -105,6 +126,8 @@
             <span class="text-[8px] font-black uppercase">Menu</span>
         </button>
     </nav>
+
+
     <script src="dashboard.js"></script>
 </body>
 </html>

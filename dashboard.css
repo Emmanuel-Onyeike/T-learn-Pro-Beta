@@ -69,3 +69,22 @@ body {
 }
 
 .no-scrollbar::-webkit-scrollbar { display: none; }
+
+
+/* Mobile Menu Link Styling */
+#mobileNavLinks .nav-item {
+    font-size: 12px; /* Slightly larger for easier tapping on mobile */
+    padding: 1.2rem 1.5rem;
+    margin-bottom: 8px;
+    background: rgba(255,255,255,0.02);
+}
+
+#mobileNavLinks .nav-item.active {
+    background: #3b82f6;
+    color: white;
+}
+
+/* Hide scrollbar for mobile nav */
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
