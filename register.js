@@ -1,33 +1,52 @@
+const registerForm = document.getElementById('registerForm');
+const registerBtn = document.getElementById('registerBtn');
 
-const registerForm = document.getElementById('registerForm'); // add id="registerForm" to form
-if (registerForm) {
+if (registerForm && registerBtn) {
     registerForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        const btn = document.querySelector('#registerBtn');
-        const original = btn.innerHTML;
-        btn.disabled = true;
-        btn.innerHTML = 'Creating Node...';
 
-        const fullName = document.getElementById('fullName').value.trim(); // add id to input
+        // 1. UI Loading State
+        const originalText = registerBtn.innerHTML;
+        registerBtn.disabled = true;
+        registerBtn.innerHTML = `
+            <i class="fas fa-circle-notch fa-spin mr-2"></i> 
+            CREATING ACCOUNT...
+        `;
+
+        // 2. Data Collection
+        const fullName = document.getElementById('fullName').value.trim();
         const email = document.getElementById('regEmail').value.trim();
         const password = document.getElementById('regPassword').value;
 
-        const { data, error } = await supabase.auth.signUp({
-            email,
-            password,
-            options: {
-                data: { full_name: fullName }
+        try {
+            // 3. Supabase Auth Call
+            const { data, error } = await supabase.auth.signUp({
+                email,
+                password,
+                options: {
+                    data: { 
+                        full_name: fullName,
+                        rank: 'Beginner', // Setting default rank for Emmanuel/Users
+                        created_at: new Date().toISOString()
+                    }
+                }
+            });
+
+            // 4. Handle Response
+            if (error) {
+                alert('Registration failed: ' + error.message);
+            } else {
+                // Success: Direct to login or show confirmation
+                alert('Success! Check your email to confirm your account.');
+                window.location.href = 'login.html';
             }
-        });
-
-        if (error) {
-            alert('Error: ' + error.message);
-        } else {
-            alert('Registration successful! Check your email to confirm.');
-            window.location.href = 'login.html';
+        } catch (err) {
+            console.error('System Error:', err);
+            alert('An unexpected system error occurred.');
+        } finally {
+            // 5. Reset UI State
+            registerBtn.disabled = false;
+            registerBtn.innerHTML = originalText;
         }
-
-        btn.disabled = false;
-        btn.innerHTML = original;
     });
 }

@@ -31,11 +31,11 @@
             <form action="dashboard.html" class="space-y-6">
                 <div>
                     <label class="text-[9px] font-black uppercase text-gray-500 tracking-widest mb-2 block"> Access (Email)</label>
-                    <input type="email" required placeholder="name@tech-nxxt.com" class="input-field w-full px-6 py-4 rounded-2xl text-xs font-bold uppercase tracking-widest placeholder:text-gray-700">
+                    <input  id="loginEmail" type="email" required placeholder="name@tech-nxxt.com" class="input-field w-full px-6 py-4 rounded-2xl text-xs font-bold uppercase tracking-widest placeholder:text-gray-700">
                 </div>
                 <div>
                     <label class="text-[9px] font-black uppercase text-gray-500 tracking-widest mb-2 block">Secure Passkey</label>
-                    <input type="password" required placeholder="••••••••" class="input-field w-full px-6 py-4 rounded-2xl text-xs font-bold tracking-widest placeholder:text-gray-700">
+                    <input id="loginPassword" type="password" required placeholder="••••••••" class="input-field w-full px-6 py-4 rounded-2xl text-xs font-bold tracking-widest placeholder:text-gray-700">
                 </div>
                 
                 <div class="flex justify-between items-center text-[9px] font-black uppercase tracking-widest pt-2">
@@ -45,7 +45,7 @@
                
                 </div>
 
-                <button type="submit" class="w-full py-5 bg-blue-600 hover:bg-white hover:text-black text-white font-black italic uppercase text-[10px] tracking-[0.3em] rounded-2xl transition-all shadow-xl">
+                <button type="submit" id="loginBtn" class="w-full py-5 bg-blue-600 hover:bg-white hover:text-black text-white font-black italic uppercase text-[10px] tracking-[0.3em] rounded-2xl transition-all shadow-xl">
                   Login
                 </button>
             </form>
