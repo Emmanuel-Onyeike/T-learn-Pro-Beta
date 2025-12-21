@@ -329,15 +329,15 @@ function toggleFaq(btn) {
 //// for the newsletter
 function handleSubscription(btn) {
     const originalContent = btn.innerHTML;
-    const emailInput = document.getElementById('newsletterEmailInput');
+    const emailInput = btn.closest('form').querySelector('input');
 
-    emailInput.style.borderColor = '';
-
-    if (!emailInput.value.trim() || !emailInput.value.includes('@')) {
-        emailInput.style.borderColor = '#ef4444';
+    // Basic Validation
+    if(!emailInput.value.includes('@')) {
+        emailInput.style.borderColor = '#ef4444'; // Red for error
         return;
     }
 
+    // 1. Show "Processing" state
     btn.disabled = true;
     btn.innerHTML = `
         <span class="flex items-center justify-center gap-2">
@@ -345,30 +345,20 @@ function handleSubscription(btn) {
         </span>
     `;
 
-    // Send as JSON string with text/plain header (reliable for GAS)
-    const payload = {
-        email: emailInput.value.trim().toLowerCase(),
-        source: 'Newsletter'
-    };
-
-    fetch('https://script.google.com/macros/s/AKfycbxNtAK6ToRg_J7USn9fNsoTGKGYpX2TkLEcGoddErh9IVRuv2ULYNn9xYgID46tBpSP/exec', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'text/plain;charset=utf-8'
-        },
-        body: JSON.stringify(payload),
-        redirect: 'follow'
-    })
-    .then(() => {
-        document.getElementById('successModal').classList.remove('hidden');
-        emailInput.value = '';
-    })
-    .catch((err) => {
-        console.error(err);
-        alert("Transmission failed. Try again.");
-    })
-    .finally(() => {
+    // 2. Simulate System Delay (1.5 seconds)
+    setTimeout(() => {
+        // Show Modal
+        const modal = document.getElementById('successModal');
+        modal.classList.remove('hidden');
+        
+        // Reset Button
         btn.disabled = false;
         btn.innerHTML = originalContent;
-    });
+        emailInput.value = ''; // Clear input
+    }, 1500);
+}
+
+function closeModal() {
+    const modal = document.getElementById('successModal');
+    modal.classList.add('hidden');
 }
