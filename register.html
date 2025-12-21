@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Provision Node | T Learn Pro</title>
+    <link rel="icon" type="image/png" href="Logo.jpeg" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;900&display=swap');
+        body { background: #020617; color: white; font-family: 'Inter', sans-serif; }
+        .reg-card { background: linear-gradient(145deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%); border: 1px solid rgba(255,255,255,0.05); }
+        .input-field { background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.1); transition: all 0.3s ease; }
+        .input-field:focus { border-color: #3b82f6; outline: none; }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center py-20 px-6">
+    <div class="max-w-xl w-full">
+        <div class="text-center mb-10">
+            <h1 class="text-5xl font-black italic uppercase tracking-tighter">Create  <span class="text-blue-500">Account///</span></h1>
+            <p class="text-[9px] text-gray-500 font-black uppercase tracking-[0.4em] mt-3 italic">Join the team by Tech Nxxt</p>
+        </div>
+
+        <div class="reg-card p-12 rounded-[4rem] shadow-2xl relative overflow-hidden">
+            <div class="absolute top-0 right-0 p-8">
+                <span class="text-[8px] font-black uppercase text-blue-500/40 tracking-[0.5em] rotate-90 block">Step_01</span>
+            </div>
+
+            <form action="dashboard.html" class="space-y-8">
+                <div class="grid grid-cols-2 gap-6">
+                    <div>
+                        <label class="text-[9px] font-black uppercase text-gray-500 tracking-widest mb-2 block">Full Name</label>
+                        <input type="text" required placeholder="J. DOE" class="input-field w-full px-6 py-4 rounded-2xl text-xs font-bold uppercase tracking-widest">
+                    </div>
+                    <div>
+                        <label class="text-[9px] font-black uppercase text-gray-500 tracking-widest mb-2 block">Handle (Username)</label>
+                        <input type="text" required placeholder="CYBER_GHOST" class="input-field w-full px-6 py-4 rounded-2xl text-xs font-bold uppercase tracking-widest">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="text-[9px] font-black uppercase text-gray-500 tracking-widest mb-2 block">Primary (Email)</label>
+                    <input type="email" required placeholder="engineer@nxxt.com" class="input-field w-full px-6 py-4 rounded-2xl text-xs font-bold uppercase tracking-widest">
+                </div>
+
+                <div>
+                    <label class="text-[9px] font-black uppercase text-gray-500 tracking-widest mb-2 block">Create Passkey</label>
+                    <input type="password" required placeholder="MIN 12 CHARS" class="input-field w-full px-6 py-4 rounded-2xl text-xs font-bold tracking-widest">
+                </div>
+
+                 <div>
+                    <label class="text-[9px] font-black uppercase text-gray-500 tracking-widest mb-2 block">Confirm  Passkey</label>
+                    <input type="password" required placeholder="MIN 12 CHARS" class="input-field w-full px-6 py-4 rounded-2xl text-xs font-bold tracking-widest">
+                </div>
+
+                <div class="p-6 bg-blue-600/5 border border-blue-500/20 rounded-2xl">
+                    <p class="text-[8px] text-gray-500 font-black uppercase tracking-widest leading-relaxed">
+                        By provisioning this node, you agree to the <span class="text-white">Privacy Protocol</span> and confirm you are ready for elite-level engineering challenges.
+                    </p>
+                </div>
+
+                <button type="submit" class="w-full py-5 bg-white text-black hover:bg-blue-600 hover:text-white font-black italic uppercase text-[10px] tracking-[0.3em] rounded-2xl transition-all">
+                Register
+                </button>
+            </form>
+        </div>
+
+        <p class="text-center mt-8 text-[9px] font-black uppercase tracking-widest text-gray-600">
+            Already authenticated? <a href="login.html" class="text-blue-500 hover:underline">Login</a>
+        </p>
+    </div>
+</body>
+</html>

@@ -1,0 +1,155 @@
+const views = {
+    'Overview': `
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="content-card">
+                <p class="text-[9px] font-black text-blue-500 uppercase tracking-widest mb-4">Course Progress</p>
+                <h3 class="text-2xl font-black text-white italic mb-6">FULLSTACK DEV</h3>
+                <div class="w-full h-2 bg-white/5 rounded-full overflow-hidden">
+                    <div class="w-[40%] h-full bg-blue-600"></div>
+                </div>
+                <p class="mt-4 text-[10px] font-bold text-gray-500">40% COMPLETED</p>
+            </div>
+            <div class="content-card text-center">
+                 <p class="text-[9px] font-black text-green-500 uppercase tracking-widest mb-4">Total Balance</p>
+                 <h3 class="text-3xl font-black text-white italic mb-2">₦0.00</h3>
+                 <button class="mt-4 text-[8px] border border-white/10 px-4 py-2 rounded-lg uppercase font-black hover:bg-white hover:text-black transition-all">Go to Xt Pay</button>
+            </div>
+            <div class="content-card">
+                <p class="text-[9px] font-black text-orange-500 uppercase tracking-widest mb-4">Upcoming</p>
+                <h3 class="text-xl font-black text-white italic mb-2">Team Sync</h3>
+                <p class="text-[10px] font-bold text-gray-500 uppercase">Tomorrow @ 10:00 AM</p>
+            </div>
+        </div>
+    `,
+
+    'Lessons': `
+        <div class="content-card">
+            <h3 class="text-2xl font-black text-white italic uppercase mb-6">Course Curriculum</h3>
+            <div class="space-y-4">
+                <div class="p-4 bg-white/5 rounded-xl border border-white/5 flex justify-between items-center">
+                    <span class="text-[10px] font-black uppercase">01. Introduction to Web Systems</span>
+                    <button class="text-blue-500 text-[10px] font-black uppercase">Start</button>
+                </div>
+                </div>
+        </div>
+    `,
+
+    'Projects': `
+        <div class="content-card">
+            <h3 class="text-2xl font-black text-white italic uppercase">Project Repository</h3>
+            <p class="text-gray-500 text-[10px] font-bold uppercase mt-2">Manage your active builds here.</p>
+        </div>
+    `,
+
+    'Leaderboard': `
+        <div class="content-card">
+            <h3 class="text-2xl font-black text-white italic uppercase">Global Ranking</h3>
+            <p class="text-gray-500 text-[10px] font-bold uppercase mt-2">See how you rank against other students.</p>
+        </div>
+    `,
+
+    'Collaboration': `
+        <div class="content-card">
+            <h3 class="text-2xl font-black text-white italic uppercase">Find Partners</h3>
+            <p class="text-gray-500 text-[10px] font-bold uppercase mt-2">Connect with students on shared projects.</p>
+        </div>
+    `,
+
+    'Team': `
+        <div class="content-card">
+            <h3 class="text-2xl font-black text-white italic uppercase">Your Squad</h3>
+            <p class="text-gray-500 text-[10px] font-bold uppercase mt-2">Manage team roles and performance.</p>
+        </div>
+    `,
+
+    'Inbox': `
+        <div class="content-card">
+            <h3 class="text-2xl font-black text-white italic uppercase">Messages</h3>
+            <p class="text-gray-500 text-[10px] font-bold uppercase mt-2">Notifications and Direct Messages.</p>
+        </div>
+    `,
+
+    'Nxxt AI': `
+        <div class="content-card min-h-[400px] flex flex-col justify-between">
+            <div>
+                <h3 class="text-3xl font-black text-white italic mb-2">NXXT AI ASSISTANT</h3>
+                <p class="text-gray-500 text-xs font-bold uppercase tracking-widest">How can I help you today?</p>
+            </div>
+            <div class="bg-black/20 rounded-2xl p-4 border border-white/10">
+                <input type="text" placeholder="ASK NXXT AI..." class="w-full bg-transparent border-none outline-none text-white font-bold text-xs uppercase tracking-widest p-2">
+            </div>
+        </div>
+    `,
+
+    'Nxxt Lab': `
+        <div class="content-card">
+            <h3 class="text-2xl font-black text-white italic uppercase">The Lab</h3>
+            <p class="text-gray-500 text-[10px] font-bold uppercase mt-2">Experimental tools and beta software access.</p>
+        </div>
+    `,
+
+    'Side Hustle Hub': `
+        <div class="content-card">
+            <h3 class="text-2xl font-black text-white italic uppercase">Freelance Marketplace</h3>
+            <p class="text-gray-500 text-[10px] font-bold uppercase mt-2">Browse gigs and start earning with your skills.</p>
+        </div>
+    `,
+
+    'Xt Pay': `
+        <div class="max-w-md mx-auto content-card text-center">
+            <i class="fas fa-wallet text-5xl text-green-500 mb-6"></i>
+            <h3 class="text-4xl font-black text-white italic mb-2">Xt Pay</h3>
+            <p class="text-gray-500 text-[10px] font-black uppercase tracking-[0.3em] mb-8">Secure Student Wallet</p>
+            <button class="w-full py-5 bg-green-600 rounded-2xl font-black uppercase text-[10px] tracking-widest">Withdraw Funds</button>
+        </div>
+    `,
+
+    'Pricing': `
+        <div class="content-card">
+            <h3 class="text-2xl font-black text-white italic uppercase">Subscriptions</h3>
+            <p class="text-gray-500 text-[10px] font-bold uppercase mt-2">Manage your T Learn Pro membership.</p>
+        </div>
+    `,
+
+    'Settings': `
+        <div class="content-card">
+            <h3 class="text-2xl font-black text-white italic uppercase">Account Settings</h3>
+            <p class="text-gray-500 text-[10px] font-bold uppercase mt-2">Privacy, Password, and Profile.</p>
+        </div>
+    `
+};
+
+// SYSTEM LOGIC - DON'T CHANGE THIS PART
+function updateView(viewName) {
+    const title = document.getElementById('viewTitle');
+    const container = document.getElementById('dynamicContent');
+    
+    container.style.opacity = '0';
+    container.style.transform = 'translateY(10px)';
+    
+    setTimeout(() => {
+        title.innerText = viewName;
+        container.innerHTML = views[viewName] || `
+            <div class="content-card text-center py-20">
+                <i class="fas fa-tools text-4xl text-blue-500/20 mb-6"></i>
+                <h3 class="text-2xl font-black text-white italic uppercase tracking-tighter">${viewName} Module</h3>
+                <p class="text-gray-500 text-[10px] font-black uppercase tracking-widest mt-2">Under Development</p>
+            </div>
+        `;
+        container.style.opacity = '1';
+        container.style.transform = 'translateY(0px)';
+        
+        // Update sidebar and bottom nav active states
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.classList.toggle('active', item.innerText.includes(viewName));
+        });
+    }, 200);
+}
+
+// Initial Setup
+const d = new Date();
+document.getElementById('currentDate').innerText = d.toLocaleDateString('en-US', { 
+    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' 
+});
+
+updateView('Overview');
