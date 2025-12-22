@@ -256,211 +256,728 @@ const views = {
                 <h3 class="text-xl font-black text-white italic uppercase tracking-tighter">Project Management</h3>
                 <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest mt-1">Manage and bulk delete your projects</p>
             </div>
-            <button id="open-create-btn" class="px-6 py-3 bg-blue-600/10 border border-blue-500/20 text-blue-500 rounded-xl text-[9px] font-black uppercase hover:bg-blue-600 hover:text-white transition-all">
-                <i class="fas fa-plus mr-2"></i> New Project
-            </button>
-        </div>
-        <div class="border-2 border-dashed border-white/5 rounded-3xl py-20 flex flex-col items-center justify-center text-center">
-            <div class="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center mb-6">
-                <i class="fas fa-code-branch text-3xl text-gray-700"></i>
-            </div>
-            <h4 class="text-white font-black uppercase italic tracking-tighter text-lg">No Projects Created Yet</h4>
-            <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest mt-2 max-w-[250px] leading-relaxed">
-                Your repository is empty. Start a new project to see it managed here.
-            </p>
-           
-            <div class="mt-8 flex gap-3">
-                <div class="px-4 py-2 bg-white/5 rounded-lg border border-white/5 text-[8px] font-black text-gray-500 uppercase">
-                    Select All
-                </div>
-                <div class="px-4 py-2 bg-red-500/5 rounded-lg border border-red-500/10 text-[8px] font-black text-red-500/40 uppercase cursor-not-allowed">
-                    Bulk Delete
-                </div>
+            <div class="px-4 py-2 bg-blue-500/5 border border-blue-500/20 rounded-xl">
+                 <p class="text-[8px] font-black text-blue-500 uppercase tracking-widest italic">System Update in Progress</p>
             </div>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div class="p-4 bg-white/5 border border-white/5 rounded-2xl">
+
+        <div class="border-2 border-dashed border-white/5 rounded-[3rem] py-24 flex flex-col items-center justify-center text-center bg-white/[0.01] relative overflow-hidden">
+            <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-blue-500/5 via-transparent to-transparent"></div>
+            
+            <div class="relative z-10">
+                <div class="w-24 h-24 bg-white/5 rounded-[2rem] flex items-center justify-center mb-8 mx-auto border border-white/5 shadow-2xl">
+                    <i class="fas fa-microchip text-4xl text-gray-700 animate-pulse"></i>
+                </div>
+                <h4 class="text-white font-black uppercase italic tracking-tighter text-2xl">No Project Module Yet</h4>
+                <p class="text-[10px] text-gray-500 font-bold uppercase tracking-[0.3em] mt-3 max-w-[300px] mx-auto leading-relaxed">
+                    Our engineers are currently building the repository core. Stay tuned for the next deployment.
+                </p>
+                
+                <div class="mt-10 flex flex-col items-center gap-4">
+                    <div class="h-1 w-48 bg-white/5 rounded-full overflow-hidden">
+                        <div class="h-full bg-blue-600 w-2/3 animate-pulse"></div>
+                    </div>
+                    <p class="text-[8px] font-black text-blue-500/50 uppercase tracking-[0.5em]">Construction 65% Complete</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 opacity-50">
+            <div class="p-6 bg-white/5 border border-white/5 rounded-3xl">
                 <i class="fas fa-info-circle text-blue-500 mb-3"></i>
-                <p class="text-[9px] font-black text-white uppercase mb-1">Deployment Tip</p>
-                <p class="text-[9px] text-gray-500 font-bold uppercase leading-relaxed">Active projects are automatically hosted on the T Learn Pro edge network.</p>
+                <p class="text-[9px] font-black text-white uppercase mb-1">Coming Soon</p>
+                <p class="text-[9px] text-gray-500 font-bold uppercase leading-relaxed">Advanced edge deployment tools are arriving in v2.0.</p>
             </div>
-            <div class="p-4 bg-white/5 border border-white/5 rounded-2xl">
+            <div class="p-6 bg-white/5 border border-white/5 rounded-3xl">
                 <i class="fas fa-history text-purple-500 mb-3"></i>
-                <p class="text-[9px] font-black text-white uppercase mb-1">Auto-Save</p>
-                <p class="text-[9px] text-gray-500 font-bold uppercase leading-relaxed">Failed builds are kept for 30 days before being purged from the testing hub.</p>
+                <p class="text-[9px] font-black text-white uppercase mb-1">Cloud Sync</p>
+                <p class="text-[9px] text-gray-500 font-bold uppercase leading-relaxed">Real-time repository synchronization will be enabled shortly.</p>
             </div>
         </div>
     </div>`,
 
-renderProjects(el) {
-    // 1. Right-Side Drawer (Modular Content)
-    const openProjectDrawer = (projectName) => {
-        const drawer = document.createElement('div');
-        drawer.className = "fixed inset-0 z-[10010] flex justify-end animate-in fade-in duration-300";
-        drawer.innerHTML = `
-            <div class="fixed inset-0 bg-black/60 backdrop-blur-sm" onclick="this.parentElement.remove()"></div>
-            <div class="relative w-full max-w-md bg-[#0a1025] h-full border-l border-white/10 shadow-2xl animate-in slide-in-from-right duration-500 flex flex-col">
-                <div class="p-8 border-b border-white/5 flex justify-between items-center bg-white/[0.02]">
-                    <div>
-                        <h3 class="text-xl font-black text-white uppercase italic tracking-tighter">${projectName}</h3>
-                        <p class="text-blue-500 text-[9px] font-bold uppercase tracking-widest">Active Workspace</p>
+
+
+
+   'Leaderboard': `
+    <div class="space-y-8 animate-in">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+                <h3 class="text-xl font-black text-white italic uppercase tracking-tighter">Global Ranking</h3>
+                <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest mt-1">See how you rank against other students</p>
+            </div>
+            <div class="px-4 py-2 bg-blue-500/5 border border-blue-500/20 rounded-xl">
+                 <p class="text-[8px] font-black text-blue-500 uppercase tracking-widest italic">Season 1 Coming Soon</p>
+            </div>
+        </div>
+
+        <div class="border-2 border-dashed border-white/5 rounded-[3rem] py-24 flex flex-col items-center justify-center text-center bg-white/[0.01] relative overflow-hidden">
+            <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-purple-500/5 via-transparent to-transparent"></div>
+            
+            <div class="relative z-10">
+                <div class="w-24 h-24 bg-white/5 rounded-[2rem] flex items-center justify-center mb-8 mx-auto border border-white/5 shadow-2xl">
+                    <i class="fas fa-trophy text-4xl text-gray-800"></i>
+                </div>
+                <h4 class="text-white font-black uppercase italic tracking-tighter text-2xl">Leaderboard Not Yet Live</h4>
+                <p class="text-[10px] text-gray-500 font-bold uppercase tracking-[0.3em] mt-3 max-w-[300px] mx-auto leading-relaxed">
+                    The competitive arena is currently being calibrated. Check back later to claim your rank.
+                </p>
+                
+                <div class="mt-10 flex flex-col items-center gap-4">
+                    <div class="flex gap-2">
+                        <div class="w-2 h-2 rounded-full bg-blue-500 animate-bounce"></div>
+                        <div class="w-2 h-2 rounded-full bg-blue-500 animate-bounce [animation-delay:-.3s]"></div>
+                        <div class="w-2 h-2 rounded-full bg-blue-500 animate-bounce [animation-delay:-.5s]"></div>
                     </div>
-                    <button onclick="this.closest('.fixed').parentElement.remove()" class="w-10 h-10 flex items-center justify-center rounded-full bg-white/5 text-gray-400 hover:text-white transition-colors">
-                        <i class="fas fa-times text-xs"></i>
+                    <p class="text-[8px] font-black text-blue-500/50 uppercase tracking-[0.5em]">Synchronizing Data...</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 opacity-40">
+            <div class="p-6 bg-white/5 border border-white/5 rounded-3xl text-center">
+                <p class="text-[8px] font-black text-gray-500 uppercase tracking-widest mb-1">Top Score</p>
+                <p class="text-xl font-black text-white italic">---</p>
+            </div>
+            <div class="p-6 bg-white/5 border border-white/5 rounded-3xl text-center">
+                <p class="text-[8px] font-black text-gray-500 uppercase tracking-widest mb-1">Global Rank</p>
+                <p class="text-xl font-black text-white italic">#--</p>
+            </div>
+            <div class="p-6 bg-white/5 border border-white/5 rounded-3xl text-center">
+                <p class="text-[8px] font-black text-gray-500 uppercase tracking-widest mb-1">Percentile</p>
+                <p class="text-xl font-black text-white italic">--%</p>
+            </div>
+        </div>
+    </div>`,
+
+
+
+
+  'Collaboration': `
+    <div class="space-y-8 animate-in">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+                <h3 class="text-xl font-black text-white italic uppercase tracking-tighter">Find Partners</h3>
+                <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest mt-1">Connect with students on shared projects</p>
+            </div>
+            <div class="px-4 py-2 bg-cyan-500/5 border border-cyan-500/20 rounded-xl">
+                 <p class="text-[8px] font-black text-cyan-500 uppercase tracking-widest italic">Network Engine Offline</p>
+            </div>
+        </div>
+
+        <div class="border-2 border-dashed border-white/5 rounded-[3rem] py-24 flex flex-col items-center justify-center text-center bg-white/[0.01] relative overflow-hidden">
+            <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-cyan-500/5 via-transparent to-transparent"></div>
+            
+            <div class="relative z-10">
+                <div class="w-24 h-24 bg-white/5 rounded-[2rem] flex items-center justify-center mb-8 mx-auto border border-white/5 shadow-2xl">
+                    <i class="fas fa-user-friends text-4xl text-gray-800 animate-pulse"></i>
+                </div>
+                <h4 class="text-white font-black uppercase italic tracking-tighter text-2xl">Engineers are building</h4>
+                <p class="text-[10px] text-gray-500 font-bold uppercase tracking-[0.3em] mt-3 max-w-[320px] mx-auto leading-relaxed">
+                    We are currently assembling the collaboration hub. Peer-to-peer networking will be live soon.
+                </p>
+                
+                <div class="mt-10 flex flex-col items-center gap-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-[1px] bg-gradient-to-r from-transparent to-cyan-500/50"></div>
+                        <i class="fas fa-shuttle-space text-cyan-500 text-xs animate-ghost-float"></i>
+                        <div class="w-12 h-[1px] bg-gradient-to-l from-transparent to-cyan-500/50"></div>
+                    </div>
+                    <p class="text-[8px] font-black text-cyan-500/50 uppercase tracking-[0.5em]">Establishing Connection Protocols...</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="p-6 bg-white/[0.02] border border-white/5 rounded-3xl group">
+                <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center border border-white/5">
+                        <i class="fas fa-search text-gray-600 text-xs"></i>
+                    </div>
+                    <div>
+                        <p class="text-[9px] font-black text-white uppercase opacity-40">Partner Discovery</p>
+                        <p class="text-[8px] text-gray-600 font-bold uppercase tracking-tight">Locked until deployment</p>
+                    </div>
+                </div>
+            </div>
+            <div class="p-6 bg-white/[0.02] border border-white/5 rounded-3xl group">
+                <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center border border-white/5">
+                        <i class="fas fa-comments text-gray-600 text-xs"></i>
+                    </div>
+                    <div>
+                        <p class="text-[9px] font-black text-white uppercase opacity-40">Direct Messaging</p>
+                        <p class="text-[8px] text-gray-600 font-bold uppercase tracking-tight">Encryption setup in progress</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>`,
+
+
+
+
+   'Team': `
+    <div class="space-y-8 animate-in">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+                <h3 class="text-xl font-black text-white italic uppercase tracking-tighter">Your Squad</h3>
+                <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest mt-1">Manage team roles and performance</p>
+            </div>
+            <div class="px-4 py-2 bg-blue-500/5 border border-blue-500/20 rounded-xl">
+                 <p class="text-[8px] font-black text-blue-500 uppercase tracking-widest italic">Recruitment Office Closed</p>
+            </div>
+        </div>
+
+        <div class="border-2 border-dashed border-white/5 rounded-[3rem] py-24 flex flex-col items-center justify-center text-center bg-white/[0.01] relative overflow-hidden">
+            <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-blue-500/5 via-transparent to-transparent"></div>
+            
+            <div class="relative z-10">
+                <div class="w-24 h-24 bg-white/5 rounded-[2rem] flex items-center justify-center mb-8 mx-auto border border-white/5 shadow-2xl">
+                    <i class="fas fa-users-cog text-4xl text-gray-800 animate-spin-slow"></i>
+                </div>
+                <h4 class="text-white font-black uppercase italic tracking-tighter text-2xl">Team Module Under Construction</h4>
+                <p class="text-[10px] text-gray-500 font-bold uppercase tracking-[0.3em] mt-3 max-w-[320px] mx-auto leading-relaxed">
+                    Our architects are drafting the squad management system. Collective performance tracking will be live in the next phase.
+                </p>
+                
+                <div class="mt-10 flex flex-col items-center gap-4">
+                    <div class="flex items-center gap-2">
+                         <div class="w-1 h-1 bg-blue-500 rounded-full animate-ping"></div>
+                         <div class="w-32 h-[2px] bg-white/5 rounded-full overflow-hidden">
+                            <div class="h-full bg-blue-600 w-1/3 animate-pulse"></div>
+                         </div>
+                         <div class="w-1 h-1 bg-blue-500 rounded-full animate-ping"></div>
+                    </div>
+                    <p class="text-[8px] font-black text-blue-500/50 uppercase tracking-[0.5em]">Assembling Squad Protocols...</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 opacity-30">
+            <div class="aspect-square bg-white/5 border border-white/5 rounded-3xl flex items-center justify-center border-dashed">
+                <i class="fas fa-plus text-gray-700"></i>
+            </div>
+            <div class="aspect-square bg-white/5 border border-white/5 rounded-3xl flex items-center justify-center border-dashed">
+                <i class="fas fa-plus text-gray-700"></i>
+            </div>
+            <div class="aspect-square bg-white/5 border border-white/5 rounded-3xl flex items-center justify-center border-dashed">
+                <i class="fas fa-plus text-gray-700"></i>
+            </div>
+            <div class="aspect-square bg-white/5 border border-white/5 rounded-3xl flex items-center justify-center border-dashed">
+                <i class="fas fa-plus text-gray-700"></i>
+            </div>
+        </div>
+    </div>`,
+
+
+
+  'Inbox': `
+    <div class="space-y-8 animate-in">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+                <h3 class="text-xl font-black text-white italic uppercase tracking-tighter">Messages</h3>
+                <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest mt-1">Notifications and Direct Messages</p>
+            </div>
+            <div class="px-4 py-2 bg-blue-500/5 border border-blue-500/20 rounded-xl">
+                 <p class="text-[8px] font-black text-blue-500 uppercase tracking-widest italic">Comms Link Offline</p>
+            </div>
+        </div>
+
+        <div class="border-2 border-dashed border-white/5 rounded-[3rem] py-24 flex flex-col items-center justify-center text-center bg-white/[0.01] relative overflow-hidden">
+            <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-emerald-500/5 via-transparent to-transparent"></div>
+            
+            <div class="relative z-10">
+                <div class="w-24 h-24 bg-white/5 rounded-[2rem] flex items-center justify-center mb-8 mx-auto border border-white/5 shadow-2xl">
+                    <i class="fas fa-satellite-dish text-4xl text-gray-800 animate-bounce"></i>
+                </div>
+                <h4 class="text-white font-black uppercase italic tracking-tighter text-2xl">Working on the Inbox</h4>
+                <p class="text-[10px] text-gray-500 font-bold uppercase tracking-[0.3em] mt-3 max-w-[320px] mx-auto leading-relaxed">
+                    Our signal engineers are calibrating the communication uplink. Secure messaging will be active once the handshake is verified.
+                </p>
+                
+                <div class="mt-10 flex flex-col items-center gap-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-2 h-2 rounded-full bg-blue-500/20"></div>
+                        <div class="w-2 h-2 rounded-full bg-blue-500/40"></div>
+                        <div class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></div>
+                    </div>
+                    <p class="text-[8px] font-black text-blue-500/50 uppercase tracking-[0.5em]">Encrypting Communication Channels...</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="space-y-3 opacity-20">
+            <div class="p-4 bg-white/5 border border-white/5 rounded-2xl flex items-center gap-4">
+                <div class="w-10 h-10 rounded-full bg-white/10"></div>
+                <div class="flex-1 space-y-2">
+                    <div class="h-2 w-24 bg-white/10 rounded"></div>
+                    <div class="h-2 w-full bg-white/5 rounded"></div>
+                </div>
+            </div>
+            <div class="p-4 bg-white/5 border border-white/5 rounded-2xl flex items-center gap-4">
+                <div class="w-10 h-10 rounded-full bg-white/10"></div>
+                <div class="flex-1 space-y-2">
+                    <div class="h-2 w-20 bg-white/10 rounded"></div>
+                    <div class="h-2 w-3/4 bg-white/5 rounded"></div>
+                </div>
+            </div>
+        </div>
+    </div>`,
+
+
+
+   'Nxxt AI': `
+    <style>
+        @keyframes fall {
+            from { transform: translateY(-10vh) translateX(0) rotate(0deg); opacity: 0; }
+            20% { opacity: 1; }
+            to { transform: translateY(110vh) translateX(40px) rotate(360deg); opacity: 0; }
+        }
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: fall linear infinite;
+        }
+        .nxxt-glass {
+            background: rgba(21, 21, 21, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+    </style>
+    
+    <div id="nxxt-root" class="relative min-h-[600px] md:min-h-[700px] flex flex-col items-center justify-center overflow-hidden rounded-[2.5rem] md:rounded-[4rem] animate-in fade-in duration-1000">
+        
+        <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+            ${Array(30).fill(0).map(() => `
+                <div class="star" style="
+                    width: ${Math.random() * 2 + 1}px; 
+                    height: ${Math.random() * 2 + 1}px; 
+                    left: ${Math.random() * 100}%; 
+                    top: -20px;
+                    animation-duration: ${Math.random() * 7 + 4}s; 
+                    animation-delay: ${Math.random() * 5}s;
+                    box-shadow: 0 0 10px white;
+                "></div>`).join('')}
+        </div>
+
+        <div class="relative z-10 w-full max-w-3xl flex flex-col items-center px-4 md:px-6">
+            
+            <div class="flex items-center gap-4 mb-10 md:mb-16 scale-90 md:scale-100">
+                <div class="w-14 h-14 md:w-16 md:h-16 rounded-full border-2 border-white/20 p-1 flex items-center justify-center overflow-hidden shadow-xl">
+                    <img src="Logo.jpeg" alt="Nxxt Avatar" class="w-full h-full object-cover rounded-full bg-blue-600/20">
+                </div>
+                <h1 class="text-5xl md:text-7xl font-medium text-white tracking-tighter italic">Nxxt AI</h1>
+            </div>
+
+            <div class="w-full nxxt-glass border border-white/10 rounded-[2rem] md:rounded-full flex flex-col md:flex-row items-center p-2 md:px-6 md:py-4 mb-8 shadow-2xl focus-within:border-white/30 transition-all duration-500">
+                <div class="flex w-full items-center px-4 py-3 md:p-0">
+                    <i class="fas fa-paperclip text-gray-500 mr-4 cursor-pointer hover:text-white transition-colors"></i>
+                    <input type="text" placeholder="What do you want to know?" class="bg-transparent border-none outline-none text-white text-base md:text-lg w-full placeholder:text-gray-600 font-medium">
+                </div>
+                
+                <div class="flex w-full md:w-auto items-center justify-between md:justify-end gap-4 px-4 py-3 md:p-0 border-t border-white/5 md:border-none">
+                    <div onclick="showNxxtAlert('Engine Selector')" class="flex items-center gap-2 text-gray-400 hover:text-white cursor-pointer transition-colors bg-white/5 md:bg-transparent px-3 py-1.5 rounded-full md:rounded-none">
+                        <i class="fas fa-rocket text-xs"></i>
+                        <span class="text-xs font-black uppercase tracking-widest">Language</span>
+                        <i class="fas fa-chevron-down text-[10px]"></i>
+                    </div>
+                    <button onclick="showNxxtAlert('Submission Engine')" class="bg-white text-black hover:bg-gray-200 p-2 rounded-full w-10 h-10 flex items-center justify-center transition-all shadow-lg">
+                        <i class="fas fa-arrow-up"></i>
                     </button>
                 </div>
-                
-                <div class="flex-1 overflow-y-auto p-8">
-                    <div class="p-20 border border-dashed border-white/5 rounded-[2.5rem] text-center flex flex-col items-center">
-                        <div class="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center mb-4 border border-white/5">
-                            <i class="fas fa-microchip text-blue-500 animate-pulse"></i>
-                        </div>
-                        <p class="text-gray-600 text-[9px] font-black uppercase tracking-[0.3em]">Initializing Content...</p>
-                    </div>
-                </div>
-
-                <div class="p-8 bg-black/40 border-t border-white/5">
-                    <button class="w-full py-5 bg-blue-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-white hover:text-black transition-all">Synchronize Project</button>
-                </div>
             </div>
-        `;
-        document.body.appendChild(drawer);
-    };
 
-    // 2. Central Create Project Modal
-    const openCreateModal = () => {
-        const modal = document.createElement('div');
-        modal.className = "fixed inset-0 z-[10005] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md animate-in fade-in";
-        modal.innerHTML = `
-            <div class="bg-[#0a1025] border border-white/10 w-full max-w-md rounded-[3rem] shadow-2xl animate-in zoom-in-95 overflow-hidden">
-                <div class="p-10 text-center border-b border-white/5 bg-white/[0.01]">
-                    <h3 class="text-white text-xl font-black uppercase italic tracking-tighter">Initialize Project</h3>
-                    <p class="text-gray-500 text-[9px] font-bold uppercase tracking-widest mt-1">Repository Setup</p>
-                </div>
-                
-                <div class="p-10 space-y-6">
-                    <div class="space-y-2">
-                        <label class="text-[8px] font-black text-blue-500 uppercase tracking-widest ml-2">Project Identity</label>
-                        <input id="new-proj-name" type="text" placeholder="ENTER NAME..." class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white text-[11px] font-bold outline-none focus:border-blue-500/50 transition-all uppercase">
-                    </div>
-                    <div class="space-y-2">
-                        <label class="text-[8px] font-black text-gray-500 uppercase tracking-widest ml-2">Description (Optional)</label>
-                        <textarea id="new-proj-desc" placeholder="DEFINE SCOPE..." class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white text-[11px] font-bold outline-none h-24 resize-none focus:border-blue-500/50 transition-all uppercase"></textarea>
-                    </div>
-                </div>
-
-                <div class="p-8 bg-black/40 flex gap-3">
-                    <button onclick="this.closest('.fixed').remove()" class="flex-1 py-5 border border-white/10 text-gray-500 rounded-2xl text-[10px] font-black uppercase hover:text-white transition-all">Cancel</button>
-                    <button id="confirm-create-proj" class="flex-1 py-5 bg-blue-600 text-white rounded-2xl text-[10px] font-black uppercase hover:bg-white hover:text-black transition-all">Continue</button>
-                </div>
+            <div class="grid grid-cols-2 md:flex md:flex-wrap justify-center gap-3 w-full md:w-auto">
+                <button onclick="showNxxtAlert('DeepSearch')" class="px-4 md:px-6 py-3 nxxt-glass border border-white/5 rounded-2xl md:rounded-full text-white text-[10px] font-bold uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-white/10 transition-all">
+                    <i class="fas fa-wind text-cyan-500"></i> DeepSearch
+                </button>
+                <button onclick="showNxxtAlert('Image Creator')" class="px-4 md:px-6 py-3 nxxt-glass border border-white/5 rounded-2xl md:rounded-full text-white text-[10px] font-bold uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-white/10 transition-all">
+                    <i class="fas fa-image text-purple-500"></i> Create Image
+                </button>
+                <button onclick="showNxxtAlert('Persona Picker')" class="px-4 md:px-6 py-3 nxxt-glass border border-white/5 rounded-2xl md:rounded-full text-white text-[10px] font-bold uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-white/10 transition-all">
+                    <i class="fas fa-id-badge text-orange-500"></i> Pick Personas
+                </button>
+                <button onclick="showNxxtAlert('Settings')" class="px-4 md:px-6 py-3 nxxt-glass border border-white/5 rounded-2xl md:rounded-full text-white text-[10px] font-bold uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-white/10 transition-all">
+                    <i class="fas fa-user-astronaut text-emerald-500"></i> Personas
+                </button>
             </div>
-        `;
-        document.body.appendChild(modal);
-
-        document.getElementById('confirm-create-proj').onclick = () => {
-            const name = document.getElementById('new-proj-name').value;
-            if(!name) {
-                document.getElementById('new-proj-name').classList.add('border-red-500/50');
-                return;
-            }
-            modal.remove();
-            openProjectDrawer(name); 
-        };
-    };
-
-    // Use the existing template from the object
-    el.innerHTML = this.options.Projects;
-    
-    // Bind the click event to the "New Project" button inside the rendered HTML
-    const btn = el.querySelector('#open-create-btn');
-    if(btn) btn.onclick = openCreateModal;
-},
-
-
-
-    'Leaderboard': `
-        <div class="content-card">
-            <h3 class="text-2xl font-black text-white italic uppercase">Global Ranking</h3>
-            <p class="text-gray-500 text-[10px] font-bold uppercase mt-2">See how you rank against other students.</p>
         </div>
-    `,
-    'Collaboration': `
-        <div class="content-card">
-            <h3 class="text-2xl font-black text-white italic uppercase">Find Partners</h3>
-            <p class="text-gray-500 text-[10px] font-bold uppercase mt-2">Connect with students on shared projects.</p>
-        </div>
-    `,
-    'Team': `
-        <div class="content-card">
-            <h3 class="text-2xl font-black text-white italic uppercase">Your Squad</h3>
-            <p class="text-gray-500 text-[10px] font-bold uppercase mt-2">Manage team roles and performance.</p>
-        </div>
-    `,
-    'Inbox': `
-        <div class="content-card">
-            <h3 class="text-2xl font-black text-white italic uppercase">Messages</h3>
-            <p class="text-gray-500 text-[10px] font-bold uppercase mt-2">Notifications and Direct Messages.</p>
-        </div>
-    `,
-    'Nxxt AI': `
-        <div class="content-card min-h-[400px] flex flex-col justify-between">
+    </div>
+
+   
+`,
+
+
+'Nxxt Lab': `
+    <div id="lab-root" class="space-y-8 animate-in relative transition-all duration-500">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
-                <h3 class="text-3xl font-black text-white italic mb-2">NXXT AI ASSISTANT</h3>
-                <p class="text-gray-500 text-xs font-bold uppercase tracking-widest">How can I help you today?</p>
+                <h3 class="text-xl font-black text-white italic uppercase tracking-tighter">The Nxxt Lab</h3>
+                <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest mt-1">Experimental tools and beta software access</p>
             </div>
-            <div class="bg-black/20 rounded-2xl p-4 border border-white/10">
-                <input type="text" placeholder="ASK NXXT AI..." class="w-full bg-transparent border-none outline-none text-white font-bold text-xs uppercase tracking-widest p-2">
+            <div class="px-4 py-2 bg-blue-500/5 border border-blue-500/20 rounded-xl">
+                 <p class="text-[8px] font-black text-blue-500 uppercase tracking-widest italic">Hazmat Protocols Active</p>
             </div>
         </div>
-    `,
-    'Nxxt Lab': `
-        <div class="content-card">
-            <h3 class="text-2xl font-black text-white italic uppercase">The Lab</h3>
-            <p class="text-gray-500 text-[10px] font-bold uppercase mt-2">Experimental tools and beta software access.</p>
+
+        <div class="border-2 border-dashed border-white/5 rounded-[3rem] py-24 flex flex-col items-center justify-center text-center bg-white/[0.01] relative overflow-hidden">
+            <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-yellow-500/5 via-transparent to-transparent"></div>
+            
+            <div class="relative z-10 px-6">
+                <div class="w-24 h-24 bg-white/5 rounded-[2rem] flex items-center justify-center mb-8 mx-auto border border-white/5 shadow-2xl">
+                    <i class="fas fa-flask text-4xl text-gray-800 animate-pulse"></i>
+                </div>
+                <h4 class="text-white font-black uppercase italic tracking-tighter text-2xl">Lab Under Construction</h4>
+                <p class="text-[10px] text-gray-500 font-bold uppercase tracking-[0.3em] mt-3 max-w-[320px] mx-auto leading-relaxed">
+                    Our researchers are stabilizing the experimental environment. Beta access keys will be distributed once the core is shielded.
+                </p>
+                
+                <div class="mt-10 flex flex-col items-center gap-4">
+                    <div class="flex items-center gap-2">
+                         <div class="w-1 h-1 bg-blue500 rounded-full animate-ping"></div>
+                         <div class="w-32 h-[2px] bg-white/5 rounded-full overflow-hidden">
+                            <div class="h-full bg-blue-600 w-1/2 animate-pulse"></div>
+                         </div>
+                         <div class="w-1 h-1 bg-blue-500 rounded-full animate-ping"></div>
+                    </div>
+                    <button onclick="showLabAlert('Beta Enrollment')" class="text-[8px] font-black text-blue-500/50 uppercase tracking-[0.5em] hover:text-blue-500 transition-colors cursor-pointer">
+                        Synthesizing Environment...
+                    </button>
+                </div>
+            </div>
         </div>
-    `,
-    'Side Hustle Hub': `
-        <div class="content-card">
-            <h3 class="text-2xl font-black text-white italic uppercase">Freelance Marketplace</h3>
-            <p class="text-gray-500 text-[10px] font-bold uppercase mt-2">Browse gigs and start earning with your skills.</p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 opacity-30">
+            <div class="p-6 bg-white/5 border border-white/5 rounded-3xl flex items-center gap-4">
+                <div class="w-12 h-12 rounded-2xl bg-blue-500/10 flex items-center justify-center border border-blue-500/20">
+                    <i class="fas fa-atom text-blue-600 text-sm"></i>
+                </div>
+                <div>
+                    <p class="text-[9px] font-black text-white uppercase tracking-widest">Quantum Compiler</p>
+                    <p class="text-[8px] text-gray-500 font-bold uppercase">Status: Testing Phase</p>
+                </div>
+            </div>
+            <div class="p-6 bg-white/5 border border-white/5 rounded-3xl flex items-center gap-4">
+                <div class="w-12 h-12 rounded-2xl bg-blue-500/10 flex items-center justify-center border border-blue-500/20">
+                    <i class="fas fa-brain text-blue-600 text-sm"></i>
+                </div>
+                <div>
+                    <p class="text-[9px] font-black text-white uppercase tracking-widest">Neural Sync V2</p>
+                    <p class="text-[8px] text-gray-500 font-bold uppercase">Status: Calibrating</p>
+                </div>
+            </div>
         </div>
-    `,
+    </div>
+
+  
+`,
+
+
+
+ 'Side Hustle Hub': `
+    <div id="side-hustle-root" class="space-y-8 animate-in relative transition-all duration-500">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+                <h3 class="text-xl font-black text-blue-500 italic uppercase tracking-tighter">Freelance Marketplace</h3>
+                <p class="text-[9px] text-blue-600/60 font-bold uppercase tracking-widest mt-1">Browse gigs and start earning with your skills</p>
+            </div>
+            <div class="px-4 py-2 bg-blue-500/5 border border-blue-500/20 rounded-xl">
+                 <p class="text-[8px] font-black text-blue-500 uppercase tracking-widest italic">Economy Engine Initializing</p>
+            </div>
+        </div>
+
+        <div class="border-2 border-dashed border-blue-500/20 rounded-[3rem] py-24 flex flex-col items-center justify-center text-center bg-blue-500/[0.02] relative overflow-hidden">
+            <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-blue-500/10 via-transparent to-transparent"></div>
+            
+            <div class="relative z-10 px-6">
+                <div class="w-24 h-24 bg-blue-500/10 rounded-[2rem] flex items-center justify-center mb-8 mx-auto border border-blue-500/20 shadow-2xl">
+                    <i class="fas fa-hand-holding-usd text-4xl text-blue-500 animate-pulse"></i>
+                </div>
+                <h4 class="text-blue-400 font-black uppercase italic tracking-tighter text-2xl">Hub Under Construction</h4>
+                <p class="text-[10px] text-blue-600/70 font-bold uppercase tracking-[0.3em] mt-3 max-w-[320px] mx-auto leading-relaxed">
+                    Our financial engineers are building the secure payment gateway and gig matching algorithm. Earning modules will be live shortly.
+                </p>
+                
+                <div class="mt-10 flex flex-col items-center gap-4">
+                    <div class="flex items-center gap-2">
+                         <div class="w-1 h-1 bg-blue-500 rounded-full animate-ping"></div>
+                         <div class="w-32 h-[2px] bg-blue-900/30 rounded-full overflow-hidden">
+                            <div class="h-full bg-blue-500 w-1/4 animate-pulse"></div>
+                         </div>
+                         <div class="w-1 h-1 bg-blue-500 rounded-full animate-ping"></div>
+                    </div>
+                    <button onclick="showHustleAlert('Marketplace Enrollment')" class="text-[8px] font-black text-blue-500/50 uppercase tracking-[0.5em] hover:text-blue-400 transition-colors cursor-pointer">
+                        Syncing Global Marketplace...
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 opacity-40">
+            <div class="p-6 bg-blue-500/5 border border-blue-500/10 rounded-3xl flex items-center gap-4">
+                <div class="w-12 h-12 rounded-2xl bg-blue-500/10 flex items-center justify-center border border-blue-500/20">
+                    <i class="fas fa-code text-blue-500 text-sm"></i>
+                </div>
+                <div>
+                    <p class="text-[9px] font-black text-blue-400 uppercase tracking-widest">Web Development</p>
+                    <p class="text-[8px] text-blue-600/50 font-bold uppercase">Average: $450 - $1.2k</p>
+                </div>
+            </div>
+            <div class="p-6 bg-blue-500/5 border border-blue-500/10 rounded-3xl flex items-center gap-4">
+                <div class="w-12 h-12 rounded-2xl bg-blue-500/10 flex items-center justify-center border border-blue-500/20">
+                    <i class="fas fa-paint-brush text-blue-500 text-sm"></i>
+                </div>
+                <div>
+                    <p class="text-[9px] font-black text-blue-400 uppercase tracking-widest">UI/UX Design</p>
+                    <p class="text-[8px] text-blue-600/50 font-bold uppercase">Average: $300 - $800</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+`,
+
+
+
 'Notifications': `
     <div class="max-w-md mx-auto content-card text-center animate-in">
         <div class="relative inline-block mb-6">
-            <i class="fa-solid fa-bell text-5xl text-blue-500"></i>
-            <span class="absolute -top-1 -right-1 w-4 h-4 bg-red-500 border-4 border-[#030816] rounded-full"></span>
+            <i id="notif-bell-icon" class="fa-solid fa-bell text-5xl text-blue-500 animate-pulse"></i>
+            <span id="notif-badge" class="absolute -top-1 -right-1 w-5 h-5 bg-red-600 border-4 border-[#030816] rounded-full animate-bounce"></span>
         </div>
-        <h3 class="text-4xl font-black text-white italic mb-2 uppercase tracking-tighter">Notifications</h3>
+        <h3 class="text-4xl font-black text-white italic mb-2 uppercase tracking-tighter">Transmissions</h3>
         <p class="text-gray-500 text-[10px] font-black uppercase tracking-[0.3em] mb-8 leading-relaxed">
-            You have 1 new transmission <br> from the T Learn Pro system
+            System logs indicate <span id="notif-count" class="text-blue-500">2 new updates</span> <br> awaiting your review
         </p>
        
-        <div class="space-y-4 mb-8">
-            <div class="p-4 bg-white/5 border border-white/5 rounded-2xl text-left">
-                <p class="text-[8px] font-black text-blue-500 uppercase mb-1">Welcome</p>
-                <p class="text-white text-[11px] font-bold">Your account is active, Emmanuel. Start your first lesson today!</p>
+        <div id="notif-scroll-area" class="space-y-4 mb-8 max-h-[380px] overflow-y-auto pr-2 custom-scrollbar">
+            <div class="notif-item p-5 bg-blue-500/5 border border-blue-500/10 rounded-3xl text-left relative overflow-hidden group hover:border-blue-500/30 transition-all">
+                <div class="flex justify-between items-start mb-2">
+                    <p class="text-[8px] font-black text-blue-500 uppercase tracking-widest">System Protocol</p>
+                    <span class="text-[7px] text-gray-600 font-bold">JUST NOW</span>
+                </div>
+                <p class="text-white text-[11px] font-bold leading-relaxed">
+                    We apologize for the inactive sections. We urge you to stay with us as we build to your comfort. Sit back and enjoy your lessons while we update the system to your taste.
+                </p>
+                <i class="fas fa-wrench absolute -bottom-2 -right-2 text-blue-500/10 text-4xl group-hover:rotate-12 transition-transform"></i>
+            </div>
+
+            <div class="notif-item p-5 bg-white/5 border border-white/5 rounded-3xl text-left hover:border-white/10 transition-all">
+                <div class="flex justify-between items-start mb-2">
+                    <p class="text-[8px] font-black text-yellow-500 uppercase tracking-widest">Lab Access</p>
+                    <span class="text-[7px] text-gray-600 font-bold">2H AGO</span>
+                </div>
+                <p class="text-gray-400 text-[11px] font-bold">
+                    Experimental tools in the Nxxt Lab are being calibrated. Beta keys will be issued to active students shortly.
+                </p>
+            </div>
+
+            <div class="notif-item p-5 bg-white/5 border border-white/5 rounded-3xl text-left opacity-50">
+                <div class="flex justify-between items-start mb-2">
+                    <p class="text-[8px] font-black text-gray-500 uppercase tracking-widest">Security Trace</p>
+                    <span class="text-[7px] text-gray-600 font-bold">5H AGO</span>
+                </div>
+                <p class="text-gray-500 text-[11px] font-bold">Encryption protocols updated to V4.2. Connection stable.</p>
             </div>
         </div>
-        <button onclick="updateView('Overview')" class="w-full py-5 bg-white/5 border border-white/10 rounded-2xl font-black uppercase text-[10px] tracking-widest text-white hover:bg-white hover:text-black transition-all">
-            Clear All Alerts
-        </button>
+
+        <div class="grid grid-cols-2 gap-3">
+            <button onclick="updateView('Overview')" class="py-4 bg-white/5 border border-white/10 rounded-2xl font-black uppercase text-[9px] tracking-widest text-white hover:bg-white hover:text-black transition-all">
+                Return Home
+            </button>
+            <button onclick="clearNotifications()" class="py-4 bg-red-500/10 border border-red-500/20 rounded-2xl font-black uppercase text-[9px] tracking-widest text-red-500 hover:bg-red-500 hover:text-white transition-all">
+                Clear Alerts
+            </button>
+        </div>
     </div>
 `,
-    'Xt Pay': `
-        <div class="max-w-md mx-auto content-card text-center">
-            <i class="fas fa-wallet text-5xl text-green-500 mb-6"></i>
-            <h3 class="text-4xl font-black text-white italic mb-2">Xt Pay</h3>
-            <p class="text-gray-500 text-[10px] font-black uppercase tracking-[0.3em] mb-8">Secure Student Wallet</p>
-            <button class="w-full py-5 bg-green-600 rounded-2xl font-black uppercase text-[10px] tracking-widest">Withdraw Funds</button>
+
+
+
+
+
+'Xt Pay': `
+    <div class="space-y-6 animate-in relative">
+        <div class="flex flex-col md:flex-row gap-6 items-start justify-between">
+            <div class="p-6">
+                <div class="flex items-center gap-4 mb-2">
+                    <div class="w-12 h-12 bg-green-500/10 rounded-full flex items-center justify-center border border-green-500/20">
+                        <i class="fas fa-user-shield text-green-500"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-black text-white italic uppercase tracking-tighter leading-none">New User</h3>
+                        <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest mt-1">Status: Verified Student</p>
+                    </div>
+                </div>
+                <div class="inline-block px-4 py-2 bg-white/5 rounded-xl border border-white/10 mt-2">
+                    <p class="text-[9px] text-gray-500 font-black uppercase tracking-[0.2em]">Account ID</p>
+                    <code class="text-green-500 font-mono text-xs font-bold">XT-Nxxt198ghe</code>
+                </div>
+            </div>
+
+            <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-yellow-500/30 transition-all min-w-[240px]">
+                <div class="flex items-center gap-4 relative z-10">
+                    <div class="w-12 h-12 bg-yellow-600/10 rounded-2xl flex items-center justify-center border border-yellow-500/20">
+                        <i class="fas fa-star text-yellow-500"></i>
+                    </div>
+                    <div>
+                        <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">XT Points</p>
+                        <h3 class="text-3xl font-black text-white mt-1">
+                            <span id="dash-xp-val">0</span> 
+                            <span class="text-xs text-yellow-500/50 uppercase">XP</span>
+                        </h3>
+                    </div>
+                </div>
+                <i class="fas fa-trophy absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-yellow-500/[0.05] transition-all"></i>
+            </div>
         </div>
-    `,
-    'Pricing': `
-        <div class="content-card">
-            <h3 class="text-2xl font-black text-white italic uppercase">Subscriptions</h3>
-            <p class="text-gray-500 text-[10px] font-bold uppercase mt-2">Manage your T Learn Pro membership.</p>
+
+        <div id="pay-main-view" class="max-w-md mx-auto bg-white/[0.02] border border-white/5 p-8 rounded-[3rem] text-center">
+            <i class="fas fa-paper-plane text-4xl text-green-500 mb-6"></i>
+            <h3 class="text-3xl font-black text-white italic mb-2 uppercase tracking-tighter">Quick Transfer</h3>
+            <div class="space-y-4 mt-6">
+                <input type="text" placeholder="RECIPIENT XT-ID" class="w-full bg-black/40 border border-white/10 rounded-2xl p-4 text-white text-[10px] font-bold uppercase tracking-widest outline-none">
+                <input type="number" placeholder="XT POINT AMOUNT" class="w-full bg-black/40 border border-white/10 rounded-2xl p-4 text-white text-[10px] font-bold uppercase tracking-widest outline-none">
+                <button class="w-full py-5 bg-green-600 hover:bg-green-500 text-white rounded-2xl font-black uppercase text-[10px] tracking-widest transition-all">Execute Transfer</button>
+            </div>
         </div>
-    `,
+
+        <div id="pay-content-display" class="hidden max-w-2xl mx-auto p-6 bg-white/[0.01] border border-dashed border-white/10 rounded-[2rem] animate-in fade-in slide-in-from-bottom-4">
+            </div>
+
+        <div class="flex justify-center items-center mt-12">
+            <nav class="flex bg-black/40 border border-white/10 p-2 rounded-2xl gap-2">
+                <button onclick="switchPayTab('history')" class="pay-tab-btn px-6 py-3 rounded-xl text-[9px] font-black uppercase tracking-widest text-gray-500 hover:text-white transition-all">
+                    <i class="fas fa-history mr-2"></i> History
+                </button>
+                <button onclick="switchPayTab('cards')" class="pay-tab-btn px-6 py-3 rounded-xl text-[9px] font-black uppercase tracking-widest text-gray-500 hover:text-white transition-all">
+                    <i class="fas fa-credit-card mr-2"></i> Cards
+                </button>
+                <button onclick="switchPayTab('subscription')" class="pay-tab-btn px-6 py-3 rounded-xl text-[9px] font-black uppercase tracking-widest text-gray-500 hover:text-white transition-all">
+                    <i class="fas fa-crown mr-2"></i> Subscription
+                </button>
+            </nav>
+        </div>
+    </div>
+`,
+
+
+
+
+ 'Pricing': `
+<div class="space-y-12 animate-in relative">
+    <div class="flex flex-col items-center text-center">
+        <div class="px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-[10px] font-black uppercase tracking-[0.3em] text-blue-400 mb-6 animate-pulse">Access Protocol v4.0</div>
+        <h2 class="text-4xl md:text-6xl font-black italic uppercase tracking-tighter text-white mb-8">System <span class="text-blue-500">Subscription///</span></h2>
+        
+        <div class="flex items-center gap-6 p-2 bg-white/5 border border-white/10 rounded-2xl backdrop-blur-md">
+            <span id="monthlyLabel" class="text-[10px] font-black uppercase tracking-widest text-white transition-all">Monthly</span>
+            <button onclick="togglePricing()" id="priceToggle" class="w-14 h-7 bg-blue-600 rounded-full relative p-1 transition-all">
+                <div id="toggleBall" class="w-5 h-5 bg-white rounded-full shadow-lg transition-transform duration-300"></div>
+            </button>
+            <span id="yearlyLabel" class="text-[10px] font-black uppercase tracking-widest text-gray-500 transition-all">Yearly <span class="text-blue-400 text-[8px] ml-1">(Save 15%)</span></span>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-end max-w-6xl mx-auto">
+        
+        <div class="pricing-card p-8 rounded-[2.5rem] bg-white/[0.02] border border-white/5 flex flex-col hover:border-blue-500/40 transition-all duration-500 group relative overflow-hidden">
+            <span class="text-[10px] font-black uppercase tracking-widest text-gray-500 mb-2">Entry Node</span>
+            <h3 class="text-3xl font-black italic uppercase text-white mb-6">Free</h3>
+            <div class="mb-8"><span class="text-4xl font-black text-white">₦0</span> <span class="text-xs font-bold text-gray-600 uppercase">/ Forever</span></div>
+            <ul class="space-y-4 mb-12 flex-grow">
+                <li class="flex items-center gap-3 text-[10px] text-gray-400 font-bold uppercase"><i class="fas fa-check text-blue-500"></i> Public Learning Hub</li>
+                <li class="flex items-center gap-3 text-[10px] text-gray-400 font-bold uppercase"><i class="fas fa-check text-blue-500"></i> Community Support</li>
+                                <li class="flex items-center gap-3 text-[10px] text-gray-400 font-bold uppercase"><i class="fas fa-check text-blue-500"></i>  Test Collaboration</li>
+                <li class="flex items-center gap-3 text-[10px] text-red-500/50 font-bold uppercase"><i class="fas fa-times"></i> No AI Tutor Access</li>
+                <li class="flex items-center gap-3 text-[10px] text-red-500/50 font-bold uppercase"><i class="fas fa-times"></i> No Verified Certs</li>
+                <li class="flex items-center gap-3 text-[10px] text-red-500/50 font-bold uppercase"><i class="fas fa-times"></i> No Projects feature</li>
+                <li class="flex items-center gap-3 text-[10px] text-red-500/50 font-bold uppercase"><i class="fas fa-times"></i> No Team feature</li>
+            </ul>
+            <button class="w-full py-4 border border-white/10 rounded-xl text-[10px] font-black uppercase tracking-widest text-white hover:bg-white hover:text-black transition-all">Current Plan</button>
+        </div>
+
+        <div class="pricing-card p-10 rounded-[3rem] bg-[#050b1d] border-2 border-blue-600 shadow-[0_0_50px_rgba(37,99,235,0.15)] flex flex-col relative scale-105 z-20 overflow-hidden group">
+            <div class="absolute -top-1 left-1/2 -translate-x-1/2 px-4 py-1 bg-blue-600 rounded-b-xl text-[8px] font-black uppercase text-white tracking-[0.3em]">Recommended</div>
+            <span class="text-[10px] font-black uppercase tracking-widest text-blue-400 mb-2">Academic Node</span>
+            <h3 class="text-3xl font-black italic uppercase text-white mb-6">Student</h3>
+            <div class="mb-8">
+                <span id="studentPrice" class="text-5xl font-black text-white transition-all">₦8,000</span> 
+                <span id="studentPeriod" class="text-xs font-bold text-blue-400/50 uppercase">/ Month</span>
+            </div>
+         <ul class="space-y-4 mb-12 flex-grow">
+    <li class="flex items-center gap-3 text-[10px] text-white font-bold uppercase">
+        <i class="fas fa-book-open text-blue-400 w-4"></i> Limited Pro Courses
+    </li>
+    <li class="flex items-center gap-3 text-[10px] text-white font-bold uppercase">
+        <i class="fas fa-project-diagram text-blue-400 w-4"></i> Limited Projects Feature
+    </li>
+    <li class="flex items-center gap-3 text-[10px] text-white font-bold uppercase">
+        <i class="fas fa-chart-line text-blue-400 w-4"></i> Real-Time Hustle Hub Update
+    </li>
+    <li class="flex items-center gap-3 text-[10px] text-white font-bold uppercase">
+        <i class="fas fa-sync text-blue-400 w-4"></i> Limited Collaboration Feature
+    </li>
+    <li class="flex items-center gap-3 text-[10px] text-white font-bold uppercase">
+        <i class="fas fa-users-cog text-blue-400 w-4"></i> Limited Team Feature
+    </li>
+    <li class="flex items-center gap-3 text-[10px] text-white font-bold uppercase">
+        <i class="fas fa-brain text-blue-400 w-4"></i> Nxxt AI Tutor (24/7)
+    </li>
+    <li class="flex items-center gap-3 text-[10px] text-white font-bold uppercase">
+        <i class="fas fa-medal text-blue-400 w-4"></i> Verified Certificates
+    </li>
+    <li class="flex items-center gap-3 text-[10px] text-white font-bold uppercase">
+        <i class="fas fa-server text-blue-400 w-4"></i> 5GB Cloud Lab Space
+    </li>
+</ul>
+          <button onclick="openPaymentModal('Student Node')" class="w-full py-5 bg-blue-600 rounded-xl text-[10px] font-black uppercase tracking-widest text-white hover:bg-white hover:text-black transition-all shadow-[0_0_30px_rgba(37,99,235,0.4)]">
+    Upgrade 
+</button>
+        </div>
+
+        <div class="pricing-card p-8 rounded-[2.5rem] bg-white/[0.02] border border-white/5 flex flex-col hover:border-blue-500/40 transition-all duration-500 group relative overflow-hidden">
+            <span class="text-[10px] font-black uppercase tracking-widest text-gray-500 mb-2">Authority Node</span>
+            <h3 class="text-3xl font-black italic uppercase text-white mb-6">Pro</h3>
+            <div class="mb-8"><span id="proPrice" class="text-4xl font-black text-white">₦16,000</span> <span id="proPeriod" class="text-xs font-bold text-gray-600 uppercase">/ Month</span></div>
+          <ul class="space-y-4 mb-12 flex-grow">
+    <li class="flex items-center gap-3 text-[10px] text-gray-400 font-bold uppercase">
+        <i class="fas fa-layer-group text-blue-500 w-4"></i> Unlimited Pro Courses
+    </li>
+    <li class="flex items-center gap-3 text-[10px] text-gray-400 font-bold uppercase">
+        <i class="fas fa-microchip text-blue-500 w-4"></i> Nxxt AI Full Support
+    </li>
+    <li class="flex items-center gap-3 text-[10px] text-gray-400 font-bold uppercase">
+        <i class="fas fa-network-wired text-blue-500 w-4"></i> Unlimited Team Feature
+    </li>
+    <li class="flex items-center gap-3 text-[10px] text-gray-400 font-bold uppercase">
+        <i class="fas fa-hands-helping text-blue-500 w-4"></i> Unlimited Collaboration Feature
+    </li>
+    <li class="flex items-center gap-3 text-[10px] text-gray-400 font-bold uppercase">
+        <i class="fas fa-rocket text-blue-500 w-4"></i> Unlimited Projects Feature
+    </li>
+    <li class="flex items-center gap-3 text-[10px] text-gray-400 font-bold uppercase">
+        <i class="fas fa-user-tie text-blue-500 w-4"></i> Priority Job Placement
+    </li>
+    <li class="flex items-center gap-3 text-[10px] text-gray-400 font-bold uppercase">
+        <i class="fas fa-chalkboard-teacher text-blue-500 w-4"></i> Private Mentor Access
+    </li>
+</ul>
+           <button onclick="openPaymentModal('Authority Node')" class="w-full py-4 border border-white/10 rounded-xl text-[10px] font-black uppercase tracking-widest text-white hover:bg-white hover:text-black transition-all">
+    Execute Mastery
+</button>
+        </div>
+    </div>
+</div>
+
+
+`,
+
+
 'Settings': `
     <div class="animate-in">
         <div class="flex items-center gap-4 overflow-x-auto no-scrollbar pb-6 mb-8 border-b border-white/5 scroll-smooth">
@@ -1931,3 +2448,330 @@ LessonEngine.init();
 // Global Window Hooks
 window.switchLessonSubTab = (t) => LessonEngine.switchTab(t);
 window.startBeginnerCourse = () => LessonEngine.startCourse();
+
+
+
+//// for the nxxxt Ai
+
+     function showNxxtAlert(feature) {
+    const root = document.getElementById('nxxt-root');
+    if(root) root.style.filter = 'blur(15px)';
+
+    const modal = document.createElement('div');
+    // Added 'transition-opacity' and 'duration-300' for the smooth exit
+    modal.className = "fixed inset-0 z-[1000000] flex items-center justify-center p-6 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300 transition-opacity";
+    modal.innerHTML = `
+        <div id="nxxt-modal-card" class="bg-[#0f0f0f] border border-white/10 w-full max-w-sm rounded-[3rem] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300 transition-transform">
+            <div class="p-10 text-center">
+                <div class="w-20 h-20 bg-white/5 rounded-3xl flex items-center justify-center mx-auto mb-6 border border-white/10 rotate-12">
+                    <i class="fas fa-hourglass-half text-white text-3xl animate-pulse"></i>
+                </div>
+                <h3 class="text-white font-black uppercase italic text-2xl tracking-tighter mb-2">${feature}</h3>
+                <p class="text-gray-500 text-[11px] font-bold uppercase tracking-[0.2em] leading-relaxed">
+                    This integration is currently being optimized by our developers. 
+                </p>
+            </div>
+            <div class="p-8 bg-white/5 border-t border-white/5">
+                <button id="close-nxxt-modal" class="w-full py-5 bg-white text-black rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-gray-200 transition-all active:scale-95">
+                    Acknowledged
+                </button>
+            </div>
+        </div>`;
+
+    document.body.appendChild(modal);
+
+    // Nice Closing Sequence
+    document.getElementById('close-nxxt-modal').onclick = () => {
+        const card = document.getElementById('nxxt-modal-card');
+        
+        // 1. Shrink the card and fade the overlay
+        if(card) card.style.transform = 'scale(0.9)';
+        modal.style.opacity = '0';
+        
+        // 2. Unblur the background slightly before the modal is fully gone
+        if(root) {
+            root.style.transition = 'filter 0.4s ease';
+            root.style.filter = 'none';
+        }
+
+        // 3. Remove from DOM after animation finishes
+        setTimeout(() => {
+            modal.remove();
+        }, 300);
+    };
+}
+
+
+//// for the Nxxt lab original
+
+  function showLabAlert(feature) {
+        const root = document.getElementById('lab-root');
+        if (root) root.style.filter = 'blur(15px)';
+
+        const modal = document.createElement('div');
+        // Modal at center per instructions
+        modal.className = "fixed inset-0 z-[1000000] flex items-center justify-center p-6 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300 transition-opacity";
+        modal.innerHTML = `
+            <div id="lab-modal-card" class="bg-[#0f0f0f] border border-white/10 w-full max-w-sm rounded-[3rem] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300 transition-transform">
+                <div class="p-10 text-center">
+                    <div class="w-20 h-20 bg-blue-500/10 rounded-3xl flex items-center justify-center mx-auto mb-6 border border-blue-500/20 rotate-12">
+                        <i class="fas fa-radiation text-blue-500 text-3xl animate-pulse"></i>
+                    </div>
+                    <h3 class="text-white font-black uppercase italic text-2xl tracking-tighter mb-2">${feature}</h3>
+                    <p class="text-gray-500 text-[11px] font-bold uppercase tracking-[0.2em] leading-relaxed">
+                        Access to experimental tools is restricted until lab protocols are finalized.
+                    </p>
+                </div>
+                <div class="p-8 bg-white/5 border-t border-white/5">
+                    <button id="close-lab-modal" class="w-full py-5 bg-blue-500 text-black rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-white transition-all active:scale-95">
+                        Understood
+                    </button>
+                </div>
+            </div>`;
+
+        document.body.appendChild(modal);
+
+        document.getElementById('close-lab-modal').onclick = () => {
+            const card = document.getElementById('lab-modal-card');
+            if (card) card.style.transform = 'scale(0.9)';
+            modal.style.opacity = '0';
+            
+            if (root) {
+                root.style.transition = 'filter 0.4s ease';
+                root.style.filter = 'none';
+            }
+
+            setTimeout(() => {
+                modal.remove();
+            }, 300);
+        };
+    }
+
+
+
+    //// for the side hustle
+    
+       function showHustleAlert(feature) {
+            const root = document.getElementById('side-hustle-root');
+            if(root) root.style.filter = 'blur(15px)';
+
+            const modal = document.createElement('div');
+            modal.className = "fixed inset-0 z-[1000000] flex items-center justify-center p-6 bg-blue-950/40 backdrop-blur-sm animate-in fade-in duration-300 transition-opacity";
+            modal.innerHTML = `
+                <div id="hustle-modal-card" class="bg-[#050a1a] border border-blue-500/20 w-full max-w-sm rounded-[3rem] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300 transition-transform">
+                    <div class="p-10 text-center">
+                        <div class="w-20 h-20 bg-blue-500/10 rounded-3xl flex items-center justify-center mx-auto mb-6 border border-blue-500/20 rotate-12">
+                            <i class="fas fa-wallet text-blue-500 text-3xl animate-pulse"></i>
+                        </div>
+                        <h3 class="text-blue-500 font-black uppercase italic text-2xl tracking-tighter mb-2">${feature}</h3>
+                        <p class="text-blue-600/60 text-[11px] font-bold uppercase tracking-[0.2em] leading-relaxed">
+                            The Side Hustle Marketplace is currently being optimized for secure transactions.
+                        </p>
+                    </div>
+                    <div class="p-8 bg-blue-500/5 border-t border-blue-500/10">
+                        <button id="close-hustle-modal" class="w-full py-5 bg-blue-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-blue-500 transition-all active:scale-95">
+                            Understood
+                        </button>
+                    </div>
+                </div>`;
+
+            document.body.appendChild(modal);
+
+            document.getElementById('close-hustle-modal').onclick = () => {
+                const card = document.getElementById('hustle-modal-card');
+                if(card) card.style.transform = 'scale(0.9)';
+                modal.style.opacity = '0';
+                
+                if(root) {
+                    root.style.transition = 'filter 0.4s ease';
+                    root.style.filter = 'none';
+                }
+
+                setTimeout(() => {
+                    modal.remove();
+                }, 300);
+            };
+        }
+
+
+        ///// for the Xt pay
+   function switchPayTab(tab) {
+    const mainView = document.getElementById('pay-main-view');
+    const display = document.getElementById('pay-content-display');
+    
+    // Hide main transfer view
+    mainView.classList.add('hidden');
+    // Show content display
+    display.classList.remove('hidden');
+
+    let content = '';
+
+    if (tab === 'history') {
+        content = `
+            <div class="text-center py-10">
+                <i class="fas fa-history text-3xl text-blue-500 mb-4 opacity-50"></i>
+                <h4 class="text-white font-black uppercase italic tracking-widest">Transaction History</h4>
+                <p class="text-[10px] text-gray-500 mt-2 font-bold uppercase tracking-widest">No recent transactions found on XT-Nxxt198ghe</p>
+            </div>
+        `;
+    } else if (tab === 'cards') {
+        content = `
+            <div class="text-center py-10">
+                <i class="fas fa-credit-card text-3xl text-purple-500 mb-4 opacity-50"></i>
+                <h4 class="text-white font-black uppercase italic tracking-widest">Virtual Cards</h4>
+                <p class="text-[10px] text-gray-500 mt-2 font-bold uppercase tracking-widest">Request your XT-Debit card in the next update</p>
+            </div>
+        `;
+    } else if (tab === 'subscription') {
+        content = `
+            <div class="text-center py-10">
+                <i class="fas fa-crown text-3xl text-yellow-500 mb-4 opacity-50"></i>
+                <h4 class="text-white font-black uppercase italic tracking-widest">free Subscription</h4>
+                <p class="text-[10px] text-gray-500 mt-2 font-bold uppercase tracking-widest">You are currently on the FREE TIER</p>
+            </div>
+        `;
+    }
+
+    // Inject the content
+    display.innerHTML = `
+        <div class="flex flex-col items-center">
+            ${content}
+            <button onclick="resetPayView()" class="mt-6 text-[8px] font-black text-green-500 uppercase tracking-[0.3em] hover:text-white transition-colors">
+                ← Back to Transfer
+            </button>
+        </div>
+    `;
+}
+
+// Function to go back to the original Quick Transfer view
+function resetPayView() {
+    document.getElementById('pay-main-view').classList.remove('hidden');
+    document.getElementById('pay-content-display').classList.add('hidden');
+}
+
+
+
+//// for the pricing 
+let isYearly = false;
+    function togglePricing() {
+        isYearly = !isYearly;
+        const ball = document.getElementById('toggleBall');
+        const studentPrice = document.getElementById('studentPrice');
+        const proPrice = document.getElementById('proPrice');
+        const sPeriod = document.getElementById('studentPeriod');
+        const pPeriod = document.getElementById('proPeriod');
+        const mLabel = document.getElementById('monthlyLabel');
+        const yLabel = document.getElementById('yearlyLabel');
+
+        if (isYearly) {
+            ball.style.transform = 'translateX(28px)';
+            studentPrice.innerText = '₦74,400';
+            proPrice.innerText = '₦142,800';
+            sPeriod.innerText = '/ Year';
+            pPeriod.innerText = '/ Year';
+            yLabel.classList.remove('text-gray-500');
+            yLabel.classList.add('text-white');
+            mLabel.classList.add('text-gray-500');
+        } else {
+            ball.style.transform = 'translateX(0px)';
+            studentPrice.innerText = '₦8,000';
+            proPrice.innerText = '₦16,000';
+            sPeriod.innerText = '/ Month';
+            pPeriod.innerText = '/ Month';
+            mLabel.classList.remove('text-gray-500');
+            mLabel.classList.add('text-white');
+            yLabel.classList.add('text-gray-500');
+        }
+    }
+
+    // Centered Modal for Pricing Actions
+    function showPricingAlert(plan) {
+        const root = document.querySelector('section'); // Targets the pricing section
+        if(root) root.style.filter = 'blur(15px)';
+
+        const modal = document.createElement('div');
+        modal.className = "fixed inset-0 z-[1000000] flex items-center justify-center p-6 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300";
+        modal.innerHTML = `
+            <div id="price-modal-card" class="bg-[#050b1d] border border-blue-500/20 w-full max-w-sm rounded-[3rem] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300 transition-transform">
+                <div class="p-10 text-center">
+                    <div class="w-20 h-20 bg-blue-500/10 rounded-3xl flex items-center justify-center mx-auto mb-6 border border-blue-500/20 rotate-12">
+                        <i class="fas fa-shield-alt text-blue-500 text-3xl animate-pulse"></i>
+                    </div>
+                    <h3 class="text-white font-black uppercase italic text-2xl tracking-tighter mb-2">\${plan} Access</h3>
+                    <p class="text-blue-400/50 text-[11px] font-bold uppercase tracking-[0.2em] leading-relaxed">
+                        Payment gateway integration is currently in sandbox mode. 
+                    </p>
+                </div>
+                <div class="p-8 bg-blue-500/5 border-t border-blue-500/10">
+                    <button id="close-price-modal" class="w-full py-5 bg-blue-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-white hover:text-black transition-all">
+                        Return to Hub
+                    </button>
+                </div>
+            </div>`;
+
+        document.body.appendChild(modal);
+
+        document.getElementById('close-price-modal').onclick = () => {
+            const card = document.getElementById('price-modal-card');
+            if(card) card.style.transform = 'scale(0.9)';
+            modal.style.opacity = '0';
+            if(root) root.style.filter = 'none';
+            setTimeout(() => modal.remove(), 300);
+        };
+    }
+
+
+
+
+    //// for the pricing modal
+    function openPaymentModal(planName) {
+        const modal = document.getElementById('payment-modal');
+        const title = document.getElementById('active-plan-title');
+        const root = document.querySelector('section');
+
+        if(title) title.innerText = planName;
+        if(modal) modal.classList.remove('translate-x-full');
+        if(root) root.style.filter = 'blur(10px)';
+    }
+
+    function closePaymentModal() {
+        const modal = document.getElementById('payment-modal');
+        const root = document.querySelector('section');
+
+        if(modal) modal.classList.add('translate-x-full');
+        if(root) root.style.filter = 'none';
+    }
+
+
+    //// for the  notification  buttons clear alert
+    function clearNotifications() {
+    const items = document.querySelectorAll('.notif-item');
+    const badge = document.getElementById('notif-badge');
+    const countText = document.getElementById('notif-count');
+    const bell = document.getElementById('notif-bell-icon');
+
+    // 1. Fade out each item
+    items.forEach((item, index) => {
+        setTimeout(() => {
+            item.style.opacity = '0';
+            item.style.transform = 'translateX(20px)';
+            item.style.transition = 'all 0.4s ease';
+        }, index * 100);
+    });
+
+    // 2. Reset Badge and Bell
+    setTimeout(() => {
+        if(badge) badge.style.display = 'none';
+        if(countText) countText.innerText = '0 new updates';
+        if(bell) bell.classList.remove('animate-pulse');
+        
+        // Optional: Show empty state
+        const scrollArea = document.getElementById('notif-scroll-area');
+        scrollArea.innerHTML = `
+            <div class="py-20 text-center opacity-30">
+                <i class="fas fa- Inbox text-4xl mb-4"></i>
+                <p class="text-[10px] font-black uppercase tracking-widest">Buffer Empty</p>
+            </div>
+        `;
+    }, 600);
+}
