@@ -6,95 +6,95 @@
     <title>T Learn Pro | Beta Phase</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link rel="stylesheet" href="styles.css">
-    <link rel="icon" type="image/png" href="Logo.jpeg" />
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon" type="image/png" href="assets/Logo.webp" />
 </head>
 <body class="bg-[#020617] text-white selection:bg-blue-500/30 overflow-x-hidden">
 
-    <div id="mobileSidebar" class="fixed inset-y-0 left-0 w-[280px] bg-[#030816] z-[200] transform -translate-x-full transition-transform duration-500 ease-in-out border-r border-white/5 backdrop-blur-xl">
-        <div class="p-8 flex flex-col h-full">
-            <div class="flex items-center justify-between mb-12">
-                <span class="text-xs font-black uppercase tracking-[0.3em] text-blue-500">Menu</span>
-                <button id="closeMenu" class="text-gray-500 hover:text-white transition-colors">
-                    <i class="fas fa-times text-xl"></i>
-                </button>
-            </div>
-            
-            <nav class="flex flex-col gap-8">
-                <a href="price.html" class="mobile-nav-link text-lg font-black italic uppercase tracking-tighter hover:text-blue-500">Pricing</a>
-                <a href="about.html" class="mobile-nav-link text-lg font-black italic uppercase tracking-tighter hover:text-blue-500">About</a>
-                <a href="Login.html" class="mobile-nav-link text-lg font-black italic uppercase tracking-tighter hover:text-blue-500">Dashboard</a>
-            </nav>
+<div id="mobileSidebar" class="fixed inset-y-0 left-0 w-[280px] bg-[#030816] z-[200] transform -translate-x-full transition-transform duration-500 ease-in-out border-r border-white/5 backdrop-blur-xl">
+    <div class="p-8 flex flex-col h-full">
+        <div class="flex items-center justify-between mb-12">
+            <span class="text-xs font-black uppercase tracking-[0.3em] text-blue-500">Menu</span>
+            <button id="closeMenu" class="text-gray-500 hover:text-white transition-colors">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
 
-         <div class="mt-auto flex flex-col gap-4">
-    <a href="Login.html" 
-       class="w-full py-4 rounded-xl text-[10px] font-black uppercase tracking-widest border border-white/10 text-white text-center hover:bg-white hover:text-black transition-all">
-       Login
-    </a>
+        <nav class="flex flex-col gap-8">
+            <a href="pages/price.html" class="mobile-nav-link text-lg font-black italic uppercase tracking-tighter hover:text-blue-500">Pricing</a>
+            <a href="pages/about.html" class="mobile-nav-link text-lg font-black italic uppercase tracking-tighter hover:text-blue-500">About</a>
+            <a href="pages/login.html" class="mobile-nav-link text-lg font-black italic uppercase tracking-tighter hover:text-blue-500">Dashboard</a>
+        </nav>
 
-    <a href="register.html" 
-       class="w-full py-4 rounded-xl text-[10px] font-black uppercase tracking-widest bg-blue-600 text-white text-center shadow-lg shadow-blue-600/20 hover:shadow-blue-600/40 hover:-translate-y-1 transition-all">
-       Get Started
-    </a>
-</div>
+        <div class="mt-auto flex flex-col gap-4">
+            <a href="pages/login.html"
+               class="w-full py-4 rounded-xl text-[10px] font-black uppercase tracking-widest border border-white/10 text-white text-center hover:bg-white hover:text-black transition-all">
+                Login
+            </a>
+
+            <a href="pages/register.html"
+               class="w-full py-4 rounded-xl text-[10px] font-black uppercase tracking-widest bg-blue-600 text-white text-center shadow-lg shadow-blue-600/20 hover:shadow-blue-600/40 hover:-translate-y-1 transition-all">
+                Get Started
+            </a>
         </div>
     </div>
+</div>
 
-    <div id="sidebarOverlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[150] hidden opacity-0 transition-opacity duration-500"></div>
+<div id="sidebarOverlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[150] hidden opacity-0 transition-opacity duration-500"></div>
 
-    <header id="mainHeader" class="fixed top-0 left-0 w-full z-[100] transition-all duration-300 px-6 py-5">
-        <div class="max-w-7xl mx-auto flex items-center justify-between">
-            
-            <div class="flex items-center gap-3 group cursor-pointer">
-                <div class="relative w-10 h-10 flex items-center justify-center">
-                    <div class="logo-ring absolute inset-0 rounded-full border-2 border-blue-500/20 group-hover:border-blue-500 transition-all duration-500"></div>
-                    <div class="w-8 h-8 rounded-full overflow-hidden border border-white/10">
-                        <img src="Logo.jpeg" alt="T Learn Pro Logo" class="w-full h-full object-cover">
-                    </div>
-                </div>
-                <div class="flex flex-col">
-                    <h1 class="text-white font-black italic tracking-tighter text-xl leading-none uppercase">T LEARN <span class="text-blue-500">PRO</span></h1>
-                    <span class="text-[7px] text-blue-500/60 font-black uppercase tracking-[0.4em] mt-0.5">Tech Nxxt</span>
+<header id="mainHeader" class="fixed top-0 left-0 w-full z-[100] transition-all duration-300 px-6 py-5">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+
+        <div class="flex items-center gap-3 group cursor-pointer">
+            <div class="relative w-10 h-10 flex items-center justify-center">
+                <div class="logo-ring absolute inset-0 rounded-full border-2 border-blue-500/20 group-hover:border-blue-500 transition-all duration-500"></div>
+                <div class="w-8 h-8 rounded-full overflow-hidden border border-white/10">
+                    <img src="/assets/Logo.webp" alt="T Learn Pro Logo" class="w-full h-full object-cover">
                 </div>
             </div>
-
-            <nav class="hidden lg:flex items-center gap-12">
-                <a href="price.html" class="nav-link text-[10px] font-black uppercase tracking-[0.25em] text-gray-400 hover:text-white">Pricing</a>
-                <a href="about.html" class="nav-link text-[10px] font-black uppercase tracking-[0.25em] text-gray-400 hover:text-white">About</a>
-                <a href="Login.html" class="nav-link text-[10px] font-black uppercase tracking-[0.25em] text-gray-400 hover:text-white">Dashboard</a>
-            </nav>
-
-          <div class="flex items-center gap-4">
-    <div class="hidden sm:flex items-center gap-4">
-        <a href="Login.html" 
-           class="btn-login px-7 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest text-gray-400 hover:text-white hover:bg-white/5 transition-all text-center">
-           Login
-        </a>
-
-        <a href="register.html" 
-           class="btn-started px-7 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest text-white bg-blue-600 shadow-lg shadow-blue-600/20 hover:shadow-blue-600/40 hover:-translate-y-0.5 transition-all text-center">
-           Get Started
-        </a>
-    </div>
-</div>
-                
-                <button id="openMenu" class="lg:hidden w-10 h-10 flex items-center justify-center text-white bg-white/5 rounded-lg border border-white/10 active:scale-90 transition-transform">
-                    <i class="fas fa-bars-staggered"></i>
-                </button>
+            <div class="flex flex-col">
+                <h1 class="text-white font-black italic tracking-tighter text-xl leading-none uppercase">T LEARN <span class="text-blue-500">PRO</span></h1>
+                <span class="text-[7px] text-blue-500/60 font-black uppercase tracking-[0.4em] mt-0.5">Tech Nxxt</span>
             </div>
         </div>
-    </header>
 
-  <main class="pt-32 md:pt-48 pb-20 overflow-hidden">
+        <nav class="hidden lg:flex items-center gap-12">
+            <a href="pages/price.html" class="nav-link text-[10px] font-black uppercase tracking-[0.25em] text-gray-400 hover:text-white">Pricing</a>
+            <a href="pages/about.html" class="nav-link text-[10px] font-black uppercase tracking-[0.25em] text-gray-400 hover:text-white">About</a>
+            <a href="pages/login.html" class="nav-link text-[10px] font-black uppercase tracking-[0.25em] text-gray-400 hover:text-white">Dashboard</a>
+        </nav>
+
+        <div class="flex items-center gap-4">
+            <div class="hidden sm:flex items-center gap-4">
+                <a href="pages/login.html"
+                   class="btn-login px-7 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest text-gray-400 hover:text-white hover:bg-white/5 transition-all text-center">
+                    Login
+                </a>
+
+                <a href="pages/register.html"
+                   class="btn-started px-7 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest text-white bg-blue-600 shadow-lg shadow-blue-600/20 hover:shadow-blue-600/40 hover:-translate-y-0.5 transition-all text-center">
+                    Get Started
+                </a>
+            </div>
+        </div>
+
+        <button id="openMenu" class="lg:hidden w-10 h-10 flex items-center justify-center text-white bg-white/5 rounded-lg border border-white/10 active:scale-90 transition-transform">
+            <i class="fas fa-bars-staggered"></i>
+        </button>
+    </div>
+    </div>
+</header>
+
+<main class="pt-32 md:pt-48 pb-20 overflow-hidden">
     <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center mb-32">
-        
+
         <div class="flex flex-col items-start text-left space-y-6 md:space-y-8 order-2 lg:order-1">
             <h1 class="text-5xl sm:text-6xl md:text-8xl font-black italic tracking-tighter uppercase leading-[0.95] md:leading-[0.9]">
                 Explore <br>
                 <span class="text-blue-500">Educate</span> <br>
                 <span class="outline-text">Experience</span>
             </h1>
-            
+
             <p class="text-gray-400 text-base md:text-xl font-medium max-w-lg leading-relaxed">
                 Unlock the next generation of tactical learning. Architecture designed for speed, precision, and the elite mindset of Tech Nxxt.
             </p>
@@ -108,10 +108,10 @@
             <div id="dynamicIconContainer" class="absolute inset-0 z-0 flex items-center justify-center">
                 <i id="rotatingIcon" class="fas fa-satellite-dish text-[12rem] md:text-[18rem] text-blue-500/10 transition-all duration-1000 transform scale-100 group-hover:scale-110"></i>
             </div>
-            
+
             <div class="relative z-10 bg-[#030816]/90 backdrop-blur-xl p-6 rounded-2xl border border-white/10 shadow-2xl">
                 <p id="typingText" class="text-[11px] md:text-xs font-bold text-blue-400 uppercase tracking-[0.2em] min-h-[3.5em] leading-relaxed">
-                    </p>
+                </p>
                 <div class="flex gap-2 mt-4">
                     <div id="dot1" class="w-1.5 h-1.5 rounded-full bg-blue-500 transition-all duration-500 shadow-[0_0_8px_#3b82f6]"></div>
                     <div id="dot2" class="w-1.5 h-1.5 rounded-full bg-white/10 transition-all duration-500"></div>
@@ -123,13 +123,13 @@
 
     <div id="dashboard" class="max-w-7xl mx-auto px-6 py-24 border-t border-white/5">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
-            
+
             <div class="lg:col-span-4 flex flex-col gap-3 bg-[#030816]/50 p-6 rounded-[2.5rem] border border-white/5 backdrop-blur-xl h-fit">
                 <div class="mb-6 px-4">
                     <h3 class="text-[10px] font-black uppercase tracking-[0.5em] text-blue-500">T Learn Pro </h3>
                     <p class="text-[9px] text-gray-600 uppercase font-bold mt-1">Features</p>
                 </div>
-                
+
                 <button onclick="switchTab('collab')" id="btn-collab" class="tab-btn active group">
                     <div class="flex items-center gap-4">
                         <div class="icon-box w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center group-hover:bg-blue-500/10 transition-colors">
@@ -172,197 +172,197 @@
             </div>
 
             <div class="lg:col-span-8 bg-[#030816] rounded-[2.5rem] border border-white/10 p-8 md:p-12 min-h-[450px] relative overflow-hidden shadow-2xl flex flex-col justify-center">
-                
-  <div id="content-collab" class="tab-content space-y-8 relative z-10">
-    <div class="flex items-center justify-between">
-        <div class="inline-block px-3 py-1 rounded-md bg-blue-500/10 border border-blue-500/20 text-[9px] font-black uppercase tracking-widest text-blue-400 uppercase">Pro Network: Encrypted</div>
-        <div class="text-[9px] font-bold text-gray-600 uppercase tracking-widest">Sync Rate: 100%</div>
-    </div>
 
-    <h2 class="text-4xl md:text-5xl font-black italic uppercase tracking-tighter text-white">Pro <span class="text-blue-500">Collaboration</span></h2>
-    
-    <div class="flex flex-col gap-4">
-        <div class="flex items-center justify-between p-4 bg-white/5 border border-white/5 rounded-2xl group hover:border-blue-500/30 transition-all cursor-pointer shadow-lg">
-            <div class="flex items-center gap-4">
-                <div class="w-2 h-2 rounded-full bg-blue-500 node-active shadow-[0_0_10px_#3b82f6]"></div>
-                <span class="text-[10px] font-black uppercase tracking-widest text-white">Knowledge Sync</span>
-            </div>
-            <span class="text-[9px] font-bold text-blue-400">ACTIVE</span>
-        </div>
+                <div id="content-collab" class="tab-content space-y-8 relative z-10">
+                    <div class="flex items-center justify-between">
+                        <div class="inline-block px-3 py-1 rounded-md bg-blue-500/10 border border-blue-500/20 text-[9px] font-black uppercase tracking-widest text-blue-400 uppercase">Pro Network: Encrypted</div>
+                        <div class="text-[9px] font-bold text-gray-600 uppercase tracking-widest">Sync Rate: 100%</div>
+                    </div>
 
-        <div class="flex items-center justify-between p-4 bg-white/5 border border-white/5 rounded-2xl opacity-40 grayscale group hover:opacity-100 hover:grayscale-0 transition-all cursor-pointer">
-            <div class="flex items-center gap-4">
-                <div class="w-2 h-2 rounded-full bg-gray-500"></div>
-                <span class="text-[10px] font-black uppercase tracking-widest text-gray-400 group-hover:text-white transition-colors">Peer Node 02</span>
-            </div>
-            <span class="text-[9px] font-bold text-gray-500">STANDBY</span>
-        </div>
-    </div>
+                    <h2 class="text-4xl md:text-5xl font-black italic uppercase tracking-tighter text-white">Pro <span class="text-blue-500">Collaboration</span></h2>
 
-    <div class="space-y-4 pt-4 border-t border-white/5">
-        <p class="text-gray-400 text-sm md:text-base leading-relaxed max-w-lg">
-            Mastery isn't achieved in a vacuum. To reach the top of your field, you must engage with a 
-            <span class="text-white font-bold">high-performance network</span>. 
-            T Learn Pro provides the infrastructure for you to connect with industry leaders, share tactical insights, and synchronize your learning path with the best in the business.
-        </p>
-        <p class="text-[11px] font-black uppercase tracking-[0.2em] text-blue-500 leading-tight">
-            Learn from the best to become the best. <br>
-            <span class="text-gray-500">Connect to the hub. Accelerate your career trajectory.</span>
-        </p>
-    </div>
-</div>
+                    <div class="flex flex-col gap-4">
+                        <div class="flex items-center justify-between p-4 bg-white/5 border border-white/5 rounded-2xl group hover:border-blue-500/30 transition-all cursor-pointer shadow-lg">
+                            <div class="flex items-center gap-4">
+                                <div class="w-2 h-2 rounded-full bg-blue-500 node-active shadow-[0_0_10px_#3b82f6]"></div>
+                                <span class="text-[10px] font-black uppercase tracking-widest text-white">Knowledge Sync</span>
+                            </div>
+                            <span class="text-[9px] font-bold text-blue-400">ACTIVE</span>
+                        </div>
 
+                        <div class="flex items-center justify-between p-4 bg-white/5 border border-white/5 rounded-2xl opacity-40 grayscale group hover:opacity-100 hover:grayscale-0 transition-all cursor-pointer">
+                            <div class="flex items-center gap-4">
+                                <div class="w-2 h-2 rounded-full bg-gray-500"></div>
+                                <span class="text-[10px] font-black uppercase tracking-widest text-gray-400 group-hover:text-white transition-colors">Peer Node 02</span>
+                            </div>
+                            <span class="text-[9px] font-bold text-gray-500">STANDBY</span>
+                        </div>
+                    </div>
 
-              <div id="content-team" class="tab-content hidden space-y-8 relative z-10">
-    <div class="flex items-center justify-between">
-        <div class="inline-block px-3 py-1 rounded-md bg-purple-500/10 border border-purple-500/20 text-[9px] font-black uppercase tracking-widest text-purple-400 uppercase">Team Architect</div>
-        <div class="text-[9px] font-bold text-gray-600 uppercase tracking-widest">Network Status: Ready</div>
-    </div>
-
-    <h2 class="text-4xl md:text-5xl font-black italic uppercase tracking-tighter text-white">Team <span class="text-blue-500">Creation</span></h2>
-    
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div class="flex flex-col gap-2 p-4 bg-white/5 border border-white/5 rounded-2xl group hover:border-blue-500/30 transition-all">
-            <span class="text-[9px] font-bold text-gray-500 uppercase tracking-widest">Team Capacity</span>
-            <div class="flex items-center justify-between">
-                <span class="text-xl font-black italic text-white">UP TO 50</span>
-                <i class="fas fa-users text-blue-500 text-xs"></i>
-            </div>
-        </div>
-
-        <div class="flex flex-col gap-2 p-4 bg-white/5 border border-white/5 rounded-2xl group hover:border-blue-500/30 transition-all">
-            <span class="text-[9px] font-bold text-gray-500 uppercase tracking-widest">Project Control</span>
-            <div class="flex items-center justify-between">
-                <span class="text-xl font-black italic text-white">OWNER</span>
-                <i class="fas fa-shield-halved text-blue-500 text-xs"></i>
-            </div>
-        </div>
-    </div>
-
-    <div class="space-y-4 pt-4 border-t border-white/5">
-        <p class="text-gray-400 text-sm md:text-base leading-relaxed max-w-lg">
-            Take control of your learning journey by building your own 
-            <span class="text-white font-bold">Project Team</span>. 
-            T Learn Pro allows you to invite peers, assign specific roles, and manage shared goals. Whether it's a study group or a startup initiative, you provide the vision—we provide the infrastructure.
-        </p>
-        <p class="text-[11px] font-black uppercase tracking-[0.2em] text-blue-500 leading-tight">
-            Lead the collective. Drive the progress. <br>
-            <span class="text-gray-500">Initialize your team today and scale your impact.</span>
-        </p>
-    </div>
-</div>
-
-
-
-             <div id="content-ai" class="tab-content hidden space-y-8 relative z-10">
-    <div class="flex items-center justify-between">
-        <div class="inline-block px-3 py-1 rounded-md bg-green-500/10 border border-green-500/20 text-[9px] font-black uppercase tracking-widest text-green-400 uppercase">Multi-Stack Engine</div>
-        <div class="text-[9px] font-bold text-gray-600 uppercase tracking-widest">Compiler: Online</div>
-    </div>
-
-    <h2 class="text-4xl md:text-5xl font-black italic uppercase tracking-tighter text-white">Nxxt <span class="text-blue-500">AI Engine</span></h2>
-    
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        
-        <div class="p-5 bg-black/40 rounded-2xl border border-white/5 flex flex-col gap-3 group hover:border-blue-500/40 transition-all">
-            <div class="flex items-center justify-between border-b border-white/5 pb-2">
-                <div class="flex items-center gap-2">
-                    <i class="fab fa-react text-blue-400 text-[10px]"></i>
-                    <span class="text-[8px] font-black uppercase tracking-[0.2em] text-gray-400">Frontend (React)</span>
+                    <div class="space-y-4 pt-4 border-t border-white/5">
+                        <p class="text-gray-400 text-sm md:text-base leading-relaxed max-w-lg">
+                            Mastery isn't achieved in a vacuum. To reach the top of your field, you must engage with a
+                            <span class="text-white font-bold">high-performance network</span>.
+                            T Learn Pro provides the infrastructure for you to connect with industry leaders, share tactical insights, and synchronize your learning path with the best in the business.
+                        </p>
+                        <p class="text-[11px] font-black uppercase tracking-[0.2em] text-blue-500 leading-tight">
+                            Learn from the best to become the best. <br>
+                            <span class="text-gray-500">Connect to the hub. Accelerate your career trajectory.</span>
+                        </p>
+                    </div>
                 </div>
-                <div class="w-1 h-1 rounded-full bg-blue-500 animate-pulse"></div>
-            </div>
-            <code class="text-[9px] md:text-xs font-mono text-blue-200 leading-relaxed">
-                <span class="text-purple-400">const</span> NxxtCard = ({ data }) => {<br>
-                &nbsp;&nbsp;<span class="text-purple-400">return</span> (<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&lt;<span class="text-blue-400">div</span> className="p-4"&gt;<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{data.name}<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&lt;/<span class="text-blue-400">div</span>&gt;<br>
-                &nbsp;&nbsp;);<br>
-                };
-            </code>
-        </div>
 
-        <div class="p-5 bg-black/40 rounded-2xl border border-white/5 flex flex-col gap-3 group hover:border-yellow-500/40 transition-all">
-            <div class="flex items-center justify-between border-b border-white/5 pb-2">
-                <div class="flex items-center gap-2">
-                    <i class="fab fa-python text-yellow-500 text-[10px]"></i>
-                    <span class="text-[8px] font-black uppercase tracking-[0.2em] text-gray-400">Backend (Python)</span>
+
+                <div id="content-team" class="tab-content hidden space-y-8 relative z-10">
+                    <div class="flex items-center justify-between">
+                        <div class="inline-block px-3 py-1 rounded-md bg-purple-500/10 border border-purple-500/20 text-[9px] font-black uppercase tracking-widest text-purple-400 uppercase">Team Architect</div>
+                        <div class="text-[9px] font-bold text-gray-600 uppercase tracking-widest">Network Status: Ready</div>
+                    </div>
+
+                    <h2 class="text-4xl md:text-5xl font-black italic uppercase tracking-tighter text-white">Team <span class="text-blue-500">Creation</span></h2>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="flex flex-col gap-2 p-4 bg-white/5 border border-white/5 rounded-2xl group hover:border-blue-500/30 transition-all">
+                            <span class="text-[9px] font-bold text-gray-500 uppercase tracking-widest">Team Capacity</span>
+                            <div class="flex items-center justify-between">
+                                <span class="text-xl font-black italic text-white">UP TO 50</span>
+                                <i class="fas fa-users text-blue-500 text-xs"></i>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col gap-2 p-4 bg-white/5 border border-white/5 rounded-2xl group hover:border-blue-500/30 transition-all">
+                            <span class="text-[9px] font-bold text-gray-500 uppercase tracking-widest">Project Control</span>
+                            <div class="flex items-center justify-between">
+                                <span class="text-xl font-black italic text-white">OWNER</span>
+                                <i class="fas fa-shield-halved text-blue-500 text-xs"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4 pt-4 border-t border-white/5">
+                        <p class="text-gray-400 text-sm md:text-base leading-relaxed max-w-lg">
+                            Take control of your learning journey by building your own
+                            <span class="text-white font-bold">Project Team</span>.
+                            T Learn Pro allows you to invite peers, assign specific roles, and manage shared goals. Whether it's a study group or a startup initiative, you provide the vision—we provide the infrastructure.
+                        </p>
+                        <p class="text-[11px] font-black uppercase tracking-[0.2em] text-blue-500 leading-tight">
+                            Lead the collective. Drive the progress. <br>
+                            <span class="text-gray-500">Initialize your team today and scale your impact.</span>
+                        </p>
+                    </div>
                 </div>
-                <div class="w-1 h-1 rounded-full bg-yellow-500 animate-pulse"></div>
-            </div>
-            <code class="text-[9px] md:text-xs font-mono text-yellow-100 leading-relaxed">
-                <span class="text-purple-400">def</span> sync_nxxt_node(node_id):<br>
-                &nbsp;&nbsp;status = nxxt.verify(node_id)<br>
-                &nbsp;&nbsp;<span class="text-purple-400">if</span> status == <span class="text-green-400">"READY"</span>:<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-purple-400">return</span> f<span class="text-green-400">"Node {node_id} Online"</span><br>
-                &nbsp;&nbsp;<span class="text-purple-400">return</span> <span class="text-red-400">None</span>
-            </code>
-        </div>
-
-    </div>
-
-    <div class="space-y-4 pt-4 border-t border-white/5">
-        <p class="text-gray-400 text-sm md:text-base leading-relaxed max-w-lg">
-            The Nxxt AI Engine is a comprehensive 
-            <span class="text-white font-bold">multi-language specialist</span>. 
-            From styling with CSS and building reactive components in JavaScript to architecting scalable backends in Python and C++, our AI understands the syntax and the strategy behind every line of code.
-        </p>
-        <p class="text-[11px] font-black uppercase tracking-[0.2em] text-blue-500 leading-tight">
-            Universal Syntax Support. <br>
-            <span class="text-gray-500">Master any stack. Solve any technical bottleneck.</span>
-        </p>
-    </div>
-</div>
 
 
-               <div id="content-learn" class="tab-content hidden space-y-8 relative z-10">
-    <div class="flex items-center justify-between">
-        <div class="inline-block px-3 py-1 rounded-md bg-yellow-500/10 border border-yellow-500/20 text-[9px] font-black uppercase tracking-widest text-yellow-400 uppercase">Education Hub</div>
-        <div class="text-[9px] font-bold text-gray-600 uppercase tracking-widest">Modules: 420+ Complete</div>
-    </div>
 
-    <h2 class="text-4xl md:text-5xl font-black italic uppercase tracking-tighter text-white">Advanced <span class="text-blue-500">Curriculum</span></h2>
-    
-    <div class="bg-black/40 rounded-2xl border border-white/5 p-5 space-y-4 group hover:border-blue-500/30 transition-all">
-        <div class="flex justify-between items-end">
-            <div class="space-y-1">
-                <span class="text-[8px] font-black uppercase tracking-widest text-gray-500">Current Path</span>
-                <p class="text-xs font-bold text-white uppercase tracking-wider">Full-Stack System Architecture</p>
-            </div>
-            <span class="text-[10px] font-black text-blue-500">85%</span>
-        </div>
-        
-        <div class="flex gap-1 h-1.5">
-            <div class="flex-[3] bg-blue-600 rounded-full shadow-[0_0_8px_rgba(37,99,235,0.4)]"></div>
-            <div class="flex-[1] bg-blue-600/40 rounded-full"></div>
-            <div class="flex-[1] bg-white/5 rounded-full"></div>
-        </div>
+                <div id="content-ai" class="tab-content hidden space-y-8 relative z-10">
+                    <div class="flex items-center justify-between">
+                        <div class="inline-block px-3 py-1 rounded-md bg-green-500/10 border border-green-500/20 text-[9px] font-black uppercase tracking-widest text-green-400 uppercase">Multi-Stack Engine</div>
+                        <div class="text-[9px] font-bold text-gray-600 uppercase tracking-widest">Compiler: Online</div>
+                    </div>
 
-        <div class="grid grid-cols-3 gap-2 pt-2">
-            <div class="text-[7px] font-black uppercase tracking-tighter text-gray-600"><i class="fas fa-check text-green-500 mr-1"></i> Syntax</div>
-            <div class="text-[7px] font-black uppercase tracking-tighter text-gray-600"><i class="fas fa-check text-green-500 mr-1"></i> Logic</div>
-            <div class="text-[7px] font-black uppercase tracking-tighter text-blue-500 animate-pulse"><i class="fas fa-circle-notch fa-spin mr-1"></i> Scaling</div>
-        </div>
-    </div>
+                    <h2 class="text-4xl md:text-5xl font-black italic uppercase tracking-tighter text-white">Nxxt <span class="text-blue-500">AI Engine</span></h2>
 
-    <div class="space-y-4 pt-4 border-t border-white/5">
-        <p class="text-gray-400 text-sm md:text-base leading-relaxed max-w-lg">
-            Elevate your technical authority with high-fidelity courses designed for 
-            <span class="text-white font-bold">Pro-level mastery</span>. 
-            The T Learn Pro curriculum bridges the gap between basic coding and complex system execution, providing you with the blueprints to build, scale, and lead in the modern tech landscape.
-        </p>
-        
-        <div class="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
-            <button class="px-8 py-3 bg-blue-600 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-transparent border border-blue-600 transition-all active:scale-95 shadow-lg shadow-blue-600/20">
-                Resume Learning
-            </button>
-            <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
-                <i class="fas fa-bolt text-yellow-500 mr-2"></i> Next up: PYTHON ADVANCED MODULE
-            </p>
-        </div>
-    </div>
-</div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                        <div class="p-5 bg-black/40 rounded-2xl border border-white/5 flex flex-col gap-3 group hover:border-blue-500/40 transition-all">
+                            <div class="flex items-center justify-between border-b border-white/5 pb-2">
+                                <div class="flex items-center gap-2">
+                                    <i class="fab fa-react text-blue-400 text-[10px]"></i>
+                                    <span class="text-[8px] font-black uppercase tracking-[0.2em] text-gray-400">Frontend (React)</span>
+                                </div>
+                                <div class="w-1 h-1 rounded-full bg-blue-500 animate-pulse"></div>
+                            </div>
+                            <code class="text-[9px] md:text-xs font-mono text-blue-200 leading-relaxed">
+                                <span class="text-purple-400">const</span> NxxtCard = ({ data }) => {<br>
+                                &nbsp;&nbsp;<span class="text-purple-400">return</span> (<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&lt;<span class="text-blue-400">div</span> className="p-4"&gt;<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{data.name}<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&lt;/<span class="text-blue-400">div</span>&gt;<br>
+                                &nbsp;&nbsp;);<br>
+                                };
+                            </code>
+                        </div>
+
+                        <div class="p-5 bg-black/40 rounded-2xl border border-white/5 flex flex-col gap-3 group hover:border-yellow-500/40 transition-all">
+                            <div class="flex items-center justify-between border-b border-white/5 pb-2">
+                                <div class="flex items-center gap-2">
+                                    <i class="fab fa-python text-yellow-500 text-[10px]"></i>
+                                    <span class="text-[8px] font-black uppercase tracking-[0.2em] text-gray-400">Backend (Python)</span>
+                                </div>
+                                <div class="w-1 h-1 rounded-full bg-yellow-500 animate-pulse"></div>
+                            </div>
+                            <code class="text-[9px] md:text-xs font-mono text-yellow-100 leading-relaxed">
+                                <span class="text-purple-400">def</span> sync_nxxt_node(node_id):<br>
+                                &nbsp;&nbsp;status = nxxt.verify(node_id)<br>
+                                &nbsp;&nbsp;<span class="text-purple-400">if</span> status == <span class="text-green-400">"READY"</span>:<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-purple-400">return</span> f<span class="text-green-400">"Node {node_id} Online"</span><br>
+                                &nbsp;&nbsp;<span class="text-purple-400">return</span> <span class="text-red-400">None</span>
+                            </code>
+                        </div>
+
+                    </div>
+
+                    <div class="space-y-4 pt-4 border-t border-white/5">
+                        <p class="text-gray-400 text-sm md:text-base leading-relaxed max-w-lg">
+                            The Nxxt AI Engine is a comprehensive
+                            <span class="text-white font-bold">multi-language specialist</span>.
+                            From styling with CSS and building reactive components in JavaScript to architecting scalable backends in Python and C++, our AI understands the syntax and the strategy behind every line of code.
+                        </p>
+                        <p class="text-[11px] font-black uppercase tracking-[0.2em] text-blue-500 leading-tight">
+                            Universal Syntax Support. <br>
+                            <span class="text-gray-500">Master any stack. Solve any technical bottleneck.</span>
+                        </p>
+                    </div>
+                </div>
+
+
+                <div id="content-learn" class="tab-content hidden space-y-8 relative z-10">
+                    <div class="flex items-center justify-between">
+                        <div class="inline-block px-3 py-1 rounded-md bg-yellow-500/10 border border-yellow-500/20 text-[9px] font-black uppercase tracking-widest text-yellow-400 uppercase">Education Hub</div>
+                        <div class="text-[9px] font-bold text-gray-600 uppercase tracking-widest">Modules: 420+ Complete</div>
+                    </div>
+
+                    <h2 class="text-4xl md:text-5xl font-black italic uppercase tracking-tighter text-white">Advanced <span class="text-blue-500">Curriculum</span></h2>
+
+                    <div class="bg-black/40 rounded-2xl border border-white/5 p-5 space-y-4 group hover:border-blue-500/30 transition-all">
+                        <div class="flex justify-between items-end">
+                            <div class="space-y-1">
+                                <span class="text-[8px] font-black uppercase tracking-widest text-gray-500">Current Path</span>
+                                <p class="text-xs font-bold text-white uppercase tracking-wider">Full-Stack System Architecture</p>
+                            </div>
+                            <span class="text-[10px] font-black text-blue-500">85%</span>
+                        </div>
+
+                        <div class="flex gap-1 h-1.5">
+                            <div class="flex-[3] bg-blue-600 rounded-full shadow-[0_0_8px_rgba(37,99,235,0.4)]"></div>
+                            <div class="flex-[1] bg-blue-600/40 rounded-full"></div>
+                            <div class="flex-[1] bg-white/5 rounded-full"></div>
+                        </div>
+
+                        <div class="grid grid-cols-3 gap-2 pt-2">
+                            <div class="text-[7px] font-black uppercase tracking-tighter text-gray-600"><i class="fas fa-check text-green-500 mr-1"></i> Syntax</div>
+                            <div class="text-[7px] font-black uppercase tracking-tighter text-gray-600"><i class="fas fa-check text-green-500 mr-1"></i> Logic</div>
+                            <div class="text-[7px] font-black uppercase tracking-tighter text-blue-500 animate-pulse"><i class="fas fa-circle-notch fa-spin mr-1"></i> Scaling</div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4 pt-4 border-t border-white/5">
+                        <p class="text-gray-400 text-sm md:text-base leading-relaxed max-w-lg">
+                            Elevate your technical authority with high-fidelity courses designed for
+                            <span class="text-white font-bold">Pro-level mastery</span>.
+                            The T Learn Pro curriculum bridges the gap between basic coding and complex system execution, providing you with the blueprints to build, scale, and lead in the modern tech landscape.
+                        </p>
+
+                        <div class="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+                            <button class="px-8 py-3 bg-blue-600 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-transparent border border-blue-600 transition-all active:scale-95 shadow-lg shadow-blue-600/20">
+                                Resume Learning
+                            </button>
+                            <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
+                                <i class="fas fa-bolt text-yellow-500 mr-2"></i> Next up: PYTHON ADVANCED MODULE
+                            </p>
+                        </div>
+                    </div>
+                </div>
 
 
 
@@ -370,493 +370,495 @@
         </div>
     </div>
     <section class="bg-[#020617] py-32 overflow-hidden relative">
-    <div class="absolute inset-0 opacity-10 pointer-events-none" 
-         style="background-image: radial-gradient(#1e3a8a 1px, transparent 1px); background-size: 40px 40px;"></div>
+        <div class="absolute inset-0 opacity-10 pointer-events-none"
+             style="background-image: radial-gradient(#1e3a8a 1px, transparent 1px); background-size: 40px 40px;"></div>
 
-    <div class="max-w-7xl mx-auto px-6 relative z-10">
-        
-        <div class="mb-20">
-            <div class="flex items-center gap-3 mb-4">
-                <div class="w-10 h-[1px] bg-blue-500"></div>
-                <span class="text-[10px] font-black uppercase tracking-[0.4em] text-blue-500">The Nxxt Lab Environment</span>
-            </div>
-            <h2 class="text-5xl md:text-7xl font-black italic uppercase tracking-tighter text-white leading-none">
-                Research. Build. <br>
-                <span class="text-blue-500 underline decoration-1 underline-offset-8">Scale///</span>
-            </h2>
-        </div>
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
 
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
-            
-            <div class="lg:col-span-5 space-y-4">
-                
-                <div class="group relative p-6 rounded-[2rem] bg-white/[0.02] border border-white/5 hover:border-blue-500/30 transition-all duration-500">
-                    <span class="text-3xl font-black italic text-white/5 group-hover:text-blue-500/20 transition-colors">01</span>
-                    <h3 class="text-lg font-black uppercase tracking-widest text-white mt-1 mb-2">Initialize Nxxt Lab</h3>
-                    <p class="text-gray-500 text-xs leading-relaxed">
-                        Access our proprietary sandbox. The Nxxt Lab provides a pre-configured, high-performance environment to stress-test your code before global deployment.
-                    </p>
+            <div class="mb-20">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-10 h-[1px] bg-blue-500"></div>
+                    <span class="text-[10px] font-black uppercase tracking-[0.4em] text-blue-500">The Nxxt Lab Environment</span>
                 </div>
-
-                <div class="group relative p-6 rounded-[2rem] bg-white/[0.02] border border-white/5 hover:border-blue-500/30 transition-all duration-500">
-                    <span class="text-3xl font-black italic text-white/5 group-hover:text-blue-500/20 transition-colors">02</span>
-                    <h3 class="text-lg font-black uppercase tracking-widest text-white mt-1 mb-2">Neural Debugging</h3>
-                    <p class="text-gray-500 text-xs leading-relaxed">
-                        Leverage the Nxxt AI within the lab to identify architectural leaks. Get real-time feedback on system efficiency and security protocols.
-                    </p>
-                </div>
-
-                <div class="group relative p-6 rounded-[2rem] bg-white/[0.02] border border-white/5 hover:border-blue-500/30 transition-all duration-500">
-                    <span class="text-3xl font-black italic text-white/5 group-hover:text-blue-500/20 transition-colors">03</span>
-                    <h3 class="text-lg font-black uppercase tracking-widest text-white mt-1 mb-2">Synchronized Execution</h3>
-                    <p class="text-gray-500 text-xs leading-relaxed">
-                        Once validated in the lab, sync your knowledge across the T Learn Pro network to scale your impact across the global infrastructure.
-                    </p>
-                </div>
-
+                <h2 class="text-5xl md:text-7xl font-black italic uppercase tracking-tighter text-white leading-none">
+                    Research. Build. <br>
+                    <span class="text-blue-500 underline decoration-1 underline-offset-8">Scale///</span>
+                </h2>
             </div>
 
-            <div class="lg:col-span-7 relative flex justify-center items-center min-h-[550px]">
-                
-                <div class="neural-core-container relative scale-75 md:scale-110">
-                    <div class="w-40 h-40 bg-blue-600 rounded-full blur-3xl opacity-10 animate-pulse absolute"></div>
-                    <div class="w-24 h-24 bg-[#030816] rounded-2xl border border-blue-500/50 shadow-[0_0_40px_rgba(59,130,246,0.3)] relative z-20 flex items-center justify-center overflow-hidden">
-                        <i class="fas fa-flask text-blue-400 text-3xl animate-bounce"></i>
-                        <div class="absolute inset-0 bg-gradient-to-b from-transparent via-blue-500/20 to-transparent h-1/2 w-full animate-scan"></div>
-                    </div>
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
 
-                    <div class="w-56 h-56 border-2 border-dashed border-white/10 rounded-full absolute animate-spin-slow"></div>
-                    <div class="w-72 h-72 border border-blue-500/20 rounded-full absolute animate-reverse-spin"></div>
-                    <div class="w-[350px] h-[350px] border border-white/5 rounded-full absolute animate-spin-slow"></div>
+                <div class="lg:col-span-5 space-y-4">
 
-                    <div class="data-node node-1 bg-blue-400"></div>
-                    <div class="data-node node-2 bg-blue-500"></div>
-                    <div class="data-node node-3 bg-white/20"></div>
-                </div>
-
-                <div class="mt-12 lg:absolute lg:bottom-0 lg:-left-5 z-30 p-8 rounded-[2.5rem] bg-[#030816]/95 backdrop-blur-2xl border border-blue-500/40 shadow-2xl max-w-sm">
-                    <div class="flex items-center justify-between mb-6">
-                        <div class="flex items-center gap-3">
-                            <div class="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_10px_#22c55e]"></div>
-                            <span class="text-[9px] font-black uppercase tracking-widest text-white">Lab Status: Stable</span>
-                        </div>
-                        <span class="text-[9px] font-bold text-gray-500">v4.0.2</span>
-                    </div>
-                    
-                    <h4 class="text-xl font-black italic uppercase text-white mb-4">Launch Nxxt Lab</h4>
-                    
-                    <div class="space-y-3 mb-8">
-                        <div class="flex justify-between text-[8px] font-bold uppercase tracking-widest">
-                            <span class="text-gray-500">Processing Power</span>
-                            <span class="text-blue-400">99.9%</span>
-                        </div>
-                        <div class="h-1 bg-white/5 rounded-full overflow-hidden">
-                            <div class="h-full bg-blue-500 w-[99%]"></div>
-                        </div>
-                    </div>
-
-                    <button class="w-full py-4 bg-blue-600 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] text-white hover:bg-white hover:text-black hover:scale-[1.02] transition-all duration-300 active:scale-95 shadow-lg shadow-blue-900/20">
-                        Enter Laboratory
-                    </button>
-                </div>
-            </div>
-
-        </div>
-    </div>
-</section>
-
-<section class="bg-[#020617] pt-32 pb-16 relative overflow-hidden">
-    <div class="absolute inset-0 opacity-20 pointer-events-none" 
-         style="background-image: linear-gradient(0deg, transparent 24%, rgba(59, 130, 246, .05) 25%, rgba(59, 130, 246, .05) 26%, transparent 27%, transparent 74%, rgba(59, 130, 246, .05) 75%, rgba(59, 130, 246, .05) 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, rgba(59, 130, 246, .05) 25%, rgba(59, 130, 246, .05) 26%, transparent 27%, transparent 74%, rgba(59, 130, 246, .05) 75%, rgba(59, 130, 246, .05) 76%, transparent 77%, transparent); background-size: 50px 50px;">
-    </div>
-
-    <div class="max-w-7xl mx-auto px-6 relative z-10">
-        <div class="flex flex-col items-center mb-20 text-center">
-            <div class="px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-[10px] font-black uppercase tracking-[0.3em] text-blue-400 mb-6 animate-pulse">Access Protocol v4.0</div>
-            <h2 class="text-5xl md:text-7xl font-black italic uppercase tracking-tighter text-white mb-10">System <span class="text-blue-500">Subscription///</span></h2>
-            
-            <div class="flex items-center gap-6 p-2 bg-white/5 border border-white/10 rounded-2xl backdrop-blur-md shadow-[0_0_20px_rgba(59,130,246,0.1)]">
-                <span id="monthlyLabel" class="text-[10px] font-black uppercase tracking-widest text-white transition-all">Monthly</span>
-                <button onclick="togglePricing()" id="priceToggle" class="w-16 h-8 bg-blue-600 rounded-full relative p-1 transition-all hover:shadow-[0_0_15px_#3b82f6]">
-                    <div id="toggleBall" class="w-6 h-6 bg-white rounded-full shadow-lg transition-transform duration-300"></div>
-                </button>
-                <span id="yearlyLabel" class="text-[10px] font-black uppercase tracking-widest text-gray-500 transition-all">Yearly <span class="text-blue-400 text-[8px] ml-1">(Save 15%)</span></span>
-            </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-end">
-            <div class="pricing-card p-10 rounded-[2.5rem] bg-white/[0.02] border border-white/5 flex flex-col hover:border-blue-500/40 transition-all duration-500 group relative overflow-hidden">
-                <div class="absolute inset-0 bg-gradient-to-br from-blue-600/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                <span class="text-[10px] font-black uppercase tracking-widest text-gray-500 mb-2 relative z-10">Entry Node</span>
-                <h3 class="text-3xl font-black italic uppercase text-white mb-6 relative z-10">Free</h3>
-                <div class="mb-8 relative z-10"><span class="text-4xl font-black text-white">₦0</span> <span class="text-xs font-bold text-gray-600 uppercase">/ Always</span></div>
-                <ul class="space-y-4 mb-12 flex-grow relative z-10">
-                    <li class="flex items-center gap-3 text-[11px] text-gray-400 font-bold uppercase"><i class="fas fa-check text-blue-500"></i> 6 Projects Deployed</li>
-                    <li class="flex items-center gap-3 text-[11px] text-red-500/50 font-bold uppercase"><i class="fas fa-times"></i> No Database Access</li>
-                    <li class="flex items-center gap-3 text-[11px] text-gray-400 font-bold uppercase"><i class="fas fa-check text-blue-500"></i> 1 Team Collaboration</li>
-                </ul>
-                <button class="w-full py-4 border border-white/10 rounded-xl text-[10px] font-black uppercase tracking-widest text-white hover:bg-white hover:text-black transition-all relative z-10">Initialize</button>
-            </div>
-
-            <div class="pricing-card p-10 rounded-[3rem] bg-[#050b1d] border-2 border-blue-600 shadow-[0_0_50px_rgba(37,99,235,0.15)] flex flex-col relative scale-105 z-20 overflow-hidden group">
-                <div class="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-blue-600 rounded-full text-[8px] font-black uppercase text-white tracking-[0.3em] shadow-[0_0_15px_#2563eb]">Recommended</div>
-                <span class="text-[10px] font-black uppercase tracking-widest text-blue-400 mb-2">Academic Node</span>
-                <h3 class="text-3xl font-black italic uppercase text-white mb-6">Student</h3>
-                <div class="mb-8"><span id="studentPrice" class="text-5xl font-black text-white transition-all">₦7,000</span> <span id="studentPeriod" class="text-xs font-bold text-blue-400/50 uppercase">/ Month</span></div>
-                <ul class="space-y-4 mb-12 flex-grow">
-                    <li class="flex items-center gap-3 text-[11px] text-white font-bold uppercase"><i class="fas fa-check text-blue-400"></i> 30 Projects Deployed</li>
-                    <li class="flex items-center gap-3 text-[11px] text-white font-bold uppercase"><i class="fas fa-check text-blue-400"></i> Basic Database</li>
-                    <li class="flex items-center gap-3 text-[11px] text-white font-bold uppercase"><i class="fas fa-check text-blue-400"></i> 12 Team Collaboration</li>
-                </ul>
-                <button class="w-full py-5 bg-blue-600 rounded-xl text-[10px] font-black uppercase tracking-widest text-white hover:bg-white hover:text-black transition-all shadow-[0_0_30px_rgba(37,99,235,0.4)]">Upgrade Node</button>
-            </div>
-
-            <div class="pricing-card p-10 rounded-[2.5rem] bg-white/[0.02] border border-white/5 flex flex-col hover:border-blue-500/40 transition-all duration-500 group relative overflow-hidden">
-                <div class="absolute inset-0 bg-gradient-to-br from-blue-600/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                <span class="text-[10px] font-black uppercase tracking-widest text-gray-500 mb-2 relative z-10">Authority Node</span>
-                <h3 class="text-3xl font-black italic uppercase text-white mb-6 relative z-10">Pro</h3>
-                <div class="mb-8 relative z-10"><span id="proPrice" class="text-4xl font-black text-white">₦14,000</span> <span id="proPeriod" class="text-xs font-bold text-gray-600 uppercase">/ Month</span></div>
-                <ul class="space-y-4 mb-12 flex-grow relative z-10">
-                    <li class="flex items-center gap-3 text-[11px] text-gray-400 font-bold uppercase"><i class="fas fa-check text-blue-500"></i> Unlimited Deployments</li>
-                    <li class="flex items-center gap-3 text-[11px] text-gray-400 font-bold uppercase"><i class="fas fa-check text-blue-500"></i> Full Authority</li>
-                    <li class="flex items-center gap-3 text-[11px] text-gray-400 font-bold uppercase"><i class="fas fa-check text-blue-500"></i> Unlimited Team Sync</li>
-                </ul>
-                <button class="w-full py-4 border border-white/10 rounded-xl text-[10px] font-black uppercase tracking-widest text-white hover:bg-white hover:text-black transition-all relative z-10">Execute Mastery</button>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="bg-[#020617] pt-16 pb-32 relative overflow-hidden">
-    <div class="max-w-7xl mx-auto px-6 mb-16">
-        <div class="w-full h-px bg-gradient-to-r from-transparent via-blue-500/20 to-transparent"></div>
-    </div>
-
-    <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-600/5 blur-[120px] rounded-full"></div>
-    
-    <div class="max-w-7xl mx-auto px-6 relative z-10">
-        <div class="mb-20">
-            <div class="flex items-center gap-3 mb-4">
-                <div class="w-10 h-[1px] bg-blue-500"></div>
-                <span class="text-[10px] font-black uppercase tracking-[0.4em] text-blue-500">User Validation</span>
-            </div>
-            <h2 class="text-5xl md:text-7xl font-black italic uppercase tracking-tighter text-white leading-none">
-                Lab <span class="text-blue-500 underline decoration-1 underline-offset-8">Reports///</span>
-            </h2>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
-            <div class="md:col-span-7 p-8 rounded-[2.5rem] bg-white/[0.02] border border-white/5 hover:border-blue-500/30 transition-all group relative overflow-hidden">
-                <div class="absolute top-4 right-8 text-6xl font-black italic text-white/[0.03] group-hover:text-blue-500/10">"</div>
-                <div class="flex items-center gap-4 mb-6">
-                    <div class="w-12 h-12 rounded-full bg-blue-600 flex items-center justify-center font-black text-white">JD</div>
-                    <div>
-                        <h4 class="text-sm font-black uppercase text-white">Toluwani Godson</h4>
-                        <p class="text-[10px] font-bold text-blue-500 uppercase">Senior Dev @ EliteLeague</p>
-                    </div>
-                </div>
-                <p class="text-gray-400 text-lg italic leading-relaxed">"The Nxxt Lab environment changed my entire workflow. Deploying on the free tier gave me the confidence to upgrade to Pro."</p>
-            </div>
-
-            <div class="md:col-span-5 p-8 rounded-[2.5rem] bg-blue-600/5 border border-blue-500/20 flex flex-col justify-between group">
-                <p class="text-white text-sm font-medium leading-relaxed mb-8">"As a student, the Academic Node is a lifesaver. Having 30 projects ready for my portfolio made my internship stand out."</p>
-                <div class="flex items-center gap-4">
-                    <div class="w-10 h-10 rounded-full bg-purple-600 flex items-center justify-center font-black text-white text-xs">SA</div>
-                    <div>
-                        <h4 class="text-xs font-black uppercase text-white">Anayo Clinton</h4>
-                        <p class="text-[9px] font-bold text-gray-500 uppercase">Student @ UNILAG</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="md:col-span-4 p-8 rounded-[2.5rem] bg-white/[0.02] border border-white/5 hover:border-blue-500/30 transition-all group">
-                <p class="text-gray-400 text-sm leading-relaxed mb-8">"Nxxt AI beginner level is surprisingly smart. It helped me debug a routing issue in minutes."</p>
-                <div class="flex items-center gap-4">
-                    <div class="w-10 h-10 rounded-full bg-green-600 flex items-center justify-center font-black text-white text-xs">TK</div>
-                    <div>
-                        <h4 class="text-xs font-black uppercase text-white">Tunde Kelly</h4>
-                        <p class="text-[9px] font-bold text-gray-500 uppercase">Junior Engineer</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="md:col-span-8 p-8 rounded-[2.5rem] bg-white/[0.02] border border-white/10 relative group overflow-hidden">
-                <div class="flex flex-col md:flex-row md:items-center gap-8">
-                    <div class="flex-grow">
-                        <p class="text-gray-300 text-base italic mb-6">"The synchronization between my Git repo and the Nxxt Lab is seamless. It's the elite-league standard."</p>
-                        <div class="flex items-center gap-4">
-                            <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center font-black text-white text-xs">EM</div>
-                            <div>
-                                <h4 class="text-xs font-black uppercase text-white">Emmanuel Okon</h4>
-                                <p class="text-[9px] font-bold text-gray-500 uppercase">System Architect</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="bg-[#020617] p-6 rounded-3xl border border-white/5 text-center min-w-[150px]">
-                        <div class="text-2xl font-black text-blue-500">99.9%</div>
-                        <div class="text-[8px] font-black uppercase text-gray-500 tracking-[0.2em]">Uptime Reported</div>
-                    </div>
-                </div>
-            </div>
-        </div> 
-    </div> 
-</section>
-
-<section class="bg-[#020617] py-32 relative overflow-hidden">
-    <div class="absolute top-1/2 left-0 -translate-y-1/2 w-96 h-96 bg-blue-600/10 blur-[120px] rounded-full"></div>
-    <div class="absolute top-0 right-0 w-64 h-64 bg-blue-500/5 blur-[80px] rounded-full"></div>
-
-    <div class="max-w-4xl mx-auto px-6 relative z-10">
-        <div class="flex flex-col items-center mb-20 text-center">
-            <div class="flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 mb-6">
-                <span class="w-2 h-2 bg-blue-500 rounded-full animate-ping"></span>
-                <span class="text-[10px] font-black uppercase tracking-[0.3em] text-blue-400">Tech Nxxt Software Corp // Knowledge Base</span>
-            </div>
-            <h2 class="text-4xl md:text-6xl font-black italic uppercase tracking-tighter text-white">System <span class="text-blue-500">Intelligence///</span></h2>
-        </div>
-
-        <div class="space-y-4">
-            
-            <div class="faq-item group">
-                <button onclick="toggleFaq(this)" class="faq-btn w-full p-6 md:p-8 bg-white/[0.03] border border-white/5 border-l-4 border-l-blue-600 hover:bg-white/[0.05] hover:border-blue-500/50 transition-all text-left flex justify-between items-center rounded-r-2xl backdrop-blur-sm">
-                    <div class="flex items-center gap-4">
-                        <div class="w-10 h-10 rounded-lg bg-blue-600/10 border border-blue-500/20 flex items-center justify-center">
-                            <i class="fas fa-microchip text-blue-500"></i>
-                        </div>
-                        <span class="text-xs md:text-sm font-black uppercase tracking-widest text-white leading-tight">What is the core difference between Tech Nxxt and T Learn Pro?</span>
-                    </div>
-                    <i class="fas fa-plus text-blue-500 group-hover:rotate-45 transition-transform duration-300"></i>
-                </button>
-                <div class="faq-answer hidden overflow-hidden transition-all duration-300">
-                    <div class="p-8 bg-white/[0.01] border-x border-b border-white/5 text-gray-400 text-sm leading-relaxed rounded-br-2xl flex gap-4">
-                        <div class="text-blue-500 font-black">ANS:</div>
-                        <div>
-                            <strong class="text-white">Tech Nxxt</strong> is our parent software company focused on building high-scale infrastructure. <strong class="text-white">T Learn Pro</strong> is our specialized educational platform designed to onboard engineers into the Tech Nxxt ecosystem through tiered training nodes.
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="faq-item group">
-                <button onclick="toggleFaq(this)" class="faq-btn w-full p-6 md:p-8 bg-white/[0.03] border border-white/5 border-l-4 border-l-blue-600/30 hover:border-l-blue-500 hover:bg-white/[0.05] transition-all text-left flex justify-between items-center rounded-r-2xl backdrop-blur-sm">
-                    <div class="flex items-center gap-4">
-                        <div class="w-10 h-10 rounded-lg bg-blue-600/10 border border-blue-500/20 flex items-center justify-center">
-                            <i class="fas fa-layer-group text-blue-500"></i>
-                        </div>
-                        <span class="text-xs md:text-sm font-black uppercase tracking-widest text-white leading-tight">Can I switch nodes after initialization?</span>
-                    </div>
-                    <i class="fas fa-plus text-blue-500 group-hover:rotate-45 transition-transform duration-300"></i>
-                </button>
-                <div class="faq-answer hidden">
-                    <div class="p-8 bg-white/[0.01] border-x border-b border-white/5 text-gray-400 text-sm leading-relaxed rounded-br-2xl flex gap-4">
-                        <div class="text-blue-500 font-black">ANS:</div>
-                        <div>Yes. You can upgrade from an Entry Node to an Academic or Authority Node via your dashboard. Tech Nxxt software handles the migration automatically, ensuring zero data loss during the transition.</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="faq-item group">
-                <button onclick="toggleFaq(this)" class="faq-btn w-full p-6 md:p-8 bg-white/[0.03] border border-white/5 border-l-4 border-l-blue-600/30 hover:border-l-blue-500 hover:bg-white/[0.05] transition-all text-left flex justify-between items-center rounded-r-2xl backdrop-blur-sm">
-                    <div class="flex items-center gap-4">
-                        <div class="w-10 h-10 rounded-lg bg-blue-600/10 border border-blue-500/20 flex items-center justify-center">
-                            <i class="fas fa-shield-halved text-blue-500"></i>
-                        </div>
-                        <span class="text-xs md:text-sm font-black uppercase tracking-widest text-white leading-tight">How secure is the Tech Nxxt infrastructure?</span>
-                    </div>
-                    <i class="fas fa-plus text-blue-500 group-hover:rotate-45 transition-transform duration-300"></i>
-                </button>
-                <div class="faq-answer hidden">
-                    <div class="p-8 bg-white/[0.01] border-x border-b border-white/5 text-gray-400 text-sm leading-relaxed rounded-br-2xl flex gap-4">
-                        <div class="text-blue-500 font-black">ANS:</div>
-                        <div>Security is our primary directive. Every deployment on T Learn Pro is sandboxed within Tech Nxxt’s proprietary cloud architecture, utilizing encrypted node-to-node communication and automated threat detection.</div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </div>
-</section>
-
-
-<section class="bg-[#020617] py-24 relative overflow-hidden">
-    <div class="absolute inset-0 opacity-10 pointer-events-none" 
-         style="background-image: linear-gradient(90deg, rgba(59, 130, 246, .1) 1px, transparent 1px), linear-gradient(rgba(59, 130, 246, .1) 1px, transparent 1px); background-size: 40px 40px;">
-    </div>
-
-    <div class="max-w-6xl mx-auto px-6 relative z-10">
-        <div class="relative p-1 md:p-1.5 rounded-[3rem] bg-gradient-to-br from-blue-600/20 via-transparent to-blue-600/20 shadow-[0_0_50px_rgba(59,130,246,0.1)]">
-            <div class="bg-[#050b1d] rounded-[2.8rem] p-8 md:p-16 border border-white/5 relative overflow-hidden">
-                <i class="fas fa-satellite-dish absolute top-10 right-10 text-blue-500/10 text-6xl rotate-12"></i>
-                <i class="fas fa-code absolute -bottom-5 -left-5 text-blue-500/5 text-9xl -rotate-12"></i>
-
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                    <div>
-                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 mb-6">
-                            <span class="w-1.5 h-1.5 bg-green-500 rounded-full animate-ping"></span>
-                            <span class="text-[9px] font-black uppercase tracking-[0.3em] text-blue-400">Live Transmission</span>
-                        </div>
-                        <h2 class="text-4xl md:text-5xl font-black italic uppercase tracking-tighter text-white mb-6">
-                            Secure your <span class="text-blue-500">Access Node///</span>
-                        </h2>
-                        <p class="text-gray-400 text-sm font-medium leading-relaxed max-w-md">
-                            Join the <strong class="text-white">Tech Nxxt</strong> intelligence network. Receive encrypted updates on new lab clusters, software patches, and elite-league engineering insights.
+                    <div class="group relative p-6 rounded-[2rem] bg-white/[0.02] border border-white/5 hover:border-blue-500/30 transition-all duration-500">
+                        <span class="text-3xl font-black italic text-white/5 group-hover:text-blue-500/20 transition-colors">01</span>
+                        <h3 class="text-lg font-black uppercase tracking-widest text-white mt-1 mb-2">Initialize Nxxt Lab</h3>
+                        <p class="text-gray-500 text-xs leading-relaxed">
+                            Access our proprietary sandbox. The Nxxt Lab provides a pre-configured, high-performance environment to stress-test your code before global deployment.
                         </p>
                     </div>
 
-                    <div class="relative">
-                        <form class="flex flex-col gap-4" onsubmit="event.preventDefault(); handleSubscription(this.querySelector('#newsletterSubscribeBtn'));">
-                            <div class="relative group">
-                                <div class="absolute inset-y-0 left-5 flex items-center pointer-events-none">
-                                    <i class="fas fa-envelope text-blue-500/50 group-focus-within:text-blue-500 transition-colors"></i>
-                                </div>
-                                <input
-                                    type="email"
-                                    id="newsletterEmailInput"
-                                    placeholder="IDENTITY@EMAIL.COM"
-                                    class="w-full bg-[#020617] border border-white/10 rounded-2xl py-5 pl-14 pr-6 text-xs font-black text-white uppercase tracking-[0.2em] focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all outline-none"
-                                    required>
+                    <div class="group relative p-6 rounded-[2rem] bg-white/[0.02] border border-white/5 hover:border-blue-500/30 transition-all duration-500">
+                        <span class="text-3xl font-black italic text-white/5 group-hover:text-blue-500/20 transition-colors">02</span>
+                        <h3 class="text-lg font-black uppercase tracking-widest text-white mt-1 mb-2">Neural Debugging</h3>
+                        <p class="text-gray-500 text-xs leading-relaxed">
+                            Leverage the Nxxt AI within the lab to identify architectural leaks. Get real-time feedback on system efficiency and security protocols.
+                        </p>
+                    </div>
+
+                    <div class="group relative p-6 rounded-[2rem] bg-white/[0.02] border border-white/5 hover:border-blue-500/30 transition-all duration-500">
+                        <span class="text-3xl font-black italic text-white/5 group-hover:text-blue-500/20 transition-colors">03</span>
+                        <h3 class="text-lg font-black uppercase tracking-widest text-white mt-1 mb-2">Synchronized Execution</h3>
+                        <p class="text-gray-500 text-xs leading-relaxed">
+                            Once validated in the lab, sync your knowledge across the T Learn Pro network to scale your impact across the global infrastructure.
+                        </p>
+                    </div>
+
+                </div>
+
+                <div class="lg:col-span-7 relative flex justify-center items-center min-h-[550px]">
+
+                    <div class="neural-core-container relative scale-75 md:scale-110">
+                        <div class="w-40 h-40 bg-blue-600 rounded-full blur-3xl opacity-10 animate-pulse absolute"></div>
+                        <div class="w-24 h-24 bg-[#030816] rounded-2xl border border-blue-500/50 shadow-[0_0_40px_rgba(59,130,246,0.3)] relative z-20 flex items-center justify-center overflow-hidden">
+                            <i class="fas fa-flask text-blue-400 text-3xl animate-bounce"></i>
+                            <div class="absolute inset-0 bg-gradient-to-b from-transparent via-blue-500/20 to-transparent h-1/2 w-full animate-scan"></div>
+                        </div>
+
+                        <div class="w-56 h-56 border-2 border-dashed border-white/10 rounded-full absolute animate-spin-slow"></div>
+                        <div class="w-72 h-72 border border-blue-500/20 rounded-full absolute animate-reverse-spin"></div>
+                        <div class="w-[350px] h-[350px] border border-white/5 rounded-full absolute animate-spin-slow"></div>
+
+                        <div class="data-node node-1 bg-blue-400"></div>
+                        <div class="data-node node-2 bg-blue-500"></div>
+                        <div class="data-node node-3 bg-white/20"></div>
+                    </div>
+
+                    <div class="mt-12 lg:absolute lg:bottom-0 lg:-left-5 z-30 p-8 rounded-[2.5rem] bg-[#030816]/95 backdrop-blur-2xl border border-blue-500/40 shadow-2xl max-w-sm">
+                        <div class="flex items-center justify-between mb-6">
+                            <div class="flex items-center gap-3">
+                                <div class="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_10px_#22c55e]"></div>
+                                <span class="text-[9px] font-black uppercase tracking-widest text-white">Lab Status: Stable</span>
                             </div>
-                            
-                            <button
-                                type="submit"
-                                id="newsletterSubscribeBtn"
-                                class="group relative w-full overflow-hidden rounded-2xl bg-blue-600 py-5 text-[10px] font-black uppercase tracking-[0.4em] text-white transition-all hover:bg-white hover:text-black">
+                            <span class="text-[9px] font-bold text-gray-500">v4.0.2</span>
+                        </div>
+
+                        <h4 class="text-xl font-black italic uppercase text-white mb-4">Launch Nxxt Lab</h4>
+
+                        <div class="space-y-3 mb-8">
+                            <div class="flex justify-between text-[8px] font-bold uppercase tracking-widest">
+                                <span class="text-gray-500">Processing Power</span>
+                                <span class="text-blue-400">99.9%</span>
+                            </div>
+                            <div class="h-1 bg-white/5 rounded-full overflow-hidden">
+                                <div class="h-full bg-blue-500 w-[99%]"></div>
+                            </div>
+                        </div>
+
+                        <button class="w-full py-4 bg-blue-600 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] text-white hover:bg-white hover:text-black hover:scale-[1.02] transition-all duration-300 active:scale-95 shadow-lg shadow-blue-900/20">
+                            Enter Laboratory
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-[#020617] pt-32 pb-16 relative overflow-hidden">
+        <div class="absolute inset-0 opacity-20 pointer-events-none"
+             style="background-image: linear-gradient(0deg, transparent 24%, rgba(59, 130, 246, .05) 25%, rgba(59, 130, 246, .05) 26%, transparent 27%, transparent 74%, rgba(59, 130, 246, .05) 75%, rgba(59, 130, 246, .05) 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, rgba(59, 130, 246, .05) 25%, rgba(59, 130, 246, .05) 26%, transparent 27%, transparent 74%, rgba(59, 130, 246, .05) 75%, rgba(59, 130, 246, .05) 76%, transparent 77%, transparent); background-size: 50px 50px;">
+        </div>
+
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+            <div class="flex flex-col items-center mb-20 text-center">
+                <div class="px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-[10px] font-black uppercase tracking-[0.3em] text-blue-400 mb-6 animate-pulse">Access Protocol v4.0</div>
+                <h2 class="text-5xl md:text-7xl font-black italic uppercase tracking-tighter text-white mb-10">System <span class="text-blue-500">Subscription///</span></h2>
+
+                <div class="flex items-center gap-6 p-2 bg-white/5 border border-white/10 rounded-2xl backdrop-blur-md shadow-[0_0_20px_rgba(59,130,246,0.1)]">
+                    <span id="monthlyLabel" class="text-[10px] font-black uppercase tracking-widest text-white transition-all">Monthly</span>
+                    <button onclick="togglePricing()" id="priceToggle" class="w-16 h-8 bg-blue-600 rounded-full relative p-1 transition-all hover:shadow-[0_0_15px_#3b82f6]">
+                        <div id="toggleBall" class="w-6 h-6 bg-white rounded-full shadow-lg transition-transform duration-300"></div>
+                    </button>
+                    <span id="yearlyLabel" class="text-[10px] font-black uppercase tracking-widest text-gray-500 transition-all">Yearly <span class="text-blue-400 text-[8px] ml-1">(Save 15%)</span></span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-end">
+                <div class="pricing-card p-10 rounded-[2.5rem] bg-white/[0.02] border border-white/5 flex flex-col hover:border-blue-500/40 transition-all duration-500 group relative overflow-hidden">
+                    <div class="absolute inset-0 bg-gradient-to-br from-blue-600/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <span class="text-[10px] font-black uppercase tracking-widest text-gray-500 mb-2 relative z-10">Entry Node</span>
+                    <h3 class="text-3xl font-black italic uppercase text-white mb-6 relative z-10">Free</h3>
+                    <div class="mb-8 relative z-10"><span class="text-4xl font-black text-white">₦0</span> <span class="text-xs font-bold text-gray-600 uppercase">/ Always</span></div>
+                    <ul class="space-y-4 mb-12 flex-grow relative z-10">
+                        <li class="flex items-center gap-3 text-[11px] text-gray-400 font-bold uppercase"><i class="fas fa-check text-blue-500"></i> 6 Projects Deployed</li>
+                        <li class="flex items-center gap-3 text-[11px] text-red-500/50 font-bold uppercase"><i class="fas fa-times"></i> No Database Access</li>
+                        <li class="flex items-center gap-3 text-[11px] text-gray-400 font-bold uppercase"><i class="fas fa-check text-blue-500"></i> 1 Team Collaboration</li>
+                    </ul>
+                    <button class="w-full py-4 border border-white/10 rounded-xl text-[10px] font-black uppercase tracking-widest text-white hover:bg-white hover:text-black transition-all relative z-10">Initialize</button>
+                </div>
+
+                <div class="pricing-card p-10 rounded-[3rem] bg-[#050b1d] border-2 border-blue-600 shadow-[0_0_50px_rgba(37,99,235,0.15)] flex flex-col relative scale-105 z-20 overflow-hidden group">
+                    <div class="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-blue-600 rounded-full text-[8px] font-black uppercase text-white tracking-[0.3em] shadow-[0_0_15px_#2563eb]">Recommended</div>
+                    <span class="text-[10px] font-black uppercase tracking-widest text-blue-400 mb-2">Academic Node</span>
+                    <h3 class="text-3xl font-black italic uppercase text-white mb-6">Student</h3>
+                    <div class="mb-8"><span id="studentPrice" class="text-5xl font-black text-white transition-all">₦7,000</span> <span id="studentPeriod" class="text-xs font-bold text-blue-400/50 uppercase">/ Month</span></div>
+                    <ul class="space-y-4 mb-12 flex-grow">
+                        <li class="flex items-center gap-3 text-[11px] text-white font-bold uppercase"><i class="fas fa-check text-blue-400"></i> 30 Projects Deployed</li>
+                        <li class="flex items-center gap-3 text-[11px] text-white font-bold uppercase"><i class="fas fa-check text-blue-400"></i> Basic Database</li>
+                        <li class="flex items-center gap-3 text-[11px] text-white font-bold uppercase"><i class="fas fa-check text-blue-400"></i> 12 Team Collaboration</li>
+                    </ul>
+                    <button class="w-full py-5 bg-blue-600 rounded-xl text-[10px] font-black uppercase tracking-widest text-white hover:bg-white hover:text-black transition-all shadow-[0_0_30px_rgba(37,99,235,0.4)]">Upgrade Node</button>
+                </div>
+
+                <div class="pricing-card p-10 rounded-[2.5rem] bg-white/[0.02] border border-white/5 flex flex-col hover:border-blue-500/40 transition-all duration-500 group relative overflow-hidden">
+                    <div class="absolute inset-0 bg-gradient-to-br from-blue-600/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <span class="text-[10px] font-black uppercase tracking-widest text-gray-500 mb-2 relative z-10">Authority Node</span>
+                    <h3 class="text-3xl font-black italic uppercase text-white mb-6 relative z-10">Pro</h3>
+                    <div class="mb-8 relative z-10"><span id="proPrice" class="text-4xl font-black text-white">₦14,000</span> <span id="proPeriod" class="text-xs font-bold text-gray-600 uppercase">/ Month</span></div>
+                    <ul class="space-y-4 mb-12 flex-grow relative z-10">
+                        <li class="flex items-center gap-3 text-[11px] text-gray-400 font-bold uppercase"><i class="fas fa-check text-blue-500"></i> Unlimited Deployments</li>
+                        <li class="flex items-center gap-3 text-[11px] text-gray-400 font-bold uppercase"><i class="fas fa-check text-blue-500"></i> Full Authority</li>
+                        <li class="flex items-center gap-3 text-[11px] text-gray-400 font-bold uppercase"><i class="fas fa-check text-blue-500"></i> Unlimited Team Sync</li>
+                    </ul>
+                    <button class="w-full py-4 border border-white/10 rounded-xl text-[10px] font-black uppercase tracking-widest text-white hover:bg-white hover:text-black transition-all relative z-10">Execute Mastery</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-[#020617] pt-16 pb-32 relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6 mb-16">
+            <div class="w-full h-px bg-gradient-to-r from-transparent via-blue-500/20 to-transparent"></div>
+        </div>
+
+        <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-600/5 blur-[120px] rounded-full"></div>
+
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+            <div class="mb-20">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-10 h-[1px] bg-blue-500"></div>
+                    <span class="text-[10px] font-black uppercase tracking-[0.4em] text-blue-500">User Validation</span>
+                </div>
+                <h2 class="text-5xl md:text-7xl font-black italic uppercase tracking-tighter text-white leading-none">
+                    Lab <span class="text-blue-500 underline decoration-1 underline-offset-8">Reports///</span>
+                </h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+                <div class="md:col-span-7 p-8 rounded-[2.5rem] bg-white/[0.02] border border-white/5 hover:border-blue-500/30 transition-all group relative overflow-hidden">
+                    <div class="absolute top-4 right-8 text-6xl font-black italic text-white/[0.03] group-hover:text-blue-500/10">"</div>
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="w-12 h-12 rounded-full bg-blue-600 flex items-center justify-center font-black text-white">JD</div>
+                        <div>
+                            <h4 class="text-sm font-black uppercase text-white">Toluwani Godson</h4>
+                            <p class="text-[10px] font-bold text-blue-500 uppercase">Senior Dev @ EliteLeague</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-400 text-lg italic leading-relaxed">"The Nxxt Lab environment changed my entire workflow. Deploying on the free tier gave me the confidence to upgrade to Pro."</p>
+                </div>
+
+                <div class="md:col-span-5 p-8 rounded-[2.5rem] bg-blue-600/5 border border-blue-500/20 flex flex-col justify-between group">
+                    <p class="text-white text-sm font-medium leading-relaxed mb-8">"As a student, the Academic Node is a lifesaver. Having 30 projects ready for my portfolio made my internship stand out."</p>
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 rounded-full bg-purple-600 flex items-center justify-center font-black text-white text-xs">SA</div>
+                        <div>
+                            <h4 class="text-xs font-black uppercase text-white">Anayo Clinton</h4>
+                            <p class="text-[9px] font-bold text-gray-500 uppercase">Student @ UNILAG</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="md:col-span-4 p-8 rounded-[2.5rem] bg-white/[0.02] border border-white/5 hover:border-blue-500/30 transition-all group">
+                    <p class="text-gray-400 text-sm leading-relaxed mb-8">"Nxxt AI beginner level is surprisingly smart. It helped me debug a routing issue in minutes."</p>
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 rounded-full bg-green-600 flex items-center justify-center font-black text-white text-xs">TK</div>
+                        <div>
+                            <h4 class="text-xs font-black uppercase text-white">Tunde Kelly</h4>
+                            <p class="text-[9px] font-bold text-gray-500 uppercase">Junior Engineer</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="md:col-span-8 p-8 rounded-[2.5rem] bg-white/[0.02] border border-white/10 relative group overflow-hidden">
+                    <div class="flex flex-col md:flex-row md:items-center gap-8">
+                        <div class="flex-grow">
+                            <p class="text-gray-300 text-base italic mb-6">"The synchronization between my Git repo and the Nxxt Lab is seamless. It's the elite-league standard."</p>
+                            <div class="flex items-center gap-4">
+                                <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center font-black text-white text-xs">EM</div>
+                                <div>
+                                    <h4 class="text-xs font-black uppercase text-white">Emmanuel Okon</h4>
+                                    <p class="text-[9px] font-bold text-gray-500 uppercase">System Architect</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-[#020617] p-6 rounded-3xl border border-white/5 text-center min-w-[150px]">
+                            <div class="text-2xl font-black text-blue-500">99.9%</div>
+                            <div class="text-[8px] font-black uppercase text-gray-500 tracking-[0.2em]">Uptime Reported</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-[#020617] py-32 relative overflow-hidden">
+        <div class="absolute top-1/2 left-0 -translate-y-1/2 w-96 h-96 bg-blue-600/10 blur-[120px] rounded-full"></div>
+        <div class="absolute top-0 right-0 w-64 h-64 bg-blue-500/5 blur-[80px] rounded-full"></div>
+
+        <div class="max-w-4xl mx-auto px-6 relative z-10">
+            <div class="flex flex-col items-center mb-20 text-center">
+                <div class="flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 mb-6">
+                    <span class="w-2 h-2 bg-blue-500 rounded-full animate-ping"></span>
+                    <span class="text-[10px] font-black uppercase tracking-[0.3em] text-blue-400">Tech Nxxt Software Corp // Knowledge Base</span>
+                </div>
+                <h2 class="text-4xl md:text-6xl font-black italic uppercase tracking-tighter text-white">System <span class="text-blue-500">Intelligence///</span></h2>
+            </div>
+
+            <div class="space-y-4">
+
+                <div class="faq-item group">
+                    <button onclick="toggleFaq(this)" class="faq-btn w-full p-6 md:p-8 bg-white/[0.03] border border-white/5 border-l-4 border-l-blue-600 hover:bg-white/[0.05] hover:border-blue-500/50 transition-all text-left flex justify-between items-center rounded-r-2xl backdrop-blur-sm">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-lg bg-blue-600/10 border border-blue-500/20 flex items-center justify-center">
+                                <i class="fas fa-microchip text-blue-500"></i>
+                            </div>
+                            <span class="text-xs md:text-sm font-black uppercase tracking-widest text-white leading-tight">What is the core difference between Tech Nxxt and T Learn Pro?</span>
+                        </div>
+                        <i class="fas fa-plus text-blue-500 group-hover:rotate-45 transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-answer hidden overflow-hidden transition-all duration-300">
+                        <div class="p-8 bg-white/[0.01] border-x border-b border-white/5 text-gray-400 text-sm leading-relaxed rounded-br-2xl flex gap-4">
+                            <div class="text-blue-500 font-black">ANS:</div>
+                            <div>
+                                <strong class="text-white">Tech Nxxt</strong> is our parent software company focused on building high-scale infrastructure. <strong class="text-white">T Learn Pro</strong> is our specialized educational platform designed to onboard engineers into the Tech Nxxt ecosystem through tiered training nodes.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item group">
+                    <button onclick="toggleFaq(this)" class="faq-btn w-full p-6 md:p-8 bg-white/[0.03] border border-white/5 border-l-4 border-l-blue-600/30 hover:border-l-blue-500 hover:bg-white/[0.05] transition-all text-left flex justify-between items-center rounded-r-2xl backdrop-blur-sm">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-lg bg-blue-600/10 border border-blue-500/20 flex items-center justify-center">
+                                <i class="fas fa-layer-group text-blue-500"></i>
+                            </div>
+                            <span class="text-xs md:text-sm font-black uppercase tracking-widest text-white leading-tight">Can I switch nodes after initialization?</span>
+                        </div>
+                        <i class="fas fa-plus text-blue-500 group-hover:rotate-45 transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-answer hidden">
+                        <div class="p-8 bg-white/[0.01] border-x border-b border-white/5 text-gray-400 text-sm leading-relaxed rounded-br-2xl flex gap-4">
+                            <div class="text-blue-500 font-black">ANS:</div>
+                            <div>Yes. You can upgrade from an Entry Node to an Academic or Authority Node via your dashboard. Tech Nxxt software handles the migration automatically, ensuring zero data loss during the transition.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item group">
+                    <button onclick="toggleFaq(this)" class="faq-btn w-full p-6 md:p-8 bg-white/[0.03] border border-white/5 border-l-4 border-l-blue-600/30 hover:border-l-blue-500 hover:bg-white/[0.05] transition-all text-left flex justify-between items-center rounded-r-2xl backdrop-blur-sm">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-lg bg-blue-600/10 border border-blue-500/20 flex items-center justify-center">
+                                <i class="fas fa-shield-halved text-blue-500"></i>
+                            </div>
+                            <span class="text-xs md:text-sm font-black uppercase tracking-widest text-white leading-tight">How secure is the Tech Nxxt infrastructure?</span>
+                        </div>
+                        <i class="fas fa-plus text-blue-500 group-hover:rotate-45 transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-answer hidden">
+                        <div class="p-8 bg-white/[0.01] border-x border-b border-white/5 text-gray-400 text-sm leading-relaxed rounded-br-2xl flex gap-4">
+                            <div class="text-blue-500 font-black">ANS:</div>
+                            <div>Security is our primary directive. Every deployment on T Learn Pro is sandboxed within Tech Nxxt’s proprietary cloud architecture, utilizing encrypted node-to-node communication and automated threat detection.</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+
+    <section class="bg-[#020617] py-24 relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10 pointer-events-none"
+             style="background-image: linear-gradient(90deg, rgba(59, 130, 246, .1) 1px, transparent 1px), linear-gradient(rgba(59, 130, 246, .1) 1px, transparent 1px); background-size: 40px 40px;">
+        </div>
+
+        <div class="max-w-6xl mx-auto px-6 relative z-10">
+            <div class="relative p-1 md:p-1.5 rounded-[3rem] bg-gradient-to-br from-blue-600/20 via-transparent to-blue-600/20 shadow-[0_0_50px_rgba(59,130,246,0.1)]">
+                <div class="bg-[#050b1d] rounded-[2.8rem] p-8 md:p-16 border border-white/5 relative overflow-hidden">
+                    <i class="fas fa-satellite-dish absolute top-10 right-10 text-blue-500/10 text-6xl rotate-12"></i>
+                    <i class="fas fa-code absolute -bottom-5 -left-5 text-blue-500/5 text-9xl -rotate-12"></i>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                        <div>
+                            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 mb-6">
+                                <span class="w-1.5 h-1.5 bg-green-500 rounded-full animate-ping"></span>
+                                <span class="text-[9px] font-black uppercase tracking-[0.3em] text-blue-400">Live Transmission</span>
+                            </div>
+                            <h2 class="text-4xl md:text-5xl font-black italic uppercase tracking-tighter text-white mb-6">
+                                Secure your <span class="text-blue-500">Access Node///</span>
+                            </h2>
+                            <p class="text-gray-400 text-sm font-medium leading-relaxed max-w-md">
+                                Join the <strong class="text-white">Tech Nxxt</strong> intelligence network. Receive encrypted updates on new lab clusters, software patches, and elite-league engineering insights.
+                            </p>
+                        </div>
+
+                        <div class="relative">
+                            <form class="flex flex-col gap-4" onsubmit="event.preventDefault(); handleSubscription(this.querySelector('#newsletterSubscribeBtn'));">
+                                <div class="relative group">
+                                    <div class="absolute inset-y-0 left-5 flex items-center pointer-events-none">
+                                        <i class="fas fa-envelope text-blue-500/50 group-focus-within:text-blue-500 transition-colors"></i>
+                                    </div>
+                                    <input
+                                            type="email"
+                                            id="newsletterEmailInput"
+                                            placeholder="IDENTITY@EMAIL.COM"
+                                            class="w-full bg-[#020617] border border-white/10 rounded-2xl py-5 pl-14 pr-6 text-xs font-black text-white uppercase tracking-[0.2em] focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all outline-none"
+                                            required>
+                                </div>
+
+                                <button
+                                        type="submit"
+                                        id="newsletterSubscribeBtn"
+                                        class="group relative w-full overflow-hidden rounded-2xl bg-blue-600 py-5 text-[10px] font-black uppercase tracking-[0.4em] text-white transition-all hover:bg-white hover:text-black">
                                 <span class="relative z-10 flex items-center justify-center gap-2">
                                     Subscribe <i class="fas fa-arrow-right text-[8px] group-hover:translate-x-2 transition-transform"></i>
                                 </span>
-                            </button>
-                        </form>
-                        
-                        <div class="mt-6 flex items-center justify-center lg:justify-start gap-6 opacity-40">
-                            <div class="flex items-center gap-2 text-[8px] font-black text-white uppercase tracking-widest">
-                                <i class="fas fa-shield-check text-blue-500"></i> No Spam
-                            </div>
-                            <div class="flex items-center gap-2 text-[8px] font-black text-white uppercase tracking-widest">
-                                <i class="fas fa-lock text-blue-500"></i> Encrypted
-                            </div>
-                            <div class="flex items-center gap-2 text-[8px] font-black text-white uppercase tracking-widest">
-                                <i class="fas fa-user-secret text-blue-500"></i> Private
+                                </button>
+                            </form>
+
+                            <div class="mt-6 flex items-center justify-center lg:justify-start gap-6 opacity-40">
+                                <div class="flex items-center gap-2 text-[8px] font-black text-white uppercase tracking-widest">
+                                    <i class="fas fa-shield-check text-blue-500"></i> No Spam
+                                </div>
+                                <div class="flex items-center gap-2 text-[8px] font-black text-white uppercase tracking-widest">
+                                    <i class="fas fa-lock text-blue-500"></i> Encrypted
+                                </div>
+                                <div class="flex items-center gap-2 text-[8px] font-black text-white uppercase tracking-widest">
+                                    <i class="fas fa-user-secret text-blue-500"></i> Private
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
-<!-- Success Modal -->
-<div id="successModal" class="fixed inset-0 z-[100] flex items-center justify-center hidden px-6">
-    <div class="absolute inset-0 bg-[#020617]/80 backdrop-blur-md"></div>
-    
-    <div class="bg-[#050b1d] border border-blue-500/30 w-full max-w-md rounded-[2.5rem] p-10 relative z-10 shadow-[0_0_50px_rgba(59,130,246,0.2)] text-center">
-        <div class="w-20 h-20 bg-blue-600/20 border border-blue-500/40 rounded-full flex items-center justify-center mx-auto mb-8 shadow-[0_0_20px_rgba(59,130,246,0.2)]">
-            <i class="fas fa-check text-3xl text-blue-500 animate-bounce"></i>
+    <!-- Success Modal -->
+    <div id="successModal" class="fixed inset-0 z-[100] flex items-center justify-center hidden px-6">
+        <div class="absolute inset-0 bg-[#020617]/80 backdrop-blur-md"></div>
+
+        <div class="bg-[#050b1d] border border-blue-500/30 w-full max-w-md rounded-[2.5rem] p-10 relative z-10 shadow-[0_0_50px_rgba(59,130,246,0.2)] text-center">
+            <div class="w-20 h-20 bg-blue-600/20 border border-blue-500/40 rounded-full flex items-center justify-center mx-auto mb-8 shadow-[0_0_20px_rgba(59,130,246,0.2)]">
+                <i class="fas fa-check text-3xl text-blue-500 animate-bounce"></i>
+            </div>
+
+            <div class="px-4 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 inline-block mb-4">
+                <span class="text-[10px] font-black uppercase tracking-[0.3em] text-blue-400">Status: Authenticated</span>
+            </div>
+
+            <h3 class="text-3xl font-black italic uppercase text-white mb-4">Data Synced///</h3>
+            <p class="text-gray-500 text-xs font-bold uppercase tracking-widest leading-relaxed mb-8">
+                Your identity has been added to the <span class="text-white">Tech Nxxt</span> transmission node. Welcome to the elite network.
+            </p>
+
+            <button onclick="closeModal()" class="w-full py-5 bg-blue-600 rounded-2xl text-[10px] font-black uppercase tracking-widest text-white hover:bg-white hover:text-black transition-all shadow-[0_0_30px_rgba(37,99,235,0.3)]">
+                Return to Dashboard
+            </button>
         </div>
-        
-        <div class="px-4 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 inline-block mb-4">
-            <span class="text-[10px] font-black uppercase tracking-[0.3em] text-blue-400">Status: Authenticated</span>
-        </div>
-        
-        <h3 class="text-3xl font-black italic uppercase text-white mb-4">Data Synced///</h3>
-        <p class="text-gray-500 text-xs font-bold uppercase tracking-widest leading-relaxed mb-8">
-            Your identity has been added to the <span class="text-white">Tech Nxxt</span> transmission node. Welcome to the elite network.
-        </p>
-        
-      <button onclick="closeModal()" class="w-full py-5 bg-blue-600 rounded-2xl text-[10px] font-black uppercase tracking-widest text-white hover:bg-white hover:text-black transition-all shadow-[0_0_30px_rgba(37,99,235,0.3)]">
-            Return to Dashboard
-        </button>
     </div>
-</div>
 
 
-<footer class="bg-[#010413] pt-24 pb-12 relative overflow-hidden border-t border-blue-500/10">
-    <div class="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-blue-500/30 to-transparent"></div>
-    
-    <div class="max-w-7xl mx-auto px-6 relative z-10">
-        <div class="grid grid-cols-1 md:grid-cols-12 gap-12 lg:gap-16 mb-20">
-            
-            <div class="md:col-span-4">
-                <div class="flex items-center gap-3 mb-8">
-                    <div class="w-14 h-14 bg-blue-600 rounded-2xl flex items-center justify-center shadow-[0_0_25px_rgba(37,99,235,0.4)] overflow-hidden border border-blue-400/20">
-                        <img src="Logo.jpeg" alt="T Learn Pro Logo" class="w-full h-full object-cover">
+    <footer class="bg-[#010413] pt-24 pb-12 relative overflow-hidden border-t border-blue-500/10">
+        <div class="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-blue-500/30 to-transparent"></div>
+
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-12 lg:gap-16 mb-20">
+
+                <div class="md:col-span-4">
+                    <div class="flex items-center gap-3 mb-8">
+                        <div class="w-14 h-14 bg-blue-600 rounded-2xl flex items-center justify-center shadow-[0_0_25px_rgba(37,99,235,0.4)] overflow-hidden border border-blue-400/20">
+                            <img src="/assets/Logo.webp" alt="T Learn Pro Logo" class="w-full h-full object-cover">
+                        </div>
+                        <div>
+                            <span class="text-2xl font-black italic tracking-tighter text-white uppercase block leading-none">T Learn <span class="text-blue-500">Pro</span></span>
+                            <span class="text-[8px] font-black uppercase tracking-[0.4em] text-gray-500">Software Deployment Unit</span>
+                        </div>
                     </div>
-                    <div>
-                        <span class="text-2xl font-black italic tracking-tighter text-white uppercase block leading-none">T Learn <span class="text-blue-500">Pro</span></span>
-                        <span class="text-[8px] font-black uppercase tracking-[0.4em] text-gray-500">Software Deployment Unit</span>
-                    </div>
-                </div>
-                
-                <p class="text-gray-500 text-xs font-bold uppercase tracking-wider leading-relaxed mb-8">
-                    Powering the next generation of Nigerian engineers through <span class="text-white">Tech Nxxt</span> proprietary infrastructure. High-speed, low-latency, elite-tier learning.
-                </p>
 
-                <div class="flex items-center gap-3 p-4 bg-white/[0.02] border border-white/5 rounded-2xl w-fit group hover:border-blue-500/30 transition-all">
-                    <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse shadow-[0_0_8px_#22c55e]"></div>
-                    <span class="text-[10px] font-black uppercase tracking-widest text-gray-400">
+                    <p class="text-gray-500 text-xs font-bold uppercase tracking-wider leading-relaxed mb-8">
+                        Powering the next generation of Nigerian engineers through <span class="text-white">Tech Nxxt</span> proprietary infrastructure. High-speed, low-latency, elite-tier learning.
+                    </p>
+
+                    <div class="flex items-center gap-3 p-4 bg-white/[0.02] border border-white/5 rounded-2xl w-fit group hover:border-blue-500/30 transition-all">
+                        <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse shadow-[0_0_8px_#22c55e]"></div>
+                        <span class="text-[10px] font-black uppercase tracking-widest text-gray-400">
                         Powered by <span class="text-white underline decoration-blue-500 underline-offset-4">Tech Nxxt</span>
                     </span>
-                </div>
-            </div>
-
-            <div class="md:col-span-2">
-                <h4 class="text-white text-[10px] font-black uppercase tracking-[0.3em] mb-8 border-b border-blue-500/20 pb-2 w-fit">Platform</h4>
-                <ul class="space-y-4">
-                    <li><a href="Lab cluters.html" class="text-gray-500 hover:text-blue-500 text-[10px] font-black uppercase tracking-widest transition-all">Lab Clusters</a></li>
-                    <li><a href="edge network.html" class="text-gray-500 hover:text-blue-500 text-[10px] font-black uppercase tracking-widest transition-all">Edge Network</a></li>
-                    <li><a href="dev console.html" class="text-gray-500 hover:text-blue-500 text-[10px] font-black uppercase tracking-widest transition-all">Dev Console</a></li>
-                    <li><a href="system pricing.html" class="text-gray-500 hover:text-blue-500 text-[10px] font-black uppercase tracking-widest transition-all">System Pricing</a></li>
-                </ul>
-            </div>
-
-            <div class="md:col-span-2">
-                <h4 class="text-white text-[10px] font-black uppercase tracking-[0.3em] mb-8 border-b border-blue-500/20 pb-2 w-fit">Resources</h4>
-                <ul class="space-y-4">
-                    <li><a href="documentation.html" class="text-gray-500 hover:text-blue-500 text-[10px] font-black uppercase tracking-widest transition-all">Documentation</a></li>
-                    <li><a href="api.html" class="text-gray-500 hover:text-blue-500 text-[10px] font-black uppercase tracking-widest transition-all">API Access</a></li>
-                    <li><a href="bug bounty.html" class="text-gray-500 hover:text-blue-500 text-[10px] font-black uppercase tracking-widest transition-all">Bug Bounty</a></li>
-                    <li><a href="open source.html" class="text-gray-500 hover:text-blue-500 text-[10px] font-black uppercase tracking-widest transition-all">Open Source</a></li>
-                </ul>
-            </div>
-
-            <div class="md:col-span-4">
-                <h4 class="text-white text-[10px] font-black uppercase tracking-[0.3em] mb-8 border-b border-blue-500/20 pb-2 w-fit">External Links</h4>
-                <div class="grid grid-cols-2 gap-4">
-                    <a href="#" class="p-4 bg-white/[0.02] border border-white/5 rounded-xl flex items-center gap-3 group hover:border-blue-500/50 transition-all">
-                        <i class="fab fa-discord text-gray-500 group-hover:text-blue-500"></i>
-                        <span class="text-[9px] font-black uppercase text-gray-500 group-hover:text-white">Discord</span>
-                    </a>
-                    <a href="#" class="p-4 bg-white/[0.02] border border-white/5 rounded-xl flex items-center gap-3 group hover:border-blue-500/50 transition-all">
-                        <i class="fab fa-github text-gray-500 group-hover:text-blue-500"></i>
-                        <span class="text-[9px] font-black uppercase text-gray-500 group-hover:text-white">Github</span>
-                    </a>
-                </div>
-                <div class="mt-6 p-4 rounded-2xl bg-blue-500/5 border border-blue-500/10">
-                    <div class="flex items-center justify-between">
-                        <span class="text-[9px] font-black uppercase text-blue-400">Global Uptime</span>
-                        <span class="text-[11px] font-black text-white">99.98%</span>
-                    </div>
-                    <div class="w-full h-1 bg-white/5 mt-2 rounded-full overflow-hidden">
-                        <div class="h-full bg-blue-500 w-[99%] shadow-[0_0_10px_#3b82f6]"></div>
                     </div>
                 </div>
-            </div>
-        </div> <div class="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
+
+                <div class="md:col-span-2">
+                    <h4 class="text-white text-[10px] font-black uppercase tracking-[0.3em] mb-8 border-b border-blue-500/20 pb-2 w-fit">Platform</h4>
+                    <ul class="space-y-4">
+                        <li><a href="pages/lab-cluters.html" class="text-gray-500 hover:text-blue-500 text-[10px] font-black uppercase tracking-widest transition-all">Lab Clusters</a></li>
+                        <li><a href="pages/edge-network.html" class="text-gray-500 hover:text-blue-500 text-[10px] font-black uppercase tracking-widest transition-all">Edge Network</a></li>
+                        <li><a href="pages/dev-console.html" class="text-gray-500 hover:text-blue-500 text-[10px] font-black uppercase tracking-widest transition-all">Dev Console</a></li>
+                        <li><a href="pages/system-pricing.html" class="text-gray-500 hover:text-blue-500 text-[10px] font-black uppercase tracking-widest transition-all">System Pricing</a></li>
+                    </ul>
+                </div>
+
+                <div class="md:col-span-2">
+                    <h4 class="text-white text-[10px] font-black uppercase tracking-[0.3em] mb-8 border-b border-blue-500/20 pb-2 w-fit">Resources</h4>
+                    <ul class="space-y-4">
+                        <li><a href="pages/documentation.html" class="text-gray-500 hover:text-blue-500 text-[10px] font-black uppercase tracking-widest transition-all">Documentation</a></li>
+                        <li><a href="pages/api.html" class="text-gray-500 hover:text-blue-500 text-[10px] font-black uppercase tracking-widest transition-all">API Access</a></li>
+                        <li><a href="pages/bug-bounty.html" class="text-gray-500 hover:text-blue-500 text-[10px] font-black uppercase tracking-widest transition-all">Bug Bounty</a></li>
+                        <li><a href="pages/open-source.html" class="text-gray-500 hover:text-blue-500 text-[10px] font-black uppercase tracking-widest transition-all">Open Source</a></li>
+                    </ul>
+                </div>
+
+                <div class="md:col-span-4">
+                    <h4 class="text-white text-[10px] font-black uppercase tracking-[0.3em] mb-8 border-b border-blue-500/20 pb-2 w-fit">External Links</h4>
+                    <div class="grid grid-cols-2 gap-4">
+                        <a href="#" class="p-4 bg-white/[0.02] border border-white/5 rounded-xl flex items-center gap-3 group hover:border-blue-500/50 transition-all">
+                            <i class="fab fa-discord text-gray-500 group-hover:text-blue-500"></i>
+                            <span class="text-[9px] font-black uppercase text-gray-500 group-hover:text-white">Discord</span>
+                        </a>
+                        <a href="#" class="p-4 bg-white/[0.02] border border-white/5 rounded-xl flex items-center gap-3 group hover:border-blue-500/50 transition-all">
+                            <i class="fab fa-github text-gray-500 group-hover:text-blue-500"></i>
+                            <span class="text-[9px] font-black uppercase text-gray-500 group-hover:text-white">Github</span>
+                        </a>
+                    </div>
+                    <div class="mt-6 p-4 rounded-2xl bg-blue-500/5 border border-blue-500/10">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[9px] font-black uppercase text-blue-400">Global Uptime</span>
+                            <span class="text-[11px] font-black text-white">99.98%</span>
+                        </div>
+                        <div class="w-full h-1 bg-white/5 mt-2 rounded-full overflow-hidden">
+                            <div class="h-full bg-blue-500 w-[99%] shadow-[0_0_10px_#3b82f6]"></div>
+                        </div>
+                    </div>
+                </div>
+            </div> <div class="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
             <div class="flex items-center gap-6">
                 <span class="text-[10px] font-black uppercase text-gray-600 tracking-widest">&copy; 2024 Tech Nxxt Software Corp.</span>
                 <span class="text-[10px] font-black uppercase text-blue-500/50 tracking-widest">v4.0.2-Stable</span>
             </div>
-            
+
             <div class="flex gap-8">
-                <a href="privacy.html" class="text-[9px] font-black uppercase text-gray-600 hover:text-white transition-colors tracking-[0.2em]">Privacy_Protocol</a>
-                <a href="terms and service.html" class="text-[9px] font-black uppercase text-gray-600 hover:text-white transition-colors tracking-[0.2em]">Terms_Of_Service</a>
-                <a href="logs.html" class="text-[9px] font-black uppercase text-gray-600 hover:text-white transition-colors tracking-[0.2em]">Security_Logs</a>
+                <a href="pages/privacy.html" class="text-[9px] font-black uppercase text-gray-600 hover:text-white transition-colors tracking-[0.2em]">Privacy_Protocol</a>
+                <a href="pages/terms-and-service.html" class="text-[9px] font-black uppercase text-gray-600 hover:text-white transition-colors tracking-[0.2em]">Terms_Of_Service</a>
+                <a href="pages/logs.html" class="text-[9px] font-black uppercase text-gray-600 hover:text-white transition-colors tracking-[0.2em]">Security_Logs</a>
             </div>
         </div>
-    </div>
-</footer>
+        </div>
+    </footer>
 </main>
 
-    <script src="script.js"></script>
+<!-- Load configuration and scripts -->
+<script src="js/config.js"></script>
+<script src="js/script.js"></script>
 </body>
 </html>

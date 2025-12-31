@@ -7,7 +7,7 @@ const ActivityEngine = {
             localStorage.setItem('user_node_activity', JSON.stringify(log));
         }, 1000);
     },
-    
+
     // Decides box thickness based on time spent
     getBoxClass(date) {
         const log = JSON.parse(localStorage.getItem('user_node_activity') || '{}');
@@ -19,9 +19,9 @@ const ActivityEngine = {
         return 'bg-green-400';                      // Long stay
     }
 };
-ActivityEngine.track(); 
+ActivityEngine.track();
 const views = {
-'Overview': `
+    'Overview': `
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 md:gap-6 animate-in">
         <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-blue-500/30 transition-all">
             <div class="flex items-center gap-4 relative z-10">
@@ -115,19 +115,19 @@ const views = {
         <div class="overflow-x-auto pb-4 no-scrollbar">
             <div class="inline-grid grid-rows-7 grid-flow-col gap-1.5 min-w-[850px]">
                 ${(() => {
-                    const currentYear = 2025;
-                    const start = new Date(currentYear, 0, 1);
-                    let boxes = '';
-                    for (let i = 0; i < 365; i++) {
-                        const d = new Date(start);
-                        d.setDate(d.getDate() + i);
-                        const dateStr = d.toISOString().split('T')[0];
-                        // Removed the backslashes here
-                        const thickness = ActivityEngine.getBoxClass(dateStr);
-                        boxes += `<div class="w-3 h-3 rounded-sm ${thickness} transition-all duration-500 cursor-pointer" title="${dateStr}"></div>`;
-                    }
-                    return boxes;
-                })()}
+        const currentYear = 2025;
+        const start = new Date(currentYear, 0, 1);
+        let boxes = '';
+        for (let i = 0; i < 365; i++) {
+            const d = new Date(start);
+            d.setDate(d.getDate() + i);
+            const dateStr = d.toISOString().split('T')[0];
+            // Removed the backslashes here
+            const thickness = ActivityEngine.getBoxClass(dateStr);
+            boxes += `<div class="w-3 h-3 rounded-sm ${thickness} transition-all duration-500 cursor-pointer" title="${dateStr}"></div>`;
+        }
+        return boxes;
+    })()}
             </div>
         </div>
 
@@ -192,7 +192,7 @@ const views = {
 
 
 
-  'Lessons': `
+    'Lessons': `
     <div class="space-y-6 animate-in">
         <div class="flex justify-center mb-8">
             <div class="bg-[#050b1d] border border-white/5 p-2 rounded-2xl flex gap-1 overflow-x-auto no-scrollbar">
@@ -249,7 +249,7 @@ const views = {
 
 
 
-'Projects': `
+    'Projects': `
     <div class="space-y-8 animate-in">
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
@@ -299,7 +299,7 @@ const views = {
 
 
 
-   'Leaderboard': `
+    'Leaderboard': `
     <div class="space-y-8 animate-in">
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
@@ -353,7 +353,7 @@ const views = {
 
 
 
-  'Collaboration': `
+    'Collaboration': `
     <div class="space-y-8 animate-in">
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
@@ -417,7 +417,7 @@ const views = {
 
 
 
-   'Team': `
+    'Team': `
     <div class="space-y-8 animate-in">
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
@@ -472,7 +472,7 @@ const views = {
 
 
 
-  'Inbox': `
+    'Inbox': `
     <div class="space-y-8 animate-in">
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
@@ -527,7 +527,7 @@ const views = {
 
 
 
-   'Nxxt AI': `
+    'Nxxt AI': `
     <style>
         @keyframes fall {
             from { transform: translateY(-10vh) translateX(0) rotate(0deg); opacity: 0; }
@@ -557,8 +557,8 @@ const views = {
                     height: ${Math.random() * 2 + 1}px; 
                     left: ${Math.random() * 100}%; 
                     top: -20px;
-                    animation-duration: ${Math.random() * 7 + 4}s; 
-                    animation-delay: ${Math.random() * 5}s;
+                    animation-duration: ${Math.random() * 7 + 4}; 
+                    animation-delay: ${Math.random() * 5};
                     box-shadow: 0 0 10px white;
                 "></div>`).join('')}
         </div>
@@ -567,7 +567,7 @@ const views = {
             
             <div class="flex items-center gap-4 mb-10 md:mb-16 scale-90 md:scale-100">
                 <div class="w-14 h-14 md:w-16 md:h-16 rounded-full border-2 border-white/20 p-1 flex items-center justify-center overflow-hidden shadow-xl">
-                    <img src="Logo.jpeg" alt="Nxxt Avatar" class="w-full h-full object-cover rounded-full bg-blue-600/20">
+                    <img src="Logo.webp" alt="Nxxt Avatar" class="w-full h-full object-cover rounded-full bg-blue-600/20">
                 </div>
                 <h1 class="text-5xl md:text-7xl font-medium text-white tracking-tighter italic">Nxxt AI</h1>
             </div>
@@ -611,7 +611,7 @@ const views = {
 `,
 
 
-'Nxxt Lab': `
+    'Nxxt Lab': `
     <div id="lab-root" class="space-y-8 animate-in relative transition-all duration-500">
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
@@ -677,7 +677,7 @@ const views = {
 
 
 
- 'Side Hustle Hub': `
+    'Side Hustle Hub': `
     <div id="side-hustle-root" class="space-y-8 animate-in relative transition-all duration-500">
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
@@ -743,7 +743,7 @@ const views = {
 
 
 
-'Notifications': `
+    'Notifications': `
     <div class="max-w-md mx-auto content-card text-center animate-in">
         <div class="relative inline-block mb-6">
             <i id="notif-bell-icon" class="fa-solid fa-bell text-5xl text-blue-500 animate-pulse"></i>
@@ -800,7 +800,7 @@ const views = {
 
 
 
-'Xt Pay': `
+    'Xt Pay': `
     <div class="space-y-6 animate-in relative">
         <div class="flex flex-col md:flex-row gap-6 items-start justify-between">
             <div class="p-6">
@@ -868,7 +868,7 @@ const views = {
 
 
 
- 'Pricing': `
+    'Pricing': `
 <div class="space-y-12 animate-in relative">
     <div class="flex flex-col items-center text-center">
         <div class="px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-[10px] font-black uppercase tracking-[0.3em] text-blue-400 mb-6 animate-pulse">Access Protocol v4.0</div>
@@ -978,7 +978,7 @@ const views = {
 `,
 
 
-'Settings': `
+    'Settings': `
     <div class="animate-in">
         <div class="flex items-center gap-4 overflow-x-auto no-scrollbar pb-6 mb-8 border-b border-white/5 scroll-smooth">
             <button onclick="updateSettingsTab('Profile')" class="settings-tab active">Profile</button>
@@ -993,7 +993,7 @@ const views = {
             <div class="space-y-8">
                 <div class="flex items-center gap-6">
                     <div class="w-20 h-20 rounded-3xl bg-blue-600/20 border border-blue-500/20 flex items-center justify-center relative overflow-hidden">
-                        <img src="Logo.jpeg" data-user-img class="w-full h-full object-cover">
+                        <img src="Logo.webp" data-user-img class="w-full h-full object-cover">
                         <button onclick="updateSettingsTab('Profile')" class="absolute -bottom-2 -right-2 w-8 h-8 bg-blue-600 rounded-xl flex items-center justify-center text-[10px] border-4 border-[#020617] hover:bg-blue-500 transition-colors">
                             <i class="fas fa-camera"></i>
                         </button>
@@ -1031,10 +1031,10 @@ const views = {
 function updateView(viewName) {
     const title = document.getElementById('viewTitle');
     const container = document.getElementById('dynamicContent');
-   
+
     container.style.opacity = '0';
     container.style.transform = 'translateY(10px)';
-   
+
     setTimeout(() => {
         title.innerText = viewName;
         container.innerHTML = views[viewName] || `
@@ -1046,7 +1046,7 @@ function updateView(viewName) {
         `;
         container.style.opacity = '1';
         container.style.transform = 'translateY(0px)';
-       
+
         // Update sidebar and bottom nav active states
         document.querySelectorAll('.nav-item').forEach(item => {
             item.classList.toggle('active', item.innerText.includes(viewName));
@@ -1059,8 +1059,8 @@ document.getElementById('currentDate').innerText = d.toLocaleDateString('en-US',
     weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
 });
 updateView('Overview');
- //// for the meun toggle
- // Function to open the Mobile Menu
+//// for the meun toggle
+// Function to open the Mobile Menu
 function openFullMenu() {
     const modal = document.getElementById('mobileMenu');
     const overlay = document.getElementById('menuOverlay');
@@ -1091,7 +1091,7 @@ function closeFullMenu() {
     const drawer = document.getElementById('menuDrawer');
     overlay.classList.remove('opacity-100');
     drawer.classList.remove('translate-x-0');
-   
+
     setTimeout(() => {
         modal.classList.add('invisible');
     }, 300);
@@ -1104,13 +1104,13 @@ function updateHeaderInfo() {
     const dateElement = document.getElementById('currentDate');
     const now = new Date();
     const hours = now.getHours();
-   
+
     // Determine Greeting
     let greeting = "Good Night";
     if (hours < 12) greeting = "Good Morning";
     else if (hours < 17) greeting = "Good Afternoon";
     else if (hours < 21) greeting = "Good Evening";
-   
+
     greetingElement.innerText = `${greeting}, New User`;
     // Update Date
     dateElement.innerText = now.toLocaleDateString('en-US', {
@@ -1124,11 +1124,11 @@ updateHeaderInfo();
 // Optional: Update every minute to keep greeting accurate
 setInterval(updateHeaderInfo, 60000);
 //// for the settings tabs
-  function updateSettingsTab(tabId) {
+function updateSettingsTab(tabId) {
     let tabName = tabId; // <-- FIXED: declared with let
 
     const container = document.getElementById('settingsContent');
-   
+
     // Update active tab button style
     document.querySelectorAll('.settings-tab').forEach(btn => {
         // This ensures the button stays blue when clicked
@@ -1137,12 +1137,12 @@ setInterval(updateHeaderInfo, 60000);
         btn.classList.toggle('active', btnText.includes(target) || target.includes(btnText));
     });
     const tabs = {
-'Profile': `
+        'Profile': `
     <div class="space-y-8 animate-in">
         <div class="flex items-center gap-6 mb-8">
             <div class="relative">
                 <div class="w-24 h-24 rounded-3xl bg-blue-600/20 border-2 border-blue-500/20 flex items-center justify-center overflow-hidden">
-                    <img src="Logo.jpeg" data-user-img class="w-full h-full object-cover hidden">
+                    <img src="Logo.webp" data-user-img class="w-full h-full object-cover hidden">
                     <i id="defaultUserIcon" class="fas fa-user text-5xl text-blue-500/50"></i>
                 </div>
                 <div onclick="triggerImageUpload()" class="absolute -bottom-2 -right-2 bg-blue-600 w-8 h-8 rounded-xl flex items-center justify-center border-4 border-[#020617] cursor-pointer hover:bg-blue-500 transition-all">
@@ -1192,7 +1192,7 @@ setInterval(updateHeaderInfo, 60000);
                 </div>
                 <button class="w-full md:w-auto px-12 py-4 bg-white/5 border border-white/10 rounded-2xl text-[10px] font-black uppercase tracking-widest">Update Security</button>
             </div>`,
-   'Projects': `
+        'Projects': `
     <div class="space-y-8 animate-in">
         <div class="space-y-6">
             <div>
@@ -1246,7 +1246,7 @@ setInterval(updateHeaderInfo, 60000);
             </div>
         </div>
     </div>`,
-'Billing': `
+        'Billing': `
     <div class="space-y-8 animate-in">
         <div class="content-card bg-blue-600/5 border-blue-500/10 text-center py-10">
             <i class="fas fa-gem text-4xl text-blue-500 mb-4"></i>
@@ -1298,7 +1298,7 @@ setInterval(updateHeaderInfo, 60000);
         </div>
     </div>
 `,
-    'History': `
+        'History': `
     <div class="space-y-8 animate-in">
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
@@ -1331,7 +1331,7 @@ setInterval(updateHeaderInfo, 60000);
         </div>
     </div>
 `,
-       'Notif-Settings': `
+        'Notif-Settings': `
     <div class="space-y-8 animate-in">
         <div>
             <h3 class="text-xl font-black text-white italic uppercase tracking-tighter">Notifications Control</h3>
@@ -1398,7 +1398,7 @@ setInterval(startHistoryClock, 1000);
 function toggleSwitch(id) {
     const btn = document.getElementById(id);
     const isOff = !btn.classList.contains('on');
-   
+
     if (isOff) {
         btn.classList.add('on');
         localStorage.setItem(id, 'true');
@@ -1532,12 +1532,12 @@ async function syncProfileUI() {
     const { data: { user } } = await client.auth.getUser();
 
     let savedName = "New User";
-    let savedImg = "Logo.jpeg";
+    let savedImg = "Logo.webp";
     let savedBio = "";
 
     if (user) {
         savedName = user.user_metadata?.full_name || user.email.split('@')[0];
-        savedImg = user.user_metadata?.avatar_url || "Logo.jpeg";
+        savedImg = user.user_metadata?.avatar_url || "Logo.webp";
         savedBio = user.user_metadata?.bio || "";
     }
 
@@ -1547,7 +1547,7 @@ async function syncProfileUI() {
     // Update all image places
     document.querySelectorAll('[data-user-img]').forEach(img => {
         img.src = savedImg;
-        if (savedImg !== "Logo.jpeg") {
+        if (savedImg !== "Logo.webp") {
             img.classList.remove('hidden');
             img.parentElement.querySelector('#defaultUserIcon')?.classList.add('hidden');
         }
@@ -1598,7 +1598,7 @@ async function saveProfile() {
     saveBtn.disabled = true;
 
     try {
-        let avatarUrl = localStorage.getItem('tlp_user_img') || "Logo.jpeg";
+        let avatarUrl = localStorage.getItem('tlp_user_img') || "Logo.webp";
 
         if (bufferedImg && bufferedImg.startsWith('data:image')) {
             const fileExt = bufferedImg.split(';')[0].split('/')[1] || 'png';
@@ -1680,12 +1680,12 @@ const LessonEngine = {
         const started = this.state.isStarted;
 
         // Sync Global Dashboard Cards
-     const dLvl = document.getElementById('dash-level-val');
+        const dLvl = document.getElementById('dash-level-val');
         const dSem = document.getElementById('dash-semester-val');
         const dXp = document.getElementById('dash-xp-val');
         const nLvl = document.getElementById('lesson-level-val');
         const nSem = document.getElementById('lesson-semester-val');
-        
+
         if (dLvl) dLvl.innerText = started ? this.state.level : "000";
         if (dSem) dSem.innerText = started ? this.state.semester : "0";
         if (dXp) dXp.innerText = started ? this.state.stats.xp : "0";
@@ -1707,7 +1707,7 @@ const LessonEngine = {
         this.state.stats.status = "Active";
         this.state.stats.rank = "Novice";
         this.state.stats.xp = 50;
-        
+
         // Initial Progress values upon activation
         this.state.progress = {
             overall: 5,
@@ -1763,7 +1763,7 @@ const LessonEngine = {
     },
 /////// Below is for the course in lesson tab only //////////
     // --- RENDERERS ---
-   renderCourses(el) {
+    renderCourses(el) {
         if (!this.state.isStarted) {
             el.innerHTML = `
                 <div class="bg-[#050b1d] border border-white/5 p-16 rounded-[3rem] text-center animate-in">
@@ -1801,7 +1801,7 @@ const LessonEngine = {
                 </div>`;
         }
     },
-renderLabCard(el) {
+    renderLabCard(el) {
         el.innerHTML = `
             <div class="bg-[#050b1d] border border-white/5 p-8 rounded-[2.5rem] cursor-pointer hover:border-blue-500/50 transition-all active:scale-95 group" 
                  onclick="LessonEngine.showLockedNotification()">
@@ -1820,10 +1820,10 @@ renderLabCard(el) {
 
         const toast = document.createElement('div');
         toast.id = "lock-toast";
-        
+
         // Tailwind classes for top-right positioning and slide-in animation
         toast.className = "fixed top-6 right-6 z-[10002] flex items-center gap-4 bg-[#0a1025] border border-blue-500/30 p-5 rounded-2xl shadow-2xl animate-in slide-in-from-right-10 duration-300";
-        
+
         toast.innerHTML = `
             <div class="w-10 h-10 bg-blue-600/10 rounded-xl flex items-center justify-center border border-blue-500/20">
                 <i class="fas fa-tools text-blue-500 text-xs"></i>
@@ -1849,8 +1849,8 @@ renderLabCard(el) {
     },
 
 
-  // ... previous state and renderCourses logic ...
-openCourseModal(courseId, name, desc) {
+    // ... previous state and renderCourses logic ...
+    openCourseModal(courseId, name, desc) {
         const curriculums = {
             html: ["Document Structure", "Semantic Tags", "Forms & Validation", "Tables & Data", "Media Elements", "Meta & SEO", "Accessibility", "Attributes", "Links & Navigation", "Final Project Structure"],
             css: ["Box Model", "Flexbox Mastery", "Grid Layouts", "Tailwind Setup", "Utility Classes", "Responsive Design", "Animations", "Variables", "Dark Mode Logic", "Project Styling"],
@@ -2023,13 +2023,13 @@ openCourseModal(courseId, name, desc) {
 
     // ... openPracticeLab and runCode logic follow ...
 
- openPracticeLab(title, courseId, index) {
+    openPracticeLab(title, courseId, index) {
         // Updated logic: GD and UIUX get Figma, others get the Code Engine
         const isDesign = (courseId === 'uiux' || courseId === 'gd');
         const modal = document.createElement('div');
         modal.id = "active-lab-env";
         modal.className = "fixed inset-0 z-[9999] bg-[#050b1d] flex flex-col animate-in fade-in duration-500";
-        
+
         modal.innerHTML = `
             <div class="h-20 border-b border-white/5 flex items-center justify-between px-8 bg-black/40">
                 <div class="flex items-center gap-4">
@@ -2084,8 +2084,8 @@ openCourseModal(courseId, name, desc) {
         `;
         document.body.appendChild(modal);
     },
-    
-   triggerNextNavigation(courseId, currentIndex) {
+
+    triggerNextNavigation(courseId, currentIndex) {
         const curriculums = {
             html: ["Document Structure", "Semantic Tags", "Forms & Validation", "Tables & Data", "Media Elements", "Meta & SEO", "Accessibility", "Attributes", "Links & Navigation", "Final Project Structure"],
             css: ["Box Model", "Flexbox Mastery", "Grid Layouts", "Tailwind Setup", "Utility Classes", "Responsive Design", "Animations", "Variables", "Dark Mode Logic", "Project Styling"],
@@ -2101,9 +2101,9 @@ openCourseModal(courseId, name, desc) {
         if (nextIndex < lessons.length) {
             const activeLab = document.getElementById('active-lab-env');
             if(activeLab) activeLab.remove();
-            
+
             this.showPracticeAlert(`Relocating to Unit ${nextIndex + 1}: ${lessons[nextIndex]}`);
-            
+
             setTimeout(() => {
                 this.openPracticeLab(lessons[nextIndex], courseId, nextIndex);
             }, 1000);
@@ -2117,7 +2117,7 @@ openCourseModal(courseId, name, desc) {
     runCode() {
         const code = document.getElementById('lab-editor').value;
         const previewFrame = document.getElementById('preview-frame');
-        
+
         if (!code.trim()) {
             this.showPracticeAlert("Code Buffer Empty. Please initialize logic.");
             return;
@@ -2168,12 +2168,12 @@ openCourseModal(courseId, name, desc) {
 
 
     //////  below is for the Exam only
-  renderExams(el) {
-    // 1. Logic for Historical Category Modals (Empty State Logic)
-    window.openExamCategory = (type) => {
-        const modal = document.createElement('div');
-        modal.className = "fixed inset-0 z-[9990] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md animate-in fade-in";
-        modal.innerHTML = `
+    renderExams(el) {
+        // 1. Logic for Historical Category Modals (Empty State Logic)
+        window.openExamCategory = (type) => {
+            const modal = document.createElement('div');
+            modal.className = "fixed inset-0 z-[9990] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md animate-in fade-in";
+            modal.innerHTML = `
             <div class="bg-[#0a1025] border border-white/10 w-full max-w-lg rounded-[3rem] shadow-2xl animate-in zoom-in-95 flex flex-col overflow-hidden">
                 <div class="p-8 border-b border-white/5 flex justify-between items-center bg-white/[0.02]">
                     <div>
@@ -2193,12 +2193,12 @@ openCourseModal(courseId, name, desc) {
                     <button onclick="this.closest('.fixed').remove()" class="text-[8px] text-blue-500 font-black uppercase tracking-[0.3em] hover:text-white transition-colors">Return to Terminal</button>
                 </div>
             </div>`;
-        document.body.appendChild(modal);
-    };
+            document.body.appendChild(modal);
+        };
 
-    // 2. Initial UI Build (Stats + Scanner)
-    const buildHome = () => {
-        el.innerHTML = `
+        // 2. Initial UI Build (Stats + Scanner)
+        const buildHome = () => {
+            el.innerHTML = `
             <div class="space-y-6 animate-in">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     ${['Passed', 'Failed', 'Outstanding'].map(type => `
@@ -2225,17 +2225,17 @@ openCourseModal(courseId, name, desc) {
                 </div>
             </div>`;
 
-        document.getElementById('scan-trigger-btn').onclick = () => {
-            const val = document.getElementById('exam-link-input').value;
-            if(val) showProctorWarning();
+            document.getElementById('scan-trigger-btn').onclick = () => {
+                const val = document.getElementById('exam-link-input').value;
+                if(val) showProctorWarning();
+            };
         };
-    };
 
-    // 3. Proctor Warning Modal (Anti-Cheat Notice)
-    const showProctorWarning = () => {
-        const warning = document.createElement('div');
-        warning.className = "fixed inset-0 z-[10005] flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl animate-in zoom-in-95";
-        warning.innerHTML = `
+        // 3. Proctor Warning Modal (Anti-Cheat Notice)
+        const showProctorWarning = () => {
+            const warning = document.createElement('div');
+            warning.className = "fixed inset-0 z-[10005] flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl animate-in zoom-in-95";
+            warning.innerHTML = `
             <div class="bg-[#0a1025] border border-red-500/30 p-12 rounded-[3.5rem] max-w-md w-full text-center">
                 <i class="fas fa-shield-alt text-red-500 text-4xl mb-6"></i>
                 <h3 class="text-white text-xl font-black uppercase italic mb-4 tracking-tighter">Proctoring Active</h3>
@@ -2245,18 +2245,18 @@ openCourseModal(courseId, name, desc) {
                 </p>
                 <button id="confirm-begin" class="w-full py-5 bg-red-600 text-white rounded-2xl text-[10px] font-black uppercase hover:bg-white hover:text-black transition-all">Acknowledge & Start</button>
             </div>`;
-        document.body.appendChild(warning);
-        document.getElementById('confirm-begin').onclick = () => { warning.remove(); startExamFlow(); };
-    };
+            document.body.appendChild(warning);
+            document.getElementById('confirm-begin').onclick = () => { warning.remove(); startExamFlow(); };
+        };
 
-    // 4. Timed Exam Environment
-    const startExamFlow = () => {
-        let currentIdx = 0;
-        let timeLeft = 300;
-        const answers = Array(20).fill("");
+        // 4. Timed Exam Environment
+        const startExamFlow = () => {
+            let currentIdx = 0;
+            let timeLeft = 300;
+            const answers = Array(20).fill("");
 
-        const refreshUI = () => {
-            el.innerHTML = `
+            const refreshUI = () => {
+                el.innerHTML = `
                 <div class="bg-[#050b1d] border border-white/10 rounded-[2.5rem] p-10 animate-in slide-in-from-bottom-5">
                     <div class="flex justify-between items-center mb-8 border-b border-white/5 pb-6">
                         <div>
@@ -2273,78 +2273,78 @@ openCourseModal(courseId, name, desc) {
                     </div>
                 </div>`;
 
-            document.getElementById('exam-box').oninput = (e) => answers[currentIdx] = e.target.value;
-            document.getElementById('btn-prev').onclick = () => { if(currentIdx > 0) { currentIdx--; refreshUI(); } };
-            document.getElementById('btn-next').onclick = () => { if(currentIdx < 19) { currentIdx++; refreshUI(); } };
-            document.getElementById('btn-submit').onclick = () => finish("Manual Submission");
-        };
+                document.getElementById('exam-box').oninput = (e) => answers[currentIdx] = e.target.value;
+                document.getElementById('btn-prev').onclick = () => { if(currentIdx > 0) { currentIdx--; refreshUI(); } };
+                document.getElementById('btn-next').onclick = () => { if(currentIdx < 19) { currentIdx++; refreshUI(); } };
+                document.getElementById('btn-submit').onclick = () => finish("Manual Submission");
+            };
 
-        const finish = (reason) => {
-            clearInterval(timerInt);
-            window.removeEventListener('blur', blurHandler);
-            el.innerHTML = `
+            const finish = (reason) => {
+                clearInterval(timerInt);
+                window.removeEventListener('blur', blurHandler);
+                el.innerHTML = `
                 <div class="p-20 text-center animate-in zoom-in-95">
                     <i class="fas fa-satellite-dish text-blue-500 text-4xl mb-6 animate-pulse"></i>
                     <h3 class="text-white text-xl font-black uppercase italic tracking-tighter">Data Synchronized</h3>
                     <p class="text-gray-500 text-[9px] font-bold uppercase mt-2 tracking-widest">${reason}</p>
                     <button onclick="location.reload()" class="mt-8 px-10 py-4 border border-white/10 text-white rounded-xl text-[9px] font-black uppercase hover:bg-white hover:text-black transition-all">Terminal Home</button>
                 </div>`;
-            // Trigger Centered Modal per instruction
-            if (typeof LessonEngine !== 'undefined') {
-                LessonEngine.showPracticeAlert(`Exam Logged: ${reason}`);
-            }
+                // Trigger Centered Modal per instruction
+                if (typeof LessonEngine !== 'undefined') {
+                    LessonEngine.showPracticeAlert(`Exam Logged: ${reason}`);
+                }
+            };
+
+            const blurHandler = () => finish("Auto-Submit: Integrity Breach (Window Focus Lost)");
+            window.addEventListener('blur', blurHandler, { once: true });
+
+            const timerInt = setInterval(() => {
+                timeLeft--;
+                const mins = Math.floor(timeLeft / 60);
+                const secs = timeLeft % 60;
+                const timerDisplay = document.getElementById('live-timer');
+                if(timerDisplay) timerDisplay.innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+                if(timeLeft <= 0) finish("Auto-Submit: Time Expired");
+            }, 1000);
+
+            refreshUI();
         };
 
-        const blurHandler = () => finish("Auto-Submit: Integrity Breach (Window Focus Lost)");
-        window.addEventListener('blur', blurHandler, { once: true });
-
-        const timerInt = setInterval(() => {
-            timeLeft--;
-            const mins = Math.floor(timeLeft / 60);
-            const secs = timeLeft % 60;
-            const timerDisplay = document.getElementById('live-timer');
-            if(timerDisplay) timerDisplay.innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-            if(timeLeft <= 0) finish("Auto-Submit: Time Expired");
-        }, 1000);
-
-        refreshUI();
-    };
-
-    buildHome();
-},
+        buildHome();
+    },
 
 /////// above is for the exam only
 
-  renderResults(el) {
-    const handleSearch = () => {
-        const idInput = el.querySelector('#result-id-input').value;
-        if (!idInput) {
-            if (typeof LessonEngine !== 'undefined') {
-                LessonEngine.showPracticeAlert("ERROR: Please enter a valid Result ID.");
+    renderResults(el) {
+        const handleSearch = () => {
+            const idInput = el.querySelector('#result-id-input').value;
+            if (!idInput) {
+                if (typeof LessonEngine !== 'undefined') {
+                    LessonEngine.showPracticeAlert("ERROR: Please enter a valid Result ID.");
+                }
+                return;
             }
-            return;
-        }
 
-        // Simulating a database lookup
-        const searchStatus = el.querySelector('#search-status-area');
-        searchStatus.innerHTML = `
+            // Simulating a database lookup
+            const searchStatus = el.querySelector('#search-status-area');
+            searchStatus.innerHTML = `
             <div class="animate-pulse flex flex-col items-center">
                 <i class="fas fa-circle-notch fa-spin text-blue-500 mb-2"></i>
                 <p class="text-[8px] text-blue-400 font-black uppercase tracking-[0.2em]">Querying Database for ID: ${idInput}...</p>
             </div>
         `;
 
-        // Triggering the Centered Modal Alert as per user instructions
-        setTimeout(() => {
-            if (typeof LessonEngine !== 'undefined') {
-                LessonEngine.showPracticeAlert(`SYSTEM: No records found for ID [${idInput}]. Check your credentials.`);
-            }
-            renderInitialState(); // Reset the UI
-        }, 1500);
-    };
+            // Triggering the Centered Modal Alert as per user instructions
+            setTimeout(() => {
+                if (typeof LessonEngine !== 'undefined') {
+                    LessonEngine.showPracticeAlert(`SYSTEM: No records found for ID [${idInput}]. Check your credentials.`);
+                }
+                renderInitialState(); // Reset the UI
+            }, 1500);
+        };
 
-    const renderInitialState = () => {
-        el.innerHTML = `
+        const renderInitialState = () => {
+            el.innerHTML = `
             <div class="bg-[#050b1d] border border-white/5 p-12 rounded-[2.5rem] space-y-8 animate-in fade-in">
                 <div class="text-center mb-4">
                     <h3 class="text-white text-lg font-black uppercase italic tracking-tighter">Transcript Retrieval</h3>
@@ -2381,11 +2381,11 @@ openCourseModal(courseId, name, desc) {
                 </div>
             </div>`;
 
-        document.getElementById('search-result-btn').onclick = handleSearch;
-    };
+            document.getElementById('search-result-btn').onclick = handleSearch;
+        };
 
-    renderInitialState();
-},
+        renderInitialState();
+    },
 
     // --- HELPERS ---
     createProgressCard(title, val, color, icon) {
@@ -2453,7 +2453,7 @@ window.startBeginnerCourse = () => LessonEngine.startCourse();
 
 //// for the nxxxt Ai
 
-     function showNxxtAlert(feature) {
+function showNxxtAlert(feature) {
     const root = document.getElementById('nxxt-root');
     if(root) root.style.filter = 'blur(15px)';
 
@@ -2483,11 +2483,11 @@ window.startBeginnerCourse = () => LessonEngine.startCourse();
     // Nice Closing Sequence
     document.getElementById('close-nxxt-modal').onclick = () => {
         const card = document.getElementById('nxxt-modal-card');
-        
+
         // 1. Shrink the card and fade the overlay
         if(card) card.style.transform = 'scale(0.9)';
         modal.style.opacity = '0';
-        
+
         // 2. Unblur the background slightly before the modal is fully gone
         if(root) {
             root.style.transition = 'filter 0.4s ease';
@@ -2504,14 +2504,14 @@ window.startBeginnerCourse = () => LessonEngine.startCourse();
 
 //// for the Nxxt lab original
 
-  function showLabAlert(feature) {
-        const root = document.getElementById('lab-root');
-        if (root) root.style.filter = 'blur(15px)';
+function showLabAlert(feature) {
+    const root = document.getElementById('lab-root');
+    if (root) root.style.filter = 'blur(15px)';
 
-        const modal = document.createElement('div');
-        // Modal at center per instructions
-        modal.className = "fixed inset-0 z-[1000000] flex items-center justify-center p-6 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300 transition-opacity";
-        modal.innerHTML = `
+    const modal = document.createElement('div');
+    // Modal at center per instructions
+    modal.className = "fixed inset-0 z-[1000000] flex items-center justify-center p-6 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300 transition-opacity";
+    modal.innerHTML = `
             <div id="lab-modal-card" class="bg-[#0f0f0f] border border-white/10 w-full max-w-sm rounded-[3rem] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300 transition-transform">
                 <div class="p-10 text-center">
                     <div class="w-20 h-20 bg-blue-500/10 rounded-3xl flex items-center justify-center mx-auto mb-6 border border-blue-500/20 rotate-12">
@@ -2529,35 +2529,35 @@ window.startBeginnerCourse = () => LessonEngine.startCourse();
                 </div>
             </div>`;
 
-        document.body.appendChild(modal);
+    document.body.appendChild(modal);
 
-        document.getElementById('close-lab-modal').onclick = () => {
-            const card = document.getElementById('lab-modal-card');
-            if (card) card.style.transform = 'scale(0.9)';
-            modal.style.opacity = '0';
-            
-            if (root) {
-                root.style.transition = 'filter 0.4s ease';
-                root.style.filter = 'none';
-            }
+    document.getElementById('close-lab-modal').onclick = () => {
+        const card = document.getElementById('lab-modal-card');
+        if (card) card.style.transform = 'scale(0.9)';
+        modal.style.opacity = '0';
 
-            setTimeout(() => {
-                modal.remove();
-            }, 300);
-        };
-    }
+        if (root) {
+            root.style.transition = 'filter 0.4s ease';
+            root.style.filter = 'none';
+        }
+
+        setTimeout(() => {
+            modal.remove();
+        }, 300);
+    };
+}
 
 
 
-    //// for the side hustle
-    
-       function showHustleAlert(feature) {
-            const root = document.getElementById('side-hustle-root');
-            if(root) root.style.filter = 'blur(15px)';
+//// for the side hustle
 
-            const modal = document.createElement('div');
-            modal.className = "fixed inset-0 z-[1000000] flex items-center justify-center p-6 bg-blue-950/40 backdrop-blur-sm animate-in fade-in duration-300 transition-opacity";
-            modal.innerHTML = `
+function showHustleAlert(feature) {
+    const root = document.getElementById('side-hustle-root');
+    if(root) root.style.filter = 'blur(15px)';
+
+    const modal = document.createElement('div');
+    modal.className = "fixed inset-0 z-[1000000] flex items-center justify-center p-6 bg-blue-950/40 backdrop-blur-sm animate-in fade-in duration-300 transition-opacity";
+    modal.innerHTML = `
                 <div id="hustle-modal-card" class="bg-[#050a1a] border border-blue-500/20 w-full max-w-sm rounded-[3rem] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300 transition-transform">
                     <div class="p-10 text-center">
                         <div class="w-20 h-20 bg-blue-500/10 rounded-3xl flex items-center justify-center mx-auto mb-6 border border-blue-500/20 rotate-12">
@@ -2575,30 +2575,30 @@ window.startBeginnerCourse = () => LessonEngine.startCourse();
                     </div>
                 </div>`;
 
-            document.body.appendChild(modal);
+    document.body.appendChild(modal);
 
-            document.getElementById('close-hustle-modal').onclick = () => {
-                const card = document.getElementById('hustle-modal-card');
-                if(card) card.style.transform = 'scale(0.9)';
-                modal.style.opacity = '0';
-                
-                if(root) {
-                    root.style.transition = 'filter 0.4s ease';
-                    root.style.filter = 'none';
-                }
+    document.getElementById('close-hustle-modal').onclick = () => {
+        const card = document.getElementById('hustle-modal-card');
+        if(card) card.style.transform = 'scale(0.9)';
+        modal.style.opacity = '0';
 
-                setTimeout(() => {
-                    modal.remove();
-                }, 300);
-            };
+        if(root) {
+            root.style.transition = 'filter 0.4s ease';
+            root.style.filter = 'none';
         }
 
+        setTimeout(() => {
+            modal.remove();
+        }, 300);
+    };
+}
 
-        ///// for the Xt pay
-   function switchPayTab(tab) {
+
+///// for the Xt pay
+function switchPayTab(tab) {
     const mainView = document.getElementById('pay-main-view');
     const display = document.getElementById('pay-content-display');
-    
+
     // Hide main transfer view
     mainView.classList.add('hidden');
     // Show content display
@@ -2653,45 +2653,45 @@ function resetPayView() {
 
 //// for the pricing 
 let isYearly = false;
-    function togglePricing() {
-        isYearly = !isYearly;
-        const ball = document.getElementById('toggleBall');
-        const studentPrice = document.getElementById('studentPrice');
-        const proPrice = document.getElementById('proPrice');
-        const sPeriod = document.getElementById('studentPeriod');
-        const pPeriod = document.getElementById('proPeriod');
-        const mLabel = document.getElementById('monthlyLabel');
-        const yLabel = document.getElementById('yearlyLabel');
+function togglePricing() {
+    isYearly = !isYearly;
+    const ball = document.getElementById('toggleBall');
+    const studentPrice = document.getElementById('studentPrice');
+    const proPrice = document.getElementById('proPrice');
+    const sPeriod = document.getElementById('studentPeriod');
+    const pPeriod = document.getElementById('proPeriod');
+    const mLabel = document.getElementById('monthlyLabel');
+    const yLabel = document.getElementById('yearlyLabel');
 
-        if (isYearly) {
-            ball.style.transform = 'translateX(28px)';
-            studentPrice.innerText = '₦74,400';
-            proPrice.innerText = '₦142,800';
-            sPeriod.innerText = '/ Year';
-            pPeriod.innerText = '/ Year';
-            yLabel.classList.remove('text-gray-500');
-            yLabel.classList.add('text-white');
-            mLabel.classList.add('text-gray-500');
-        } else {
-            ball.style.transform = 'translateX(0px)';
-            studentPrice.innerText = '₦8,000';
-            proPrice.innerText = '₦16,000';
-            sPeriod.innerText = '/ Month';
-            pPeriod.innerText = '/ Month';
-            mLabel.classList.remove('text-gray-500');
-            mLabel.classList.add('text-white');
-            yLabel.classList.add('text-gray-500');
-        }
+    if (isYearly) {
+        ball.style.transform = 'translateX(28px)';
+        studentPrice.innerText = '₦74,400';
+        proPrice.innerText = '₦142,800';
+        sPeriod.innerText = '/ Year';
+        pPeriod.innerText = '/ Year';
+        yLabel.classList.remove('text-gray-500');
+        yLabel.classList.add('text-white');
+        mLabel.classList.add('text-gray-500');
+    } else {
+        ball.style.transform = 'translateX(0px)';
+        studentPrice.innerText = '₦8,000';
+        proPrice.innerText = '₦16,000';
+        sPeriod.innerText = '/ Month';
+        pPeriod.innerText = '/ Month';
+        mLabel.classList.remove('text-gray-500');
+        mLabel.classList.add('text-white');
+        yLabel.classList.add('text-gray-500');
     }
+}
 
-    // Centered Modal for Pricing Actions
-    function showPricingAlert(plan) {
-        const root = document.querySelector('section'); // Targets the pricing section
-        if(root) root.style.filter = 'blur(15px)';
+// Centered Modal for Pricing Actions
+function showPricingAlert(plan) {
+    const root = document.querySelector('section'); // Targets the pricing section
+    if(root) root.style.filter = 'blur(15px)';
 
-        const modal = document.createElement('div');
-        modal.className = "fixed inset-0 z-[1000000] flex items-center justify-center p-6 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300";
-        modal.innerHTML = `
+    const modal = document.createElement('div');
+    modal.className = "fixed inset-0 z-[1000000] flex items-center justify-center p-6 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300";
+    modal.innerHTML = `
             <div id="price-modal-card" class="bg-[#050b1d] border border-blue-500/20 w-full max-w-sm rounded-[3rem] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300 transition-transform">
                 <div class="p-10 text-center">
                     <div class="w-20 h-20 bg-blue-500/10 rounded-3xl flex items-center justify-center mx-auto mb-6 border border-blue-500/20 rotate-12">
@@ -2709,42 +2709,42 @@ let isYearly = false;
                 </div>
             </div>`;
 
-        document.body.appendChild(modal);
+    document.body.appendChild(modal);
 
-        document.getElementById('close-price-modal').onclick = () => {
-            const card = document.getElementById('price-modal-card');
-            if(card) card.style.transform = 'scale(0.9)';
-            modal.style.opacity = '0';
-            if(root) root.style.filter = 'none';
-            setTimeout(() => modal.remove(), 300);
-        };
-    }
-
-
-
-
-    //// for the pricing modal
-    function openPaymentModal(planName) {
-        const modal = document.getElementById('payment-modal');
-        const title = document.getElementById('active-plan-title');
-        const root = document.querySelector('section');
-
-        if(title) title.innerText = planName;
-        if(modal) modal.classList.remove('translate-x-full');
-        if(root) root.style.filter = 'blur(10px)';
-    }
-
-    function closePaymentModal() {
-        const modal = document.getElementById('payment-modal');
-        const root = document.querySelector('section');
-
-        if(modal) modal.classList.add('translate-x-full');
+    document.getElementById('close-price-modal').onclick = () => {
+        const card = document.getElementById('price-modal-card');
+        if(card) card.style.transform = 'scale(0.9)';
+        modal.style.opacity = '0';
         if(root) root.style.filter = 'none';
-    }
+        setTimeout(() => modal.remove(), 300);
+    };
+}
 
 
-    //// for the  notification  buttons clear alert
-    function clearNotifications() {
+
+
+//// for the pricing modal
+function openPaymentModal(planName) {
+    const modal = document.getElementById('payment-modal');
+    const title = document.getElementById('active-plan-title');
+    const root = document.querySelector('section');
+
+    if(title) title.innerText = planName;
+    if(modal) modal.classList.remove('translate-x-full');
+    if(root) root.style.filter = 'blur(10px)';
+}
+
+function closePaymentModal() {
+    const modal = document.getElementById('payment-modal');
+    const root = document.querySelector('section');
+
+    if(modal) modal.classList.add('translate-x-full');
+    if(root) root.style.filter = 'none';
+}
+
+
+//// for the  notification  buttons clear alert
+function clearNotifications() {
     const items = document.querySelectorAll('.notif-item');
     const badge = document.getElementById('notif-badge');
     const countText = document.getElementById('notif-count');
@@ -2764,7 +2764,7 @@ let isYearly = false;
         if(badge) badge.style.display = 'none';
         if(countText) countText.innerText = '0 new updates';
         if(bell) bell.classList.remove('animate-pulse');
-        
+
         // Optional: Show empty state
         const scrollArea = document.getElementById('notif-scroll-area');
         scrollArea.innerHTML = `
