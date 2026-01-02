@@ -107,34 +107,14 @@ const views = {
             <h3 class="text-lg font-black text-white italic uppercase tracking-tighter">Activity</h3>
             <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest mt-1">Tracking session</p>
         </div>
-        <div class="flex gap-2 flex-wrap">
-            <button class="px-4 py-2 bg-gray-800 rounded-lg text-[9px] font-black uppercase tracking-widest text-white shadow-lg shadow-gray-800/20">2025</button>
-            <button class="px-4 py-2 bg-blue-600 rounded-lg text-[9px] font-black uppercase tracking-widest text-white shadow-lg shadow-blue-600/20">2026</button>
+        <div id="year-buttons" class="flex gap-2 flex-wrap">
+            <button class="year-btn px-4 py-2 rounded-lg text-[9px] font-black uppercase tracking-widest text-white shadow-lg" data-year="2025">2025</button>
+            <button class="year-btn px-4 py-2 rounded-lg text-[9px] font-black uppercase tracking-widest text-white shadow-lg" data-year="2026">2026</button>
         </div>
     </div>
     <div class="overflow-x-auto pb-4 no-scrollbar">
-        <div class="inline-grid grid-rows-7 grid-flow-col gap-1.5 min-w-[850px]">
-            <!-- 2026 Activity Grid (365 days starting Jan 1, 2026) -->
-            <!-- Example with very light early activity + mostly empty for future days -->
-            <div class="w-3 h-3 rounded-sm bg-white/[0.03] transition-all duration-500 cursor-pointer" title="2026-01-01"></div>
-            <div class="w-3 h-3 rounded-sm bg-green-900 transition-all duration-500 cursor-pointer" title="2026-01-02"></div>
-            <div class="w-3 h-3 rounded-sm bg-green-900 transition-all duration-500 cursor-pointer" title="2026-01-03"></div>
-            <!-- The rest of the year continues with mostly low/no activity yet -->
-            <div class="w-3 h-3 rounded-sm bg-white/[0.03] transition-all duration-500 cursor-pointer" title="2026-01-04"></div>
-            <div class="w-3 h-3 rounded-sm bg-white/[0.03] transition-all duration-500 cursor-pointer" title="2026-01-05"></div>
-            <!-- ... (repeat pattern for all 365 days, thickening based on real future engagement) ... -->
-            <!-- Placeholder for the remaining ~360 boxes (they would be generated dynamically) -->
-            ${(() => {
-                let boxes = '';
-                for (let i = 3; i < 365; i++) {
-                    // Most future days = no activity yet
-                    const thickness = 'bg-white/[0.03]';
-                    const d = new Date(2026, 0, i + 1);
-                    const dateStr = d.toISOString().split('T')[0];
-                    boxes += `<div class="w-3 h-3 rounded-sm ${thickness} transition-all duration-500 cursor-pointer" title="${dateStr}"></div>`;
-                }
-                return boxes;
-            })()}
+        <div id="activity-grid" class="inline-grid grid-rows-7 grid-flow-col gap-1.5 min-w-[850px]">
+            <!-- Grid boxes generated dynamically -->
         </div>
     </div>
     <div class="flex justify-between items-center mt-4">
@@ -152,6 +132,8 @@ const views = {
         </div>
     </div>
 </div>
+
+
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mt-8">
         <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-emerald-500/30 transition-all">
             <div class="flex items-center gap-4 relative z-10">
@@ -2796,5 +2778,89 @@ function clearNotifications() {
     window.location.href = "login.html"; // or /login
   }
 
+
+
+//// for the activity 
+
+// Simulated ActivityEngine – replace with your real tracking later
+const ActivityEngine = {
+    getBoxClass: (dateStr) => {
+        const date = new Date(dateStr);
+        const year = date.getFullYear();
+        const today = new Date('2026-01-03'); // Current date: Jan 3, 2026
+
+        if (year === 2025) {
+            // Simulated full-year activity for 2025 (random but looks real)
+            const rand = Math.sin(date.getTime() / 86400000) * 1000 % 1;
+            if (rand < 0.15) return 'bg-white/[0.03]';
+            if (rand < 0.35) return 'bg-green-900';
+            if (rand < 0.55) return 'bg-green-700';
+            if (rand < 0.75) return 'bg-green-500';
+            return 'bg-green-400';
+        } 
+        else if (year === 2026) {
+            if (date > today) return 'bg-white/[0.03]'; // Future days = empty
+            // Real early 2026 activity (Jan 1–3)
+            const day = date.getDate();
+            if (day === 1) return 'bg-white/[0.03]';
+            if (day === 2 || day === 3) return 'bg-green-900';
+            return 'bg-white/[0.03]'; // No activity yet on other past days
+        }
+        return 'bg-white/[0.03]';
+    }
+};
+
+function generateGrid(year) {
+    const grid = document.getElementById('activity-grid');
+    grid.innerHTML = ''; // Clear previous grid
+
+    const start = new Date(year, 0, 1);
+    const daysInYear = (year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0)) ? 366 : 365;
+
+    // This ensures correct week alignment (GitHub style)
+    const firstDayWeekday = start.getDay(); // 0 = Sunday
+    for (let i = 0; i < firstDayWeekday; i++) {
+        // Add empty invisible boxes at start if year doesn't begin on Sunday
+        const empty = document.createElement('div');
+        empty.className = 'w-3 h-3 rounded-sm opacity-0';
+        grid.appendChild(empty);
+    }
+
+    for (let i = 0; i < daysInYear; i++) {
+        const d = new Date(start);
+        d.setDate(d.getDate() + i);
+        const dateStr = d.toISOString().split('T')[0];
+        const thickness = ActivityEngine.getBoxClass(dateStr);
+
+        const box = document.createElement('div');
+        box.className = `w-3 h-3 rounded-sm ${thickness} transition-all duration-500 cursor-pointer hover:scale-150`;
+        box.title = dateStr + (thickness.includes('green') ? ' - Active' : '');
+        grid.appendChild(box);
+    }
+}
+
+function switchYear(selectedYear) {
+    // Update button appearance
+    document.querySelectorAll('.year-btn').forEach(btn => {
+        const year = parseInt(btn.dataset.year);
+        if (year === selectedYear) {
+            btn.className = 'year-btn px-4 py-2 bg-blue-600 rounded-lg text-[9px] font-black uppercase tracking-widest text-white shadow-lg shadow-blue-600/20';
+        } else {
+            btn.className = 'year-btn px-4 py-2 bg-gray-800 rounded-lg text-[9px] font-black uppercase tracking-widest text-white shadow-lg shadow-gray-800/20';
+        }
+    });
+
+    generateGrid(selectedYear);
+}
+
+// Add click listeners to buttons
+document.querySelectorAll('.year-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        switchYear(parseInt(btn.dataset.year));
+    });
+});
+
+// Load current year on page open (Jan 3, 2026 → show 2026)
+switchYear(2026);
 
 
