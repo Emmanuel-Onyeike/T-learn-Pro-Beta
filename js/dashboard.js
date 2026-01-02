@@ -750,7 +750,7 @@ const views = {
 
 
 
-    'Notifications': `
+  'Notifications': `
     <div class="max-w-md mx-auto content-card text-center animate-in">
         <div class="relative inline-block mb-6">
             <i id="notif-bell-icon" class="fa-solid fa-bell text-5xl text-blue-500 animate-pulse"></i>
@@ -758,37 +758,41 @@ const views = {
         </div>
         <h3 class="text-4xl font-black text-white italic mb-2 uppercase tracking-tighter">Transmissions</h3>
         <p class="text-gray-500 text-[10px] font-black uppercase tracking-[0.3em] mb-8 leading-relaxed">
-            System logs indicate <span id="notif-count" class="text-blue-500">2 new updates</span> <br> awaiting your review
+            System logs indicate <span id="notif-count" class="text-blue-500">3 new updates</span> <br> awaiting your review
         </p>
        
         <div id="notif-scroll-area" class="space-y-4 mb-8 max-h-[380px] overflow-y-auto pr-2 custom-scrollbar">
+            
+            <div class="notif-item p-5 bg-yellow-500/5 border border-yellow-500/20 rounded-3xl text-left relative overflow-hidden group hover:border-yellow-500/40 transition-all">
+                <div class="flex justify-between items-start mb-2">
+                    <p class="text-[8px] font-black text-yellow-500 uppercase tracking-widest">Global Broadcast</p>
+                    <span class="text-[7px] text-gray-600 font-bold">2026.01.01</span>
+                </div>
+                <p class="text-white text-[11px] font-bold leading-relaxed">
+                    Happy New Year, Nxxters! The board is set for 2026. Let's work, build, and dominate this cycle together.
+                </p>
+                <i class="fas fa-crown absolute -bottom-2 -right-2 text-yellow-500/10 text-4xl group-hover:scale-110 transition-transform"></i>
+            </div>
+
             <div class="notif-item p-5 bg-blue-500/5 border border-blue-500/10 rounded-3xl text-left relative overflow-hidden group hover:border-blue-500/30 transition-all">
                 <div class="flex justify-between items-start mb-2">
-                    <p class="text-[8px] font-black text-blue-500 uppercase tracking-widest">System Protocol</p>
+                    <p class="text-[8px] font-black text-blue-500 uppercase tracking-widest">Dev Protocol</p>
                     <span class="text-[7px] text-gray-600 font-bold">JUST NOW</span>
                 </div>
                 <p class="text-white text-[11px] font-bold leading-relaxed">
-                    We apologize for the inactive sections. We urge you to stay with us as we build to your comfort. Sit back and enjoy your lessons while we update the system to your taste.
+                    Prototype update is almost out. Nxxt engineers are currently building the next-gen framework. Standby for deployment.
                 </p>
-                <i class="fas fa-wrench absolute -bottom-2 -right-2 text-blue-500/10 text-4xl group-hover:rotate-12 transition-transform"></i>
+                <i class="fas fa-microchip absolute -bottom-2 -right-2 text-blue-500/10 text-4xl group-hover:rotate-12 transition-transform"></i>
             </div>
 
             <div class="notif-item p-5 bg-white/5 border border-white/5 rounded-3xl text-left hover:border-white/10 transition-all">
                 <div class="flex justify-between items-start mb-2">
-                    <p class="text-[8px] font-black text-yellow-500 uppercase tracking-widest">Lab Access</p>
-                    <span class="text-[7px] text-gray-600 font-bold">2H AGO</span>
+                    <p class="text-[8px] font-black text-gray-400 uppercase tracking-widest">Support Sync</p>
+                    <span class="text-[7px] text-gray-600 font-bold">1H AGO</span>
                 </div>
                 <p class="text-gray-400 text-[11px] font-bold">
-                    Experimental tools in the Nxxt Lab are being calibrated. Beta keys will be issued to active students shortly.
+                    We apologize for the inactive sections. We urge you to stay with us as we build to your comfort.
                 </p>
-            </div>
-
-            <div class="notif-item p-5 bg-white/5 border border-white/5 rounded-3xl text-left opacity-50">
-                <div class="flex justify-between items-start mb-2">
-                    <p class="text-[8px] font-black text-gray-500 uppercase tracking-widest">Security Trace</p>
-                    <span class="text-[7px] text-gray-600 font-bold">5H AGO</span>
-                </div>
-                <p class="text-gray-500 text-[11px] font-bold">Encryption protocols updated to V4.2. Connection stable.</p>
             </div>
         </div>
 
@@ -802,6 +806,7 @@ const views = {
         </div>
     </div>
 `,
+    
 
 
 
