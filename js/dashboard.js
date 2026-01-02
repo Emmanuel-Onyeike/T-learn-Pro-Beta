@@ -86,21 +86,20 @@ const views = {
     </div>
     <i class="fas fa-graduation-cap absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-blue-400/[0.05] transition-all"></i>
 </div>
-        <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-red-500/30 transition-all">
+               <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-red-500/30 transition-all">
             <div class="flex items-center gap-4 relative z-10">
                 <div class="w-12 h-12 bg-red-600/10 rounded-2xl flex items-center justify-center border border-red-500/20">
                     <i class="fas fa-fire text-red-500"></i>
                 </div>
                 <div>
-                    <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">STREAKS</p>
+                    <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">CP Score</p>
                     <h3 class="text-3xl font-black text-white mt-1">0</h3>
                 </div>
             </div>
-           <i class="fas fa-fire-alt absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12
-           group-hover:text-orange-500/[0.05] transition-all pointer-events-none"></i>
-
+            <i class="fas fa-terminal absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-red-500/[0.05] transition-all"></i>
         </div>
     </div>
+ turn this to streaks instead
  
  
    <div class="mt-8 bg-[#050b1d] border border-white/5 p-8 rounded-[2.5rem] relative overflow-hidden">
