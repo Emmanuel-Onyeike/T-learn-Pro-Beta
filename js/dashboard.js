@@ -92,7 +92,7 @@ const views = {
                     <i class="fas fa-fire text-red-500"></i>
                 </div>
                 <div>
-                    <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">CP Score</p>
+                    <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Streaks</p>
                     <h3 class="text-3xl font-black text-white mt-1">0</h3>
                 </div>
             </div>
