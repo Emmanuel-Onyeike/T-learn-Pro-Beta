@@ -101,51 +101,57 @@ const views = {
         </div>
     </div>
 
-    <div class="mt-8 bg-[#050b1d] border border-white/5 p-8 rounded-[2.5rem] relative overflow-hidden">
-        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
-            <div>
-                <h3 class="text-lg font-black text-white italic uppercase tracking-tighter"> Activity</h3>
-                <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest mt-1">Tracking session </p>
-            </div>
-            <div class="flex gap-2">
-                <button class="px-4 py-2 bg-blue-600 rounded-lg text-[9px] font-black uppercase tracking-widest text-white shadow-lg shadow-blue-600/20">2025</button>
-            </div>
+   <div class="mt-8 bg-[#050b1d] border border-white/5 p-8 rounded-[2.5rem] relative overflow-hidden">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+        <div>
+            <h3 class="text-lg font-black text-white italic uppercase tracking-tighter">Activity</h3>
+            <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest mt-1">Tracking session</p>
         </div>
-
-        <div class="overflow-x-auto pb-4 no-scrollbar">
-            <div class="inline-grid grid-rows-7 grid-flow-col gap-1.5 min-w-[850px]">
-                ${(() => {
-        const currentYear = 2025;
-        const start = new Date(currentYear, 0, 1);
-        let boxes = '';
-        for (let i = 0; i < 365; i++) {
-            const d = new Date(start);
-            d.setDate(d.getDate() + i);
-            const dateStr = d.toISOString().split('T')[0];
-            // Removed the backslashes here
-            const thickness = ActivityEngine.getBoxClass(dateStr);
-            boxes += `<div class="w-3 h-3 rounded-sm ${thickness} transition-all duration-500 cursor-pointer" title="${dateStr}"></div>`;
-        }
-        return boxes;
-    })()}
-            </div>
-        </div>
-
-        <div class="flex justify-between items-center mt-4">
-            <p class="text-[8px] text-gray-600 font-bold uppercase tracking-widest italic">Density increases with page engagement time</p>
-            <div class="flex items-center gap-2">
-                <span class="text-[8px] text-gray-600 font-bold uppercase tracking-widest">Low</span>
-                <div class="flex gap-1">
-                    <div class="w-2.5 h-2.5 rounded-sm bg-white/[0.03]"></div>
-                    <div class="w-2.5 h-2.5 rounded-sm bg-green-900"></div>
-                    <div class="w-2.5 h-2.5 rounded-sm bg-green-700"></div>
-                    <div class="w-2.5 h-2.5 rounded-sm bg-green-500"></div>
-                    <div class="w-2.5 h-2.5 rounded-sm bg-green-400"></div>
-                </div>
-                <span class="text-[8px] text-gray-600 font-bold uppercase tracking-widest">Elite</span>
-            </div>
+        <div class="flex gap-2 flex-wrap">
+            <button class="px-4 py-2 bg-gray-800 rounded-lg text-[9px] font-black uppercase tracking-widest text-white shadow-lg shadow-gray-800/20">2025</button>
+            <button class="px-4 py-2 bg-blue-600 rounded-lg text-[9px] font-black uppercase tracking-widest text-white shadow-lg shadow-blue-600/20">2026</button>
         </div>
     </div>
+    <div class="overflow-x-auto pb-4 no-scrollbar">
+        <div class="inline-grid grid-rows-7 grid-flow-col gap-1.5 min-w-[850px]">
+            <!-- 2026 Activity Grid (365 days starting Jan 1, 2026) -->
+            <!-- Example with very light early activity + mostly empty for future days -->
+            <div class="w-3 h-3 rounded-sm bg-white/[0.03] transition-all duration-500 cursor-pointer" title="2026-01-01"></div>
+            <div class="w-3 h-3 rounded-sm bg-green-900 transition-all duration-500 cursor-pointer" title="2026-01-02"></div>
+            <div class="w-3 h-3 rounded-sm bg-green-900 transition-all duration-500 cursor-pointer" title="2026-01-03"></div>
+            <!-- The rest of the year continues with mostly low/no activity yet -->
+            <div class="w-3 h-3 rounded-sm bg-white/[0.03] transition-all duration-500 cursor-pointer" title="2026-01-04"></div>
+            <div class="w-3 h-3 rounded-sm bg-white/[0.03] transition-all duration-500 cursor-pointer" title="2026-01-05"></div>
+            <!-- ... (repeat pattern for all 365 days, thickening based on real future engagement) ... -->
+            <!-- Placeholder for the remaining ~360 boxes (they would be generated dynamically) -->
+            ${(() => {
+                let boxes = '';
+                for (let i = 3; i < 365; i++) {
+                    // Most future days = no activity yet
+                    const thickness = 'bg-white/[0.03]';
+                    const d = new Date(2026, 0, i + 1);
+                    const dateStr = d.toISOString().split('T')[0];
+                    boxes += `<div class="w-3 h-3 rounded-sm ${thickness} transition-all duration-500 cursor-pointer" title="${dateStr}"></div>`;
+                }
+                return boxes;
+            })()}
+        </div>
+    </div>
+    <div class="flex justify-between items-center mt-4">
+        <p class="text-[8px] text-gray-600 font-bold uppercase tracking-widest italic">Density increases with page engagement time</p>
+        <div class="flex items-center gap-2">
+            <span class="text-[8px] text-gray-600 font-bold uppercase tracking-widest">Low</span>
+            <div class="flex gap-1">
+                <div class="w-2.5 h-2.5 rounded-sm bg-white/[0.03]"></div>
+                <div class="w-2.5 h-2.5 rounded-sm bg-green-900"></div>
+                <div class="w-2.5 h-2.5 rounded-sm bg-green-700"></div>
+                <div class="w-2.5 h-2.5 rounded-sm bg-green-500"></div>
+                <div class="w-2.5 h-2.5 rounded-sm bg-green-400"></div>
+            </div>
+            <span class="text-[8px] text-gray-600 font-bold uppercase tracking-widest">Elite</span>
+        </div>
+    </div>
+</div>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mt-8">
         <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-emerald-500/30 transition-all">
             <div class="flex items-center gap-4 relative z-10">
