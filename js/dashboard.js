@@ -87,34 +87,28 @@ const views = {
     <i class="fas fa-graduation-cap absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-blue-400/[0.05] transition-all"></i>
 </div>
 
-<div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-orange-500/30 transition-all">
-    <div class="absolute -top-10 -left-10 w-32 h-32 bg-orange-600/5 rounded-full blur-3xl group-hover:bg-orange-600/10 transition-all"></div>
-
-    <div class="flex items-center justify-between relative z-10">
-        <div class="flex items-center gap-4">
-            <div class="w-14 h-14 bg-orange-600/10 rounded-2xl flex items-center justify-center border border-orange-500/20 group-hover:shadow-[0_0_20px_rgba(249,115,22,0.2)] transition-all">
-                <i class="fas fa-fire-alt text-2xl text-orange-500 group-hover:animate-bounce"></i>
-            </div>
-            
-            <div>
-                <p class="text-[10px] font-black text-gray-500 uppercase tracking-[0.2em] flex items-center gap-2">
-                    Active Streak 
-                    <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
-                </p>
-                <h3 class="text-4xl font-black text-white mt-1 italic tracking-tighter">
-                    0 <span class="text-xs font-black uppercase text-gray-600 not-italic tracking-widest ml-1">Days</span>
-                </h3>
-            </div>
-        </div>
-
-        <div class="text-right border-l border-white/5 pl-4">
-            <p class="text-[8px] font-black text-gray-600 uppercase tracking-widest">Best</p>
-            <p class="text-sm font-black text-white/40 italic">0d</p>
-        </div>
+        <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-red-500/30 transition-all">
+            <div class="flex items-center gap-4 relative z-10">
+                <div class="w-12 h-12 bg-orange-600/10 rounded-2xl flex items-center justify-center border border-orange-500/20">
+      <i class="fas fa-fire-alt text-orange-500 text-sm"></i>
     </div>
 
-    <i class="fas fa-calendar-check absolute -bottom-6 -right-6 text-white/[0.02] text-8xl -rotate-12 group-hover:text-orange-500/[0.05] transition-all"></i>
-</div>
+                <div>
+                    <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">STREAKS</p>
+                   <h3 class="text-3xl font-black text-white mt-1 leading-none">
+        0
+        <span class="text-[10px] font-black uppercase text-gray-600 tracking-widest ml-1">
+          days
+        </span>
+      </h3>
+                </div>
+            </div>
+         <i class="fas fa-fire-alt absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12
+           group-hover:text-orange-500/[0.05] transition-all pointer-events-none"></i>
+
+        </div>
+    </div>
+ 
    <div class="mt-8 bg-[#050b1d] border border-white/5 p-8 rounded-[2.5rem] relative overflow-hidden">
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
         <div>
