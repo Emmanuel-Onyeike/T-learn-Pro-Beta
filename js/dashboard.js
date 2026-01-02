@@ -96,7 +96,7 @@ const views = {
                     <h3 class="text-3xl font-black text-white mt-1">0</h3>
                 </div>
             </div>
-            <i class="fas fa-terminal absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-red-500/[0.05] transition-all"></i>
+            <i class="fas fa-fire-alt absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-red-500/[0.05] transition-all"></i>
         </div>
     </div>
 
