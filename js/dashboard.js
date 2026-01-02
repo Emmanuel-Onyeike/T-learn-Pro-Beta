@@ -2778,3 +2778,17 @@ function clearNotifications() {
 
 
 
+///// for the logout
+
+  function handleLogout() {
+    // Call your existing logout logic
+    if (typeof logout === "function") {
+      logout();
+    }
+
+    // Redirect to login page
+    window.location.href = "login.html"; // or /login
+  }
+
+
+
