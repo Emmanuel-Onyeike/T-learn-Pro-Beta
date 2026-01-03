@@ -321,89 +321,66 @@ const views = {
 
 
 'Leaderboard': `
-    <div class="space-y-8 animate-in">
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div>
-                <h3 class="text-xl font-black text-white italic uppercase tracking-tighter">Global Ranking</h3>
-                <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest mt-1">Battle for the #1 Spot • 2026 Cycle</p>
+    <div class="space-y-10 animate-in">
+        <div class="space-y-4">
+            <div class="flex items-center gap-3 ml-2">
+                <i class="fas fa-trophy text-yellow-500 text-sm"></i>
+                <h3 class="text-white font-black uppercase italic tracking-tighter">Top Performers</h3>
             </div>
-            <div class="px-4 py-2 bg-yellow-500/10 border border-yellow-500/20 rounded-xl flex items-center gap-2">
-                <span class="w-1.5 h-1.5 rounded-full bg-yellow-500 animate-ping"></span>
-                <p class="text-[8px] font-black text-yellow-500 uppercase tracking-widest italic">Championship Phase</p>
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-4" id="top-five-grid">
+                <div id="spotlight-rank-1" class="relative p-6 rounded-[2.5rem] bg-[#0a1025] border border-yellow-500/30 text-center group transition-all duration-500">
+                    <div class="absolute top-4 left-4 bg-yellow-500 text-black text-[9px] font-black px-2 py-0.5 rounded-full">#1</div>
+                    <div class="absolute top-4 right-4"><i class="fas fa-star text-yellow-500 animate-pulse"></i></div>
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Emmanuel" class="w-20 h-20 rounded-full mx-auto mb-4 border-2 border-yellow-500 shadow-lg shadow-yellow-500/20">
+                    <h4 class="text-white font-black italic uppercase text-xs">Emmanuel</h4>
+                    <div class="mt-4 bg-black/40 rounded-2xl py-3 border border-white/5">
+                         <p id="top-pts-1" class="text-xl font-black text-white italic tracking-tighter">0</p>
+                         <p class="text-[7px] text-gray-500 uppercase font-bold tracking-widest">Points</p>
+                    </div>
+                </div>
+                ${[2,3,4,5].map(i => `
+                <div class="relative p-6 rounded-[2.5rem] bg-white/[0.02] border border-white/5 text-center opacity-40">
+                    <div class="absolute top-4 left-4 text-[9px] font-black text-gray-500">#${i}</div>
+                    <div class="w-16 h-16 rounded-full mx-auto mb-4 bg-white/5 flex items-center justify-center border border-dashed border-white/10 italic text-gray-700 text-[10px]">Node_${i}</div>
+                    <h4 class="text-gray-500 font-bold uppercase text-[10px]">Nxxt_Rival</h4>
+                    <div class="mt-4 bg-black/20 rounded-2xl py-2"><p class="text-gray-600 font-black italic">--</p></div>
+                </div>`).join('')}
             </div>
         </div>
 
-        <div class="bg-[#050b1d] border border-white/5 rounded-[2.5rem] overflow-hidden shadow-2xl shadow-blue-500/5">
-            <table class="w-full text-left border-collapse">
-                <thead>
-                    <tr class="border-b border-white/5 bg-white/[0.02]">
-                        <th class="p-5 text-[8px] font-black text-gray-500 uppercase tracking-[0.2em]">Rank</th>
-                        <th class="p-5 text-[8px] font-black text-gray-500 uppercase tracking-[0.2em]">Student Node</th>
-                        <th class="p-5 text-[8px] font-black text-gray-500 uppercase tracking-[0.2em]">Activity Intensity</th>
-                        <th class="p-5 text-[8px] font-black text-gray-500 uppercase tracking-[0.2em] text-right">Points</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-white/5">
-                    <tr id="lb-user-row" class="group bg-blue-500/5 transition-all duration-500">
-                        <td class="p-5">
-                            <div class="w-8 h-8 rounded-lg bg-yellow-500 flex items-center justify-center shadow-lg shadow-yellow-500/20">
-                                <i class="fas fa-crown text-black text-[10px]"></i>
-                            </div>
-                        </td>
-                        <td class="p-5">
-                            <p class="text-white text-xs font-black italic uppercase tracking-tight">
-                                Emmanuel <span class="text-blue-500 text-[10px] ml-2 font-bold animate-pulse">(ACTIVE)</span>
-                            </p>
-                        </td>
-                        <td class="p-5">
-                            <div id="lb-activity-bars" class="flex gap-1">
-                                <div class="w-3 h-1.5 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.5)]"></div>
-                                <div class="w-3 h-1.5 rounded-full bg-blue-500/20"></div>
-                                <div class="w-3 h-1.5 rounded-full bg-blue-500/20"></div>
-                                <div class="w-3 h-1.5 rounded-full bg-blue-500/20"></div>
-                            </div>
-                        </td>
-                        <td class="p-5 text-right">
-                            <p id="leaderboard-points" class="text-white font-black italic tracking-tighter text-lg">0</p>
-                        </td>
-                    </tr>
-                    
-                    <tr class="opacity-40">
-                        <td class="p-5 text-gray-500 font-black italic text-xs">#2</td>
-                        <td class="p-5 text-gray-400 font-bold text-[11px] uppercase tracking-widest">Nxxt_Alpha_Node</td>
-                        <td class="p-5"><div class="flex gap-1"><div class="w-3 h-1.5 rounded-full bg-gray-700"></div><div class="w-3 h-1.5 rounded-full bg-gray-700"></div></div></td>
-                        <td class="p-5 text-right text-gray-500 font-black italic">--</td>
-                    </tr>
-                    <tr class="opacity-20">
-                        <td class="p-5 text-gray-500 font-black italic text-xs">#3</td>
-                        <td class="p-5 text-gray-400 font-bold text-[11px] uppercase tracking-widest">Nxxt_Bravo_Node</td>
-                        <td class="p-5 text-gray-600 text-[10px]">Standby...</td>
-                        <td class="p-5 text-right text-gray-500 font-black italic">--</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div class="p-6 bg-blue-500/5 border border-blue-500/10 rounded-3xl text-center relative group overflow-hidden hover:border-blue-500/40 transition-all">
-                <p class="text-[8px] font-black text-blue-500 uppercase tracking-widest mb-1 relative z-10">Current Rank</p>
-                <p id="global-rank-val" class="text-4xl font-black text-white italic relative z-10 tracking-tighter">#--</p>
-                <i class="fas fa-trophy absolute -bottom-2 -right-2 text-blue-500/5 text-6xl rotate-12"></i>
+        <div class="space-y-4">
+            <div class="flex items-center gap-3 ml-2">
+                <i class="fas fa-list-ol text-blue-500 text-sm"></i>
+                <h3 class="text-white font-black uppercase italic tracking-tighter text-sm">Full Rankings</h3>
             </div>
-            <div class="p-6 bg-white/5 border border-white/5 rounded-3xl text-center hover:border-white/20 transition-all">
-                <p class="text-[8px] font-black text-gray-500 uppercase tracking-widest mb-1">Total Streak</p>
-                <p id="leaderboard-streak" class="text-4xl font-black text-white italic tracking-tighter">0d</p>
-            </div>
-            <div class="p-6 bg-gradient-to-br from-purple-500/10 to-blue-500/10 border border-white/5 rounded-3xl text-center">
-                <p class="text-[8px] font-black text-purple-500 uppercase tracking-widest mb-1">Global Percentile</p>
-                <div class="flex items-center justify-center gap-1">
-                     <p class="text-3xl font-black text-white italic tracking-tighter">99.9</p>
-                     <span class="text-xs text-purple-500 font-bold">%</span>
+            <div class="space-y-2" id="full-rankings-list">
+                <div class="flex items-center justify-between p-4 bg-white/[0.03] border border-white/5 rounded-2xl group hover:border-blue-500/30 transition-all">
+                    <div class="flex items-center gap-4">
+                        <div class="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center text-[10px] font-black text-blue-500 italic" id="lb-list-rank">#--</div>
+                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Emmanuel" class="w-8 h-8 rounded-full border border-white/10">
+                        <p class="text-xs font-black text-white uppercase italic">Emmanuel <i class="fas fa-check-circle text-[10px] text-blue-500 ml-1"></i></p>
+                    </div>
+                    <div class="flex gap-8 items-center">
+                         <div class="text-right">
+                            <p id="lb-list-points" class="text-white font-black italic tracking-tighter text-sm">0</p>
+                            <p class="text-[7px] text-gray-600 font-bold uppercase tracking-widest">Deployment Pts</p>
+                         </div>
+                         <i class="fas fa-chevron-right text-gray-800 text-[8px]"></i>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between p-4 bg-white/[0.01] border border-white/5 rounded-2xl opacity-30">
+                    <div class="flex items-center gap-4">
+                        <div class="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-[10px] font-black text-gray-600 italic">#--</div>
+                        <div class="w-8 h-8 rounded-full bg-white/5"></div>
+                        <p class="text-xs font-bold text-gray-600 uppercase">Nxxt_Alpha_Node</p>
+                    </div>
+                    <p class="text-gray-700 font-black italic text-sm">--</p>
                 </div>
             </div>
         </div>
     </div>
 `,
+    
 
 
     
@@ -2856,8 +2833,8 @@ function clearNotifications() {
 ///// for the rank and streaks
 // --- SYSTEM DATA CORE ---
 let systemData = JSON.parse(localStorage.getItem('nxxt_user_data')) || {
-    rankPoints: 0,      // Total points earned
-    streak: 0,          // Current active streak
+    rankPoints: 0,
+    streak: 0,
     lastActive: null,
     totalSecondsToday: 0,
     sessionStartTime: Date.now(),
@@ -2870,15 +2847,14 @@ function updateSystem() {
     const now = new Date();
     const todayStr = now.toISOString().split('T')[0];
 
-    // 1. TRACK TIME & ACTIVITY (Gains points for being active)
+    // 1. TRACK TIME & ACTIVITY
     systemData.totalSecondsToday += 10; 
-    systemData.rankPoints += 5; // +5 points every 10 seconds
+    systemData.rankPoints += 5; 
     
-    // Update the Activity Grid Intensity
     let intensity = Math.min(Math.floor(systemData.totalSecondsToday / 3600), 4);
     if (intensity > 0) systemData.activityHistory[todayStr] = intensity;
 
-    // 2. 24-HOUR ONLINE PROTOCOL (Stay online for 24h = +1 Streak)
+    // 2. 24-HOUR ONLINE PROTOCOL
     const sessionDurationHours = (Date.now() - systemData.sessionStartTime) / (1000 * 60 * 60);
     if (sessionDurationHours >= 24) {
         systemData.streak += 1;
@@ -2886,15 +2862,14 @@ function updateSystem() {
         showNotification("STREAK UNLOCKED: 24h Online Milestone Reached.");
     }
 
-    // 3. DAILY LOGIN STREAK LOGIC
+    // 3. DAILY LOGIN STREAK
     if (systemData.lastActive) {
         const lastDate = new Date(systemData.lastActive);
         const daysSince = Math.floor((now - lastDate) / (1000 * 60 * 60 * 24));
-        
         if (daysSince === 1) {
             systemData.streak += 1; 
         } else if (daysSince > 1) {
-            systemData.streak = 0; // Streak broken
+            systemData.streak = 0;
         }
     }
     
@@ -2903,37 +2878,65 @@ function updateSystem() {
 }
 
 function renderUI() {
-    // A. CALCULATE GLOBAL POSITION (Battle for Rank 1)
-    // Starting at #100, users grind down to #1
+    // A. CALCULATE GLOBAL POSITION
     let globalRank = 100 - Math.floor(systemData.rankPoints / 1000);
     if (globalRank < 1) globalRank = 1;
 
-    // B. UPDATE DASHBOARD RANK CARD
-    const rankDisplay = document.getElementById('ui-rank'); // Ensure your HTML ID is 'ui-rank'
-    if(rankDisplay) {
-        rankDisplay.innerText = `#${globalRank}`;
-        
-        // Rank 1 Special Effects
+    // B. DASHBOARD CARD UPDATES
+    const uiRank = document.getElementById('ui-rank');
+    if (uiRank) {
+        uiRank.innerText = `#${globalRank}`;
+        const crown = document.getElementById('rank-crown-icon');
         if (globalRank === 1) {
-            rankDisplay.classList.add('text-yellow-500', 'animate-pulse');
-            document.getElementById('rank-crown-icon')?.classList.add('text-yellow-500/20');
+            uiRank.classList.add('text-yellow-500', 'animate-pulse');
+            if (crown) crown.style.color = 'rgba(234, 179, 8, 0.2)';
         } else {
-            rankDisplay.classList.remove('text-yellow-500', 'animate-pulse');
+            uiRank.classList.remove('text-yellow-500', 'animate-pulse');
+            if (crown) crown.style.color = '';
         }
     }
 
-    // C. UPDATE DASHBOARD STREAK CARD
-    const streakDisplay = document.getElementById('ui-streak');
-    if(streakDisplay) streakDisplay.innerText = systemData.streak;
+    const uiStreak = document.getElementById('ui-streak');
+    if (uiStreak) uiStreak.innerText = systemData.streak;
 
-    // D. UPDATE LEADERBOARD SECTION
-    const lbRank = document.getElementById('global-rank-val');
-    const lbPoints = document.getElementById('leaderboard-points');
-    const lbStreak = document.getElementById('leaderboard-streak');
+    // C. LEADERBOARD: TOP 5 PERFORMERS (Spotlight Containers)
+    // We target the Top 5 grid cards
+    for (let i = 1; i <= 5; i++) {
+        const spotlightCard = document.getElementById(`spotlight-rank-${i}`);
+        const spotlightPoints = document.getElementById(`top-pts-${i}`);
+        
+        if (globalRank === i) {
+            // If the user is in the Top 5, highlight their specific card
+            if (spotlightCard) {
+                spotlightCard.classList.remove('opacity-40');
+                spotlightCard.classList.add('border-yellow-500/50', 'bg-yellow-500/5');
+            }
+            if (spotlightPoints) spotlightPoints.innerText = systemData.rankPoints.toLocaleString();
+        }
+    }
 
-    if (lbRank) lbRank.innerText = `#${globalRank}`;
-    if (lbPoints) lbPoints.innerText = systemData.rankPoints.toLocaleString();
-    if (lbStreak) lbStreak.innerText = `${systemData.streak}d`;
+    // D. LEADERBOARD: FULL RANKINGS (Label List)
+    const lbListRank = document.getElementById('lb-list-rank');
+    const lbListPoints = document.getElementById('lb-list-points');
+    const lbGlobalRankVal = document.getElementById('global-rank-val');
+    const lbGlobalStreak = document.getElementById('leaderboard-streak');
+
+    if (lbListRank) lbListRank.innerText = `#${globalRank}`;
+    if (lbListPoints) lbListPoints.innerText = systemData.rankPoints.toLocaleString();
+    if (lbGlobalRankVal) lbGlobalRankVal.innerText = `#${globalRank}`;
+    if (lbGlobalStreak) lbGlobalStreak.innerText = `${systemData.streak}d`;
+    
+    // E. ACTIVITY BARS (Intensity Visuals)
+    const intensityBars = document.getElementById('lb-activity-bars');
+    if (intensityBars) {
+        const level = Math.min(Math.floor(systemData.totalSecondsToday / 3600), 4);
+        let barHTML = '';
+        for (let i = 0; i < 4; i++) {
+            const activeClass = i < level ? 'bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.5)]' : 'bg-blue-500/20';
+            barHTML += `<div class="w-3 h-1.5 rounded-full ${activeClass}"></div>`;
+        }
+        intensityBars.innerHTML = barHTML;
+    }
 }
 
 function saveAndRefresh() {
@@ -2941,12 +2944,23 @@ function saveAndRefresh() {
     renderUI();
 }
 
-// Global Notification Alert (Matches your modal preference)
 function showNotification(msg) {
-    // Replace this with your specific Modal Trigger function
-    console.log("PROTOCOL ALERT: " + msg);
+    // Triggering your centered modal alert as requested
+    const modalHTML = `
+        <div id="system-modal" class="fixed inset-0 z-[999] flex items-center justify-center bg-black/80 backdrop-blur-sm animate-in fade-in">
+            <div class="bg-[#0a1025] border border-white/10 p-8 rounded-[2.5rem] text-center max-w-sm mx-4 shadow-2xl">
+                <div class="w-16 h-16 bg-yellow-500/20 rounded-2xl flex items-center justify-center mx-auto mb-6 border border-yellow-500/30">
+                    <i class="fas fa-bolt text-yellow-500 text-2xl"></i>
+                </div>
+                <h2 class="text-white font-black italic uppercase tracking-tighter text-xl mb-2">System Alert</h2>
+                <p class="text-gray-400 text-xs font-medium leading-relaxed mb-8">${msg}</p>
+                <button onclick="document.getElementById('system-modal').remove()" class="w-full py-4 bg-white text-black font-black uppercase italic text-xs rounded-2xl hover:bg-yellow-500 transition-colors">Acknowledge</button>
+            </div>
+        </div>
+    `;
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
 }
 
 // Run System
 setInterval(updateSystem, 10000);
-renderUI(); // Initial run on load
+renderUI();
