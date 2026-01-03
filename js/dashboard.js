@@ -115,7 +115,7 @@ const views = {
 
 
 
-   <div class="mt-8 bg-[#050b1d] border border-white/5 p-8 rounded-[2.5rem] relative overflow-hidden">
+<div class="mt-8 bg-[#050b1d] border border-white/5 p-8 rounded-[2.5rem] relative overflow-hidden">
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
         <div>
             <h3 class="text-lg font-black text-white italic uppercase tracking-tighter">Activity</h3>
@@ -126,31 +126,45 @@ const views = {
             <button class="px-4 py-2 bg-blue-600 rounded-lg text-[9px] font-black uppercase tracking-widest text-white shadow-lg shadow-blue-600/20">2026</button>
         </div>
     </div>
+
     <div class="overflow-x-auto pb-4 no-scrollbar">
         <div class="inline-grid grid-rows-7 grid-flow-col gap-1.5 min-w-[850px]">
-            <!-- 2026 Activity Grid (365 days starting Jan 1, 2026) -->
-            <!-- Example with very light early activity + mostly empty for future days -->
-            <div class="w-3 h-3 rounded-sm bg-white/[0.03] transition-all duration-500 cursor-pointer" title="2026-01-01"></div>
-            <div class="w-3 h-3 rounded-sm bg-green-900 transition-all duration-500 cursor-pointer" title="2026-01-02"></div>
-            <div class="w-3 h-3 rounded-sm bg-green-900 transition-all duration-500 cursor-pointer" title="2026-01-03"></div>
-            <!-- The rest of the year continues with mostly low/no activity yet -->
-            <div class="w-3 h-3 rounded-sm bg-white/[0.03] transition-all duration-500 cursor-pointer" title="2026-01-04"></div>
-            <div class="w-3 h-3 rounded-sm bg-white/[0.03] transition-all duration-500 cursor-pointer" title="2026-01-05"></div>
-            <!-- ... (repeat pattern for all 365 days, thickening based on real future engagement) ... -->
-            <!-- Placeholder for the remaining ~360 boxes (they would be generated dynamically) -->
             ${(() => {
                 let boxes = '';
-                for (let i = 3; i < 365; i++) {
-                    // Most future days = no activity yet
-                    const thickness = 'bg-white/[0.03]';
-                    const d = new Date(2026, 0, i + 1);
-                    const dateStr = d.toISOString().split('T')[0];
-                    boxes += `<div class="w-3 h-3 rounded-sm ${thickness} transition-all duration-500 cursor-pointer" title="${dateStr}"></div>`;
+                const year = 2026;
+                const startDate = new Date(year, 0, 1);
+                const todayStr = new Date().toISOString().split('T')[0];
+                
+                // 365 Days logic
+                for (let i = 0; i < 365; i++) {
+                    const currentDate = new Date(startDate);
+                    currentDate.setDate(startDate.getDate() + i);
+                    const dateStr = currentDate.toISOString().split('T')[0];
+                    
+                    // Fetch intensity from systemData core
+                    const intensity = (systemData.activityHistory && systemData.activityHistory[dateStr]) || 0;
+                    
+                    // GitHub Exact Mapping
+                    let colorClass = 'bg-white/[0.03]'; // Level 0 (Empty)
+                    if (intensity === 1) colorClass = 'bg-green-900'; // Level 1 (Low)
+                    if (intensity === 2) colorClass = 'bg-green-700'; // Level 2 (Mid)
+                    if (intensity === 3) colorClass = 'bg-green-500'; // Level 3 (High)
+                    if (intensity >= 4) colorClass = 'bg-green-400';  // Level 4 (Elite)
+                    
+                    // Highlight Today
+                    const isToday = (dateStr === todayStr);
+                    const todayPulse = isToday ? 'ring-1 ring-white/40 scale-110 z-10 shadow-[0_0_10px_rgba(255,255,255,0.1)]' : '';
+
+                    boxes += `
+                        <div class="w-3 h-3 rounded-sm ${colorClass} ${todayPulse} transition-all duration-700 cursor-pointer hover:ring-1 hover:ring-white/50" 
+                             title="${dateStr} | Level: ${intensity}">
+                        </div>`;
                 }
                 return boxes;
             })()}
         </div>
     </div>
+
     <div class="flex justify-between items-center mt-4">
         <p class="text-[8px] text-gray-600 font-bold uppercase tracking-widest italic">Density increases with page engagement time</p>
         <div class="flex items-center gap-2">
@@ -2842,19 +2856,18 @@ let systemData = JSON.parse(localStorage.getItem('nxxt_user_data')) || {
     highRankAchieved: 100
 };
 
-// --- LOGIC ENGINE ---
 function updateSystem() {
     const now = new Date();
     const todayStr = now.toISOString().split('T')[0];
 
-    // 1. TRACK TIME & ACTIVITY
+    // 1. EARN POINTS (Points go UP)
     systemData.totalSecondsToday += 10; 
     systemData.rankPoints += 5; 
     
     let intensity = Math.min(Math.floor(systemData.totalSecondsToday / 3600), 4);
     if (intensity > 0) systemData.activityHistory[todayStr] = intensity;
 
-    // 2. 24-HOUR ONLINE PROTOCOL
+    // 2. STREAK LOGIC
     const sessionDurationHours = (Date.now() - systemData.sessionStartTime) / (1000 * 60 * 60);
     if (sessionDurationHours >= 24) {
         systemData.streak += 1;
@@ -2862,15 +2875,11 @@ function updateSystem() {
         showNotification("STREAK UNLOCKED: 24h Online Milestone Reached.");
     }
 
-    // 3. DAILY LOGIN STREAK
     if (systemData.lastActive) {
         const lastDate = new Date(systemData.lastActive);
         const daysSince = Math.floor((now - lastDate) / (1000 * 60 * 60 * 24));
-        if (daysSince === 1) {
-            systemData.streak += 1; 
-        } else if (daysSince > 1) {
-            systemData.streak = 0;
-        }
+        if (daysSince === 1) systemData.streak += 1; 
+        else if (daysSince > 1) systemData.streak = 0;
     }
     
     systemData.lastActive = now.toISOString();
@@ -2878,65 +2887,50 @@ function updateSystem() {
 }
 
 function renderUI() {
-    // A. CALCULATE GLOBAL POSITION
+    // FIX: RANK CALCULATION
+    // You start at Rank 100. Every 1000 points moves you UP 1 rank.
+    // At 99,000 points, you hit Rank #1.
     let globalRank = 100 - Math.floor(systemData.rankPoints / 1000);
     if (globalRank < 1) globalRank = 1;
 
-    // B. DASHBOARD CARD UPDATES
+    // A. UPDATE CARDS (Rank & Streak)
     const uiRank = document.getElementById('ui-rank');
     if (uiRank) {
         uiRank.innerText = `#${globalRank}`;
-        const crown = document.getElementById('rank-crown-icon');
         if (globalRank === 1) {
             uiRank.classList.add('text-yellow-500', 'animate-pulse');
-            if (crown) crown.style.color = 'rgba(234, 179, 8, 0.2)';
+            document.getElementById('rank-crown-icon')?.classList.add('text-yellow-500');
+            document.getElementById('rank-glow')?.classList.replace('bg-yellow-500/0', 'bg-yellow-500/5');
         } else {
             uiRank.classList.remove('text-yellow-500', 'animate-pulse');
-            if (crown) crown.style.color = '';
+            document.getElementById('rank-crown-icon')?.classList.remove('text-yellow-500');
         }
     }
 
     const uiStreak = document.getElementById('ui-streak');
     if (uiStreak) uiStreak.innerText = systemData.streak;
 
-    // C. LEADERBOARD: TOP 5 PERFORMERS (Spotlight Containers)
-    // We target the Top 5 grid cards
+    // B. LEADERBOARD SPOTLIGHT (The Top 5)
+    // We only light up the #1 spot if your rank is actually 1.
     for (let i = 1; i <= 5; i++) {
-        const spotlightCard = document.getElementById(`spotlight-rank-${i}`);
-        const spotlightPoints = document.getElementById(`top-pts-${i}`);
+        const spotlight = document.getElementById(`spotlight-rank-${i}`);
+        const ptsDisplay = document.getElementById(`top-pts-${i}`);
         
         if (globalRank === i) {
-            // If the user is in the Top 5, highlight their specific card
-            if (spotlightCard) {
-                spotlightCard.classList.remove('opacity-40');
-                spotlightCard.classList.add('border-yellow-500/50', 'bg-yellow-500/5');
-            }
-            if (spotlightPoints) spotlightPoints.innerText = systemData.rankPoints.toLocaleString();
+            spotlight?.classList.remove('opacity-40');
+            spotlight?.classList.add('border-yellow-500', 'bg-yellow-500/5', 'scale-[1.02]');
+            if (ptsDisplay) ptsDisplay.innerText = systemData.rankPoints.toLocaleString();
+        } else {
+            spotlight?.classList.add('opacity-40');
+            spotlight?.classList.remove('border-yellow-500', 'bg-yellow-500/5', 'scale-[1.02]');
         }
     }
 
-    // D. LEADERBOARD: FULL RANKINGS (Label List)
+    // C. FULL RANKINGS LIST
     const lbListRank = document.getElementById('lb-list-rank');
     const lbListPoints = document.getElementById('lb-list-points');
-    const lbGlobalRankVal = document.getElementById('global-rank-val');
-    const lbGlobalStreak = document.getElementById('leaderboard-streak');
-
     if (lbListRank) lbListRank.innerText = `#${globalRank}`;
     if (lbListPoints) lbListPoints.innerText = systemData.rankPoints.toLocaleString();
-    if (lbGlobalRankVal) lbGlobalRankVal.innerText = `#${globalRank}`;
-    if (lbGlobalStreak) lbGlobalStreak.innerText = `${systemData.streak}d`;
-    
-    // E. ACTIVITY BARS (Intensity Visuals)
-    const intensityBars = document.getElementById('lb-activity-bars');
-    if (intensityBars) {
-        const level = Math.min(Math.floor(systemData.totalSecondsToday / 3600), 4);
-        let barHTML = '';
-        for (let i = 0; i < 4; i++) {
-            const activeClass = i < level ? 'bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.5)]' : 'bg-blue-500/20';
-            barHTML += `<div class="w-3 h-1.5 rounded-full ${activeClass}"></div>`;
-        }
-        intensityBars.innerHTML = barHTML;
-    }
 }
 
 function saveAndRefresh() {
@@ -2945,22 +2939,21 @@ function saveAndRefresh() {
 }
 
 function showNotification(msg) {
-    // Triggering your centered modal alert as requested
     const modalHTML = `
-        <div id="system-modal" class="fixed inset-0 z-[999] flex items-center justify-center bg-black/80 backdrop-blur-sm animate-in fade-in">
-            <div class="bg-[#0a1025] border border-white/10 p-8 rounded-[2.5rem] text-center max-w-sm mx-4 shadow-2xl">
+        <div id="system-modal" class="fixed inset-0 z-[999] flex items-center justify-center bg-black/80 backdrop-blur-sm">
+            <div class="bg-[#0a1025] border border-white/10 p-8 rounded-[2.5rem] text-center max-w-sm mx-4 shadow-2xl animate-in zoom-in duration-300">
                 <div class="w-16 h-16 bg-yellow-500/20 rounded-2xl flex items-center justify-center mx-auto mb-6 border border-yellow-500/30">
                     <i class="fas fa-bolt text-yellow-500 text-2xl"></i>
                 </div>
-                <h2 class="text-white font-black italic uppercase tracking-tighter text-xl mb-2">System Alert</h2>
+                <h2 class="text-white font-black italic uppercase tracking-tighter text-xl mb-2">Protocol Update</h2>
                 <p class="text-gray-400 text-xs font-medium leading-relaxed mb-8">${msg}</p>
-                <button onclick="document.getElementById('system-modal').remove()" class="w-full py-4 bg-white text-black font-black uppercase italic text-xs rounded-2xl hover:bg-yellow-500 transition-colors">Acknowledge</button>
+                <button onclick="document.getElementById('system-modal').remove()" class="w-full py-4 bg-white text-black font-black uppercase italic text-xs rounded-2xl hover:bg-yellow-500 transition-colors">Confirm</button>
             </div>
         </div>
     `;
     document.body.insertAdjacentHTML('beforeend', modalHTML);
 }
 
-// Run System
+// Start
 setInterval(updateSystem, 10000);
 renderUI();
