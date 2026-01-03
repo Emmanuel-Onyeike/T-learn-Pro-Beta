@@ -577,72 +577,124 @@ const views = {
 
 
 
-    'Nxxt AI': `
-   
-    
-    <div id="nxxt-root" class="relative min-h-[600px] md:min-h-[700px] flex flex-col items-center justify-center overflow-hidden rounded-[2.5rem] md:rounded-[4rem] animate-in fade-in duration-1000">
+  'Nxxt AI': `
+    <div id="nxxt-root" class="relative min-h-[700px] flex flex-col items-center justify-center overflow-hidden rounded-[3rem] md:rounded-[4.5rem] bg-[#020617] animate-in fade-in duration-1000 group">
         
         <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-            ${Array(30).fill(0).map(() => `
-                <div class="star" style="
-                    width: ${Math.random() * 2 + 1}px; 
-                    height: ${Math.random() * 2 + 1}px; 
+            <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(30,58,138,0.2),transparent)]"></div>
+            ${Array(40).fill(0).map(() => `
+                <div class="absolute bg-white rounded-full opacity-20 animate-drift" style="
+                    width: ${Math.random() * 2}px; 
+                    height: ${Math.random() * 2}px; 
                     left: ${Math.random() * 100}%; 
-                    top: -20px;
-                    animation-duration: ${Math.random() * 7 + 4}; 
-                    animation-delay: ${Math.random() * 5};
-                    box-shadow: 0 0 10px white;
+                    top: ${Math.random() * 100}%;
+                    animation-duration: ${Math.random() * 15 + 10}s;
+                    box-shadow: 0 0 8px rgba(255,255,255,0.8);
                 "></div>`).join('')}
         </div>
 
-        <div class="relative z-10 w-full max-w-3xl flex flex-col items-center px-4 md:px-6">
+        <div class="relative z-10 w-full max-w-4xl flex flex-col items-center px-6">
             
-            <div class="flex items-center gap-4 mb-10 md:mb-16 scale-90 md:scale-100">
-                <div class="w-14 h-14 md:w-16 md:h-16 rounded-full border-2 border-white/20 p-1 flex items-center justify-center overflow-hidden shadow-xl">
-                    <img src="/assets/Logo.webp" alt="Nxxt Avatar" class="w-full h-full object-cover rounded-full bg-blue-600/20">
-                </div>
-                <h1 class="text-5xl md:text-7xl font-medium text-white tracking-tighter italic">Nxxt AI</h1>
-            </div>
-
-            <div class="w-full nxxt-glass border border-white/10 rounded-[2rem] md:rounded-full flex flex-col md:flex-row items-center p-2 md:px-6 md:py-4 mb-8 shadow-2xl focus-within:border-white/30 transition-all duration-500">
-                <div class="flex w-full items-center px-4 py-3 md:p-0">
-                    <i class="fas fa-paperclip text-gray-500 mr-4 cursor-pointer hover:text-white transition-colors"></i>
-                    <input type="text" placeholder="What do you want to know?" class="bg-transparent border-none outline-none text-white text-base md:text-lg w-full placeholder:text-gray-600 font-medium">
-                </div>
+            <div class="relative mb-12 md:mb-20">
+                <div class="absolute inset-0 rounded-full bg-blue-500/20 blur-3xl animate-pulse"></div>
+                <svg class="absolute -inset-6 w-[calc(100%+3rem)] h-[calc(100%+3rem)] animate-spin-slow opacity-40" viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="48" stroke="white" stroke-width="0.5" fill="none" stroke-dasharray="10 20" />
+                </svg>
                 
-                <div class="flex w-full md:w-auto items-center justify-between md:justify-end gap-4 px-4 py-3 md:p-0 border-t border-white/5 md:border-none">
-                    <div onclick="showNxxtAlert('Engine Selector')" class="flex items-center gap-2 text-gray-400 hover:text-white cursor-pointer transition-colors bg-white/5 md:bg-transparent px-3 py-1.5 rounded-full md:rounded-none">
-                        <i class="fas fa-rocket text-xs"></i>
-                        <span class="text-xs font-black uppercase tracking-widest">Language</span>
-                        <i class="fas fa-chevron-down text-[10px]"></i>
-                    </div>
-                    <button onclick="showNxxtAlert('Submission Engine')" class="bg-white text-black hover:bg-gray-200 p-2 rounded-full w-10 h-10 flex items-center justify-center transition-all shadow-lg">
-                        <i class="fas fa-arrow-up"></i>
-                    </button>
+                <div class="relative w-20 h-20 md:w-24 md:h-24 rounded-full border border-white/20 p-1.5 bg-[#020617] flex items-center justify-center shadow-[0_0_50px_rgba(59,130,246,0.3)]">
+                    <img src="/assets/Logo.webp" alt="Nxxt" class="w-full h-full object-cover rounded-full">
+                </div>
+                <div class="absolute -bottom-6 left-1/2 -translate-x-1/2 whitespace-nowrap">
+                    <h1 class="text-4xl md:text-6xl font-black text-white italic tracking-tighter uppercase">Nxxt AI</h1>
                 </div>
             </div>
 
-            <div class="grid grid-cols-2 md:flex md:flex-wrap justify-center gap-3 w-full md:w-auto">
-                <button onclick="showNxxtAlert('DeepSearch')" class="px-4 md:px-6 py-3 nxxt-glass border border-white/5 rounded-2xl md:rounded-full text-white text-[10px] font-bold uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-white/10 transition-all">
-                    <i class="fas fa-wind text-cyan-500"></i> DeepSearch
-                </button>
-                <button onclick="showNxxtAlert('Image Creator')" class="px-4 md:px-6 py-3 nxxt-glass border border-white/5 rounded-2xl md:rounded-full text-white text-[10px] font-bold uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-white/10 transition-all">
-                    <i class="fas fa-image text-purple-500"></i> Create Image
-                </button>
-                <button onclick="showNxxtAlert('Persona Picker')" class="px-4 md:px-6 py-3 nxxt-glass border border-white/5 rounded-2xl md:rounded-full text-white text-[10px] font-bold uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-white/10 transition-all">
-                    <i class="fas fa-id-badge text-orange-500"></i> Pick Personas
-                </button>
-                <button onclick="showNxxtAlert('Settings')" class="px-4 md:px-6 py-3 nxxt-glass border border-white/5 rounded-2xl md:rounded-full text-white text-[10px] font-bold uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-white/10 transition-all">
-                    <i class="fas fa-user-astronaut text-emerald-500"></i> Personas
-                </button>
+            <div class="w-full relative group/input">
+                <div class="absolute -inset-1 bg-gradient-to-r from-blue-600 to-cyan-500 rounded-[2.5rem] blur opacity-20 group-focus-within/input:opacity-50 transition duration-1000"></div>
+                
+                <div class="relative bg-[#050b1d]/90 backdrop-blur-2xl border border-white/10 rounded-[2.5rem] flex flex-col p-2 shadow-3xl transition-all duration-500 group-focus-within/input:border-blue-500/50">
+                    
+                    <div class="flex items-center px-6 py-4">
+                        <div class="flex-shrink-0 mr-4">
+                            <div class="w-2 h-2 rounded-full bg-blue-500 animate-ping"></div>
+                        </div>
+                        <input type="text" placeholder="Initialize command sequence..." 
+                            class="bg-transparent border-none outline-none text-white text-lg w-full placeholder:text-gray-600 font-bold tracking-tight">
+                        
+                        <div class="flex items-center gap-3">
+                             <i class="fas fa-microphone text-gray-500 hover:text-blue-400 cursor-pointer transition-colors"></i>
+                             <button onclick="showNxxtAlert('Submission Engine')" class="bg-blue-600 hover:bg-blue-500 text-white w-12 h-12 rounded-2xl flex items-center justify-center transition-all shadow-lg shadow-blue-900/40 hover:scale-105 active:scale-95">
+                                <i class="fas fa-bolt"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between px-6 py-3 border-t border-white/5 bg-white/[0.02] rounded-b-[2.5rem]">
+                        <div class="flex gap-4">
+                            <div onclick="showNxxtAlert('File Upload')" class="flex items-center gap-2 text-[10px] font-black text-gray-500 hover:text-white cursor-pointer uppercase tracking-widest transition-all">
+                                <i class="fas fa-paperclip"></i> Attach
+                            </div>
+                            <div onclick="showNxxtAlert('Deep Search')" class="flex items-center gap-2 text-[10px] font-black text-gray-500 hover:text-white cursor-pointer uppercase tracking-widest transition-all">
+                                <i class="fas fa-globe"></i> Web
+                            </div>
+                        </div>
+                        
+                        <div onclick="showNxxtAlert('Engine Selector')" class="flex items-center gap-2 px-3 py-1.5 bg-blue-500/10 border border-blue-500/20 rounded-xl cursor-pointer hover:bg-blue-500/20 transition-all">
+                            <span class="text-[9px] font-black text-blue-400 uppercase tracking-widest">Neural v2.4</span>
+                            <i class="fas fa-chevron-down text-blue-400 text-[8px]"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-10 grid grid-cols-2 md:grid-cols-4 gap-4 w-full">
+                ${[
+                    { name: 'DeepSearch', icon: 'fa-wind', color: 'text-cyan-400' },
+                    { name: 'Creative', icon: 'fa- revelation', icon: 'fa- paintbrush', color: 'text-purple-400' },
+                    { name: 'Analyze', icon: 'fa-microchip', color: 'text-emerald-400' },
+                    { name: 'Persona', icon: 'fa-user-ninja', color: 'text-orange-400' }
+                ].map(cmd => `
+                    <button onclick="showNxxtAlert('${cmd.name}')" class="group/btn relative p-4 bg-white/[0.03] border border-white/5 rounded-3xl hover:bg-white/10 hover:border-white/20 transition-all duration-300 overflow-hidden">
+                        <div class="absolute inset-0 bg-gradient-to-br from-blue-600/0 to-blue-600/5 opacity-0 group-hover/btn:opacity-100 transition-opacity"></div>
+                        <div class="relative flex flex-col items-center gap-2">
+                            <i class="fas ${cmd.icon} ${cmd.color} text-lg"></i>
+                            <span class="text-[9px] font-black text-white uppercase tracking-[0.2em]">${cmd.name}</span>
+                        </div>
+                    </button>
+                `).join('')}
+            </div>
+
+            <div class="mt-12 flex items-center gap-6 opacity-40">
+                <div class="flex items-center gap-2">
+                    <div class="w-1.5 h-1.5 rounded-full bg-green-500"></div>
+                    <span class="text-[8px] font-bold text-white uppercase tracking-widest">Systems Nominal</span>
+                </div>
+                <div class="h-3 w-[1px] bg-white/20"></div>
+                <span class="text-[8px] font-bold text-white uppercase tracking-widest">Latency: 14ms</span>
+                <div class="h-3 w-[1px] bg-white/20"></div>
+                <span class="text-[8px] font-bold text-white uppercase tracking-widest">Nxxt-OS v4.0.1</span>
             </div>
         </div>
-    </div>
 
-   
+        <style>
+            @keyframes drift {
+                from { transform: translateY(0); opacity: 0; }
+                50% { opacity: 0.3; }
+                to { transform: translateY(100vh); opacity: 0; }
+            }
+            @keyframes spin-slow {
+                from { transform: rotate(0deg); }
+                to { transform: rotate(360deg); }
+            }
+            .animate-drift { animation: drift linear infinite; }
+            .animate-spin-slow { animation: spin-slow 20s linear infinite; }
+            .nxxt-glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); }
+        </style>
+    </div>
 `,
 
 
+    
     'Nxxt Lab': `
     <div id="lab-root" class="space-y-8 animate-in relative transition-all duration-500">
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
