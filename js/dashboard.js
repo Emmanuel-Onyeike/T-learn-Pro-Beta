@@ -62,17 +62,27 @@ const views = {
     <i class="fas fa-chart-line absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-green-500/[0.05] transition-all"></i>
 </div>
 
-  <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-orange-500/30 transition-all">
+<div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-orange-500/30 transition-all">
+    <div id="rank-glow" class="absolute inset-0 bg-yellow-500/0 transition-all duration-700"></div>
+
     <div class="flex items-center gap-4 relative z-10">
-        <div class="w-12 h-12 bg-orange-600/10 rounded-2xl flex items-center justify-center border border-orange-500/20">
+        <div class="w-12 h-12 bg-orange-600/10 rounded-2xl flex items-center justify-center border border-orange-500/20 group-hover:border-orange-500/50 transition-all">
             <i class="fas fa-medal text-orange-500"></i>
         </div>
+        
         <div>
-            <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Rank</p>
-            <h3 id="ui-rank" class="text-3xl font-black text-white mt-1">1</h3>
+            <div class="flex items-center gap-2">
+                <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Current Rank</p>
+                <span class="w-1 h-1 rounded-full bg-orange-500 animate-pulse"></span>
+            </div>
+            
+            <h3 id="ui-rank" class="text-3xl font-black text-white mt-1 italic tracking-tighter">
+                #100
+            </h3>
         </div>
     </div>
-    <i class="fas fa-crown absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-orange-500/[0.05] transition-all"></i>
+
+    <i id="rank-crown-icon" class="fas fa-crown absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:rotate-0 group-hover:text-orange-500/[0.08] transition-all duration-500"></i>
 </div>
         
         <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-blue-400/30 transition-all">
