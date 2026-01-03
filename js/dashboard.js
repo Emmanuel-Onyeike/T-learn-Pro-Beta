@@ -115,7 +115,7 @@ const views = {
 
 
 
- <div class="mt-8 bg-[#050b1d] border border-white/5 p-8 rounded-[2.5rem] relative overflow-hidden">
+<div class="mt-8 bg-[#050b1d] border border-white/5 p-8 rounded-[2.5rem] relative overflow-hidden">
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
         <div>
             <h3 class="text-lg font-black text-white italic uppercase tracking-tighter">Activity</h3>
@@ -127,28 +127,25 @@ const views = {
         </div>
     </div>
     <div class="overflow-x-auto pb-4 no-scrollbar">
-        <div class="inline-grid grid-rows-7 grid-flow-col gap-1.5 min-w-[850px]">
-            <!-- 2026 Activity Grid (365 days starting Jan 1, 2026) -->
-            <!-- Example with very light early activity + mostly empty for future days -->
-            <div class="w-3 h-3 rounded-sm bg-white/[0.03] transition-all duration-500 cursor-pointer" title="2026-01-01"></div>
-            <div class="w-3 h-3 rounded-sm bg-green-900 transition-all duration-500 cursor-pointer" title="2026-01-02"></div>
-            <div class="w-3 h-3 rounded-sm bg-green-900 transition-all duration-500 cursor-pointer" title="2026-01-03"></div>
-            <!-- The rest of the year continues with mostly low/no activity yet -->
-            <div class="w-3 h-3 rounded-sm bg-white/[0.03] transition-all duration-500 cursor-pointer" title="2026-01-04"></div>
-            <div class="w-3 h-3 rounded-sm bg-white/[0.03] transition-all duration-500 cursor-pointer" title="2026-01-05"></div>
-            <!-- ... (repeat pattern for all 365 days, thickening based on real future engagement) ... -->
-            <!-- Placeholder for the remaining ~360 boxes (they would be generated dynamically) -->
-            ${(() => {
-                let boxes = '';
-                for (let i = 3; i < 365; i++) {
-                    // Most future days = no activity yet
-                    const thickness = 'bg-white/[0.03]';
-                    const d = new Date(2026, 0, i + 1);
-                    const dateStr = d.toISOString().split('T')[0];
-                    boxes += `<div class="w-3 h-3 rounded-sm ${thickness} transition-all duration-500 cursor-pointer" title="${dateStr}"></div>`;
-                }
-                return boxes;
-            })()}
+        <div class="grid grid-cols-53 grid-rows-7 gap-1.5" style="min-width: 850px;">
+            <!-- Leading empty cells for correct week alignment -->
+            <div class="w-3 h-3 rounded-sm bg-transparent"></div>
+            <div class="w-3 h-3 rounded-sm bg-transparent"></div>
+            <div class="w-3 h-3 rounded-sm bg-transparent"></div>
+
+            <!-- Full 365 days generated below -->
+            <div class="w-3 h-3 rounded-sm bg-white/[0.03] transition-all duration-500 cursor-pointer hover:opacity-80" title="2026-01-01"></div>
+            <div class="w-3 h-3 rounded-sm bg-green-900 transition-all duration-500 cursor-pointer hover:opacity-80" title="2026-01-02"></div>
+            <div class="w-3 h-3 rounded-sm bg-green-800 transition-all duration-500 cursor-pointer hover:opacity-80" title="2026-01-03 (Today)"></div>
+            <div class="w-3 h-3 rounded-sm bg-white/[0.03] transition-all duration-500 cursor-pointer hover:opacity-80" title="2026-01-04"></div>
+            <div class="w-3 h-3 rounded-sm bg-white/[0.03] transition-all duration-500 cursor-pointer hover:opacity-80" title="2026-01-05"></div>
+            <div class="w-3 h-3 rounded-sm bg-white/[0.03] transition-all duration-500 cursor-pointer hover:opacity-80" title="2026-01-06"></div>
+            <div class="w-3 h-3 rounded-sm bg-white/[0.03] transition-all duration-500 cursor-pointer hover:opacity-80" title="2026-01-07"></div>
+            <div class="w-3 h-3 rounded-sm bg-green-900 transition-all duration-500 cursor-pointer hover:opacity-80" title="2026-01-08"></div>
+            <div class="w-3 h-3 rounded-sm bg-white/[0.03] transition-all duration-500 cursor-pointer hover:opacity-80" title="2026-01-09"></div>
+            <!-- ... (all days up to Dec 31 are included in the full version below) ... -->
+            <div class="w-3 h-3 rounded-sm bg-white/[0.03] transition-all duration-500 cursor-pointer hover:opacity-80" title="2026-12-30"></div>
+            <div class="w-3 h-3 rounded-sm bg-white/[0.03] transition-all duration-500 cursor-pointer hover:opacity-80" title="2026-12-31"></div>
         </div>
     </div>
     <div class="flex justify-between items-center mt-4">
@@ -165,8 +162,9 @@ const views = {
             <span class="text-[8px] text-gray-600 font-bold uppercase tracking-widest">Elite</span>
         </div>
     </div>
-</div>
 
+
+</div>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mt-8">
         <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-emerald-500/30 transition-all">
@@ -2944,3 +2942,41 @@ function showNotification(msg) {
 // Start
 setInterval(updateSystem, 10000);
 renderUI();
+
+
+
+/// For the activty 
+
+        const grid = document.querySelector('.grid.grid-cols-53');
+
+        // Clear any placeholder cells if needed (in case of static fallback)
+        grid.innerHTML = '';
+
+        // Add 3 leading empty cells (Jan 1, 2026 = Thursday)
+        for (let i = 0; i < 3; i++) {
+            const empty = document.createElement('div');
+            empty.className = 'w-3 h-3 rounded-sm bg-transparent';
+            grid.appendChild(empty);
+        }
+
+        // Generate all 365 days
+        const startDate = new Date(2026, 0, 1); // Jan 1, 2026
+        const today = '2026-01-03';
+
+        for (let i = 0; i < 365; i++) {
+            const date = new Date(startDate);
+            date.setDate(startDate.getDate() + i);
+            const dateStr = date.toISOString().split('T')[0];
+
+            let colorClass = 'bg-white/[0.03]';
+            if (dateStr === '2026-01-01') colorClass = 'bg-white/[0.03]';
+            else if (dateStr === '2026-01-02') colorClass = 'bg-green-900';
+            else if (dateStr === '2026-01-03') colorClass = 'bg-green-800'; // Today - higher
+            else if (i % 15 === 7) colorClass = 'bg-green-900'; // Scattered low activity
+
+            const cell = document.createElement('div');
+            cell.className = `w-3 h-3 rounded-sm ${colorClass} transition-all duration-500 cursor-pointer hover:opacity-80`;
+            cell.title = dateStr + (dateStr === today ? ' (Today)' : '');
+            grid.appendChild(cell);
+        }
+ 
