@@ -101,6 +101,7 @@ const views = {
     </div>
     <i class="fas fa-fire-alt absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-red-500/[0.05] transition-all"></i>
 </div>
+</div>
 
 
 
