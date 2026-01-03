@@ -310,61 +310,64 @@ const views = {
 
 
 
- 'Leaderboard': `
+'Leaderboard': `
     <div class="space-y-8 animate-in">
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
                 <h3 class="text-xl font-black text-white italic uppercase tracking-tighter">Global Ranking</h3>
-                <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest mt-1">Real-time performance metrics for 2026 Cycle</p>
+                <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest mt-1">Battle for the #1 Spot • 2026 Cycle</p>
             </div>
-            <div class="px-4 py-2 bg-green-500/10 border border-green-500/20 rounded-xl flex items-center gap-2">
-                <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
-                <p class="text-[8px] font-black text-green-500 uppercase tracking-widest italic">Live Arena Active</p>
+            <div class="px-4 py-2 bg-yellow-500/10 border border-yellow-500/20 rounded-xl flex items-center gap-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-yellow-500 animate-ping"></span>
+                <p class="text-[8px] font-black text-yellow-500 uppercase tracking-widest italic">Championship Phase</p>
             </div>
         </div>
 
-        <div class="bg-[#050b1d] border border-white/5 rounded-[2.5rem] overflow-hidden">
+        <div class="bg-[#050b1d] border border-white/5 rounded-[2.5rem] overflow-hidden shadow-2xl shadow-blue-500/5">
             <table class="w-full text-left border-collapse">
                 <thead>
                     <tr class="border-b border-white/5 bg-white/[0.02]">
                         <th class="p-5 text-[8px] font-black text-gray-500 uppercase tracking-[0.2em]">Rank</th>
                         <th class="p-5 text-[8px] font-black text-gray-500 uppercase tracking-[0.2em]">Student Node</th>
-                        <th class="p-5 text-[8px] font-black text-gray-500 uppercase tracking-[0.2em]">Activity Level</th>
+                        <th class="p-5 text-[8px] font-black text-gray-500 uppercase tracking-[0.2em]">Activity Intensity</th>
                         <th class="p-5 text-[8px] font-black text-gray-500 uppercase tracking-[0.2em] text-right">Points</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-white/5">
-                    <tr class="group hover:bg-white/[0.02] transition-colors">
+                    <tr id="lb-user-row" class="group bg-blue-500/5 transition-all duration-500">
                         <td class="p-5">
-                            <div class="w-8 h-8 rounded-lg bg-yellow-500/10 border border-yellow-500/20 flex items-center justify-center">
-                                <i class="fas fa-crown text-yellow-500 text-[10px]"></i>
+                            <div class="w-8 h-8 rounded-lg bg-yellow-500 flex items-center justify-center shadow-lg shadow-yellow-500/20">
+                                <i class="fas fa-crown text-black text-[10px]"></i>
                             </div>
                         </td>
                         <td class="p-5">
-                            <p class="text-white text-xs font-black italic uppercase tracking-tight">Emmanuel <span class="text-blue-500 text-[10px] ml-2 font-bold opacity-50">(You)</span></p>
+                            <p class="text-white text-xs font-black italic uppercase tracking-tight">
+                                Emmanuel <span class="text-blue-500 text-[10px] ml-2 font-bold animate-pulse">(ACTIVE)</span>
+                            </p>
                         </td>
                         <td class="p-5">
-                            <div class="flex gap-1">
-                                <div class="w-3 h-1.5 rounded-full bg-blue-500"></div>
-                                <div class="w-3 h-1.5 rounded-full bg-blue-500"></div>
-                                <div class="w-3 h-1.5 rounded-full bg-blue-500"></div>
+                            <div id="lb-activity-bars" class="flex gap-1">
+                                <div class="w-3 h-1.5 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.5)]"></div>
+                                <div class="w-3 h-1.5 rounded-full bg-blue-500/20"></div>
+                                <div class="w-3 h-1.5 rounded-full bg-blue-500/20"></div>
                                 <div class="w-3 h-1.5 rounded-full bg-blue-500/20"></div>
                             </div>
                         </td>
                         <td class="p-5 text-right">
-                            <p id="leaderboard-points" class="text-white font-black italic tracking-tighter">0</p>
+                            <p id="leaderboard-points" class="text-white font-black italic tracking-tighter text-lg">0</p>
                         </td>
                     </tr>
+                    
                     <tr class="opacity-40">
                         <td class="p-5 text-gray-500 font-black italic text-xs">#2</td>
-                        <td class="p-5 text-gray-400 font-bold text-[11px] uppercase tracking-widest">Nxxt_Node_772</td>
-                        <td class="p-5 text-gray-600 text-[10px]">Calibrating...</td>
+                        <td class="p-5 text-gray-400 font-bold text-[11px] uppercase tracking-widest">Nxxt_Alpha_Node</td>
+                        <td class="p-5"><div class="flex gap-1"><div class="w-3 h-1.5 rounded-full bg-gray-700"></div><div class="w-3 h-1.5 rounded-full bg-gray-700"></div></div></td>
                         <td class="p-5 text-right text-gray-500 font-black italic">--</td>
                     </tr>
                     <tr class="opacity-20">
                         <td class="p-5 text-gray-500 font-black italic text-xs">#3</td>
-                        <td class="p-5 text-gray-400 font-bold text-[11px] uppercase tracking-widest">Nxxt_Node_104</td>
-                        <td class="p-5 text-gray-600 text-[10px]">Calibrating...</td>
+                        <td class="p-5 text-gray-400 font-bold text-[11px] uppercase tracking-widest">Nxxt_Bravo_Node</td>
+                        <td class="p-5 text-gray-600 text-[10px]">Standby...</td>
                         <td class="p-5 text-right text-gray-500 font-black italic">--</td>
                     </tr>
                 </tbody>
@@ -372,24 +375,28 @@ const views = {
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div class="p-6 bg-blue-500/5 border border-blue-500/10 rounded-3xl text-center relative group overflow-hidden">
-                <p class="text-[8px] font-black text-blue-500 uppercase tracking-widest mb-1 relative z-10">Your Rank</p>
-                <p id="global-rank-val" class="text-3xl font-black text-white italic relative z-10">#1</p>
-                <i class="fas fa-chart-line absolute -bottom-2 -right-2 text-blue-500/5 text-5xl"></i>
+            <div class="p-6 bg-blue-500/5 border border-blue-500/10 rounded-3xl text-center relative group overflow-hidden hover:border-blue-500/40 transition-all">
+                <p class="text-[8px] font-black text-blue-500 uppercase tracking-widest mb-1 relative z-10">Current Rank</p>
+                <p id="global-rank-val" class="text-4xl font-black text-white italic relative z-10 tracking-tighter">#--</p>
+                <i class="fas fa-trophy absolute -bottom-2 -right-2 text-blue-500/5 text-6xl rotate-12"></i>
             </div>
-            <div class="p-6 bg-white/5 border border-white/5 rounded-3xl text-center">
+            <div class="p-6 bg-white/5 border border-white/5 rounded-3xl text-center hover:border-white/20 transition-all">
                 <p class="text-[8px] font-black text-gray-500 uppercase tracking-widest mb-1">Total Streak</p>
-                <p id="leaderboard-streak" class="text-3xl font-black text-white italic">0d</p>
+                <p id="leaderboard-streak" class="text-4xl font-black text-white italic tracking-tighter">0d</p>
             </div>
-            <div class="p-6 bg-white/5 border border-white/5 rounded-3xl text-center">
-                <p class="text-[8px] font-black text-gray-500 uppercase tracking-widest mb-1">Percentile</p>
-                <p class="text-3xl font-black text-white italic tracking-tighter">99.9<span class="text-xs text-gray-600">%</span></p>
+            <div class="p-6 bg-gradient-to-br from-purple-500/10 to-blue-500/10 border border-white/5 rounded-3xl text-center">
+                <p class="text-[8px] font-black text-purple-500 uppercase tracking-widest mb-1">Global Percentile</p>
+                <div class="flex items-center justify-center gap-1">
+                     <p class="text-3xl font-black text-white italic tracking-tighter">99.9</p>
+                     <span class="text-xs text-purple-500 font-bold">%</span>
+                </div>
             </div>
         </div>
     </div>
 `,
 
 
+    
     'Collaboration': `
     <div class="space-y-8 animate-in">
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -2833,15 +2840,19 @@ function clearNotifications() {
   }
 
 
-//// for the rank, streaks and leaderboard
+
+
+
+///// for the rank and streaks
 // --- SYSTEM DATA CORE ---
 let systemData = JSON.parse(localStorage.getItem('nxxt_user_data')) || {
-    rank: 1,
-    points: 0,
-    streak: 0,
+    rankPoints: 0,      // Total points earned
+    streak: 0,          // Current active streak
     lastActive: null,
     totalSecondsToday: 0,
-    activityHistory: {} // Stores date: intensity (1-4)
+    sessionStartTime: Date.now(),
+    activityHistory: {},
+    highRankAchieved: 100
 };
 
 // --- LOGIC ENGINE ---
@@ -2849,35 +2860,70 @@ function updateSystem() {
     const now = new Date();
     const todayStr = now.toISOString().split('T')[0];
 
-    // 1. TRACK TIME & ACTIVITY
-    systemData.totalSecondsToday += 10; // Called every 10s
+    // 1. TRACK TIME & ACTIVITY (Gains points for being active)
+    systemData.totalSecondsToday += 10; 
+    systemData.rankPoints += 5; // +5 points every 10 seconds
     
-    // Update Activity Intensity based on seconds spent
-    // 3600s = 1hr = Level 1, 7200s = Level 2, etc.
+    // Update the Activity Grid Intensity
     let intensity = Math.min(Math.floor(systemData.totalSecondsToday / 3600), 4);
     if (intensity > 0) systemData.activityHistory[todayStr] = intensity;
 
-    // 2. CALCULATE RANK (Points based on activity)
-    // Formula: Rank increases every 1000 points
-    systemData.points += 5; 
-    systemData.rank = Math.floor(systemData.points / 1000) + 1;
+    // 2. 24-HOUR ONLINE PROTOCOL (Stay online for 24h = +1 Streak)
+    const sessionDurationHours = (Date.now() - systemData.sessionStartTime) / (1000 * 60 * 60);
+    if (sessionDurationHours >= 24) {
+        systemData.streak += 1;
+        systemData.sessionStartTime = Date.now(); 
+        showNotification("STREAK UNLOCKED: 24h Online Milestone Reached.");
+    }
 
-    // 3. STREAK LOGIC (Check if 24hr has passed since last login)
+    // 3. DAILY LOGIN STREAK LOGIC
     if (systemData.lastActive) {
         const lastDate = new Date(systemData.lastActive);
-        const hoursSince = (now - lastDate) / (1000 * 60 * 60);
+        const daysSince = Math.floor((now - lastDate) / (1000 * 60 * 60 * 24));
         
-        if (hoursSince > 24 && hoursSince < 48) {
-            // Logged in next day: Streak continues
-            systemData.streak += 1;
-        } else if (hoursSince >= 48) {
-            // Missed a day: Streak reset
-            systemData.streak = 0;
+        if (daysSince === 1) {
+            systemData.streak += 1; 
+        } else if (daysSince > 1) {
+            systemData.streak = 0; // Streak broken
         }
     }
-    systemData.lastActive = now.toISOString();
     
+    systemData.lastActive = now.toISOString();
     saveAndRefresh();
+}
+
+function renderUI() {
+    // A. CALCULATE GLOBAL POSITION (Battle for Rank 1)
+    // Starting at #100, users grind down to #1
+    let globalRank = 100 - Math.floor(systemData.rankPoints / 1000);
+    if (globalRank < 1) globalRank = 1;
+
+    // B. UPDATE DASHBOARD RANK CARD
+    const rankDisplay = document.getElementById('ui-rank'); // Ensure your HTML ID is 'ui-rank'
+    if(rankDisplay) {
+        rankDisplay.innerText = `#${globalRank}`;
+        
+        // Rank 1 Special Effects
+        if (globalRank === 1) {
+            rankDisplay.classList.add('text-yellow-500', 'animate-pulse');
+            document.getElementById('rank-crown-icon')?.classList.add('text-yellow-500/20');
+        } else {
+            rankDisplay.classList.remove('text-yellow-500', 'animate-pulse');
+        }
+    }
+
+    // C. UPDATE DASHBOARD STREAK CARD
+    const streakDisplay = document.getElementById('ui-streak');
+    if(streakDisplay) streakDisplay.innerText = systemData.streak;
+
+    // D. UPDATE LEADERBOARD SECTION
+    const lbRank = document.getElementById('global-rank-val');
+    const lbPoints = document.getElementById('leaderboard-points');
+    const lbStreak = document.getElementById('leaderboard-streak');
+
+    if (lbRank) lbRank.innerText = `#${globalRank}`;
+    if (lbPoints) lbPoints.innerText = systemData.rankPoints.toLocaleString();
+    if (lbStreak) lbStreak.innerText = `${systemData.streak}d`;
 }
 
 function saveAndRefresh() {
@@ -2885,22 +2931,12 @@ function saveAndRefresh() {
     renderUI();
 }
 
-// Start tracking every 10 seconds
+// Global Notification Alert (Matches your modal preference)
+function showNotification(msg) {
+    // Replace this with your specific Modal Trigger function
+    console.log("PROTOCOL ALERT: " + msg);
+}
+
+// Run System
 setInterval(updateSystem, 10000);
-//// addition for the ranks and streaks
-function renderUI() {
-    // Update Dashboard Cards
-    if(document.getElementById('ui-rank')) document.getElementById('ui-rank').innerText = systemData.rank;
-    if(document.getElementById('ui-streak')) document.getElementById('ui-streak').innerText = systemData.streak;
-
-    // Update Leaderboard Rank (In the leaderboard view)
-    const rankDisplay = document.querySelector('.Leaderboard #global-rank-val');
-    if(rankDisplay) rankDisplay.innerText = `#${systemData.rank}`;
-}
-
-// Helper to generate Activity Grid Colors
-function getActivityColor(dateStr) {
-    const intensity = systemData.activityHistory[dateStr] || 0;
-    const colors = ['bg-white/[0.03]', 'bg-green-900', 'bg-green-700', 'bg-green-500', 'bg-green-400'];
-    return colors[intensity];
-}
+renderUI(); // Initial run on load
