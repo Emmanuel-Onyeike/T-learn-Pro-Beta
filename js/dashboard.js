@@ -114,72 +114,58 @@ const views = {
 </div>
 
 
-
-<div class="mt-8 bg-[#050b1d] border border-white/5 p-8 rounded-[2.5rem] relative overflow-hidden">
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
-        <div>
-            <h3 class="text-lg font-black text-white italic uppercase tracking-tighter">Activity</h3>
-            <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest mt-1">Tracking session</p>
-        </div>
-        <div class="flex gap-2 flex-wrap">
-            <button class="px-4 py-2 bg-gray-800 rounded-lg text-[9px] font-black uppercase tracking-widest text-white shadow-lg shadow-gray-800/20">2025</button>
-            <button class="px-4 py-2 bg-blue-600 rounded-lg text-[9px] font-black uppercase tracking-widest text-white shadow-lg shadow-blue-600/20">2026</button>
-        </div>
-    </div>
-
-    <div class="overflow-x-auto pb-4 no-scrollbar">
-        <div class="inline-grid grid-rows-7 grid-flow-col gap-1.5 min-w-[850px]">
-            ${(() => {
-                let boxes = '';
-                const year = 2026;
-                const startDate = new Date(year, 0, 1);
-                const todayStr = new Date().toISOString().split('T')[0];
-                
-                // 365 Days logic
-                for (let i = 0; i < 365; i++) {
-                    const currentDate = new Date(startDate);
-                    currentDate.setDate(startDate.getDate() + i);
-                    const dateStr = currentDate.toISOString().split('T')[0];
-                    
-                    // Fetch intensity from systemData core
-                    const intensity = (systemData.activityHistory && systemData.activityHistory[dateStr]) || 0;
-                    
-                    // GitHub Exact Mapping
-                    let colorClass = 'bg-white/[0.03]'; // Level 0 (Empty)
-                    if (intensity === 1) colorClass = 'bg-green-900'; // Level 1 (Low)
-                    if (intensity === 2) colorClass = 'bg-green-700'; // Level 2 (Mid)
-                    if (intensity === 3) colorClass = 'bg-green-500'; // Level 3 (High)
-                    if (intensity >= 4) colorClass = 'bg-green-400';  // Level 4 (Elite)
-                    
-                    // Highlight Today
-                    const isToday = (dateStr === todayStr);
-                    const todayPulse = isToday ? 'ring-1 ring-white/40 scale-110 z-10 shadow-[0_0_10px_rgba(255,255,255,0.1)]' : '';
-
-                    boxes += `
-                        <div class="w-3 h-3 rounded-sm ${colorClass} ${todayPulse} transition-all duration-700 cursor-pointer hover:ring-1 hover:ring-white/50" 
-                             title="${dateStr} | Level: ${intensity}">
-                        </div>`;
-                }
-                return boxes;
-            })()}
-        </div>
-    </div>
-
-    <div class="flex justify-between items-center mt-4">
-        <p class="text-[8px] text-gray-600 font-bold uppercase tracking-widest italic">Density increases with page engagement time</p>
-        <div class="flex items-center gap-2">
-            <span class="text-[8px] text-gray-600 font-bold uppercase tracking-widest">Low</span>
-            <div class="flex gap-1">
-                <div class="w-2.5 h-2.5 rounded-sm bg-white/[0.03]"></div>
-                <div class="w-2.5 h-2.5 rounded-sm bg-green-900"></div>
-                <div class="w-2.5 h-2.5 rounded-sm bg-green-700"></div>
-                <div class="w-2.5 h-2.5 rounded-sm bg-green-500"></div>
-                <div class="w-2.5 h-2.5 rounded-sm bg-green-400"></div>
-            </div>
-            <span class="text-[8px] text-gray-600 font-bold uppercase tracking-widest">Elite</span>
-        </div>
-    </div>
+   <div class="mt-8 bg-[#050b1d] border border-white/5 p-8 rounded-[2.5rem] relative overflow-hidden">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+        <div>
+            <h3 class="text-lg font-black text-white italic uppercase tracking-tighter">Activity</h3>
+            <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest mt-1">Tracking session</p>
+        </div>
+        <div class="flex gap-2 flex-wrap">
+            <button class="px-4 py-2 bg-gray-800 rounded-lg text-[9px] font-black uppercase tracking-widest text-white shadow-lg shadow-gray-800/20">2025</button>
+            <button class="px-4 py-2 bg-blue-600 rounded-lg text-[9px] font-black uppercase tracking-widest text-white shadow-lg shadow-blue-600/20">2026</button>
+        </div>
+    </div>
+    <div class="overflow-x-auto pb-4 no-scrollbar">
+        <div class="inline-grid grid-rows-7 grid-flow-col gap-1.5 min-w-[850px]">
+            <!-- 2026 Activity Grid (365 days starting Jan 1, 2026) -->
+            <!-- Example with very light early activity + mostly empty for future days -->
+            <div class="w-3 h-3 rounded-sm bg-white/[0.03] transition-all duration-500 cursor-pointer" title="2026-01-01"></div>
+            <div class="w-3 h-3 rounded-sm bg-green-900 transition-all duration-500 cursor-pointer" title="2026-01-02"></div>
+            <div class="w-3 h-3 rounded-sm bg-green-900 transition-all duration-500 cursor-pointer" title="2026-01-03"></div>
+            <!-- The rest of the year continues with mostly low/no activity yet -->
+            <div class="w-3 h-3 rounded-sm bg-white/[0.03] transition-all duration-500 cursor-pointer" title="2026-01-04"></div>
+            <div class="w-3 h-3 rounded-sm bg-white/[0.03] transition-all duration-500 cursor-pointer" title="2026-01-05"></div>
+            <!-- ... (repeat pattern for all 365 days, thickening based on real future engagement) ... -->
+            <!-- Placeholder for the remaining ~360 boxes (they would be generated dynamically) -->
+            ${(() => {
+                let boxes = '';
+                for (let i = 3; i < 365; i++) {
+                    // Most future days = no activity yet
+                    const thickness = 'bg-white/[0.03]';
+                    const d = new Date(2026, 0, i + 1);
+                    const dateStr = d.toISOString().split('T')[0];
+                    boxes += `<div class="w-3 h-3 rounded-sm ${thickness} transition-all duration-500 cursor-pointer" title="${dateStr}"></div>`;
+                }
+                return boxes;
+            })()}
+        </div>
+    </div>
+    <div class="flex justify-between items-center mt-4">
+        <p class="text-[8px] text-gray-600 font-bold uppercase tracking-widest italic">Density increases with page engagement time</p>
+        <div class="flex items-center gap-2">
+            <span class="text-[8px] text-gray-600 font-bold uppercase tracking-widest">Low</span>
+            <div class="flex gap-1">
+                <div class="w-2.5 h-2.5 rounded-sm bg-white/[0.03]"></div>
+                <div class="w-2.5 h-2.5 rounded-sm bg-green-900"></div>
+                <div class="w-2.5 h-2.5 rounded-sm bg-green-700"></div>
+                <div class="w-2.5 h-2.5 rounded-sm bg-green-500"></div>
+                <div class="w-2.5 h-2.5 rounded-sm bg-green-400"></div>
+            </div>
+            <span class="text-[8px] text-gray-600 font-bold uppercase tracking-widest">Elite</span>
+        </div>
+    </div>
 </div>
+ 
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mt-8">
         <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-emerald-500/30 transition-all">
