@@ -115,92 +115,57 @@ const views = {
 
 
 
-<div class="mt-8 bg-[#050b1d] border border-white/5 p-8 rounded-[3rem] relative overflow-hidden group">
-    <div class="absolute -top-24 -left-24 w-64 h-64 bg-blue-600/5 blur-[100px] rounded-full"></div>
-    <div class="absolute -bottom-24 -right-24 w-64 h-64 bg-cyan-600/5 blur-[100px] rounded-full"></div>
-
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-6 relative z-10">
-        <div class="space-y-1">
-            <div class="flex items-center gap-3">
-                <div class="px-2 py-0.5 bg-blue-500/10 border border-blue-500/20 rounded text-[8px] font-black text-blue-500 uppercase tracking-widest">Live Node</div>
-                <h3 class="text-2xl font-black text-white italic uppercase tracking-tighter">Activity Pulse</h3>
-            </div>
-            <p class="text-[10px] text-gray-500 font-medium tracking-[0.1em]">Neural link established // Port 8080 active</p>
+ <div class="mt-8 bg-[#050b1d] border border-white/5 p-8 rounded-[2.5rem] relative overflow-hidden">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+        <div>
+            <h3 class="text-lg font-black text-white italic uppercase tracking-tighter">Activity</h3>
+            <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest mt-1">Tracking session</p>
         </div>
-        
-        <div class="flex items-center gap-6">
-            <div class="text-right">
-                <p class="text-[8px] text-gray-600 font-black uppercase tracking-widest mb-1">Session Uptime</p>
-                <span id="session-timer-display" class="text-xl font-black text-white tabular-nums tracking-tighter italic">00:00:00</span>
-            </div>
-            <div class="h-10 w-[1px] bg-white/5"></div>
-            <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-600 to-cyan-500 flex items-center justify-center shadow-lg shadow-blue-500/20">
-                <i class="fas fa-microchip text-white text-lg animate-pulse"></i>
-            </div>
+        <div class="flex gap-2 flex-wrap">
+            <button class="px-4 py-2 bg-gray-800 rounded-lg text-[9px] font-black uppercase tracking-widest text-white shadow-lg shadow-gray-800/20">2025</button>
+            <button class="px-4 py-2 bg-blue-600 rounded-lg text-[9px] font-black uppercase tracking-widest text-white shadow-lg shadow-blue-600/20">2026</button>
         </div>
     </div>
-
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 relative z-10">
-        
-        <div class="lg:col-span-5 p-8 rounded-[2.5rem] bg-white/[0.02] border border-white/5 relative overflow-hidden group/mod">
-            <p class="text-[9px] text-gray-500 font-black uppercase tracking-[0.3em] mb-8">Signal Intensity</p>
-            
-            <div class="flex items-end justify-between h-20 gap-1 px-2" id="live-intensity-bars">
-                ${Array(12).fill(0).map((_, i) => `
-                    <div class="flex-1 bg-white/5 rounded-full transition-all duration-500 intensity-bar" 
-                         style="height: ${20 + Math.random() * 80}%"></div>
-                `).join('')}
-            </div>
-            
-            <div class="mt-8 flex justify-between items-end">
-                <div>
-                    <h4 id="intensity-label" class="text-lg font-black text-white italic uppercase tracking-tighter">Standby</h4>
-                    <p class="text-[8px] text-blue-500 font-bold uppercase tracking-widest">Frequency: 0.00Hz</p>
-                </div>
-                <i class="fas fa-wave-square text-blue-500/20 text-2xl"></i>
-            </div>
+    <div class="overflow-x-auto pb-4 no-scrollbar">
+        <div class="inline-grid grid-rows-7 grid-flow-col gap-1.5 min-w-[850px]">
+            <!-- 2026 Activity Grid (365 days starting Jan 1, 2026) -->
+            <!-- Example with very light early activity + mostly empty for future days -->
+            <div class="w-3 h-3 rounded-sm bg-white/[0.03] transition-all duration-500 cursor-pointer" title="2026-01-01"></div>
+            <div class="w-3 h-3 rounded-sm bg-green-900 transition-all duration-500 cursor-pointer" title="2026-01-02"></div>
+            <div class="w-3 h-3 rounded-sm bg-green-900 transition-all duration-500 cursor-pointer" title="2026-01-03"></div>
+            <!-- The rest of the year continues with mostly low/no activity yet -->
+            <div class="w-3 h-3 rounded-sm bg-white/[0.03] transition-all duration-500 cursor-pointer" title="2026-01-04"></div>
+            <div class="w-3 h-3 rounded-sm bg-white/[0.03] transition-all duration-500 cursor-pointer" title="2026-01-05"></div>
+            <!-- ... (repeat pattern for all 365 days, thickening based on real future engagement) ... -->
+            <!-- Placeholder for the remaining ~360 boxes (they would be generated dynamically) -->
+            ${(() => {
+                let boxes = '';
+                for (let i = 3; i < 365; i++) {
+                    // Most future days = no activity yet
+                    const thickness = 'bg-white/[0.03]';
+                    const d = new Date(2026, 0, i + 1);
+                    const dateStr = d.toISOString().split('T')[0];
+                    boxes += `<div class="w-3 h-3 rounded-sm ${thickness} transition-all duration-500 cursor-pointer" title="${dateStr}"></div>`;
+                }
+                return boxes;
+            })()}
         </div>
-
-        <div class="lg:col-span-4 p-8 rounded-[2.5rem] bg-white/[0.02] border border-white/5 flex flex-col justify-between">
-            <div>
-                <div class="flex justify-between items-center mb-2">
-                    <p class="text-[9px] text-gray-500 font-black uppercase tracking-[0.3em]">Deployment Goal</p>
-                    <span id="daily-percent" class="text-xs font-black text-blue-400 italic">0%</span>
-                </div>
-                <div class="relative h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
-                    <div id="daily-progress-bar" class="absolute top-0 left-0 h-full bg-gradient-to-r from-blue-600 via-cyan-400 to-blue-600 bg-[length:200%_100%] animate-shimmer transition-all duration-1000" style="width: 0%"></div>
-                </div>
+    </div>
+    <div class="flex justify-between items-center mt-4">
+        <p class="text-[8px] text-gray-600 font-bold uppercase tracking-widest italic">Density increases with page engagement time</p>
+        <div class="flex items-center gap-2">
+            <span class="text-[8px] text-gray-600 font-bold uppercase tracking-widest">Low</span>
+            <div class="flex gap-1">
+                <div class="w-2.5 h-2.5 rounded-sm bg-white/[0.03]"></div>
+                <div class="w-2.5 h-2.5 rounded-sm bg-green-900"></div>
+                <div class="w-2.5 h-2.5 rounded-sm bg-green-700"></div>
+                <div class="w-2.5 h-2.5 rounded-sm bg-green-500"></div>
+                <div class="w-2.5 h-2.5 rounded-sm bg-green-400"></div>
             </div>
-
-            <div class="space-y-3">
-                <div class="flex justify-between text-[9px] font-bold uppercase tracking-tighter">
-                    <span class="text-gray-500">Tier Progress:</span>
-                    <span class="text-white italic" id="tier-status">Initiate</span>
-                </div>
-                <div class="grid grid-cols-4 gap-1">
-                    <div class="h-1 rounded-full bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.4)]"></div>
-                    <div class="h-1 rounded-full bg-white/5 tier-step"></div>
-                    <div class="h-1 rounded-full bg-white/5 tier-step"></div>
-                    <div class="h-1 rounded-full bg-white/5 tier-step"></div>
-                </div>
-            </div>
+            <span class="text-[8px] text-gray-600 font-bold uppercase tracking-widest">NXXT</span>
         </div>
-
-        <div class="lg:col-span-3 p-8 rounded-[2.5rem] bg-gradient-to-br from-blue-600/10 to-transparent border border-blue-500/10 flex flex-col items-center justify-center text-center">
-             <div class="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center mb-4">
-                 <i class="fas fa-database text-blue-400 text-sm"></i>
-             </div>
-             <p class="text-[9px] text-gray-500 font-black uppercase tracking-[0.3em] mb-1">Credits Synced</p>
-             <h4 id="session-points" class="text-4xl font-black text-white italic tracking-tighter">+0</h4>
-             <div class="mt-4 px-3 py-1 bg-green-500/10 rounded-full">
-                 <p class="text-[7px] text-green-500 font-black uppercase tracking-widest animate-pulse">Buff Active: 1.2x</p>
-             </div>
-        </div>
-
     </div>
 </div>
-
-
 
 
 
@@ -2983,68 +2948,3 @@ setInterval(updateSystem, 10000);
 renderUI();
 
 
-
-/// For the activty 
-
-     function updateActivityUI() {
-    const totalSeconds = systemData.totalSecondsToday;
-    
-    // 1. ADVANCED TIMER
-    const hrs = Math.floor(totalSeconds / 3600).toString().padStart(2, '0');
-    const mins = Math.floor((totalSeconds % 3600) / 60).toString().padStart(2, '0');
-    const secs = (totalSeconds % 60).toString().padStart(2, '0');
-    if(document.getElementById('session-timer-display')) {
-        document.getElementById('session-timer-display').innerText = `${hrs}:${mins}:${secs}`;
-    }
-
-    // 2. WAVEFORM LOGIC
-    const level = Math.min(Math.floor(totalSeconds / 3600), 4); 
-    const bars = document.querySelectorAll('.intensity-bar');
-    const label = document.getElementById('intensity-label');
-    
-    bars.forEach((bar, i) => {
-        // Randomize height slightly for organic feel
-        const randomHeight = 20 + Math.random() * 60;
-        bar.style.height = `${randomHeight}%`;
-        
-        // Activate bars based on intensity level
-        if (i < (level + 1) * 2.4) { // Spreads intensity across 12 bars
-            bar.classList.add('active', 'bg-blue-500');
-            bar.classList.remove('bg-white/5');
-        } else {
-            bar.classList.remove('active', 'bg-blue-500');
-            bar.classList.add('bg-white/5');
-        }
-    });
-
-    if (level >= 4) label.innerText = "Quantum Elite";
-    else if (level >= 2) label.innerText = "Overclocked";
-    else if (level >= 1) label.innerText = "Neural Link";
-
-    // 3. PROGRESS & TIER STATUS
-    const progress = Math.min((totalSeconds / 21600) * 100, 100);
-    if(document.getElementById('daily-progress-bar')) {
-        document.getElementById('daily-progress-bar').style.width = `${progress}%`;
-        document.getElementById('daily-percent').innerText = `${Math.floor(progress)}%`;
-    }
-
-    const tierSteps = document.querySelectorAll('.tier-step');
-    const tierStatus = document.getElementById('tier-status');
-    tierSteps.forEach((step, i) => {
-        if (progress > (i + 1) * 25) {
-            step.classList.replace('bg-white/5', 'bg-cyan-500');
-            step.classList.add('shadow-[0_0_8px_rgba(34,211,238,0.4)]');
-        }
-    });
-    
-    if (progress > 75) tierStatus.innerText = "Vanguard";
-    else if (progress > 50) tierStatus.innerText = "Specialist";
-    else if (progress > 25) tierStatus.innerText = "Operator";
-
-    // 4. SESSION GAIN (Mathematic Sync)
-    const sessionPts = document.getElementById('session-points');
-    if(sessionPts) {
-        const earned = Math.floor((Date.now() - systemData.sessionStartTime) / 10000 * 5);
-        sessionPts.innerText = `+${earned.toLocaleString()}`;
-    }
-}
