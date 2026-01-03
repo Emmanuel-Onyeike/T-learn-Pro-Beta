@@ -351,7 +351,7 @@ const views = {
                     <div class="absolute top-4 left-4 bg-yellow-500 text-black text-[9px] font-black px-2 py-0.5 rounded-full">#1</div>
                     <div class="absolute top-4 right-4"><i class="fas fa-star text-yellow-500 animate-pulse"></i></div>
                     <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Emmanuel" class="w-20 h-20 rounded-full mx-auto mb-4 border-2 border-yellow-500 shadow-lg shadow-yellow-500/20">
-                    <h4 class="text-white font-black italic uppercase text-xs">Emmanuel</h4>
+                    <h4 class="text-white font-black italic uppercase text-xs">Unknown</h4>
                     <div class="mt-4 bg-black/40 rounded-2xl py-3 border border-white/5">
                          <p id="top-pts-1" class="text-xl font-black text-white italic tracking-tighter">0</p>
                          <p class="text-[7px] text-gray-500 uppercase font-bold tracking-widest">Points</p>
@@ -382,7 +382,7 @@ const views = {
                     <div class="flex gap-8 items-center">
                          <div class="text-right">
                             <p id="lb-list-points" class="text-white font-black italic tracking-tighter text-sm">0</p>
-                            <p class="text-[7px] text-gray-600 font-bold uppercase tracking-widest">Deployment Pts</p>
+                            <p class="text-[7px] text-gray-600 font-bold uppercase tracking-widest">GND Pts</p>
                          </div>
                          <i class="fas fa-chevron-right text-gray-800 text-[8px]"></i>
                     </div>
