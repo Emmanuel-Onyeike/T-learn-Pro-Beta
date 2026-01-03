@@ -115,56 +115,93 @@ const views = {
 
 
 
-<div class="mt-8 bg-[#050b1d] border border-white/5 p-8 rounded-[2.5rem] relative overflow-hidden group">
-    <div class="absolute -top-24 -right-24 w-48 h-48 bg-blue-500/10 blur-[80px] group-hover:bg-blue-500/20 transition-all duration-700"></div>
+<div class="mt-8 bg-[#050b1d] border border-white/5 p-8 rounded-[3rem] relative overflow-hidden group">
+    <div class="absolute -top-24 -left-24 w-64 h-64 bg-blue-600/5 blur-[100px] rounded-full"></div>
+    <div class="absolute -bottom-24 -right-24 w-64 h-64 bg-cyan-600/5 blur-[100px] rounded-full"></div>
 
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4 relative z-10">
-        <div>
-            <div class="flex items-center gap-2">
-                <h3 class="text-xl font-black text-white italic uppercase tracking-tighter">Live Activity</h3>
-                <span class="flex h-2 w-2 rounded-full bg-green-500 animate-ping"></span>
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-6 relative z-10">
+        <div class="space-y-1">
+            <div class="flex items-center gap-3">
+                <div class="px-2 py-0.5 bg-blue-500/10 border border-blue-500/20 rounded text-[8px] font-black text-blue-500 uppercase tracking-widest">Live Node</div>
+                <h3 class="text-2xl font-black text-white italic uppercase tracking-tighter">Activity Pulse</h3>
             </div>
-            <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest mt-1">Real-time session deployment</p>
+            <p class="text-[10px] text-gray-500 font-medium tracking-[0.1em]">Neural link established // Port 8080 active</p>
         </div>
         
-        <div class="flex items-center gap-3 bg-white/[0.03] border border-white/5 px-4 py-2 rounded-2xl">
-            <i class="fas fa-clock text-blue-500 text-xs"></i>
-            <span id="session-timer-display" class="text-xs font-black text-white italic tracking-widest">00:00:00</span>
+        <div class="flex items-center gap-6">
+            <div class="text-right">
+                <p class="text-[8px] text-gray-600 font-black uppercase tracking-widest mb-1">Session Uptime</p>
+                <span id="session-timer-display" class="text-xl font-black text-white tabular-nums tracking-tighter italic">00:00:00</span>
+            </div>
+            <div class="h-10 w-[1px] bg-white/5"></div>
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-600 to-cyan-500 flex items-center justify-center shadow-lg shadow-blue-500/20">
+                <i class="fas fa-microchip text-white text-lg animate-pulse"></i>
+            </div>
         </div>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 relative z-10">
         
-        <div class="p-6 rounded-3xl bg-white/[0.02] border border-white/5 flex flex-col items-center justify-center text-center">
-            <p class="text-[8px] text-gray-500 font-black uppercase tracking-[0.2em] mb-4">Node Intensity</p>
-            <div class="flex items-end gap-1.5 h-12" id="live-intensity-bars">
-                <div class="w-2 bg-blue-500/20 rounded-full h-1/4"></div>
-                <div class="w-2 bg-blue-500/20 rounded-full h-1/2"></div>
-                <div class="w-2 bg-blue-500/20 rounded-full h-3/4"></div>
-                <div class="w-2 bg-blue-500/20 rounded-full h-full"></div>
+        <div class="lg:col-span-5 p-8 rounded-[2.5rem] bg-white/[0.02] border border-white/5 relative overflow-hidden group/mod">
+            <p class="text-[9px] text-gray-500 font-black uppercase tracking-[0.3em] mb-8">Signal Intensity</p>
+            
+            <div class="flex items-end justify-between h-20 gap-1 px-2" id="live-intensity-bars">
+                ${Array(12).fill(0).map((_, i) => `
+                    <div class="flex-1 bg-white/5 rounded-full transition-all duration-500 intensity-bar" 
+                         style="height: ${20 + Math.random() * 80}%"></div>
+                `).join('')}
             </div>
-            <p id="intensity-label" class="text-[10px] font-black text-blue-500 italic mt-4 uppercase">Standby Mode</p>
+            
+            <div class="mt-8 flex justify-between items-end">
+                <div>
+                    <h4 id="intensity-label" class="text-lg font-black text-white italic uppercase tracking-tighter">Standby</h4>
+                    <p class="text-[8px] text-blue-500 font-bold uppercase tracking-widest">Frequency: 0.00Hz</p>
+                </div>
+                <i class="fas fa-wave-square text-blue-500/20 text-2xl"></i>
+            </div>
         </div>
 
-        <div class="p-6 rounded-3xl bg-white/[0.02] border border-white/5">
-            <div class="flex justify-between items-center mb-4">
-                <p class="text-[8px] text-gray-500 font-black uppercase tracking-[0.2em]">Daily Goal</p>
-                <span id="daily-percent" class="text-[10px] text-white font-black italic">0%</span>
+        <div class="lg:col-span-4 p-8 rounded-[2.5rem] bg-white/[0.02] border border-white/5 flex flex-col justify-between">
+            <div>
+                <div class="flex justify-between items-center mb-2">
+                    <p class="text-[9px] text-gray-500 font-black uppercase tracking-[0.3em]">Deployment Goal</p>
+                    <span id="daily-percent" class="text-xs font-black text-blue-400 italic">0%</span>
+                </div>
+                <div class="relative h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
+                    <div id="daily-progress-bar" class="absolute top-0 left-0 h-full bg-gradient-to-r from-blue-600 via-cyan-400 to-blue-600 bg-[length:200%_100%] animate-shimmer transition-all duration-1000" style="width: 0%"></div>
+                </div>
             </div>
-            <div class="w-full h-2 bg-white/5 rounded-full overflow-hidden">
-                <div id="daily-progress-bar" class="h-full bg-gradient-to-r from-blue-600 to-cyan-400 transition-all duration-1000" style="width: 0%"></div>
+
+            <div class="space-y-3">
+                <div class="flex justify-between text-[9px] font-bold uppercase tracking-tighter">
+                    <span class="text-gray-500">Tier Progress:</span>
+                    <span class="text-white italic" id="tier-status">Initiate</span>
+                </div>
+                <div class="grid grid-cols-4 gap-1">
+                    <div class="h-1 rounded-full bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.4)]"></div>
+                    <div class="h-1 rounded-full bg-white/5 tier-step"></div>
+                    <div class="h-1 rounded-full bg-white/5 tier-step"></div>
+                    <div class="h-1 rounded-full bg-white/5 tier-step"></div>
+                </div>
             </div>
-            <p class="text-[9px] text-gray-600 font-bold mt-4 uppercase tracking-tighter text-center">Reach 6h for Elite Status</p>
         </div>
 
-        <div class="p-6 rounded-3xl bg-white/[0.02] border border-white/5 text-center">
-             <p class="text-[8px] text-gray-500 font-black uppercase tracking-[0.2em] mb-2">Session Gain</p>
-             <h4 id="session-points" class="text-3xl font-black text-white italic tracking-tighter">+0</h4>
-             <p class="text-[7px] text-green-500 font-black uppercase mt-2 tracking-widest animate-pulse">Earning Live</p>
+        <div class="lg:col-span-3 p-8 rounded-[2.5rem] bg-gradient-to-br from-blue-600/10 to-transparent border border-blue-500/10 flex flex-col items-center justify-center text-center">
+             <div class="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center mb-4">
+                 <i class="fas fa-database text-blue-400 text-sm"></i>
+             </div>
+             <p class="text-[9px] text-gray-500 font-black uppercase tracking-[0.3em] mb-1">Credits Synced</p>
+             <h4 id="session-points" class="text-4xl font-black text-white italic tracking-tighter">+0</h4>
+             <div class="mt-4 px-3 py-1 bg-green-500/10 rounded-full">
+                 <p class="text-[7px] text-green-500 font-black uppercase tracking-widest animate-pulse">Buff Active: 1.2x</p>
+             </div>
         </div>
 
     </div>
 </div>
+
+
+
 
 
 
@@ -2949,55 +2986,65 @@ renderUI();
 
 /// For the activty 
 
-        const grid = document.querySelector('.grid.grid-cols-53');
+     function updateActivityUI() {
+    const totalSeconds = systemData.totalSecondsToday;
+    
+    // 1. ADVANCED TIMER
+    const hrs = Math.floor(totalSeconds / 3600).toString().padStart(2, '0');
+    const mins = Math.floor((totalSeconds % 3600) / 60).toString().padStart(2, '0');
+    const secs = (totalSeconds % 60).toString().padStart(2, '0');
+    if(document.getElementById('session-timer-display')) {
+        document.getElementById('session-timer-display').innerText = `${hrs}:${mins}:${secs}`;
+    }
 
-        // Clear just in case
-        grid.innerHTML = '';
-
-        // Jan 1, 2026 is a Thursday
-        // GitHub grid: 7 rows (Sunday at top to Saturday at bottom in many clones, but alignment matters)
-        // To match real GitHub (Sunday start): weekday 0=Sun, 3=Thu → leading empties: 4 (Sun-Wed)
-        // Confirmed accurate for calendar alignment
-        const leadingEmpties = 4; // Sun, Mon, Tue, Wed empty → Jan 1 in Thursday position
-
-        for (let i = 0; i < leadingEmpties; i++) {
-            const empty = document.createElement('div');
-            empty.className = 'w-3 h-3 rounded-sm bg-transparent';
-            grid.appendChild(empty);
+    // 2. WAVEFORM LOGIC
+    const level = Math.min(Math.floor(totalSeconds / 3600), 4); 
+    const bars = document.querySelectorAll('.intensity-bar');
+    const label = document.getElementById('intensity-label');
+    
+    bars.forEach((bar, i) => {
+        // Randomize height slightly for organic feel
+        const randomHeight = 20 + Math.random() * 60;
+        bar.style.height = `${randomHeight}%`;
+        
+        // Activate bars based on intensity level
+        if (i < (level + 1) * 2.4) { // Spreads intensity across 12 bars
+            bar.classList.add('active', 'bg-blue-500');
+            bar.classList.remove('bg-white/5');
+        } else {
+            bar.classList.remove('active', 'bg-blue-500');
+            bar.classList.add('bg-white/5');
         }
+    });
 
-        // Generate exactly 365 days
-        const startDate = new Date(2026, 0, 1); // Jan 1, 2026
-        const todayStr = '2026-01-03';
+    if (level >= 4) label.innerText = "Quantum Elite";
+    else if (level >= 2) label.innerText = "Overclocked";
+    else if (level >= 1) label.innerText = "Neural Link";
 
-        for (let i = 0; i < 365; i++) {
-            const date = new Date(startDate);
-            date.setDate(startDate.getDate() + i);
-            const dateStr = date.toISOString().split('T')[0];
+    // 3. PROGRESS & TIER STATUS
+    const progress = Math.min((totalSeconds / 21600) * 100, 100);
+    if(document.getElementById('daily-progress-bar')) {
+        document.getElementById('daily-progress-bar').style.width = `${progress}%`;
+        document.getElementById('daily-percent').innerText = `${Math.floor(progress)}%`;
+    }
 
-            // Realistic activity levels
-            let colorClass = 'bg-white/[0.03]'; // default: no activity
-
-            if (dateStr === '2026-01-01') {
-                colorClass = 'bg-white/[0.03]'; // very light
-            } else if (dateStr === '2026-01-02') {
-                colorClass = 'bg-green-900'; // low
-            } else if (dateStr === todayStr) {
-                colorClass = 'bg-green-800'; // medium - current day (Jan 3, 2026)
-            } else if (i % 14 === 5) {
-                colorClass = 'bg-green-900'; // scattered low activity throughout the year
-            } else if (i % 37 === 0) {
-                colorClass = 'bg-green-700'; // occasional medium
-            }
-
-            const cell = document.createElement('div');
-            cell.className = `w-3 h-3 rounded-sm ${colorClass} transition-all duration-500 cursor-pointer hover:opacity-80`;
-            cell.title = dateStr + (dateStr === todayStr ? ' (Today)' : '');
-            cell.dataset.date = dateStr;
-            grid.appendChild(cell);
+    const tierSteps = document.querySelectorAll('.tier-step');
+    const tierStatus = document.getElementById('tier-status');
+    tierSteps.forEach((step, i) => {
+        if (progress > (i + 1) * 25) {
+            step.classList.replace('bg-white/5', 'bg-cyan-500');
+            step.classList.add('shadow-[0_0_8px_rgba(34,211,238,0.4)]');
         }
+    });
+    
+    if (progress > 75) tierStatus.innerText = "Vanguard";
+    else if (progress > 50) tierStatus.innerText = "Specialist";
+    else if (progress > 25) tierStatus.innerText = "Operator";
 
-        // Grid automatically leaves trailing cells empty in last column
-        // Dec 31, 2026 is Thursday → fills Sun-Thu in last week, Fri-Sat empty
-   
- 
+    // 4. SESSION GAIN (Mathematic Sync)
+    const sessionPts = document.getElementById('session-points');
+    if(sessionPts) {
+        const earned = Math.floor((Date.now() - systemData.sessionStartTime) / 10000 * 5);
+        sessionPts.innerText = `+${earned.toLocaleString()}`;
+    }
+}
