@@ -617,7 +617,7 @@ const views = {
             
             <div class="flex items-center gap-4 mb-10 md:mb-16 scale-90 md:scale-100">
                 <div class="w-14 h-14 md:w-16 md:h-16 rounded-full border-2 border-white/20 p-1 flex items-center justify-center overflow-hidden shadow-xl">
-                    <img src="Logo.webp" alt="Nxxt Avatar" class="w-full h-full object-cover rounded-full bg-blue-600/20">
+                    <img src="/assets/Logo.webp" alt="Nxxt Avatar" class="w-full h-full object-cover rounded-full bg-blue-600/20">
                 </div>
                 <h1 class="text-5xl md:text-7xl font-medium text-white tracking-tighter italic">Nxxt AI</h1>
             </div>
