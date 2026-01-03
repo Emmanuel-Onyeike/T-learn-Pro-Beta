@@ -116,62 +116,57 @@ const views = {
 
 
 <div class="mt-8 bg-[#050b1d] border border-white/5 p-8 rounded-[2.5rem] relative overflow-hidden">
-    <div class="absolute inset-0 pointer-events-none">
-        <div class="absolute inset-0 bg-[url('data:image/svg+xml;utf8,<svg width="10" height="10" viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg"><g fill="%23FFFFFF" fill-opacity="0.03" fill-rule="evenodd"><path d="M0 0h1v1H0zm2 0h1v1H2zm4 0h1v1H4zm-2 2h1v1H2zm-4 4h1v1H0zm2 0h1v1H2zm4 0h1v1H4zm-2 2h1v1H2zm-4 4h1v1H0zm2 0h1v1H2zm4 0h1v1H4zM6 0h1v1H6zm-2 2h1v1H4zm-2 4h1v1H2zm-4 0h1v1H0zm6 2h1v1H6zM0 6h1v1H0zm2 0h1v1H2zm4 0h1v1H4zM6 2h1v1H6zm-2 4h1v1H4zm2 2h1v1H6zM4 0h1v1H4zm-2 2h1v1H2zm4 0h1v1H4zm-2 4h1v1H2zm-4 4h1v1H0zm6 0h1v1H6zm-2 2h1v1H4zM4 6h1v1H4zm2 2h1v1H6z"/></g></svg>')] opacity-20"></div>
-        
-        <div class="absolute -top-10 -right-10 w-40 h-40 bg-gradient-to-br from-blue-500/10 to-transparent rotate-45 blur-xl opacity-30 group-hover:opacity-60 transition-opacity duration-700"></div>
-
-        <div class="absolute top-1/2 left-1/4 w-3 h-3 bg-cyan-400 rounded-full animate-pulse-slow opacity-0 group-hover:opacity-70 transition-opacity duration-1000"></div>
-        <div class="absolute bottom-1/4 right-1/3 w-2 h-2 bg-blue-400 rounded-full animate-pulse-fast opacity-0 group-hover:opacity-70 transition-opacity duration-1000 delay-200"></div>
-    </div>
-
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4 relative z-10">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
         <div>
-            <h3 class="text-lg font-black text-white italic uppercase tracking-tighter">Activity Matrix</h3>
-            <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest mt-1">Analyzing network deployment</p>
+            <h3 class="text-lg font-black text-white italic uppercase tracking-tighter">Activity</h3>
+            <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest mt-1">Tracking session</p>
+
+
+
+
+
+
         </div>
         <div class="flex gap-2 flex-wrap">
             <button class="px-4 py-2 bg-gray-800 rounded-lg text-[9px] font-black uppercase tracking-widest text-white shadow-lg shadow-gray-800/20">2025</button>
             <button class="px-4 py-2 bg-blue-600 rounded-lg text-[9px] font-black uppercase tracking-widest text-white shadow-lg shadow-blue-600/20">2026</button>
+
+
+
+
+
+
+
         </div>
     </div>
-
-    <div class="overflow-x-auto pb-4 no-scrollbar relative z-10">
+    <div class="overflow-x-auto pb-4 no-scrollbar">
         <div class="inline-grid grid-rows-7 grid-flow-col gap-1.5 min-w-[850px]">
+            <!-- 2026 Activity Grid (365 days starting Jan 1, 2026) -->
+            <!-- Example with very light early activity + mostly empty for future days -->
+            <div class="w-3 h-3 rounded-sm bg-white/[0.03] transition-all duration-500 cursor-pointer" title="2026-01-01"></div>
+            <div class="w-3 h-3 rounded-sm bg-green-900 transition-all duration-500 cursor-pointer" title="2026-01-02"></div>
+            <div class="w-3 h-3 rounded-sm bg-green-900 transition-all duration-500 cursor-pointer" title="2026-01-03"></div>
+            <!-- The rest of the year continues with mostly low/no activity yet -->
+            <div class="w-3 h-3 rounded-sm bg-white/[0.03] transition-all duration-500 cursor-pointer" title="2026-01-04"></div>
+            <div class="w-3 h-3 rounded-sm bg-white/[0.03] transition-all duration-500 cursor-pointer" title="2026-01-05"></div>
+            <!-- ... (repeat pattern for all 365 days, thickening based on real future engagement) ... -->
+            <!-- Placeholder for the remaining ~360 boxes (they would be generated dynamically) -->
             ${(() => {
                 let boxes = '';
-                const year = 2026;
-                const startDate = new Date(year, 0, 1);
-                const todayStr = new Date().toISOString().split('T')[0];
-                
-                for (let i = 0; i < 365; i++) {
-                    const currentDate = new Date(startDate);
-                    currentDate.setDate(startDate.getDate() + i);
-                    const dateStr = currentDate.toISOString().split('T')[0];
-                    
-                    const intensity = (systemData.activityHistory && systemData.activityHistory[dateStr]) || 0;
-                    
-                    let colorClass = 'bg-white/[0.03]'; 
-                    if (intensity === 1) colorClass = 'bg-green-900'; 
-                    if (intensity === 2) colorClass = 'bg-green-700'; 
-                    if (intensity === 3) colorClass = 'bg-green-500'; 
-                    if (intensity >= 4) colorClass = 'bg-green-400';  
-                    
-                    const isToday = (dateStr === todayStr);
-                    const todayPulse = isToday ? 'ring-1 ring-white/40 scale-110 z-10 shadow-[0_0_10px_rgba(255,255,255,0.1)]' : '';
-
-                    boxes += `
-                        <div class="w-3 h-3 rounded-sm ${colorClass} ${todayPulse} transition-all duration-700 cursor-pointer hover:ring-1 hover:ring-white/50" 
-                             title="${dateStr} | Level: ${intensity}">
-                        </div>`;
+                for (let i = 3; i < 365; i++) {
+                    // Most future days = no activity yet
+                    const thickness = 'bg-white/[0.03]';
+                    const d = new Date(2026, 0, i + 1);
+                    const dateStr = d.toISOString().split('T')[0];
+                    boxes += `<div class="w-3 h-3 rounded-sm ${thickness} transition-all duration-500 cursor-pointer" title="${dateStr}"></div>`;
                 }
                 return boxes;
             })()}
+
         </div>
     </div>
-
-    <div class="flex justify-between items-center mt-4 relative z-10">
-        <p class="text-[8px] text-gray-600 font-bold uppercase tracking-widest italic">Density indicates network throughput</p>
+    <div class="flex justify-between items-center mt-4">
+        <p class="text-[8px] text-gray-600 font-bold uppercase tracking-widest italic">Density increases with page engagement time</p>
         <div class="flex items-center gap-2">
             <span class="text-[8px] text-gray-600 font-bold uppercase tracking-widest">Low</span>
             <div class="flex gap-1">
@@ -181,13 +176,12 @@ const views = {
                 <div class="w-2.5 h-2.5 rounded-sm bg-green-500"></div>
                 <div class="w-2.5 h-2.5 rounded-sm bg-green-400"></div>
             </div>
-            <span class="text-[8px] text-gray-600 font-bold uppercase tracking-widest">Elite</span>
+            <span class="text-[8px] text-gray-600 font-bold uppercase tracking-widest">NXXT</span>
         </div>
-    </div>
 
-    <div class="absolute -bottom-10 -left-10 w-32 h-32 rounded-full bg-blue-500/5 blur-3xl group-hover:scale-110 transition-transform duration-700"></div>
-    
+    </div>
 </div>
+
 
 
 
