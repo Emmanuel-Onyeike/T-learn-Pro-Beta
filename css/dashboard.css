@@ -170,6 +170,4 @@ body {
 }
 
 
-    @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
-    .animate-shimmer { animation: shimmer 3s linear infinite; }
-    .intensity-bar.active { @apply bg-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.6)]; }
+
