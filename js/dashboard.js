@@ -167,8 +167,6 @@ const views = {
     </div>
 </div>
 
- 
-
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mt-8">
         <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-emerald-500/30 transition-all">
