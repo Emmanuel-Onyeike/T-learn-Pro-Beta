@@ -115,36 +115,54 @@ const views = {
 
 
 
-<div class="mt-8 bg-[#050b1d] border border-white/5 p-8 rounded-[2.5rem] relative overflow-hidden">
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+<div class="mt-8 bg-[#050b1d] border border-white/5 p-8 rounded-[2.5rem] relative overflow-hidden group">
+    <div class="absolute -top-24 -right-24 w-48 h-48 bg-blue-500/10 blur-[80px] group-hover:bg-blue-500/20 transition-all duration-700"></div>
+
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4 relative z-10">
         <div>
-            <h3 class="text-lg font-black text-white italic uppercase tracking-tighter">Activity</h3>
-            <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest mt-1">Tracking session</p>
-        </div>
-        <div class="flex gap-2 flex-wrap">
-            <button class="px-4 py-2 bg-gray-800 rounded-lg text-[9px] font-black uppercase tracking-widest text-white shadow-lg shadow-gray-800/20">2025</button>
-            <button class="px-4 py-2 bg-blue-600 rounded-lg text-[9px] font-black uppercase tracking-widest text-white shadow-lg shadow-blue-600/20">2026</button>
-        </div>
-    </div>
-    <div class="overflow-x-auto pb-4 no-scrollbar">
-        <div class="grid grid-cols-53 grid-rows-7 gap-1.5" style="min-width: 850px;">
-            <!-- The grid is fully populated by the JavaScript below -->
-            <!-- No static cells needed -->
-        </div>
-    </div>
-    <div class="flex justify-between items-center mt-4">
-        <p class="text-[8px] text-gray-600 font-bold uppercase tracking-widest italic">Density increases with page engagement time</p>
-        <div class="flex items-center gap-2">
-            <span class="text-[8px] text-gray-600 font-bold uppercase tracking-widest">Low</span>
-            <div class="flex gap-1">
-                <div class="w-2.5 h-2.5 rounded-sm bg-white/[0.03]"></div>
-                <div class="w-2.5 h-2.5 rounded-sm bg-green-900"></div>
-                <div class="w-2.5 h-2.5 rounded-sm bg-green-700"></div>
-                <div class="w-2.5 h-2.5 rounded-sm bg-green-500"></div>
-                <div class="w-2.5 h-2.5 rounded-sm bg-green-400"></div>
+            <div class="flex items-center gap-2">
+                <h3 class="text-xl font-black text-white italic uppercase tracking-tighter">Live Activity</h3>
+                <span class="flex h-2 w-2 rounded-full bg-green-500 animate-ping"></span>
             </div>
-            <span class="text-[8px] text-gray-600 font-bold uppercase tracking-widest">Elite</span>
+            <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest mt-1">Real-time session deployment</p>
         </div>
+        
+        <div class="flex items-center gap-3 bg-white/[0.03] border border-white/5 px-4 py-2 rounded-2xl">
+            <i class="fas fa-clock text-blue-500 text-xs"></i>
+            <span id="session-timer-display" class="text-xs font-black text-white italic tracking-widest">00:00:00</span>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10">
+        
+        <div class="p-6 rounded-3xl bg-white/[0.02] border border-white/5 flex flex-col items-center justify-center text-center">
+            <p class="text-[8px] text-gray-500 font-black uppercase tracking-[0.2em] mb-4">Node Intensity</p>
+            <div class="flex items-end gap-1.5 h-12" id="live-intensity-bars">
+                <div class="w-2 bg-blue-500/20 rounded-full h-1/4"></div>
+                <div class="w-2 bg-blue-500/20 rounded-full h-1/2"></div>
+                <div class="w-2 bg-blue-500/20 rounded-full h-3/4"></div>
+                <div class="w-2 bg-blue-500/20 rounded-full h-full"></div>
+            </div>
+            <p id="intensity-label" class="text-[10px] font-black text-blue-500 italic mt-4 uppercase">Standby Mode</p>
+        </div>
+
+        <div class="p-6 rounded-3xl bg-white/[0.02] border border-white/5">
+            <div class="flex justify-between items-center mb-4">
+                <p class="text-[8px] text-gray-500 font-black uppercase tracking-[0.2em]">Daily Goal</p>
+                <span id="daily-percent" class="text-[10px] text-white font-black italic">0%</span>
+            </div>
+            <div class="w-full h-2 bg-white/5 rounded-full overflow-hidden">
+                <div id="daily-progress-bar" class="h-full bg-gradient-to-r from-blue-600 to-cyan-400 transition-all duration-1000" style="width: 0%"></div>
+            </div>
+            <p class="text-[9px] text-gray-600 font-bold mt-4 uppercase tracking-tighter text-center">Reach 6h for Elite Status</p>
+        </div>
+
+        <div class="p-6 rounded-3xl bg-white/[0.02] border border-white/5 text-center">
+             <p class="text-[8px] text-gray-500 font-black uppercase tracking-[0.2em] mb-2">Session Gain</p>
+             <h4 id="session-points" class="text-3xl font-black text-white italic tracking-tighter">+0</h4>
+             <p class="text-[7px] text-green-500 font-black uppercase mt-2 tracking-widest animate-pulse">Earning Live</p>
+        </div>
+
     </div>
 </div>
 
