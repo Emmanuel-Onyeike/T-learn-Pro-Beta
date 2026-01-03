@@ -62,18 +62,19 @@ const views = {
     <i class="fas fa-chart-line absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-green-500/[0.05] transition-all"></i>
 </div>
 
-        <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-orange-500/30 transition-all">
-            <div class="flex items-center gap-4 relative z-10">
-                <div class="w-12 h-12 bg-orange-600/10 rounded-2xl flex items-center justify-center border border-orange-500/20">
-                    <i class="fas fa-medal text-orange-500"></i>
-                </div>
-                <div>
-                    <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Rank</p>
-                    <h3 class="text-3xl font-black text-white mt-1">0</h3>
-                </div>
-            </div>
-            <i class="fas fa-crown absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-orange-500/[0.05] transition-all"></i>
+  <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-orange-500/30 transition-all">
+    <div class="flex items-center gap-4 relative z-10">
+        <div class="w-12 h-12 bg-orange-600/10 rounded-2xl flex items-center justify-center border border-orange-500/20">
+            <i class="fas fa-medal text-orange-500"></i>
         </div>
+        <div>
+            <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Rank</p>
+            <h3 id="ui-rank" class="text-3xl font-black text-white mt-1">1</h3>
+        </div>
+    </div>
+    <i class="fas fa-crown absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-orange-500/[0.05] transition-all"></i>
+</div>
+        
         <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-blue-400/30 transition-all">
     <div class="flex items-center gap-4 relative z-10">
         <div class="w-12 h-12 bg-blue-400/10 rounded-2xl flex items-center justify-center border border-blue-400/20">
@@ -86,19 +87,20 @@ const views = {
     </div>
     <i class="fas fa-graduation-cap absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-blue-400/[0.05] transition-all"></i>
 </div>
-  <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-red-500/30 transition-all">
-            <div class="flex items-center gap-4 relative z-10">
-                <div class="w-12 h-12 bg-red-600/10 rounded-2xl flex items-center justify-center border border-red-500/20">
-                    <i class="fas fa-fire text-red-500"></i>
-                </div>
-                <div>
-                    <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Streaks</p>
-                    <h3 class="text-3xl font-black text-white mt-1">0</h3>
-                </div>
-            </div>
-            <i class="fas fa-fire-alt absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-red-500/[0.05] transition-all"></i>
+
+
+<div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-red-500/30 transition-all">
+    <div class="flex items-center gap-4 relative z-10">
+        <div class="w-12 h-12 bg-red-600/10 rounded-2xl flex items-center justify-center border border-red-500/20">
+            <i class="fas fa-fire text-red-500"></i>
+        </div>
+        <div>
+            <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Streaks</p>
+            <h3 id="ui-streak" class="text-3xl font-black text-white mt-1">0</h3>
         </div>
     </div>
+    <i class="fas fa-fire-alt absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-red-500/[0.05] transition-all"></i>
+</div>
 
 
 
@@ -307,58 +309,84 @@ const views = {
 
 
 
-    'Leaderboard': `
+ 'Leaderboard': `
     <div class="space-y-8 animate-in">
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
                 <h3 class="text-xl font-black text-white italic uppercase tracking-tighter">Global Ranking</h3>
-                <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest mt-1">See how you rank against other students</p>
+                <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest mt-1">Real-time performance metrics for 2026 Cycle</p>
             </div>
-            <div class="px-4 py-2 bg-blue-500/5 border border-blue-500/20 rounded-xl">
-                 <p class="text-[8px] font-black text-blue-500 uppercase tracking-widest italic">Season 1 Coming Soon</p>
-            </div>
-        </div>
-
-        <div class="border-2 border-dashed border-white/5 rounded-[3rem] py-24 flex flex-col items-center justify-center text-center bg-white/[0.01] relative overflow-hidden">
-            <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-purple-500/5 via-transparent to-transparent"></div>
-            
-            <div class="relative z-10">
-                <div class="w-24 h-24 bg-white/5 rounded-[2rem] flex items-center justify-center mb-8 mx-auto border border-white/5 shadow-2xl">
-                    <i class="fas fa-trophy text-4xl text-gray-800"></i>
-                </div>
-                <h4 class="text-white font-black uppercase italic tracking-tighter text-2xl">Leaderboard Not Yet Live</h4>
-                <p class="text-[10px] text-gray-500 font-bold uppercase tracking-[0.3em] mt-3 max-w-[300px] mx-auto leading-relaxed">
-                    The competitive arena is currently being calibrated. Check back later to claim your rank.
-                </p>
-                
-                <div class="mt-10 flex flex-col items-center gap-4">
-                    <div class="flex gap-2">
-                        <div class="w-2 h-2 rounded-full bg-blue-500 animate-bounce"></div>
-                        <div class="w-2 h-2 rounded-full bg-blue-500 animate-bounce [animation-delay:-.3s]"></div>
-                        <div class="w-2 h-2 rounded-full bg-blue-500 animate-bounce [animation-delay:-.5s]"></div>
-                    </div>
-                    <p class="text-[8px] font-black text-blue-500/50 uppercase tracking-[0.5em]">Synchronizing Data...</p>
-                </div>
+            <div class="px-4 py-2 bg-green-500/10 border border-green-500/20 rounded-xl flex items-center gap-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+                <p class="text-[8px] font-black text-green-500 uppercase tracking-widest italic">Live Arena Active</p>
             </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 opacity-40">
-            <div class="p-6 bg-white/5 border border-white/5 rounded-3xl text-center">
-                <p class="text-[8px] font-black text-gray-500 uppercase tracking-widest mb-1">Top Score</p>
-                <p class="text-xl font-black text-white italic">---</p>
+        <div class="bg-[#050b1d] border border-white/5 rounded-[2.5rem] overflow-hidden">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="border-b border-white/5 bg-white/[0.02]">
+                        <th class="p-5 text-[8px] font-black text-gray-500 uppercase tracking-[0.2em]">Rank</th>
+                        <th class="p-5 text-[8px] font-black text-gray-500 uppercase tracking-[0.2em]">Student Node</th>
+                        <th class="p-5 text-[8px] font-black text-gray-500 uppercase tracking-[0.2em]">Activity Level</th>
+                        <th class="p-5 text-[8px] font-black text-gray-500 uppercase tracking-[0.2em] text-right">Points</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-white/5">
+                    <tr class="group hover:bg-white/[0.02] transition-colors">
+                        <td class="p-5">
+                            <div class="w-8 h-8 rounded-lg bg-yellow-500/10 border border-yellow-500/20 flex items-center justify-center">
+                                <i class="fas fa-crown text-yellow-500 text-[10px]"></i>
+                            </div>
+                        </td>
+                        <td class="p-5">
+                            <p class="text-white text-xs font-black italic uppercase tracking-tight">Emmanuel <span class="text-blue-500 text-[10px] ml-2 font-bold opacity-50">(You)</span></p>
+                        </td>
+                        <td class="p-5">
+                            <div class="flex gap-1">
+                                <div class="w-3 h-1.5 rounded-full bg-blue-500"></div>
+                                <div class="w-3 h-1.5 rounded-full bg-blue-500"></div>
+                                <div class="w-3 h-1.5 rounded-full bg-blue-500"></div>
+                                <div class="w-3 h-1.5 rounded-full bg-blue-500/20"></div>
+                            </div>
+                        </td>
+                        <td class="p-5 text-right">
+                            <p id="leaderboard-points" class="text-white font-black italic tracking-tighter">0</p>
+                        </td>
+                    </tr>
+                    <tr class="opacity-40">
+                        <td class="p-5 text-gray-500 font-black italic text-xs">#2</td>
+                        <td class="p-5 text-gray-400 font-bold text-[11px] uppercase tracking-widest">Nxxt_Node_772</td>
+                        <td class="p-5 text-gray-600 text-[10px]">Calibrating...</td>
+                        <td class="p-5 text-right text-gray-500 font-black italic">--</td>
+                    </tr>
+                    <tr class="opacity-20">
+                        <td class="p-5 text-gray-500 font-black italic text-xs">#3</td>
+                        <td class="p-5 text-gray-400 font-bold text-[11px] uppercase tracking-widest">Nxxt_Node_104</td>
+                        <td class="p-5 text-gray-600 text-[10px]">Calibrating...</td>
+                        <td class="p-5 text-right text-gray-500 font-black italic">--</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="p-6 bg-blue-500/5 border border-blue-500/10 rounded-3xl text-center relative group overflow-hidden">
+                <p class="text-[8px] font-black text-blue-500 uppercase tracking-widest mb-1 relative z-10">Your Rank</p>
+                <p id="global-rank-val" class="text-3xl font-black text-white italic relative z-10">#1</p>
+                <i class="fas fa-chart-line absolute -bottom-2 -right-2 text-blue-500/5 text-5xl"></i>
             </div>
             <div class="p-6 bg-white/5 border border-white/5 rounded-3xl text-center">
-                <p class="text-[8px] font-black text-gray-500 uppercase tracking-widest mb-1">Global Rank</p>
-                <p class="text-xl font-black text-white italic">#--</p>
+                <p class="text-[8px] font-black text-gray-500 uppercase tracking-widest mb-1">Total Streak</p>
+                <p id="leaderboard-streak" class="text-3xl font-black text-white italic">0d</p>
             </div>
             <div class="p-6 bg-white/5 border border-white/5 rounded-3xl text-center">
                 <p class="text-[8px] font-black text-gray-500 uppercase tracking-widest mb-1">Percentile</p>
-                <p class="text-xl font-black text-white italic">--%</p>
+                <p class="text-3xl font-black text-white italic tracking-tighter">99.9<span class="text-xs text-gray-600">%</span></p>
             </div>
         </div>
-    </div>`,
-
-
+    </div>
+`,
 
 
     'Collaboration': `
@@ -2804,4 +2832,74 @@ function clearNotifications() {
   }
 
 
+//// for the rank, streaks and leaderboard
+// --- SYSTEM DATA CORE ---
+let systemData = JSON.parse(localStorage.getItem('nxxt_user_data')) || {
+    rank: 1,
+    points: 0,
+    streak: 0,
+    lastActive: null,
+    totalSecondsToday: 0,
+    activityHistory: {} // Stores date: intensity (1-4)
+};
 
+// --- LOGIC ENGINE ---
+function updateSystem() {
+    const now = new Date();
+    const todayStr = now.toISOString().split('T')[0];
+
+    // 1. TRACK TIME & ACTIVITY
+    systemData.totalSecondsToday += 10; // Called every 10s
+    
+    // Update Activity Intensity based on seconds spent
+    // 3600s = 1hr = Level 1, 7200s = Level 2, etc.
+    let intensity = Math.min(Math.floor(systemData.totalSecondsToday / 3600), 4);
+    if (intensity > 0) systemData.activityHistory[todayStr] = intensity;
+
+    // 2. CALCULATE RANK (Points based on activity)
+    // Formula: Rank increases every 1000 points
+    systemData.points += 5; 
+    systemData.rank = Math.floor(systemData.points / 1000) + 1;
+
+    // 3. STREAK LOGIC (Check if 24hr has passed since last login)
+    if (systemData.lastActive) {
+        const lastDate = new Date(systemData.lastActive);
+        const hoursSince = (now - lastDate) / (1000 * 60 * 60);
+        
+        if (hoursSince > 24 && hoursSince < 48) {
+            // Logged in next day: Streak continues
+            systemData.streak += 1;
+        } else if (hoursSince >= 48) {
+            // Missed a day: Streak reset
+            systemData.streak = 0;
+        }
+    }
+    systemData.lastActive = now.toISOString();
+    
+    saveAndRefresh();
+}
+
+function saveAndRefresh() {
+    localStorage.setItem('nxxt_user_data', JSON.stringify(systemData));
+    renderUI();
+}
+
+// Start tracking every 10 seconds
+setInterval(updateSystem, 10000);
+//// addition for the ranks and streaks
+function renderUI() {
+    // Update Dashboard Cards
+    if(document.getElementById('ui-rank')) document.getElementById('ui-rank').innerText = systemData.rank;
+    if(document.getElementById('ui-streak')) document.getElementById('ui-streak').innerText = systemData.streak;
+
+    // Update Leaderboard Rank (In the leaderboard view)
+    const rankDisplay = document.querySelector('.Leaderboard #global-rank-val');
+    if(rankDisplay) rankDisplay.innerText = `#${systemData.rank}`;
+}
+
+// Helper to generate Activity Grid Colors
+function getActivityColor(dateStr) {
+    const intensity = systemData.activityHistory[dateStr] || 0;
+    const colors = ['bg-white/[0.03]', 'bg-green-900', 'bg-green-700', 'bg-green-500', 'bg-green-400'];
+    return colors[intensity];
+}
