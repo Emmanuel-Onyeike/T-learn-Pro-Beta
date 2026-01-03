@@ -578,25 +578,7 @@ const views = {
 
 
     'Nxxt AI': `
-    <style>
-        @keyframes fall {
-            from { transform: translateY(-10vh) translateX(0) rotate(0deg); opacity: 0; }
-            20% { opacity: 1; }
-            to { transform: translateY(110vh) translateX(40px) rotate(360deg); opacity: 0; }
-        }
-        .star {
-            position: absolute;
-            background: white;
-            border-radius: 50%;
-            pointer-events: none;
-            animation: fall linear infinite;
-        }
-        .nxxt-glass {
-            background: rgba(21, 21, 21, 0.8);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-        }
-    </style>
+   
     
     <div id="nxxt-root" class="relative min-h-[600px] md:min-h-[700px] flex flex-col items-center justify-center overflow-hidden rounded-[2.5rem] md:rounded-[4rem] animate-in fade-in duration-1000">
         
