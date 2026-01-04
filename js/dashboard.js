@@ -288,56 +288,81 @@ const views = {
 
 
 
-
-    'Projects': `
-    <div class="space-y-8 animate-in">
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div>
-                <h3 class="text-xl font-black text-white italic uppercase tracking-tighter">Project Management</h3>
-                <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest mt-1">Manage and bulk delete your projects</p>
-            </div>
-            <div class="px-4 py-2 bg-blue-500/5 border border-blue-500/20 rounded-xl">
-                 <p class="text-[8px] font-black text-blue-500 uppercase tracking-widest italic">System Update in Progress</p>
-            </div>
+'Projects': `
+<div class="space-y-8 animate-in pb-20">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 px-2">
+        <div>
+            <h3 class="text-3xl font-black text-white italic uppercase tracking-tighter">Project <span class="text-blue-500">Repository</span></h3>
+            <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest mt-1">Initialize and deploy neural modules</p>
         </div>
 
-        <div class="border-2 border-dashed border-white/5 rounded-[3rem] py-24 flex flex-col items-center justify-center text-center bg-white/[0.01] relative overflow-hidden">
-            <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-blue-500/5 via-transparent to-transparent"></div>
+        <div class="flex items-center gap-3 w-full md:w-auto">
+            <div class="relative flex-1 md:w-64 group">
+                <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-600 group-focus-within:text-blue-500 transition-colors"></i>
+                <input type="text" placeholder="SEARCH REPOSITORY..." 
+                    class="w-full bg-[#050b1d] border border-white/5 rounded-2xl py-3 pl-12 pr-4 text-[10px] font-black uppercase tracking-widest text-white focus:outline-none focus:border-blue-500/50 transition-all">
+            </div>
+
+            <button onclick="showNxxtAlert('New Project Initialization')" 
+                class="group flex items-center bg-blue-600 hover:bg-blue-500 text-[#020617] rounded-2xl h-[46px] px-4 transition-all duration-500 ease-in-out max-w-[50px] hover:max-w-[200px] overflow-hidden whitespace-nowrap shadow-lg shadow-blue-900/20">
+                <i class="fas fa-plus transition-transform group-hover:rotate-90"></i>
+                <span class="ml-3 text-[10px] font-black uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity duration-300">Add New Project</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="border-2 border-dashed border-white/5 rounded-[3.5rem] py-20 flex flex-col items-center justify-center text-center bg-white/[0.01] relative overflow-hidden group/box">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.05),transparent)] group-hover/box:opacity-100 opacity-50 transition-opacity"></div>
+        
+        <div class="relative z-10">
+            <div class="relative w-24 h-24 mb-8 mx-auto">
+                <div class="absolute inset-0 bg-blue-500/20 blur-2xl rounded-full animate-pulse"></div>
+                <div class="relative w-full h-full bg-[#050b1d] rounded-[2rem] border border-white/10 flex items-center justify-center shadow-2xl">
+                    <i class="fas fa-folder-open text-3xl text-gray-600 group-hover/box:text-blue-500 transition-colors duration-500"></i>
+                </div>
+            </div>
+
+            <h4 class="text-white font-black uppercase italic tracking-tighter text-2xl">Repository <span class="text-blue-500">Empty</span></h4>
+            <p class="text-[10px] text-gray-500 font-bold uppercase tracking-[0.3em] mt-3 max-w-[320px] mx-auto leading-relaxed">
+                No active project modules detected in your local uplink. Initialize a new sequence to begin.
+            </p>
             
-            <div class="relative z-10">
-                <div class="w-24 h-24 bg-white/5 rounded-[2rem] flex items-center justify-center mb-8 mx-auto border border-white/5 shadow-2xl">
-                    <i class="fas fa-microchip text-4xl text-gray-700 animate-pulse"></i>
+            <div class="mt-12 flex flex-col items-center gap-4">
+                <div class="h-1.5 w-64 bg-white/5 rounded-full overflow-hidden p-[2px] border border-white/5">
+                    <div class="h-full bg-gradient-to-r from-blue-600 to-cyan-400 w-3/4 animate-pulse rounded-full shadow-[0_0_10px_rgba(37,99,235,0.5)]"></div>
                 </div>
-                <h4 class="text-white font-black uppercase italic tracking-tighter text-2xl">No Project Module Yet</h4>
-                <p class="text-[10px] text-gray-500 font-bold uppercase tracking-[0.3em] mt-3 max-w-[300px] mx-auto leading-relaxed">
-                    Our engineers are currently building the repository core. Stay tuned for the next deployment.
-                </p>
-                
-                <div class="mt-10 flex flex-col items-center gap-4">
-                    <div class="h-1 w-48 bg-white/5 rounded-full overflow-hidden">
-                        <div class="h-full bg-blue-600 w-2/3 animate-pulse"></div>
-                    </div>
-                    <p class="text-[8px] font-black text-blue-500/50 uppercase tracking-[0.5em]">Construction 65% Complete</p>
+                <div class="flex items-center gap-3">
+                    <span class="text-[8px] font-black text-blue-500 uppercase tracking-[0.4em]">Core Construction: 75%</span>
+                    <div class="w-1 h-1 bg-blue-500 rounded-full animate-ping"></div>
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 opacity-50">
-            <div class="p-6 bg-white/5 border border-white/5 rounded-3xl">
-                <i class="fas fa-info-circle text-blue-500 mb-3"></i>
-                <p class="text-[9px] font-black text-white uppercase mb-1">Coming Soon</p>
-                <p class="text-[9px] text-gray-500 font-bold uppercase leading-relaxed">Advanced edge deployment tools are arriving in v2.0.</p>
-            </div>
-            <div class="p-6 bg-white/5 border border-white/5 rounded-3xl">
-                <i class="fas fa-history text-purple-500 mb-3"></i>
-                <p class="text-[9px] font-black text-white uppercase mb-1">Cloud Sync</p>
-                <p class="text-[9px] text-gray-500 font-bold uppercase leading-relaxed">Real-time repository synchronization will be enabled shortly.</p>
-            </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="p-6 bg-[#050b1d] border border-white/5 rounded-[2rem] hover:border-blue-500/30 transition-all cursor-pointer group/tile">
+            <i class="fas fa-terminal text-blue-500 mb-4 block group-hover/tile:scale-110 transition-transform"></i>
+            <h5 class="text-white font-black text-[10px] uppercase tracking-widest mb-1">Bulk Deployment</h5>
+            <p class="text-[9px] text-gray-600 font-bold uppercase">Push multiple modules to production</p>
         </div>
-    </div>`,
+        
+        <div class="p-6 bg-[#050b1d] border border-white/5 rounded-[2rem] hover:border-purple-500/30 transition-all cursor-pointer group/tile">
+            <i class="fas fa-trash-alt text-purple-500 mb-4 block group-hover/tile:scale-110 transition-transform"></i>
+            <h5 class="text-white font-black text-[10px] uppercase tracking-widest mb-1">Purge Module</h5>
+            <p class="text-[9px] text-gray-600 font-bold uppercase">Safely delete legacy project data</p>
+        </div>
+
+        <div class="p-6 bg-[#050b1d] border border-white/5 rounded-[2rem] hover:border-emerald-500/30 transition-all cursor-pointer group/tile">
+            <i class="fas fa-cloud-upload-alt text-emerald-500 mb-4 block group-hover/tile:scale-110 transition-transform"></i>
+            <h5 class="text-white font-black text-[10px] uppercase tracking-widest mb-1">Cloud Sync</h5>
+            <p class="text-[9px] text-gray-600 font-bold uppercase">Sync repository with Nxxt Cloud</p>
+        </div>
+    </div>
+</div>
+`,
 
 
-
+    
 
 'Leaderboard': `
     <div class="space-y-10 animate-in">
