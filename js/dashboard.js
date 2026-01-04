@@ -289,78 +289,80 @@ const views = {
 
 
 'Projects': `
-<div class="space-y-8 animate-in pb-20">
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 px-2">
-        <div>
-            <h3 class="text-3xl font-black text-white italic uppercase tracking-tighter">Project <span class="text-blue-500">Repository</span></h3>
-            <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest mt-1">Initialize and deploy neural modules</p>
+<div class="space-y-12 animate-in pb-32 px-4 md:px-8">
+    <div class="space-y-2">
+        <div class="flex items-center gap-4">
+            <div class="w-2 h-2 bg-blue-500 rounded-full animate-pulse shadow-[0_0_10px_#3b82f6]"></div>
+            <span class="text-[10px] text-blue-400 font-black uppercase tracking-[0.5em]">Project Management Interface</span>
         </div>
+        <h3 class="text-4xl md:text-5xl font-black italic uppercase tracking-tighter text-white">Neural <span class="text-blue-500">Repository</span></h3>
+    </div>
 
-        <div class="flex items-center gap-3 w-full md:w-auto">
-            <div class="relative flex-1 md:w-64 group">
-                <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-600 group-focus-within:text-blue-500 transition-colors"></i>
-                <input type="text" placeholder="SEARCH REPOSITORY..." 
-                    class="w-full bg-[#050b1d] border border-white/5 rounded-2xl py-3 pl-12 pr-4 text-[10px] font-black uppercase tracking-widest text-white focus:outline-none focus:border-blue-500/50 transition-all">
-            </div>
-
-            <button onclick="showNxxtAlert('New Project Initialization')" 
-                class="group flex items-center bg-blue-600 hover:bg-blue-500 text-[#020617] rounded-2xl h-[46px] px-4 transition-all duration-500 ease-in-out max-w-[50px] hover:max-w-[200px] overflow-hidden whitespace-nowrap shadow-lg shadow-blue-900/20">
+    <div class="relative w-full group">
+        <div class="flex items-center bg-[#050b1d] border border-white/10 rounded-2xl h-16 px-6 transition-all focus-within:border-blue-500/50 focus-within:shadow-[0_0_30px_rgba(59,130,246,0.1)]">
+            <i class="fas fa-search text-gray-600 mr-4"></i>
+            <input type="text" placeholder="SEARCH REPOSITORY OR ENTER COMMAND..." 
+                class="flex-1 bg-transparent border-none text-[11px] font-black uppercase tracking-[0.2em] text-white focus:outline-none placeholder:text-gray-700">
+            
+            <button onclick="handleNewProject()" 
+                class="group flex items-center bg-blue-600 hover:bg-blue-500 text-[#020617] rounded-xl h-10 px-4 transition-all duration-500 ease-in-out max-w-[40px] hover:max-w-[220px] overflow-hidden whitespace-nowrap shadow-lg">
                 <i class="fas fa-plus transition-transform group-hover:rotate-90"></i>
-                <span class="ml-3 text-[10px] font-black uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity duration-300">Add New Project</span>
+                <span class="ml-3 text-[10px] font-black uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity duration-300">Initialize New Project</span>
             </button>
         </div>
     </div>
 
-    <div class="border-2 border-dashed border-white/5 rounded-[3.5rem] py-20 flex flex-col items-center justify-center text-center bg-white/[0.01] relative overflow-hidden group/box">
-        <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.05),transparent)] group-hover/box:opacity-100 opacity-50 transition-opacity"></div>
-        
-        <div class="relative z-10">
-            <div class="relative w-24 h-24 mb-8 mx-auto">
-                <div class="absolute inset-0 bg-blue-500/20 blur-2xl rounded-full animate-pulse"></div>
-                <div class="relative w-full h-full bg-[#050b1d] rounded-[2rem] border border-white/10 flex items-center justify-center shadow-2xl">
-                    <i class="fas fa-folder-open text-3xl text-gray-600 group-hover/box:text-blue-500 transition-colors duration-500"></i>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="bg-gradient-to-br from-blue-600/10 to-transparent border border-blue-500/20 rounded-[2.5rem] p-8 relative overflow-hidden group">
+            <div class="flex justify-between items-start mb-6">
+                <div class="w-12 h-12 bg-[#020617] rounded-2xl border border-blue-500/30 flex items-center justify-center">
+                    <i class="fas fa-microchip text-blue-500 text-xl"></i>
                 </div>
+                <span class="px-3 py-1 bg-blue-500/10 text-blue-500 text-[8px] font-black uppercase tracking-widest rounded-full border border-blue-500/20">Active</span>
             </div>
+            <h4 class="text-white font-black uppercase italic tracking-tighter text-xl mb-2">Nexus Core v1.0</h4>
+            <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest leading-relaxed mb-6">Centralized intelligence hub for tactical football data processing.</p>
+            <div class="h-1 w-full bg-white/5 rounded-full overflow-hidden">
+                <div class="h-full bg-blue-600 w-full shadow-[0_0_10px_#3b82f6]"></div>
+            </div>
+            <div class="mt-4 flex justify-between items-center">
+                <span class="text-[8px] text-gray-600 font-black uppercase tracking-[0.2em]">Deployment: Successful</span>
+                <i class="fas fa-arrow-right text-gray-700 group-hover:text-blue-500 transition-colors"></i>
+            </div>
+        </div>
 
-            <h4 class="text-white font-black uppercase italic tracking-tighter text-2xl">Repository <span class="text-blue-500">Empty</span></h4>
-            <p class="text-[10px] text-gray-500 font-bold uppercase tracking-[0.3em] mt-3 max-w-[320px] mx-auto leading-relaxed">
-                No active project modules detected in your local uplink. Initialize a new sequence to begin.
-            </p>
-            
-            <div class="mt-12 flex flex-col items-center gap-4">
-                <div class="h-1.5 w-64 bg-white/5 rounded-full overflow-hidden p-[2px] border border-white/5">
-                    <div class="h-full bg-gradient-to-r from-blue-600 to-cyan-400 w-3/4 animate-pulse rounded-full shadow-[0_0_10px_rgba(37,99,235,0.5)]"></div>
-                </div>
-                <div class="flex items-center gap-3">
-                    <span class="text-[8px] font-black text-blue-500 uppercase tracking-[0.4em]">Core Construction: 75%</span>
-                    <div class="w-1 h-1 bg-blue-500 rounded-full animate-ping"></div>
-                </div>
+        <div class="border-2 border-dashed border-white/5 rounded-[2.5rem] p-8 flex flex-col items-center justify-center text-center hover:bg-white/[0.02] hover:border-blue-500/20 transition-all group cursor-pointer">
+            <div class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <i class="fas fa-plus text-gray-700 group-hover:text-blue-500 transition-colors"></i>
             </div>
+            <p class="text-[9px] text-gray-600 font-black uppercase tracking-[0.4em]">Initialize Slot 02</p>
+        </div>
+
+        <div class="border-2 border-dashed border-white/5 rounded-[2.5rem] p-8 flex flex-col items-center justify-center text-center hover:bg-white/[0.02] hover:border-blue-500/20 transition-all group cursor-pointer">
+            <div class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <i class="fas fa-plus text-gray-700 group-hover:text-blue-500 transition-colors"></i>
+            </div>
+            <p class="text-[9px] text-gray-600 font-black uppercase tracking-[0.4em]">Initialize Slot 03</p>
         </div>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div class="p-6 bg-[#050b1d] border border-white/5 rounded-[2rem] hover:border-blue-500/30 transition-all cursor-pointer group/tile">
-            <i class="fas fa-terminal text-blue-500 mb-4 block group-hover/tile:scale-110 transition-transform"></i>
-            <h5 class="text-white font-black text-[10px] uppercase tracking-widest mb-1">Bulk Deployment</h5>
-            <p class="text-[9px] text-gray-600 font-bold uppercase">Push multiple modules to production</p>
-        </div>
-        
-        <div class="p-6 bg-[#050b1d] border border-white/5 rounded-[2rem] hover:border-purple-500/30 transition-all cursor-pointer group/tile">
-            <i class="fas fa-trash-alt text-purple-500 mb-4 block group-hover/tile:scale-110 transition-transform"></i>
-            <h5 class="text-white font-black text-[10px] uppercase tracking-widest mb-1">Purge Module</h5>
-            <p class="text-[9px] text-gray-600 font-bold uppercase">Safely delete legacy project data</p>
-        </div>
-
-        <div class="p-6 bg-[#050b1d] border border-white/5 rounded-[2rem] hover:border-emerald-500/30 transition-all cursor-pointer group/tile">
-            <i class="fas fa-cloud-upload-alt text-emerald-500 mb-4 block group-hover/tile:scale-110 transition-transform"></i>
-            <h5 class="text-white font-black text-[10px] uppercase tracking-widest mb-1">Cloud Sync</h5>
-            <p class="text-[9px] text-gray-600 font-bold uppercase">Sync repository with Nxxt Cloud</p>
+    <div class="pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
+        <p class="text-[10px] text-gray-700 font-black uppercase tracking-[0.5em]">Uplink Status: Secure</p>
+        <div class="flex gap-8">
+            <div class="flex items-center gap-2">
+                <div class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></div>
+                <span class="text-[9px] text-gray-500 font-black uppercase tracking-widest">Repository Synced</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <div class="w-1.5 h-1.5 bg-blue-500 rounded-full"></div>
+                <span class="text-[9px] text-gray-500 font-black uppercase tracking-widest">v2.06 Stable</span>
+            </div>
         </div>
     </div>
 </div>
 `,
 
+    
 
     
 
