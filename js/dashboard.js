@@ -287,24 +287,23 @@ const views = {
 `,
 
 
-
 'Projects': `
 <div class="space-y-12 animate-in pb-32 px-4 md:px-8">
     <div class="space-y-2">
         <div class="flex items-center gap-4">
             <div class="w-2 h-2 bg-blue-500 rounded-full animate-pulse shadow-[0_0_10px_#3b82f6]"></div>
-            <span class="text-[10px] text-blue-400 font-black uppercase tracking-[0.5em]">Project Management Interface</span>
+            <span class="text-[10px] text-blue-400 font-black uppercase tracking-[0.5em]">What projects are you doing today?</span>
         </div>
-        <h3 class="text-4xl md:text-5xl font-black italic uppercase tracking-tighter text-white">Neural <span class="text-blue-500">Repository</span></h3>
+        <h3 class="text-4xl md:text-5xl font-black italic uppercase tracking-tighter text-white"> <span class="text-blue-500">Porjects</span></h3>
     </div>
 
     <div class="relative w-full group">
-        <div class="flex items-center bg-[#050b1d] border border-white/10 rounded-2xl h-16 px-6 transition-all focus-within:border-blue-500/50 focus-within:shadow-[0_0_30px_rgba(59,130,246,0.1)]">
+        <div class="flex items-center bg-[#050b1d] border border-white/10 rounded-2xl h-16 px-6 transition-all focus-within:border-blue-500/50">
             <i class="fas fa-search text-gray-600 mr-4"></i>
-            <input type="text" placeholder="SEARCH REPOSITORY OR ENTER COMMAND..." 
-                class="flex-1 bg-transparent border-none text-[11px] font-black uppercase tracking-[0.2em] text-white focus:outline-none placeholder:text-gray-700">
+            <input type="text" id="projectSearch" placeholder="SEARCH PROJECTS ..." 
+                class="flex-1 bg-transparent border-none text-[11px] font-black uppercase tracking-[0.2em] text-white focus:outline-none">
             
-            <button onclick="handleNewProject()" 
+            <button onclick="openProjectNamingModal()" 
                 class="group flex items-center bg-blue-600 hover:bg-blue-500 text-[#020617] rounded-xl h-10 px-4 transition-all duration-500 ease-in-out max-w-[40px] hover:max-w-[220px] overflow-hidden whitespace-nowrap shadow-lg">
                 <i class="fas fa-plus transition-transform group-hover:rotate-90"></i>
                 <span class="ml-3 text-[10px] font-black uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity duration-300">Initialize New Project</span>
@@ -312,56 +311,23 @@ const views = {
         </div>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div class="bg-gradient-to-br from-blue-600/10 to-transparent border border-blue-500/20 rounded-[2.5rem] p-8 relative overflow-hidden group">
-            <div class="flex justify-between items-start mb-6">
-                <div class="w-12 h-12 bg-[#020617] rounded-2xl border border-blue-500/30 flex items-center justify-center">
-                    <i class="fas fa-microchip text-blue-500 text-xl"></i>
-                </div>
-                <span class="px-3 py-1 bg-blue-500/10 text-blue-500 text-[8px] font-black uppercase tracking-widest rounded-full border border-blue-500/20">Active</span>
+    <div id="projectContainer">
+        <div id="emptyProjectState" class="border-2 border-dashed border-white/5 rounded-[3.5rem] py-24 flex flex-col items-center justify-center text-center bg-white/[0.01]">
+             <div class="w-20 h-20 bg-white/5 rounded-3xl flex items-center justify-center mb-6 border border-white/5">
+                <i class="fas fa-folder-plus text-gray-700 text-3xl"></i>
             </div>
-            <h4 class="text-white font-black uppercase italic tracking-tighter text-xl mb-2">Nexus Core v1.0</h4>
-            <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest leading-relaxed mb-6">Centralized intelligence hub for tactical football data processing.</p>
-            <div class="h-1 w-full bg-white/5 rounded-full overflow-hidden">
-                <div class="h-full bg-blue-600 w-full shadow-[0_0_10px_#3b82f6]"></div>
-            </div>
-            <div class="mt-4 flex justify-between items-center">
-                <span class="text-[8px] text-gray-600 font-black uppercase tracking-[0.2em]">Deployment: Successful</span>
-                <i class="fas fa-arrow-right text-gray-700 group-hover:text-blue-500 transition-colors"></i>
-            </div>
+            <h4 class="text-white font-black uppercase italic tracking-tighter text-2xl">No Projects done</h4>
+            <p class="text-[10px] text-gray-500 font-bold uppercase tracking-[0.3em] mt-3 mb-10">System standby. Awaiting first deployment.</p>
+            <button onclick="openProjectNamingModal()" class="px-8 py-4 bg-blue-600 text-[#020617] text-[10px] font-black uppercase tracking-widest rounded-2xl hover:bg-blue-400 transition-all shadow-xl shadow-blue-500/10">
+                Create First Project
+            </button>
         </div>
 
-        <div class="border-2 border-dashed border-white/5 rounded-[2.5rem] p-8 flex flex-col items-center justify-center text-center hover:bg-white/[0.02] hover:border-blue-500/20 transition-all group cursor-pointer">
-            <div class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                <i class="fas fa-plus text-gray-700 group-hover:text-blue-500 transition-colors"></i>
+        <div id="projectGrid" class="hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             </div>
-            <p class="text-[9px] text-gray-600 font-black uppercase tracking-[0.4em]">Initialize Slot 02</p>
-        </div>
-
-        <div class="border-2 border-dashed border-white/5 rounded-[2.5rem] p-8 flex flex-col items-center justify-center text-center hover:bg-white/[0.02] hover:border-blue-500/20 transition-all group cursor-pointer">
-            <div class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                <i class="fas fa-plus text-gray-700 group-hover:text-blue-500 transition-colors"></i>
-            </div>
-            <p class="text-[9px] text-gray-600 font-black uppercase tracking-[0.4em]">Initialize Slot 03</p>
-        </div>
-    </div>
-
-    <div class="pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
-        <p class="text-[10px] text-gray-700 font-black uppercase tracking-[0.5em]">Uplink Status: Secure</p>
-        <div class="flex gap-8">
-            <div class="flex items-center gap-2">
-                <div class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></div>
-                <span class="text-[9px] text-gray-500 font-black uppercase tracking-widest">Repository Synced</span>
-            </div>
-            <div class="flex items-center gap-2">
-                <div class="w-1.5 h-1.5 bg-blue-500 rounded-full"></div>
-                <span class="text-[9px] text-gray-500 font-black uppercase tracking-widest">v2.06 Stable</span>
-            </div>
-        </div>
     </div>
 </div>
 `,
-
     
 
     
