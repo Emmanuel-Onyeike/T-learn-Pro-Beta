@@ -2993,7 +2993,30 @@ renderUI();
 
 ///// for the projects 
 // Modal 1: Center Naming Modal
-// Modal 1: Center Naming Modal with Project Icon
+
+// 1. CENTRAL ALERT CONTROLLER
+// This replaces browser alerts with a centered Nxxt-themed modal
+function showNxxtAlert(message) {
+    const alertHtml = `
+        <div id="nxxtAlertModal" class="fixed inset-0 z-[300] bg-black/90 backdrop-blur-md flex items-center justify-center p-6 animate-in fade-in duration-300">
+            <div class="bg-[#050b1d] border border-rose-500/20 w-full max-w-xs rounded-[2rem] p-8 text-center space-y-6 shadow-[0_0_50px_rgba(244,63,94,0.1)]">
+                <div class="w-12 h-12 bg-rose-500/10 rounded-2xl flex items-center justify-center mx-auto border border-rose-500/20">
+                    <i class="fas fa-exclamation-triangle text-rose-500"></i>
+                </div>
+                <div>
+                    <h5 class="text-white font-black uppercase italic tracking-widest text-[10px]">System Notification</h5>
+                    <p class="text-gray-500 text-[11px] font-bold uppercase tracking-widest mt-2 leading-relaxed">${message}</p>
+                </div>
+                <button onclick="document.getElementById('nxxtAlertModal').remove()" 
+                    class="w-full py-3 bg-white/5 text-white text-[9px] font-black uppercase tracking-[0.3em] rounded-xl hover:bg-white/10 transition-all">
+                    Acknowledge
+                </button>
+            </div>
+        </div>`;
+    document.body.insertAdjacentHTML('beforeend', alertHtml);
+}
+
+// 2. PROJECT NAMING MODAL (CENTER)
 function openProjectNamingModal() {
     const modalHtml = `
         <div id="centerModalOverlay" class="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex items-center justify-center p-6">
@@ -3018,11 +3041,11 @@ function openProjectNamingModal() {
 
                 <div class="flex gap-4">
                     <button onclick="closeCenterModal()" 
-                        class="flex-1 py-3 bg-white/5 text-gray-500 text-[10px] font-black uppercase tracking-widest rounded-xl hover:text-white hover:bg-white/10 transition-all">
+                        class="flex-1 py-3 bg-white/5 text-gray-500 text-[10px] font-black uppercase tracking-widest rounded-xl hover:text-white transition-all">
                         Cancel
                     </button>
                     <button onclick="triggerRightSlideOut()" 
-                        class="flex-1 py-3 bg-blue-600 text-[#020617] text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-blue-500 shadow-lg shadow-blue-500/20 transition-all">
+                        class="flex-1 py-3 bg-blue-600 text-[#020617] text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-blue-500 transition-all">
                         Next Step
                     </button>
                 </div>
@@ -3031,17 +3054,25 @@ function openProjectNamingModal() {
     document.body.insertAdjacentHTML('beforeend', modalHtml);
 }
 
-// Modal 2: Right Side Detail Slide-out
+// 3. RIGHT SIDE SLIDE-OUT MODAL
 function triggerRightSlideOut() {
-    const name = document.getElementById('pName').value;
-    const desc = document.getElementById('pDesc').value || "No detailed description provided.";
-    if (!name) return alert("PROJECT NAME REQUIRED");
+    const nameInput = document.getElementById('pName');
+    const descInput = document.getElementById('pDesc');
+    
+    const name = nameInput.value.trim();
+    const desc = descInput.value.trim() || "No detailed description provided.";
+    
+    // Using Custom Modal Alert instead of standard alert
+    if (!name) {
+        showNxxtAlert("PROJECT NAME REQUIRED FOR INITIALIZATION");
+        return;
+    }
 
     closeCenterModal();
 
     const slideOutHtml = `
         <div id="rightSlideOverlay" class="fixed inset-0 z-[110] bg-black/40 backdrop-blur-sm">
-            <div class="absolute right-0 top-0 h-full w-full max-w-md bg-[#020617] border-l border-white/10 p-10 animate-in slide-in-from-right duration-500">
+            <div class="absolute right-0 top-0 h-full w-full max-w-md bg-[#02010a] border-l border-white/10 p-10 animate-in slide-in-from-right duration-500">
                 <div class="h-full flex flex-col justify-between">
                     <div class="space-y-8">
                         <div>
@@ -3049,17 +3080,23 @@ function triggerRightSlideOut() {
                             <h6 class="text-white font-black text-2xl uppercase italic tracking-tighter mt-2">${name}</h6>
                             <p class="text-gray-500 text-[10px] font-bold uppercase tracking-widest mt-4 leading-relaxed">${desc}</p>
                         </div>
-                        <div class="p-6 bg-white/5 border border-white/5 rounded-2xl">
-                             <p class="text-[9px] text-white font-black uppercase mb-4">Neural Parameters</p>
-                             <div class="space-y-4 opacity-50">
-                                 <div class="h-1 bg-white/10 w-full rounded-full"></div>
-                                 <div class="h-1 bg-white/10 w-2/3 rounded-full"></div>
+                        <div class="p-6 bg-white/5 border border-white/5 rounded-2xl space-y-4">
+                             <p class="text-[9px] text-white font-black uppercase">Neural Parameters</p>
+                             <div class="flex justify-between text-[8px] text-gray-500 font-bold uppercase">
+                                <span>Optimization Status</span>
+                                <span class="text-blue-500 italic">Ready</span>
+                             </div>
+                             <div class="h-1 bg-white/10 w-full rounded-full overflow-hidden">
+                                <div class="h-full bg-blue-600 w-1/2 animate-pulse"></div>
                              </div>
                         </div>
                     </div>
                     <div class="flex gap-4">
                         <button onclick="closeRightSlide()" class="flex-1 py-4 bg-white/5 text-gray-500 text-[10px] font-black uppercase tracking-widest rounded-2xl">Cancel</button>
-                        <button onclick="finalizeProject('${name}', '${desc}')" class="flex-1 py-4 bg-blue-600 text-[#020617] text-[10px] font-black uppercase tracking-widest rounded-2xl shadow-lg shadow-blue-500/20">Finalize & Deploy</button>
+                        <button onclick="finalizeProject('${name.replace(/'/g, "\\'")}', '${desc.replace(/'/g, "\\'")}')" 
+                            class="flex-1 py-4 bg-blue-600 text-[#020617] text-[10px] font-black uppercase tracking-widest rounded-2xl shadow-lg shadow-blue-500/20 transition-all hover:bg-blue-400">
+                            Finalize & Deploy
+                        </button>
                     </div>
                 </div>
             </div>
@@ -3067,38 +3104,48 @@ function triggerRightSlideOut() {
     document.body.insertAdjacentHTML('beforeend', slideOutHtml);
 }
 
+// 4. DEPLOYMENT & 6-SECOND LOADER
 function finalizeProject(name, desc) {
     closeRightSlide();
     
-    // Show 6-Second Loader
     const loaderHtml = `
         <div id="loaderOverlay" class="fixed inset-0 z-[200] bg-[#020617] flex flex-col items-center justify-center">
             <div class="w-16 h-16 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin mb-6"></div>
             <p class="text-[10px] text-white font-black uppercase tracking-[0.5em] animate-pulse">Initializing Neural Node...</p>
+            <p class="text-[8px] text-gray-700 font-black uppercase tracking-[0.2em] mt-2">Uploading Packet Streams</p>
         </div>`;
     document.body.insertAdjacentHTML('beforeend', loaderHtml);
 
     setTimeout(() => {
         document.getElementById('loaderOverlay').remove();
-        document.getElementById('emptyProjectState').classList.add('hidden');
-        document.getElementById('projectGrid').classList.remove('hidden');
+        
+        // Handle UI Transition from Empty to Grid
+        const emptyState = document.getElementById('emptyProjectState');
+        const gridState = document.getElementById('projectGrid');
+        
+        if (emptyState) emptyState.classList.add('hidden');
+        if (gridState) gridState.classList.remove('hidden');
         
         const newProject = `
-            <div class="bg-[#050b1d] border border-white/5 rounded-[2rem] p-6 group hover:border-blue-500/30 transition-all">
-                <div class="w-10 h-10 bg-blue-500/10 rounded-xl flex items-center justify-center mb-4">
-                    <i class="fas fa-microchip text-blue-500 text-sm"></i>
+            <div class="bg-[#050b1d] border border-white/5 rounded-[2rem] p-6 group hover:border-blue-500/30 transition-all animate-in zoom-in-95">
+                <div class="flex justify-between items-start mb-6">
+                    <div class="w-10 h-10 bg-blue-500/10 rounded-xl flex items-center justify-center">
+                        <i class="fas fa-microchip text-blue-500 text-sm"></i>
+                    </div>
+                    <div class="w-2 h-2 bg-green-500 rounded-full shadow-[0_0_8px_#22c55e]"></div>
                 </div>
-                <h6 class="text-white font-black uppercase italic text-xs mb-2">${name}</h6>
-                <p class="text-[9px] text-gray-600 font-bold uppercase truncate">${desc}</p>
-                <div class="mt-6 flex justify-between items-center">
-                    <span class="text-[8px] text-blue-500 font-black tracking-widest">STABLE</span>
+                <h6 class="text-white font-black uppercase italic text-xs mb-2 truncate">${name}</h6>
+                <p class="text-[9px] text-gray-600 font-bold uppercase line-clamp-2 leading-relaxed">${desc}</p>
+                <div class="mt-6 flex justify-between items-center opacity-40 group-hover:opacity-100 transition-opacity">
+                    <span class="text-[8px] text-blue-500 font-black tracking-widest">STABLE v1.0</span>
                     <i class="fas fa-chevron-right text-[8px] text-gray-800"></i>
                 </div>
             </div>`;
-        document.getElementById('projectGrid').insertAdjacentHTML('beforeend', newProject);
+            
+        gridState.insertAdjacentHTML('beforeend', newProject);
     }, 6000);
 }
 
-// Utility Closers
-function closeCenterModal() { document.getElementById('centerModalOverlay').remove(); }
-function closeRightSlide() { document.getElementById('rightSlideOverlay').remove(); }
+// UTILITY CLOSERS
+function closeCenterModal() { const m = document.getElementById('centerModalOverlay'); if(m) m.remove(); }
+function closeRightSlide() { const m = document.getElementById('rightSlideOverlay'); if(m) m.remove(); }
