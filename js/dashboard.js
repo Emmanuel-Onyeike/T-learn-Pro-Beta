@@ -384,70 +384,52 @@ const views = {
     
 
 
+   'Collaboration': `
+<div class="space-y-6 animate-in fade-in duration-500 pb-20">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+            <h3 class="text-xl font-black text-white italic uppercase tracking-tighter">Neural Network</h3>
+            <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest mt-1">Global Partner Discovery Protocol</p>
+        </div>
+        <div class="relative group">
+            <input type="text" placeholder="SEARCH BY TECH STACK..." 
+                class="bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-[16px] md:text-[10px] text-white font-black uppercase tracking-widest focus:border-cyan-500 focus:outline-none w-full md:w-64 transition-all">
+            <i class="fas fa-search absolute right-4 top-1/2 -translate-y-1/2 text-gray-600 text-[10px]"></i>
+        </div>
+    </div>
+
+    <div id="partnerGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div class="bg-[#050b1d] border border-white/5 rounded-[2rem] p-6 hover:border-cyan-500/30 transition-all group relative overflow-hidden">
+            <div class="flex items-center gap-4 mb-6">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-600 p-[1px]">
+                    <div class="w-full h-full bg-[#050b1d] rounded-[calc(1rem-1px)] flex items-center justify-center">
+                        <i class="fas fa-user-astronaut text-cyan-500"></i>
+                    </div>
+                </div>
+                <div>
+                    <h6 class="text-white font-black uppercase italic text-[11px]">Alex Rivers</h6>
+                    <p class="text-[8px] text-cyan-500 font-bold uppercase">Full Stack Architect</p>
+                </div>
+            </div>
+            <div class="space-y-3 mb-6">
+                <div class="flex flex-wrap gap-2">
+                    <span class="px-2 py-1 bg-white/5 rounded-md text-[7px] text-gray-400 font-black uppercase tracking-widest">React</span>
+                    <span class="px-2 py-1 bg-white/5 rounded-md text-[7px] text-gray-400 font-black uppercase tracking-widest">Python</span>
+                </div>
+                <p class="text-[9px] text-gray-500 leading-relaxed font-medium">Looking for a designer to assist with a neural-interface dashboard project.</p>
+            </div>
+            <button onclick="openCollaborationRequest('Alex Rivers')" 
+                class="w-full py-3 bg-white/5 group-hover:bg-cyan-600 group-hover:text-black text-white text-[9px] font-black uppercase tracking-widest rounded-xl transition-all">
+                Initiate Uplink
+            </button>
+        </div>
+        
+        </div>
+</div>`,
+
+
+
     
-    'Collaboration': `
-    <div class="space-y-8 animate-in">
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div>
-                <h3 class="text-xl font-black text-white italic uppercase tracking-tighter">Find Partners</h3>
-                <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest mt-1">Connect with students on shared projects</p>
-            </div>
-            <div class="px-4 py-2 bg-cyan-500/5 border border-cyan-500/20 rounded-xl">
-                 <p class="text-[8px] font-black text-cyan-500 uppercase tracking-widest italic">Network Engine Offline</p>
-            </div>
-        </div>
-
-        <div class="border-2 border-dashed border-white/5 rounded-[3rem] py-24 flex flex-col items-center justify-center text-center bg-white/[0.01] relative overflow-hidden">
-            <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-cyan-500/5 via-transparent to-transparent"></div>
-            
-            <div class="relative z-10">
-                <div class="w-24 h-24 bg-white/5 rounded-[2rem] flex items-center justify-center mb-8 mx-auto border border-white/5 shadow-2xl">
-                    <i class="fas fa-user-friends text-4xl text-gray-800 animate-pulse"></i>
-                </div>
-                <h4 class="text-white font-black uppercase italic tracking-tighter text-2xl">Engineers are building</h4>
-                <p class="text-[10px] text-gray-500 font-bold uppercase tracking-[0.3em] mt-3 max-w-[320px] mx-auto leading-relaxed">
-                    We are currently assembling the collaboration hub. Peer-to-peer networking will be live soon.
-                </p>
-                
-                <div class="mt-10 flex flex-col items-center gap-4">
-                    <div class="flex items-center gap-3">
-                        <div class="w-12 h-[1px] bg-gradient-to-r from-transparent to-cyan-500/50"></div>
-                        <i class="fas fa-shuttle-space text-cyan-500 text-xs animate-ghost-float"></i>
-                        <div class="w-12 h-[1px] bg-gradient-to-l from-transparent to-cyan-500/50"></div>
-                    </div>
-                    <p class="text-[8px] font-black text-cyan-500/50 uppercase tracking-[0.5em]">Establishing Connection Protocols...</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div class="p-6 bg-white/[0.02] border border-white/5 rounded-3xl group">
-                <div class="flex items-center gap-4">
-                    <div class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center border border-white/5">
-                        <i class="fas fa-search text-gray-600 text-xs"></i>
-                    </div>
-                    <div>
-                        <p class="text-[9px] font-black text-white uppercase opacity-40">Partner Discovery</p>
-                        <p class="text-[8px] text-gray-600 font-bold uppercase tracking-tight">Locked until deployment</p>
-                    </div>
-                </div>
-            </div>
-            <div class="p-6 bg-white/[0.02] border border-white/5 rounded-3xl group">
-                <div class="flex items-center gap-4">
-                    <div class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center border border-white/5">
-                        <i class="fas fa-comments text-gray-600 text-xs"></i>
-                    </div>
-                    <div>
-                        <p class="text-[9px] font-black text-white uppercase opacity-40">Direct Messaging</p>
-                        <p class="text-[8px] text-gray-600 font-bold uppercase tracking-tight">Encryption setup in progress</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>`,
-
-
-
 
     'Team': `
     <div class="space-y-8 animate-in">
@@ -3432,3 +3414,77 @@ window.addEventListener('load', () => {
     updateProjectCounter();
     initProjectManagement();
 });
+
+
+/////// this is for the collaborationnnnn
+
+
+function openCollaborationRequest(partnerName) {
+    const slideHtml = `
+        <div id="collabSlideOverlay" class="fixed inset-0 z-[150] bg-black/60 backdrop-blur-sm touch-none">
+            <div class="absolute right-0 top-0 h-full w-full max-w-md bg-[#02010a] border-l border-white/10 p-8 animate-in slide-in-from-right duration-500 flex flex-col">
+                <div class="flex-1">
+                    <span class="text-[9px] text-cyan-500 font-black uppercase tracking-[0.3em]">Protocol 04: Request</span>
+                    <h2 class="text-white font-black text-3xl uppercase italic tracking-tighter mt-2">Connect with ${partnerName}</h2>
+                    
+                    <div class="mt-12 space-y-6">
+                        <div class="space-y-2">
+                            <label class="text-[8px] text-gray-500 font-black uppercase tracking-[0.2em] ml-1">Your Proposal</label>
+                            <textarea id="collabMessage" placeholder="TYPE YOUR MISSION OBJECTIVE..." 
+                                class="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-white text-[16px] md:text-[11px] font-bold uppercase tracking-widest h-48 focus:border-cyan-500 focus:outline-none resize-none transition-all"></textarea>
+                        </div>
+                        
+                        <div class="bg-cyan-500/5 border border-cyan-500/10 rounded-2xl p-4 flex gap-4">
+                            <i class="fas fa-shield-halved text-cyan-500 mt-1"></i>
+                            <p class="text-[9px] text-gray-400 leading-relaxed font-bold uppercase">
+                                Your profile and current active projects will be shared with <span class="text-white">${partnerName}</span> for verification.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex gap-4 pt-6 border-t border-white/5">
+                    <button onclick="document.getElementById('collabSlideOverlay').remove()" 
+                        class="flex-1 py-4 bg-white/5 text-gray-500 text-[10px] font-black uppercase tracking-widest rounded-2xl hover:text-white transition-all">
+                        Abort
+                    </button>
+                    <button onclick="sendCollabRequest('${partnerName}')" 
+                        class="flex-1 py-4 bg-cyan-600 text-black text-[10px] font-black uppercase tracking-widest rounded-2xl shadow-lg shadow-cyan-600/20 active:scale-95 transition-all">
+                        Send Request
+                    </button>
+                </div>
+            </div>
+        </div>`;
+    document.body.insertAdjacentHTML('beforeend', slideHtml);
+}
+function sendCollabRequest(name) {
+    const msg = document.getElementById('collabMessage').value;
+    if(!msg) {
+        showNxxtAlert("PROPOSAL DESCRIPTION REQUIRED FOR UPLINK");
+        return;
+    }
+
+    // Close the slide-out
+    document.getElementById('collabSlideOverlay').remove();
+
+    // Show high-tech loading state
+    const loader = `<div id="uplinkLoader" class="fixed inset-0 z-[200] bg-black flex items-center justify-center">
+        <div class="text-center">
+            <div class="w-20 h-20 border-2 border-cyan-500/20 border-t-cyan-500 rounded-full animate-spin mb-4"></div>
+            <p class="text-cyan-500 text-[8px] font-black uppercase tracking-[0.8em] animate-pulse">Syncing Neural Link...</p>
+        </div>
+    </div>`;
+    document.body.insertAdjacentHTML('beforeend', loader);
+
+    setTimeout(() => {
+        document.getElementById('uplinkLoader').remove();
+        
+        // Final Success Alert (Centered as per your instruction)
+        showNxxtAlert(`REQUEST TRANSMITTED TO ${name.toUpperCase()}. AWAITING RESPONSE.`);
+        
+        // Optional: Add to system notifications
+        if(typeof addSystemNotification === 'function') {
+            addSystemNotification(`Uplink sent to ${name}`, "PENDING", "");
+        }
+    }, 2500);
+}
