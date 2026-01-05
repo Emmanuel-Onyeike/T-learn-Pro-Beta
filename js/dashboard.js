@@ -2436,7 +2436,7 @@ async function handleAISend() {
     const resultArea = document.getElementById('nxxt-chat-results');
     const greet = document.getElementById('initial-greet');
     const query = input.value.trim();
-    const API_KEY = 'YOUR_OPENAI_KEY_HERE'; // DO NOT SHARE THIS
+    const API_KEY = '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'; // DO NOT SHARE THIS
 
     if (!query) return;
 
