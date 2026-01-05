@@ -2430,82 +2430,105 @@ window.startBeginnerCourse = () => LessonEngine.startCourse();
 
 //// for the nxxxt Ai
 
+// REPLACE your current handleAISend with this version
 async function handleAISend() {
     const input = document.getElementById('ai-input');
     const resultArea = document.getElementById('nxxt-chat-results');
     const greet = document.getElementById('initial-greet');
     const query = input.value.trim();
+    const API_KEY = 'YOUR_OPENAI_KEY_HERE'; // DO NOT SHARE THIS
 
     if (!query) return;
 
-    // 1. Hide greeting on first message
+    // 1. CLEAR VIEWPORT
     if (greet) greet.remove();
 
-    // 2. Append User Message
+    // 2. DISPLAY USER QUERY
     const userMsg = `
-    <div class="flex flex-col items-end animate-in slide-in-from-right-4 duration-500">
+    <div class="flex flex-col items-end animate-in slide-in-from-right-4 duration-500 mb-8">
         <div class="bg-blue-600/20 border border-blue-500/30 px-6 py-4 rounded-[2rem] rounded-tr-none max-w-[85%]">
             <p class="text-[13px] font-medium text-white leading-relaxed uppercase">${query}</p>
         </div>
     </div>`;
     resultArea.insertAdjacentHTML('beforeend', userMsg);
     
-    // Clear input
     input.value = '';
     input.style.height = 'auto';
 
-    // 3. Append AI Loading State
+    // 3. CREATE AI RESPONSE CONTAINER (WITH LOADING STATE)
     const aiId = 'ai-' + Date.now();
     const aiMsg = `
-    <div id="${aiId}" class="flex flex-col items-start animate-in fade-in duration-1000">
+    <div id="${aiId}" class="flex flex-col items-start animate-in fade-in duration-1000 mb-10">
         <div class="flex items-center gap-3 mb-4">
-            <div class="w-6 h-6 rounded-lg bg-white/10 flex items-center justify-center">
-                <img src="/assets/Logo.webp" class="w-4 h-4 opacity-50">
+            <div class="w-6 h-6 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center">
+                <div class="w-1.5 h-1.5 bg-blue-500 rounded-full animate-ping"></div>
             </div>
-            <span class="text-[8px] font-black uppercase tracking-[0.2em] text-gray-500">Nxxt Response</span>
+            <span class="text-[8px] font-black uppercase tracking-[0.2em] text-gray-500">Nxxt Thinking...</span>
         </div>
-        <div class="space-y-4 w-full">
-            <div class="h-4 bg-white/5 rounded-full w-3/4 animate-pulse"></div>
-            <div class="h-4 bg-white/5 rounded-full w-1/2 animate-pulse"></div>
+        <div id="loader-${aiId}" class="space-y-3 w-full opacity-30 px-2">
+            <div class="h-2 bg-white/20 rounded-full w-3/4 animate-pulse"></div>
+            <div class="h-2 bg-white/20 rounded-full w-1/2 animate-pulse"></div>
         </div>
     </div>`;
     resultArea.insertAdjacentHTML('beforeend', aiMsg);
-    
-    // Scroll to bottom
     resultArea.scrollTop = resultArea.scrollHeight;
 
-    // 4. MOCK GPT API CALL (TESTING)
+    // 4. REAL API CALL
     try {
-        // Replace this with your actual local API endpoint or worker
-        // const response = await fetch('YOUR_OPENAI_PROXY_URL', { ... });
+        const response = await fetch('https://api.openai.com/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${API_KEY}`
+            },
+            body: JSON.stringify({
+                model: "gpt-4o", // Or "gpt-5" when available in your tier
+                messages: [{ "role": "user", "content": query }],
+                temperature: 0.7
+            })
+        });
+
+        const data = await response.json();
         
-        setTimeout(() => {
-            const aiContainer = document.getElementById(aiId);
-            aiContainer.innerHTML = `
-                <div class="flex items-center gap-3 mb-4">
-                    <div class="w-6 h-6 rounded-lg bg-blue-600 flex items-center justify-center">
-                        <img src="/assets/Logo.webp" class="w-4 h-4">
-                    </div>
-                    <span class="text-[8px] font-black uppercase tracking-[0.2em] text-blue-500">Signal Ready</span>
+        // Handle standard Chat Completion structure
+        const aiResponseText = data.choices[0].message.content;
+
+        // 5. UPDATE UI WITH REAL DATA
+        const aiContainer = document.getElementById(aiId);
+        document.getElementById(`loader-${aiId}`).remove(); // Remove pulsing bars
+
+        aiContainer.innerHTML = `
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-6 h-6 rounded-lg bg-blue-600 flex items-center justify-center shadow-[0_0_20px_rgba(37,99,235,0.3)]">
+                    <img src="/assets/Logo.webp" class="w-4 h-4">
                 </div>
-                <div class="prose prose-invert max-w-none text-gray-300 text-[14px] font-medium leading-[1.8] uppercase">
-                    We are currently building the GPT integration bridge. This result area will soon display live intelligence data.
-                </div>
-                <div class="flex gap-4 mt-6 opacity-30">
-                    <i class="far fa-copy text-xs hover:text-white cursor-pointer"></i>
-                    <i class="fas fa-redo text-xs hover:text-white cursor-pointer"></i>
-                </div>
-            `;
-            resultArea.scrollTop = resultArea.scrollHeight;
-        }, 1500);
+                <span class="text-[8px] font-black uppercase tracking-[0.2em] text-blue-500">Verified Response</span>
+            </div>
+            
+            <div class="prose prose-invert max-w-none text-gray-200 text-[14px] font-medium leading-[1.8] uppercase px-2">
+                ${aiResponseText.replace(/\n/g, '<br>')}
+            </div>
+
+            <div class="flex gap-4 mt-6 opacity-20 hover:opacity-100 transition-opacity px-2">
+                <button onclick="copyText(this)" class="hover:text-blue-500"><i class="far fa-copy text-xs"></i></button>
+                <button onclick="handleAISend()" class="hover:text-blue-500"><i class="fas fa-redo text-xs"></i></button>
+            </div>
+        `;
+
     } catch (err) {
-        showNxxtAlert("Uplink Error");
+        console.error(err);
+        const aiContainer = document.getElementById(aiId);
+        aiContainer.innerHTML = `<p class="text-red-500 text-[10px] font-black uppercase tracking-widest px-2">Uplink Failed: Check Connection or API Key</p>`;
     }
+    
+    resultArea.scrollTop = resultArea.scrollHeight;
 }
 
-function fillAndSend(text) {
-    document.getElementById('ai-input').value = text;
-    handleAISend();
+// Helper to copy text
+function copyText(btn) {
+    const text = btn.closest('.flex-col').querySelector('.prose').innerText;
+    navigator.clipboard.writeText(text);
+    showNxxtAlert("CONTENT COPIED TO CLIPBOARD");
 }
 
 
