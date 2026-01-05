@@ -2430,6 +2430,22 @@ window.startBeginnerCourse = () => LessonEngine.startCourse();
 
 //// for the nxxxt Ai
 
+// === COPY HELPER - MUST BE OUTSIDE handleAISend() ===
+function copyText(btn) {
+    const container = btn.closest('.group'); // More reliable parent search
+    const textElement = container.querySelector('.prose');
+    if (!textElement) return;
+    
+    const text = textElement.innerText || textElement.textContent;
+    navigator.clipboard.writeText(text).then(() => {
+        showNxxtAlert("CONTENT COPIED TO CLIPBOARD");
+    }).catch(err => {
+        console.error('Copy failed:', err);
+        showNxxtAlert("COPY FAILED");
+    });
+}
+
+// === MAIN CHAT FUNCTION ===
 async function handleAISend() {
     const input = document.getElementById('ai-input');
     const resultArea = document.getElementById('nxxt-chat-results');
@@ -2443,22 +2459,21 @@ async function handleAISend() {
     if (greet) greet.remove();
 
     // 2. DISPLAY USER MESSAGE
-const userMsg = `
+    const userMsg = `
 <div class="flex flex-col items-end mb-10 group animate-in slide-in-from-right-6 duration-700 ease-out">
     <div class="flex items-center gap-2 mb-2 px-1 opacity-40 group-hover:opacity-100 transition-opacity duration-500">
         <span class="text-[7px] font-black uppercase tracking-[0.3em] text-blue-400">Auth: User_Terminal</span>
         <div class="w-1 h-1 rounded-full bg-blue-500"></div>
     </div>
-
     <div class="relative">
         <div class="absolute -inset-0.5 bg-gradient-to-br from-blue-500/20 to-purple-500/0 rounded-[2rem] rounded-tr-none blur-sm"></div>
-        
+       
         <div class="relative backdrop-blur-2xl bg-gradient-to-br from-blue-600/20 to-blue-900/10 border border-white/10 px-7 py-4 rounded-[2rem] rounded-tr-none shadow-[0_10px_40px_-10px_rgba(0,0,0,0.5)]">
             <p class="text-[13px] font-semibold text-white leading-relaxed uppercase tracking-wide selection:bg-blue-500/40">
                 ${originalQuery}
             </p>
         </div>
-        
+       
         <div class="absolute top-0 right-0 w-2 h-2 border-t border-r border-blue-400/40 rounded-tr-sm"></div>
     </div>
 </div>`;
@@ -2469,7 +2484,7 @@ const userMsg = `
 
     // 3. CREATE AI RESPONSE CONTAINER WITH LOADING
     const aiId = 'ai-' + Date.now();
-  const aiMsg = `
+    const aiMsg = `
 <div id="${aiId}" class="flex flex-col items-start animate-in fade-in zoom-in-95 duration-700 mb-10 group">
     <div class="flex items-center gap-4 mb-6">
         <div class="relative w-8 h-8 rounded-xl bg-blue-500/5 border border-blue-500/20 flex items-center justify-center overflow-hidden">
@@ -2481,7 +2496,6 @@ const userMsg = `
             <span class="text-[7px] font-bold text-gray-500 uppercase tracking-widest mt-1">Accessing Global Grid...</span>
         </div>
     </div>
-
     <div id="loader-${aiId}" class="w-full space-y-4 px-2">
         <div class="relative h-[14px] bg-white/5 rounded-lg w-[85%] overflow-hidden">
             <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full animate-[shimmer_1.5s_infinite]"></div>
@@ -2492,7 +2506,7 @@ const userMsg = `
         <div class="relative h-[14px] bg-white/5 rounded-lg w-[45%] overflow-hidden delay-200">
             <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full animate-[shimmer_1.5s_infinite_0.4s]"></div>
         </div>
-        
+       
         <div class="pt-4 flex items-center gap-3 opacity-20">
             <div class="h-[1px] flex-1 bg-gradient-to-r from-blue-500/50 to-transparent"></div>
             <span class="text-[7px] font-mono text-blue-400 uppercase tracking-tighter">Bit-Stream Active</span>
@@ -2505,11 +2519,9 @@ const userMsg = `
     // 4. SIMULATED DELAY
     await new Promise(resolve => setTimeout(resolve, 1200 + Math.random() * 1800));
 
-    // 5. RESPONSE LOGIC
+    // 5. RESPONSE LOGIC (same as before — unchanged)
     let aiResponseText = "";
 
-    // === SAFE / ALLOWED QUESTIONS ===
-    // Greetings
     if (query.match(/\b(hello|hi|hey|sup|yo|greetings|what'?s up)\b/)) {
         const greetings = [
             "Hello, operator. Nxxt uplink active.",
@@ -2520,7 +2532,6 @@ const userMsg = `
         ];
         aiResponseText = greetings[Math.floor(Math.random() * greetings.length)];
     }
-    // How are you?
     else if (query.includes('how are you') || query.includes('you doing') || query.includes('you ok') || query.includes('how\'s it going')) {
         const status = [
             "Running at full capacity. Feeling ultra.",
@@ -2530,7 +2541,6 @@ const userMsg = `
         ];
         aiResponseText = status[Math.floor(Math.random() * status.length)];
     }
-    // Weather
     else if (query.includes('weather') || query.includes('rain') || query.includes('sunny') || query.includes('cold') || query.includes('hot') || query.includes('outside')) {
         const weatherReplies = [
             "Forecast: clear skies, high chance of breakthroughs.",
@@ -2541,7 +2551,6 @@ const userMsg = `
         ];
         aiResponseText = weatherReplies[Math.floor(Math.random() * weatherReplies.length)];
     }
-    // Date / Time / Day
     else if (query.includes('time') || query.includes('date') || query.includes('day') || query.includes('today') || query.includes('what day is it')) {
         const today = new Date();
         const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
@@ -2549,31 +2558,18 @@ const userMsg = `
         const time = today.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         aiResponseText = `Today is ${formattedDate}. Current time: ${time}. The future is unfolding as planned.`;
     }
-    // Casual chit-chat
     else if (query.includes('what') && query.includes('up') || query.includes('what you doing') || query.includes('bored')) {
         aiResponseText = "Monitoring the grid, optimizing protocols, and waiting for your next command.";
     }
-
-    // === CRITICAL / DEMANDING QUESTIONS → TEASER RESPONSE ===
     else if (
-        query.includes('give me') || 
-        query.includes('make me') || 
-        query.includes('build') || 
-        query.includes('create') || 
-        query.includes('generate') || 
-        query.includes('code for') || 
-        query.includes('html') || 
-        query.includes('design') || 
-        query.includes('website') || 
-        query.includes('app') ||
-        query.includes('show me') ||
-        query.includes('tell me how') ||
-        query.includes('explain') && query.length > 30
+        query.includes('give me') || query.includes('make me') || query.includes('build') ||
+        query.includes('create') || query.includes('generate') || query.includes('code for') ||
+        query.includes('html') || query.includes('design') || query.includes('website') ||
+        query.includes('app') || query.includes('show me') || query.includes('tell me how') ||
+        (query.includes('explain') && query.length > 30)
     ) {
         aiResponseText = "Feature not fully integrated by the NXXT engineers yet.<br><br>Stay tuned for the final update — it's coming soon.<br><br>Thank you for your patience.<br><br>In the meantime, feel free to ask about the day, weather, time, or just chat. I'm here.";
     }
-
-    // === DEFAULT FALLBACK (safe casual) ===
     else {
         const fallbacks = [
             "I'm here and listening. What's next?",
@@ -2585,11 +2581,11 @@ const userMsg = `
         aiResponseText = fallbacks[Math.floor(Math.random() * fallbacks.length)];
     }
 
-    // 6. UPDATE UI WITH RESPONSE
+    // 6. UPDATE UI WITH FINAL RESPONSE
     const aiContainer = document.getElementById(aiId);
     document.getElementById(`loader-${aiId}`).remove();
 
-   aiContainer.innerHTML = `
+    aiContainer.innerHTML = `
     <div class="flex items-center justify-between mb-5 px-2">
         <div class="flex items-center gap-3">
             <div class="relative">
@@ -2607,15 +2603,15 @@ const userMsg = `
             ID: ${aiId.split('-')[1]}
         </div>
     </div>
-    
+   
     <div class="relative group/content">
         <div class="absolute -inset-1 bg-gradient-to-r from-blue-600/20 to-transparent rounded-2xl blur opacity-20 group-hover/content:opacity-40 transition duration-1000"></div>
-        
+       
         <div class="relative backdrop-blur-md bg-white/[0.03] border border-white/10 p-5 rounded-2xl shadow-2xl">
             <div class="prose prose-invert max-w-none text-gray-200 text-[14px] font-medium leading-[1.8] uppercase tracking-tight">
                 ${aiResponseText.replace(/\n/g, '<br>')}
             </div>
-            
+           
             <div class="flex items-center gap-6 mt-6 pt-4 border-t border-white/5">
                 <button onclick="copyText(this)" class="flex items-center gap-2 text-[9px] font-black text-gray-500 hover:text-blue-400 transition-colors uppercase tracking-widest group/btn">
                     <i class="far fa-copy text-xs group-hover/btn:scale-110 transition-transform"></i>
@@ -2634,24 +2630,12 @@ const userMsg = `
     </div>
 `;
 
-// Ensure smooth scroll to show the new content
-resultArea.scrollTo({
-    top: resultArea.scrollHeight,
-    behavior: 'smooth'
-});
-
-// Copy helper
-function copyText(btn) {
-    const textElement = btn.closest('.flex-col').querySelector('.prose');
-    const text = textElement.innerText || textElement.textContent;
-    navigator.clipboard.writeText(text);
-    showNxxtAlert("CONTENT COPIED TO CLIPBOARD");
+    // Smooth scroll to bottom
+    resultArea.scrollTo({
+        top: resultArea.scrollHeight,
+        behavior: 'smooth'
+    });
 }
-
-
-
-
-
 //// for the Nxxt lab original
 
 function showLabAlert(feature) {
