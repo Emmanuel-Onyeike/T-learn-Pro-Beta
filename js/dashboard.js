@@ -819,9 +819,8 @@ const views = {
 `,
 
 
-
-  'Notifications': `
-    <div class="max-w-md mx-auto content-card text-center animate-in">
+'Notifications': `
+    <div id="notifications-container" class="max-w-md mx-auto content-card text-center animate-in">
         <div class="relative inline-block mb-6">
             <i id="notif-bell-icon" class="fa-solid fa-bell text-5xl text-blue-500 animate-pulse"></i>
             <span id="notif-badge" class="absolute -top-1 -right-1 w-5 h-5 bg-red-600 border-4 border-[#030816] rounded-full animate-bounce"></span>
@@ -830,7 +829,7 @@ const views = {
         <p class="text-gray-500 text-[10px] font-black uppercase tracking-[0.3em] mb-8 leading-relaxed">
             System logs indicate <span id="notif-count" class="text-blue-500">3 new updates</span> <br> awaiting your review
         </p>
-       
+        
         <div id="notif-scroll-area" class="space-y-4 mb-8 max-h-[380px] overflow-y-auto pr-2 custom-scrollbar">
             
             <div class="notif-item p-5 bg-yellow-500/5 border border-yellow-500/20 rounded-3xl text-left relative overflow-hidden group hover:border-yellow-500/40 transition-all">
