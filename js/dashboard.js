@@ -22,19 +22,19 @@ const ActivityEngine = {
 ActivityEngine.track();
 const views = {
     'Overview': `
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 md:gap-6 animate-in">
-        <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-blue-500/30 transition-all">
-            <div class="flex items-center gap-4 relative z-10">
-                <div class="w-12 h-12 bg-blue-600/10 rounded-2xl flex items-center justify-center border border-blue-500/20">
-                    <i class="fas fa-code-branch text-blue-500"></i>
-                </div>
-                <div>
-                    <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Projects</p>
-                    <h3 class="text-3xl font-black text-white mt-1">0</h3>
-                </div>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 md:gap-6 animate-in">
+    <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-blue-500/30 transition-all">
+        <div class="flex items-center gap-4 relative z-10">
+            <div class="w-12 h-12 bg-blue-600/10 rounded-2xl flex items-center justify-center border border-blue-500/20">
+                <i class="fas fa-code-branch text-blue-500"></i>
             </div>
-            <i class="fas fa-project-diagram absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-blue-500/[0.05] transition-all"></i>
+            <div>
+                <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Projects</p>
+                <h3 id="projectCount" class="text-3xl font-black text-white mt-1">0</h3>
+            </div>
         </div>
+        <i class="fas fa-project-diagram absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-blue-500/[0.05] transition-all"></i>
+    </div>
 
         <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-purple-500/30 transition-all">
             <div class="flex items-center gap-4 relative z-10">
@@ -2984,9 +2984,13 @@ renderUI();
 
 ///// for the projects 
 /**
- * FULLY WORKING PROJECT CREATION SYSTEM
- * Dashboard Grid + Management List + Notifications + Persistence
- * UI 100% preserved – just copy & paste this entire block
+ * FULLY WORKING & PERSISTENT NXXT PROJECT SYSTEM
+ * - Projects persist across all tabs (Dashboard, Management, Notifications, etc.)
+ * - Project count card always updated
+ * - All deletions sync instantly
+ * - Everything survives page refresh & tab switching
+ * - UI 100% preserved
+ * Just replace your entire script block with this one
  */
 
 function showNxxtAlert(message) {
@@ -3131,6 +3135,25 @@ function showTopRightToast(message) {
     }, 4000);
 }
 
+/* ========== PROJECT COUNT UPDATE ========== */
+function updateProjectCounter() {
+    const countElement = document.getElementById('projectCount');
+    if (!countElement) return;
+
+    const gridCount = document.querySelectorAll('#projectGrid .project-card').length;
+    const listCount = document.querySelectorAll('#projectContainer .project-item').length;
+    const total = Math.max(gridCount, listCount); // Use the highest in case one view isn't loaded
+
+    countElement.textContent = total;
+
+    // Subtle pulse when count increases
+    if (total > (parseInt(countElement.dataset.last) || 0)) {
+        countElement.classList.add('animate-pulse');
+        setTimeout(() => countElement.classList.remove('animate-pulse'), 1000);
+    }
+    countElement.dataset.last = total;
+}
+
 /* ========== MAIN DEPLOYMENT FUNCTION ========== */
 function finalizeProject(name, desc) {
     const pfpSrc = document.getElementById('imgPreview')?.src || '';
@@ -3192,6 +3215,7 @@ function finalizeProject(name, desc) {
         document.querySelectorAll('#emptyProjectState').forEach(el => el.classList.add('hidden'));
 
         saveAllData();
+        updateProjectCounter(); // ← Update counter
     }, 3000);
 }
 
@@ -3225,7 +3249,6 @@ function deleteProjectEverywhere(button, projectName) {
     const item = button.closest('.project-item');
     if (item) item.remove();
 
-    // Remove from dashboard grid
     document.querySelectorAll('#projectGrid .project-card').forEach(card => {
         const title = card.querySelector('h6')?.innerText.trim();
         if (title === projectName) {
@@ -3234,7 +3257,6 @@ function deleteProjectEverywhere(button, projectName) {
         }
     });
 
-    // Restore empty states if needed
     if (document.querySelectorAll('#projectContainer .project-item').length === 0) {
         document.querySelectorAll('#emptyProjectState').forEach(el => el.classList.remove('hidden'));
     }
@@ -3243,6 +3265,7 @@ function deleteProjectEverywhere(button, projectName) {
     }
 
     saveAllData();
+    updateProjectCounter(); // ← Update counter
 }
 
 /* NOTIFICATIONS */
@@ -3265,16 +3288,23 @@ function addSystemNotification(projName, date, time) {
         updateNotificationUI();
     }
 
-    // Background persistence
     if (typeof views !== 'undefined' && views['Notifications']) {
         const temp = document.createElement('div');
         temp.innerHTML = views['Notifications'];
         const bgScroll = temp.querySelector('#notif-scroll-area');
         if (bgScroll) {
             bgScroll.insertAdjacentHTML('afterbegin', logHtml);
-            views['Notifications'] = temp.querySelector('#notifications-container').outerHTML;
+            views['Notifications'] = temp.innerHTML;
+        }
+        const bgCount = temp.querySelector('#notif-count');
+        if (bgCount) {
+            let current = parseInt(bgCount.innerText) || 0;
+            bgCount.innerText = `${current + 1} new updates`;
+            views['Notifications'] = temp.innerHTML;
         }
     }
+
+    saveAllData();
 }
 
 function updateNotificationUI() {
@@ -3324,14 +3354,12 @@ function initProjectManagement() {
             cb.closest('.project-item').remove();
         });
 
-        // Remove from dashboard
         names.forEach(name => {
             document.querySelectorAll('#projectGrid .project-card').forEach(card => {
                 if (card.querySelector('h6')?.innerText.trim() === name) card.remove();
             });
         });
 
-        // Empty states
         if (document.querySelectorAll('#projectContainer .project-item').length === 0) {
             document.querySelectorAll('#emptyProjectState').forEach(el => el.classList.remove('hidden'));
         }
@@ -3341,6 +3369,7 @@ function initProjectManagement() {
 
         updateUI();
         saveAllData();
+        updateProjectCounter(); // ← Update counter
     };
 
     updateUI();
@@ -3355,34 +3384,38 @@ function saveAllData() {
         notifCount: document.getElementById('notif-count')?.innerText || "0 new updates",
         rawNotifs: typeof views !== 'undefined' ? views['Notifications'] : null
     };
-    localStorage.setItem('nxxt_system_data_v2', JSON.stringify(data));
+    localStorage.setItem('nxxt_system_data_v4', JSON.stringify(data));
 }
 
 function loadAllData() {
-    const saved = localStorage.getItem('nxxt_system_data_v2');
+    const saved = localStorage.getItem('nxxt_system_data_v4');
     if (!saved) return;
 
     try {
         const data = JSON.parse(saved);
 
-        if (data.grid && document.getElementById('projectGrid')) {
-            document.getElementById('projectGrid').innerHTML = data.grid;
+        const grid = document.getElementById('projectGrid');
+        if (data.grid && grid) {
+            grid.innerHTML = data.grid;
             if (data.grid.trim()) {
-                document.getElementById('projectGrid').classList.remove('hidden');
+                grid.classList.remove('hidden');
                 document.querySelectorAll('#emptyProjectState').forEach(el => el.classList.add('hidden'));
             }
         }
 
-        if (data.list && document.getElementById('projectContainer')) {
-            document.getElementById('projectContainer').innerHTML = data.list;
+        const container = document.getElementById('projectContainer');
+        if (data.list && container) {
+            container.innerHTML = data.list;
         }
 
-        if (data.notifs && document.getElementById('notif-scroll-area')) {
-            document.getElementById('notif-scroll-area').innerHTML = data.notifs;
+        const scrollArea = document.getElementById('notif-scroll-area');
+        if (data.notifs && scrollArea) {
+            scrollArea.innerHTML = data.notifs;
         }
 
-        if (data.notifCount && document.getElementById('notif-count')) {
-            document.getElementById('notif-count').innerText = data.notifCount;
+        const countText = document.getElementById('notif-count');
+        if (data.notifCount && countText) {
+            countText.innerText = data.notifCount;
             if (parseInt(data.notifCount) > 0) document.getElementById('notif-badge')?.classList.remove('hidden');
         }
 
@@ -3390,7 +3423,8 @@ function loadAllData() {
             views['Notifications'] = data.rawNotifs;
         }
 
-        setTimeout(initProjectManagement, 100);
+        updateProjectCounter();
+        initProjectManagement();
     } catch (e) {
         console.error('Load failed:', e);
     }
@@ -3399,8 +3433,25 @@ function loadAllData() {
 function closeCenterModal() { document.getElementById('centerModalOverlay')?.remove(); }
 function closeRightSlide() { document.getElementById('rightSlideOverlay')?.remove(); }
 
-/* INIT ON LOAD */
+/* VIEW SWITCHING – FULL PERSISTENCE */
+const originalUpdateView = window.updateView;
+window.updateView = function(viewName) {
+    if (originalUpdateView) originalUpdateView(viewName);
+    else {
+        const main = document.getElementById('main-content') || document.querySelector('main') || document.body;
+        if (views && views[viewName]) main.innerHTML = views[viewName];
+    }
+
+    // Always restore data + update counter after switching views
+    setTimeout(() => {
+        loadAllData();
+        updateProjectCounter();
+    }, 50);
+};
+
+/* INITIAL LOAD */
 window.addEventListener('load', () => {
     loadAllData();
-    initProjectManagement(); // In case we're on management tab
+    updateProjectCounter();
+    initProjectManagement();
 });
