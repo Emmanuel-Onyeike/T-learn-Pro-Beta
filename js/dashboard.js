@@ -3192,6 +3192,10 @@ function showTopRightToast(message) {
  * FINALIZE PROJECT & DEPLOYMENT LOGIC
  * Includes UI Transition, Card Generation, and Notification Sync
  */
+/**
+ * CORE DEPLOYMENT LOGIC
+ * Handled by finalizeProject
+ */
 function finalizeProject(name, desc) {
     const pfpSrc = document.getElementById('imgPreview').src;
     const hasPfp = !document.getElementById('imgPreview').classList.contains('hidden');
@@ -3200,7 +3204,6 @@ function finalizeProject(name, desc) {
     
     closeRightSlide();
     
-    // 1. Show Tactical 6-Second Loader
     const loaderHtml = `
         <div id="loaderOverlay" class="fixed inset-0 z-[200] bg-[#020617] flex flex-col items-center justify-center">
             <div class="w-16 h-16 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin mb-6"></div>
@@ -3209,22 +3212,18 @@ function finalizeProject(name, desc) {
     document.body.insertAdjacentHTML('beforeend', loaderHtml);
 
     setTimeout(() => {
-        // Remove Loader
         const loader = document.getElementById('loaderOverlay');
         if (loader) loader.remove();
         
-        // 2. UI Transition: Swap Empty State for Grid
         const emptyState = document.getElementById('emptyProjectState');
         const gridState = document.getElementById('projectGrid');
         if (emptyState) emptyState.classList.add('hidden');
         if (gridState) gridState.classList.remove('hidden');
 
-        // Capture Deployment Metadata
         const now = new Date();
         const timestamp = `${now.getFullYear()}.${String(now.getMonth() + 1).padStart(2, '0')}.${String(now.getDate()).padStart(2, '0')}`;
         const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-        // 3. Generate High-Tech Project Card
         const newProject = `
             <div class="bg-[#050b1d] border border-white/5 rounded-[2rem] p-6 group hover:border-blue-500/30 transition-all animate-in zoom-in-95 relative overflow-hidden">
                 <div class="absolute top-0 right-0 px-3 py-1 bg-green-500/10 border-b border-l border-green-500/20 rounded-bl-xl">
@@ -3251,24 +3250,20 @@ function finalizeProject(name, desc) {
                 </div>
             </div>`;
 
-        gridState.insertAdjacentHTML('afterbegin', newProject);
-
-        // 4. Trigger the Notification System Update
-        addSystemNotification(name, timestamp, timeStr);
+        if (gridState) gridState.insertAdjacentHTML('afterbegin', newProject);
         
+        addSystemNotification(name, timestamp, timeStr);
+        saveAllData(); // <--- PERSISTENCE TRIGGER
     }, 6000);
 }
 
 /**
- * NOTIFICATION SYSTEM CONTROLLER
- * Updates the 'Transmissions' view dynamically
+ * NOTIFICATION SYSTEM
  */
 function addSystemNotification(projName, date, time) {
-    // Format date and time nicely (fallback to current if not provided)
     const formattedDate = date || new Date().toLocaleDateString('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\-/g, '.');
     const formattedTime = time || new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }).toUpperCase();
 
-    // 1. Define the new notification HTML
     const logHtml = `
         <div class="notif-item p-5 bg-green-500/5 border border-green-500/20 rounded-3xl text-left relative overflow-hidden group hover:border-green-500/40 transition-all animate-in slide-in-from-top">
             <div class="flex justify-between items-start mb-2">
@@ -3279,39 +3274,25 @@ function addSystemNotification(projName, date, time) {
                 New Core Module <span class="text-green-500 italic">"${projName}"</span> has been successfully compiled.
             </p>
             <i class="fas fa-check-circle absolute -bottom-2 -right-2 text-green-500/10 text-4xl"></i>
-        </div>
-    `;
+        </div>`;
 
-    let wasUpdated = false;
-
-    // 2. LIVE DOM INJECTION (if user is on Notifications page)
     const activeScrollArea = document.getElementById('notif-scroll-area');
     if (activeScrollArea) {
         activeScrollArea.insertAdjacentHTML('afterbegin', logHtml);
-        wasUpdated = true;
+        updateNotificationUI();
+        saveAllData(); // <--- PERSISTENCE TRIGGER
     } else if (typeof views !== 'undefined' && views['Notifications']) {
-        // 3. FALLBACK: Update the stored template string safely
         const parser = new DOMParser();
         const doc = parser.parseFromString(views['Notifications'], 'text/html');
         const scrollArea = doc.getElementById('notif-scroll-area');
-
         if (scrollArea) {
             scrollArea.insertAdjacentHTML('afterbegin', logHtml);
-            // Properly serialize the full document or just the container?
-            // Since views['Notifications'] appears to be just the inner container HTML,
-            // we'll assume it's the content of #notifications-container or similar.
-            // So we extract the updated container:
-            const container = doc.getElementById('notifications-container');
+            const container = doc.getElementById('notifications-container') || doc.body.firstChild;
             if (container) {
                 views['Notifications'] = container.outerHTML;
-                wasUpdated = true;
+                updateNotificationUI();
             }
         }
-    }
-
-    // 4. Always update UI indicators (badge, bell, count) if elements exist
-    if (wasUpdated || activeScrollArea) {
-        updateNotificationUI();
     }
 }
 
@@ -3319,158 +3300,131 @@ function updateNotificationUI() {
     const badge = document.getElementById('notif-badge');
     const bell = document.getElementById('notif-bell-icon');
     const countText = document.getElementById('notif-count');
-
-    // Show badge
-    if (badge) {
-        badge.classList.remove('hidden');
-        badge.classList.add('animate-bounce');
-    }
-
-    // Bounce bell icon
-    if (bell) {
-        bell.classList.add('animate-bounce');
-        setTimeout(() => bell.classList.remove('animate-bounce'), 2000);
-    }
-
-    // Increment counter
+    if (badge) { badge.classList.remove('hidden'); badge.classList.add('animate-bounce'); }
+    if (bell) { bell.classList.add('animate-bounce'); setTimeout(() => bell.classList.remove('animate-bounce'), 2000); }
     if (countText) {
         const match = countText.innerText.match(/(\d+)/);
         let current = match ? parseInt(match[1]) : 0;
-        current += 1;
-        countText.innerText = `${current} new updates`;
-        countText.classList.add('text-blue-500', 'font-black');
+        countText.innerText = `${current + 1} new updates`;
     }
 }
-// UTILITY CLOSERS
-function closeCenterModal() { const m = document.getElementById('centerModalOverlay'); if(m) m.remove(); }
-function closeRightSlide() { const m = document.getElementById('rightSlideOverlay'); if(m) m.remove(); }
 
-
-//// for the bulk delete
-// Run this after the Projects view is loaded
-
+/**
+ * PROJECT MANAGEMENT (BULK ACTIONS)
+ */
 function initProjectManagement() {
     const selectAllBtn = document.getElementById('selectAllBtn');
     const bulkDeleteBtn = document.getElementById('bulkDeleteBtn');
     const projectContainer = document.getElementById('projectContainer');
     const emptyState = document.getElementById('emptyProjectState');
 
-    if (!selectAllBtn || !bulkDeleteBtn) return;
+    if (!selectAllBtn || !bulkDeleteBtn || !projectContainer) return;
 
-    // Update bulk delete button state
     function updateBulkDelete() {
         const checkboxes = document.querySelectorAll('.project-checkbox');
         const checked = document.querySelectorAll('.project-checkbox:checked');
         const count = checked.length;
-
         bulkDeleteBtn.textContent = `Bulk Delete (${count})`;
         if (count > 0) {
             bulkDeleteBtn.disabled = false;
-            bulkDeleteBtn.classList.remove('opacity-50', 'text-red-500/40', 'cursor-not-allowed');
-            bulkDeleteBtn.classList.add('text-red-500', 'hover:bg-red-500/10');
+            bulkDeleteBtn.classList.remove('opacity-50', 'cursor-not-allowed');
         } else {
             bulkDeleteBtn.disabled = true;
-            bulkDeleteBtn.classList.add('opacity-50', 'text-red-500/40', 'cursor-not-allowed');
-            bulkDeleteBtn.classList.remove('text-red-500', 'hover:bg-red-500/10');
+            bulkDeleteBtn.classList.add('opacity-50', 'cursor-not-allowed');
         }
-
         selectAllBtn.textContent = count === checkboxes.length && checkboxes.length > 0 ? 'Deselect All' : 'Select All';
     }
 
-    // Select All / Deselect All
-    selectAllBtn.addEventListener('click', () => {
+    selectAllBtn.onclick = () => {
         const checkboxes = document.querySelectorAll('.project-checkbox');
         const allChecked = Array.from(checkboxes).every(cb => cb.checked);
-
-        checkboxes.forEach(cb => {
-            cb.checked = !allChecked;
-        });
+        checkboxes.forEach(cb => cb.checked = !allChecked);
         updateBulkDelete();
-    });
+    };
 
-    // Listen to individual checkbox changes
-    projectContainer.addEventListener('change', (e) => {
-        if (e.target.classList.contains('project-checkbox')) {
-            updateBulkDelete();
-        }
-    });
+    projectContainer.onchange = (e) => {
+        if (e.target.classList.contains('project-checkbox')) updateBulkDelete();
+    };
 
-    // Bulk Delete Action
-    bulkDeleteBtn.addEventListener('click', () => {
-        if (!confirm('Are you sure you want to permanently delete the selected projects?')) return;
-
-        const checked = document.querySelectorAll('.project-checkbox:checked');
-        checked.forEach(checkbox => {
-            const projectItem = checkbox.closest('.project-item');
-            if (projectItem) projectItem.remove();
-        });
-
+    bulkDeleteBtn.onclick = () => {
+        if (!confirm('Permanently delete selected projects?')) return;
+        document.querySelectorAll('.project-checkbox:checked').forEach(cb => cb.closest('.project-item').remove());
         updateBulkDelete();
+        if (document.querySelectorAll('.project-item').length === 0 && emptyState) emptyState.style.display = 'flex';
+        saveAllData(); // <--- PERSISTENCE TRIGGER
+    };
 
-        // If no projects left, show empty state
-        const remainingProjects = document.querySelectorAll('.project-item');
-        if (remainingProjects.length === 0) {
-            emptyState.style.display = 'flex';
-        }
-    });
+    if (document.querySelectorAll('.project-item').length > 0 && emptyState) emptyState.style.display = 'none';
+}
 
-    // Initial: hide empty state if projects exist
-    const hasProjects = document.querySelectorAll('.project-item').length > 0;
-    if (hasProjects) {
-        emptyState.style.display = 'none';
-    }
-    function addProjectToList(name, tech = '') {
-    // Safety check: ensure required elements exist
+function addProjectToList(name, tech = '') {
     const emptyState = document.getElementById('emptyProjectState');
     const projectContainer = document.getElementById('projectContainer');
+    if (!projectContainer) return;
+    if (emptyState) emptyState.style.display = 'none';
 
-    if (!projectContainer) {
-        console.error('Project container not found!');
-        return;
-    }
-
-    // Hide empty state if it's visible
-    if (emptyState) {
-        emptyState.style.display = 'none';
-    }
-
-    // Sanitize name to prevent XSS (basic)
     const safeName = name.trim() || 'Untitled Project';
     const safeTech = tech.trim() || 'Unknown Stack';
 
-    // Create the project item HTML
     const html = `
         <div class="project-item p-6 bg-white/5 border border-white/10 rounded-3xl flex items-center justify-between hover:border-blue-500/30 transition-all animate-in slide-in-from-bottom">
             <div class="flex items-center gap-4">
                 <input type="checkbox" class="project-checkbox w-4 h-4 accent-blue-500 rounded">
-                <div>
-                    <h5 class="text-white font-black text-sm uppercase">${safeName}</h5>
-                    <p class="text-[9px] text-gray-500 uppercase tracking-wider">${safeTech}</p>
-                </div>
+                <div><h5 class="text-white font-black text-sm uppercase">${safeName}</h5><p class="text-[9px] text-gray-500 uppercase tracking-wider">${safeTech}</p></div>
             </div>
             <div class="flex items-center gap-4">
-                <span class="text-[8px] text-gray-600 uppercase tracking-widest">Just now</span>
-                <button onclick="deleteProjectItem(this)" class="text-red-500 hover:text-red-400 text-xs uppercase font-black transition-colors">
-                    Delete
-                </button>
+                <button onclick="this.closest('.project-item').remove(); saveAllData();" class="text-red-500 hover:text-red-400 text-xs uppercase font-black transition-colors">Delete</button>
             </div>
-        </div>
-    `;
+        </div>`;
 
-    // Insert at the top (newest first)
     projectContainer.insertAdjacentHTML('afterbegin', html);
-
-    // Re-initialize management (updates Select All, count, etc.)
     initProjectManagement();
-
-    // Optional: Trigger a success notification
-    const now = new Date();
-    const date = now.toLocaleDateString('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/-/g, '.');
-    const time = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }).toUpperCase();
-
-    addSystemNotification(safeName, date, time);
-}
+    addSystemNotification(safeName);
+    saveAllData(); // <--- PERSISTENCE TRIGGER
 }
 
-// Call this when switching to Projects view
-// e.g., in your updateView('Projects') function, add: initProjectManagement();
+/**
+ * PERSISTENCE ENGINE (LOCAL STORAGE)
+ */
+function saveAllData() {
+    const data = {
+        grid: document.getElementById('projectGrid')?.innerHTML || "",
+        list: document.getElementById('projectContainer')?.innerHTML || "",
+        notifs: document.getElementById('notif-scroll-area')?.innerHTML || "",
+        count: document.getElementById('notif-count')?.innerText || "0 new updates",
+        rawNotifs: (typeof views !== 'undefined') ? views['Notifications'] : null
+    };
+    localStorage.setItem('nxxt_system_data', JSON.stringify(data));
+}
+
+function loadAllData() {
+    const saved = localStorage.getItem('nxxt_system_data');
+    if (!saved) return;
+    const data = JSON.parse(saved);
+    
+    if (data.grid) {
+        const grid = document.getElementById('projectGrid');
+        if (grid) { grid.innerHTML = data.grid; grid.classList.remove('hidden'); }
+        const empty = document.getElementById('emptyProjectState');
+        if (empty) empty.classList.add('hidden');
+    }
+    if (data.list) {
+        const list = document.getElementById('projectContainer');
+        if (list) { list.innerHTML = data.list; initProjectManagement(); }
+    }
+    if (data.notifs) {
+        const area = document.getElementById('notif-scroll-area');
+        if (area) area.innerHTML = data.notifs;
+    }
+    if (data.count && document.getElementById('notif-count')) {
+        document.getElementById('notif-count').innerText = data.count;
+    }
+    if (data.rawNotifs && typeof views !== 'undefined') {
+        views['Notifications'] = data.rawNotifs;
+    }
+}
+
+// Startup
+window.onload = loadAllData;
+function closeCenterModal() { const m = document.getElementById('centerModalOverlay'); if(m) m.remove(); }
+function closeRightSlide() { const m = document.getElementById('rightSlideOverlay'); if(m) m.remove(); }
