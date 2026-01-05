@@ -471,24 +471,39 @@ const views = {
 
 
 'Inbox': `
-<div class="space-y-6 animate-in fade-in duration-500 pb-24 relative">
-    <div class="flex flex-col gap-4">
-        <h3 class="text-xl font-black text-white italic uppercase tracking-tighter">Neural Comms</h3>
-        <div class="flex flex-wrap gap-2 p-1.5 bg-white/5 border border-white/10 rounded-2xl w-full overflow-x-auto no-scrollbar">
+<div class="space-y-8 animate-in fade-in duration-700 pb-32 relative min-h-screen bg-[#02010a] text-white selection:bg-blue-500/30">
+    
+    <div class="px-6 pt-6 flex justify-between items-end">
+        <div>
+            <div class="flex items-center gap-2 mb-1">
+                <p class="text-[8px] font-black text-blue-500 uppercase tracking-[0.5em]">Neural Link v4.0.2</p>
+                <span class="w-1.5 h-1.5 rounded-full bg-red-600 animate-pulse"></span>
+            </div>
+            <h3 class="text-3xl font-black italic uppercase tracking-tighter leading-none">Comms Hub</h3>
+        </div>
+        <div class="flex flex-col items-end opacity-40">
+            <p class="text-[7px] font-black uppercase tracking-widest text-gray-500">Node Status</p>
+            <p class="text-[9px] font-black uppercase text-red-500">Building...</p>
+        </div>
+    </div>
+
+    <div class="sticky top-0 z-[100] bg-[#02010a]/80 backdrop-blur-xl border-y border-white/5">
+        <div class="flex overflow-x-auto no-scrollbar py-4 px-6 gap-3 snap-x scroll-smooth">
             ${['Messages', 'Post', 'Live', 'Updates', 'Groups', 'Archived', 'Blocked', 'Friends'].map(tab => 
                 `<button onclick="switchInboxTab('${tab.toLowerCase()}')" id="itab-${tab.toLowerCase()}" 
-                    class="inbox-tab px-4 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all text-gray-500 hover:text-white whitespace-nowrap">
+                    class="inbox-tab flex-shrink-0 snap-start px-6 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all border border-white/10 text-gray-500 bg-white/5 hover:text-white whitespace-nowrap active:scale-95">
                     ${tab}
                 </button>`
             ).join('')}
         </div>
     </div>
 
-    <div id="inbox-content" class="min-h-[400px]">
+    <div id="inbox-content" class="px-6 min-h-[500px]">
         </div>
 
-    <button id="postFAB" onclick="openCreatePostModal()" class="hidden fixed bottom-10 right-8 w-16 h-16 bg-blue-600 text-white rounded-2xl shadow-lg flex items-center justify-center z-[90]">
-        <i class="fas fa-plus text-xl"></i>
+    <button id="postFAB" onclick="openCreatePostModal()" 
+        class="hidden fixed bottom-12 right-6 w-14 h-14 bg-blue-600 text-white rounded-full shadow-[0_15px_40px_rgba(37,99,235,0.4)] flex items-center justify-center z-[90] active:scale-90 transition-all border border-white/20">
+        <i class="fas fa-plus text-lg"></i>
     </button>
 </div>`,
 
@@ -3576,210 +3591,118 @@ function submitJoinRequest() {
 
 
 
-////// for the messages 
-// Global Data Store
-let testPosts = [
-    { id: 1, user: 'Admin_Alpha', text: 'COMMUNICATIONS UPLINK ESTABLISHED. WELCOME TO THE NETWORK.', likes: 99, liked: false, img: null, comments: ["SYSTEM STABLE", "ENCRYPTED"] }
-];
+////// for the INBOX
+/**
+ * TECH NXXT COMMS HUB - V4 (PURE BUILD PROTOCOL)
+ * THEME: TOTAL SYSTEM CALIBRATION
+ */
 
-let friendsList = [
-    { name: 'Alex_Rivers', bio: 'Full Stack Architect' },
-    { name: 'Sarah_Codes', bio: 'UI Specialist' },
-    { name: 'Cipher_K', bio: 'Backend Node' }
-];
+// 1. --- MATRIX ANIMATION ENGINE ---
+function startMatrixEffect(canvasId) {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    
+    // Set internal resolution
+    canvas.width = canvas.parentElement.offsetWidth;
+    canvas.height = 400; 
 
-// Tab Switching Logic
+    const characters = "0101010101010101"; // Binary focus for building feel
+    const fontSize = 12;
+    const columns = canvas.width / fontSize;
+    const drops = Array(Math.floor(columns)).fill(1);
+
+    function draw() {
+        ctx.fillStyle = "rgba(2, 1, 10, 0.05)";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = "#2563eb"; // Blue Matrix to match brand
+        ctx.font = fontSize + "px monospace";
+
+        for (let i = 0; i < drops.length; i++) {
+            const text = characters.charAt(Math.floor(Math.random() * characters.length));
+            ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+            if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+            drops[i]++;
+        }
+    }
+    const interval = setInterval(draw, 40);
+    canvas.dataset.intervalId = interval; 
+}
+
+// 2. --- CORE CONTROLLER (ALL TABS BLOCKED) ---
 function switchInboxTab(tab) {
-    document.querySelectorAll('.inbox-tab').forEach(t => t.classList.remove('bg-blue-600', 'text-white'));
+    // UI Update: Tabs
+    document.querySelectorAll('.inbox-tab').forEach(t => {
+        t.className = "inbox-tab flex-shrink-0 snap-start px-6 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all border border-white/10 text-gray-500 bg-white/5 hover:text-white whitespace-nowrap";
+    });
+    
     const activeTab = document.getElementById(`itab-${tab}`);
-    if(activeTab) activeTab.classList.add('bg-blue-600', 'text-white');
+    if(activeTab) {
+        activeTab.className = "inbox-tab flex-shrink-0 snap-start px-6 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all border-blue-500/50 text-white bg-blue-600 shadow-[0_0_20px_rgba(37,99,235,0.2)] whitespace-nowrap";
+    }
     
     const content = document.getElementById('inbox-content');
     const fab = document.getElementById('postFAB');
-    fab.classList.add('hidden');
+    
+    // Only show FAB on Post tab, but it will trigger a "Building" modal
+    tab === 'post' ? fab.classList.remove('hidden') : fab.classList.add('hidden');
 
-    switch(tab) {
-        case 'post': 
-            fab.classList.remove('hidden');
-            content.innerHTML = renderEmptyState("Post Area", "Initialize a new broadcast");
-            break;
-        case 'updates': renderUpdatesFeed(); break;
-        case 'friends': renderFriendsTab(); break;
-        case 'groups': renderGroupsTab(); break;
-        case 'live':
-            content.innerHTML = `<div class="py-20 text-center opacity-40"><i class="fas fa-broadcast-tower text-4xl mb-4"></i><p class="text-[10px] font-black uppercase tracking-[0.4em]">Not Ready Yet</p></div>`;
-            break;
-        case 'messages':
-        case 'archived':
-        case 'blocked':
-            content.innerHTML = renderEmptyState(tab, `No ${tab} in cache`);
-            break;
-    }
+    // Clean up old matrix intervals
+    document.querySelectorAll('canvas').forEach(c => clearInterval(c.dataset.intervalId));
+
+    // Every Tab renders the same Building State
+    renderBuildingState(tab);
 }
 
-function renderEmptyState(title, sub) {
-    return `<div class="py-32 text-center opacity-20"><i class="fas fa-ghost text-4xl mb-4"></i><h4 class="text-white font-black uppercase text-xl">${title}</h4><p class="text-[9px] font-black uppercase mt-2">${sub}</p></div>`;
-}
-
-// --- Post & Updates System ---
-function openCreatePostModal() {
-    const modalHtml = `
-    <div id="postModal" class="fixed inset-0 z-[150] bg-black/80 backdrop-blur-md flex flex-col justify-end">
-        <div class="bg-[#050b1d] w-full rounded-t-[3rem] p-8 animate-in slide-in-from-bottom duration-500 max-h-[90vh] overflow-y-auto">
-            <div class="w-12 h-1 bg-white/10 rounded-full mx-auto mb-8"></div>
-            <div class="flex justify-between items-center mb-6">
-                <h4 class="text-white font-black uppercase italic text-xl">Create Post</h4>
-                <div class="relative"><i class="fas fa-robot text-gray-700 text-xl"></i><span class="absolute -top-2 -right-6 text-[6px] bg-red-600 text-white px-1 py-0.5 rounded font-black uppercase">Not Ready</span></div>
-            </div>
-            <div class="space-y-6">
-                <div onclick="document.getElementById('postImg').click()" class="w-full h-48 bg-white/5 border-2 border-dashed border-white/10 rounded-[2rem] flex flex-col items-center justify-center cursor-pointer overflow-hidden">
-                    <img id="preview" class="hidden w-full h-full object-cover">
-                    <div id="uploadPlaceholder"><i class="fas fa-camera text-2xl text-gray-700 mb-2"></i><p class="text-[8px] text-gray-600 font-black uppercase">Access Gallery</p></div>
-                    <input type="file" id="postImg" class="hidden" accept="image/*" onchange="const r=new FileReader();r.onload=e=>{document.getElementById('preview').src=e.target.result;document.getElementById('preview').classList.remove('hidden');document.getElementById('uploadPlaceholder').classList.add('hidden')};r.readAsDataURL(this.files[0])">
-                </div>
-                <textarea id="postText" placeholder="TYPE CONTENT..." class="w-full bg-white/5 border border-white/10 rounded-2xl p-6 text-white text-[16px] md:text-[11px] font-bold uppercase h-32 outline-none focus:border-blue-500"></textarea>
-                <div class="flex gap-4 pb-8">
-                    <button onclick="document.getElementById('postModal').remove()" class="flex-1 py-4 text-gray-500 text-[10px] font-black uppercase">Discard</button>
-                    <button onclick="publishPost()" class="flex-1 py-4 bg-blue-600 text-white text-[10px] font-black uppercase rounded-2xl">Done</button>
-                </div>
-            </div>
-        </div>
-    </div>`;
-    document.body.insertAdjacentHTML('beforeend', modalHtml);
-}
-
-function publishPost() {
-    const text = document.getElementById('postText').value;
-    const img = document.getElementById('preview').src;
-    const hasImg = !document.getElementById('preview').classList.contains('hidden');
-    if(!text && !hasImg) return;
-    testPosts.unshift({ id: Date.now(), user: 'You', text: text.toUpperCase(), likes: 0, liked: false, img: hasImg ? img : null, comments: [] });
-    document.getElementById('postModal').remove();
-    showNxxtAlert("POST DEPLOYED SUCCESSFULLY");
-    switchInboxTab('updates');
-}
-
-function renderUpdatesFeed() {
+function renderBuildingState(tab) {
     const content = document.getElementById('inbox-content');
-    content.innerHTML = testPosts.map(post => `
-    <div class="bg-[#050b1d] border border-white/5 rounded-[2.5rem] p-6 mb-4">
-        <div class="flex justify-between items-center mb-4">
-            <span class="text-[10px] text-white font-black uppercase italic">${post.user}</span>
-            <button onclick="deletePost(${post.id})" class="text-gray-600 hover:text-red-500"><i class="fas fa-trash-alt text-xs"></i></button>
-        </div>
-        <p class="text-[11px] text-gray-400 font-bold uppercase mb-4 leading-relaxed">${post.text}</p>
-        ${post.img ? `<img src="${post.img}" class="w-full rounded-2xl border border-white/10 mb-4">` : ''}
-        <div class="flex items-center justify-between pt-4 border-t border-white/5">
-            <div class="flex gap-6">
-                <button onclick="likePost(${post.id})" class="flex items-center gap-2 ${post.liked ? 'text-red-500' : 'text-gray-500'}"><i class="fas fa-heart"></i> <span class="text-[10px] font-black">${post.likes}</span></button>
-                <button onclick="openComments(${post.id})" class="text-gray-500 flex items-center gap-2"><i class="fas fa-comment"></i> <span class="text-[10px] font-black">${post.comments.length}</span></button>
-                <i onclick="showNxxtAlert('REPOSTED')" class="fas fa-retweet text-gray-500 cursor-pointer"></i>
-            </div>
-            <div class="flex gap-4">
-                <i onclick="showNxxtAlert('LINK COPIED')" class="fas fa-share-alt text-gray-500 cursor-pointer"></i>
-                <i onclick="showNxxtAlert('DOWNLOAD STARTED')" class="fas fa-download text-gray-500 cursor-pointer"></i>
-            </div>
-        </div>
-    </div>`).join('');
-}
-
-function likePost(id) {
-    const p = testPosts.find(x => x.id === id);
-    p.liked = !p.liked;
-    p.likes += p.liked ? 1 : -1;
-    renderUpdatesFeed();
-}
-
-function deletePost(id) {
-    testPosts = testPosts.filter(x => x.id !== id);
-    renderUpdatesFeed();
-    showNxxtAlert("POST REMOVED");
-}
-
-function openComments(id) {
-    const p = testPosts.find(x => x.id === id);
-    const modalHtml = `<div id="commentModal" class="fixed inset-0 z-[200] bg-black/90 backdrop-blur-md flex items-center justify-center p-4">
-        <div class="bg-[#050b1d] border border-white/10 w-full max-w-md rounded-[2.5rem] p-6 max-h-[80vh] flex flex-col">
-            <h5 class="text-white font-black uppercase text-xs mb-4">Comments</h5>
-            <div class="flex-1 overflow-y-auto space-y-3 mb-4">${p.comments.map(c => `<div class="bg-white/5 p-3 rounded-xl text-[10px] text-gray-400 font-bold uppercase">${c}</div>`).join('')}</div>
-            <div class="relative">
-                <input id="cInput" class="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white text-[16px] md:text-[10px] pr-12 outline-none">
-                <button onclick="addComment(${id})" class="absolute right-2 top-1/2 -translate-y-1/2 text-blue-500"><i class="fas fa-paper-plane"></i></button>
-            </div>
-            <button onclick="document.getElementById('commentModal').remove()" class="mt-4 text-[9px] text-gray-500 font-black uppercase">Close</button>
-        </div>
-    </div>`;
-    document.body.insertAdjacentHTML('beforeend', modalHtml);
-}
-
-function addComment(id) {
-    const val = document.getElementById('cInput').value;
-    if(!val) return;
-    testPosts.find(x => x.id === id).comments.push(val.toUpperCase());
-    document.getElementById('commentModal').remove();
-    openComments(id);
-}
-
-// --- Friends & Chat System ---
-function renderFriendsTab() {
-    const content = document.getElementById('inbox-content');
+    const canvasId = `matrix-${tab}`;
+    
     content.innerHTML = `
-    <div class="flex justify-between items-center mb-6">
-        <p class="text-gray-500 text-[9px] font-black uppercase">Active Nodes</p>
-        <button onclick="showNxxtAlert('SYNCING FRIENDS...')" class="bg-blue-600 px-4 py-2 rounded-xl text-white text-[8px] font-black uppercase">Add Friend</button>
-    </div>
-    <div class="space-y-3">
-        ${friendsList.map(f => `
-        <div class="p-4 bg-white/5 border border-white/5 rounded-[2rem] flex items-center justify-between group">
-            <div onclick="openChat('${f.name}')" class="flex items-center gap-4 cursor-pointer">
-                <div class="w-10 h-10 rounded-xl bg-blue-600/20 flex items-center justify-center text-blue-500 font-black">${f.name[0]}</div>
-                <div><p class="text-white text-[10px] font-black uppercase">${f.name}</p><p class="text-[7px] text-gray-600 font-bold uppercase">${f.bio}</p></div>
+    <div class="relative overflow-hidden rounded-[3rem] border border-white/5 bg-[#02010a] h-[450px] flex flex-col items-center justify-center text-center p-10 group">
+        <canvas id="${canvasId}" class="absolute inset-0 opacity-10 group-hover:opacity-30 transition-opacity"></canvas>
+        
+        <div class="relative z-10 animate-in zoom-in-95 duration-700">
+            <div class="w-20 h-20 bg-blue-600/10 border border-blue-500/20 rounded-full flex items-center justify-center mx-auto mb-8 shadow-[0_0_40px_rgba(37,99,235,0.1)]">
+                <i class="fas fa-tools text-2xl text-blue-500 animate-bounce"></i>
             </div>
-            <div class="relative">
-                <button onclick="this.nextElementSibling.classList.toggle('hidden')" class="text-gray-600 p-2"><i class="fas fa-ellipsis-v text-xs"></i></button>
-                <div class="hidden absolute right-0 top-8 bg-[#050b1d] border border-white/10 rounded-xl p-2 w-32 z-50">
-                    <button onclick="showNxxtAlert('ARCHIVED')" class="w-full text-left p-2 text-[8px] text-gray-400 font-black uppercase">Archive</button>
-                    <button onclick="showNxxtAlert('BLOCKED')" class="w-full text-left p-2 text-[8px] text-red-500 font-black uppercase">Block</button>
-                </div>
-            </div>
-        </div>`).join('')}
-    </div>`;
-}
-
-function openChat(name) {
-    showNxxtAlert(`SECURE LINK TO ${name.toUpperCase()} OPENED. SENDING RESPONSE...`);
-}
-
-// --- Groups System ---
-function renderGroupsTab() {
-    const content = document.getElementById('inbox-content');
-    content.innerHTML = `<div class="flex justify-center py-20"><button onclick="openCreateGroupModal()" class="px-8 py-4 bg-blue-600/10 border border-blue-500/20 rounded-2xl text-blue-500 text-[10px] font-black uppercase">Create Group</button></div>`;
-}
-
-function openCreateGroupModal() {
-    const html = `<div id="gCenter" class="fixed inset-0 z-[200] bg-black/90 flex items-center justify-center p-6">
-        <div class="bg-[#050b1d] border border-white/10 w-full max-w-md rounded-[2.5rem] p-8 space-y-6">
-            <h5 class="text-white font-black uppercase italic text-sm">New Group</h5>
-            <input type="text" id="gn" placeholder="GROUP NAME" class="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white text-[16px] md:text-[10px] font-black uppercase">
-            <textarea id="gd" placeholder="DESCRIPTION" class="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white text-[16px] md:text-[10px] h-24 outline-none"></textarea>
-            <div class="flex gap-4">
-                <button onclick="document.getElementById('gCenter').remove()" class="flex-1 py-4 text-gray-500 text-[10px] font-black uppercase">Cancel</button>
-                <button onclick="openGroupStep2()" class="flex-1 py-4 bg-blue-600 text-white rounded-xl text-[10px] font-black uppercase">Next</button>
+            
+            <p class="text-[8px] font-black text-blue-500 uppercase tracking-[0.8em] mb-4">Neural Hub Protocol</p>
+            <h4 class="text-white font-black uppercase text-3xl tracking-tighter mb-4">${tab}</h4>
+            
+            <div class="h-1 w-12 bg-blue-600/30 rounded-full mx-auto mb-8"></div>
+            
+            <p class="text-[10px] font-bold text-gray-600 uppercase tracking-[0.3em] max-w-[220px] mx-auto leading-relaxed mb-10">
+                Architectural override active. This node is currently being engineered.
+            </p>
+            
+            <div class="inline-flex items-center gap-3 px-8 py-3 bg-white/5 border border-white/10 rounded-full">
+                <div class="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+                <p class="text-white text-[9px] font-black uppercase tracking-widest">We Are Building Now</p>
             </div>
         </div>
     </div>`;
-    document.body.insertAdjacentHTML('beforeend', html);
+    
+    startMatrixEffect(canvasId);
 }
 
-function openGroupStep2() {
-    document.getElementById('gCenter').remove();
-    const html = `<div id="gRight" class="fixed inset-0 z-[200] bg-black/60"><div class="absolute right-0 top-0 h-full w-full max-w-md bg-[#02010a] border-l border-white/10 p-8 animate-in slide-in-from-right">
-        <h5 class="text-white font-black uppercase italic mb-8">Deploy Protocol</h5>
-        <div class="space-y-6">
-            <input type="number" placeholder="USER LIMIT" class="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white text-[10px]">
-            <input type="text" placeholder="PUBLISHER NAME" class="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white text-[10px]">
-            <button onclick="document.getElementById('gRight').remove(); showNxxtAlert('GROUP INITIALIZED')" class="w-full py-4 bg-blue-600 text-white rounded-xl text-[10px] font-black uppercase">Deploy</button>
+// 3. --- MODAL ALERT (CENTERED) ---
+function showNxxtAlert(message) {
+    const alertModal = `
+    <div id="alertModal" class="fixed inset-0 z-[500] bg-black/95 flex items-center justify-center p-8 backdrop-blur-2xl">
+        <div class="bg-[#050b1d] border border-white/10 w-full max-w-xs p-10 rounded-[3rem] text-center shadow-2xl animate-in zoom-in-90">
+            <div class="w-16 h-16 bg-blue-600/10 border border-blue-500/30 rounded-full flex items-center justify-center mx-auto mb-6">
+                <i class="fas fa-shield-alt text-blue-500 text-xl"></i>
+            </div>
+            <h6 class="text-white font-black uppercase text-[11px] tracking-widest mb-4">System Notice</h6>
+            <p class="text-gray-500 font-bold uppercase text-[9px] leading-relaxed mb-8 tracking-wide">${message}</p>
+            <button onclick="document.getElementById('alertModal').remove()" class="w-full py-4 bg-white text-black rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-blue-600 hover:text-white transition-all">Acknowledge</button>
         </div>
-    </div></div>`;
-    document.body.insertAdjacentHTML('beforeend', html);
+    </div>`;
+    document.body.insertAdjacentHTML('beforeend', alertModal);
+}
+
+// 4. --- POST BROADCASTER (BUILDING MODE) ---
+function openCreatePostModal() {
+    showNxxtAlert("BROADCASTING MODULE: WE ARE BUILDING NOW.");
 }
