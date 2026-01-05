@@ -189,4 +189,60 @@ body {
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
         }
- 
+ /* --- NXXT AI CORE STYLES --- */
+
+#nxxt-chat-results {
+    scroll-behavior: smooth;
+    /* Hide scrollbar for Chrome/Safari but keep functionality */
+    -webkit-overflow-scrolling: touch;
+}
+
+#nxxt-chat-results::-webkit-scrollbar {
+    width: 3px;
+}
+
+#nxxt-chat-results::-webkit-scrollbar-thumb {
+    background: rgba(59, 130, 246, 0.2);
+    border-radius: 10px;
+}
+
+/* --- CUSTOM ANIMATIONS --- */
+
+@keyframes scan {
+    0% { transform: translateY(-100%); }
+    100% { transform: translateY(100%); }
+}
+
+@keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+/* --- UTILITY CLASSES --- */
+
+.animate-scan {
+    animation: scan 2s linear infinite;
+}
+
+.animate-shimmer {
+    animation: shimmer 1.8s infinite;
+}
+
+/* Glassmorphism Polish */
+.backdrop-blur-2xl {
+    backdrop-filter: blur(40px);
+    -webkit-backdrop-filter: blur(40px);
+}
+
+/* Prose override for AI responses */
+.prose {
+    word-spacing: 0.05em;
+    letter-spacing: -0.01em;
+}
+
+/* Center Modal Alert Styles */
+.modal-overlay {
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(8px);
+    transition: all 0.3s ease;
+}
