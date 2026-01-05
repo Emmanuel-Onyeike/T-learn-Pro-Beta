@@ -595,81 +595,46 @@ const views = {
 
     
     
-   'Nxxt Lab': `
-<div id="lab-root" class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 relative max-w-5xl mx-auto px-4 pb-32">
+  'Nxxt Lab': `
+<div id="lab-root" class="space-y-6 animate-in fade-in duration-700 max-w-5xl mx-auto px-4 pb-40">
     
-    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-white/5 pb-8">
-        <div>
-            <div class="flex items-center gap-3 mb-2">
-                <div class="w-2 h-2 bg-yellow-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(234,179,8,0.8)]"></div>
-                <h3 class="text-2xl font-black text-white italic uppercase tracking-tighter">The Nxxt Lab</h3>
-            </div>
-            <p class="text-[10px] text-gray-500 font-bold uppercase tracking-[0.3em]">Experimental Sandboxes & Developer IDEs</p>
+    <div class="sticky top-0 z-20 bg-[#020617] pt-2">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-sm font-black text-white uppercase tracking-widest italic">Lab Modules</h3>
+            <span class="text-[7px] font-bold text-yellow-500 border border-yellow-500/20 px-2 py-1 rounded tracking-[0.2em]">BETA_LOCKED</span>
         </div>
-        <div class="px-4 py-2 bg-yellow-500/5 border border-yellow-500/20 rounded-lg hidden md:block">
-             <p class="text-[8px] font-black text-yellow-500 uppercase tracking-widest italic">Hazmat Status: Isolated</p>
-        </div>
-    </div>
-
-    <div class="relative group">
-        <div class="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-[#020617] to-transparent z-10 pointer-events-none md:hidden"></div>
-        <div class="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-[#020617] to-transparent z-10 pointer-events-none md:hidden"></div>
         
-        <nav class="flex overflow-x-auto no-scrollbar gap-8 py-4 border-b border-white/5 scroll-smooth">
-            ${['Sandbox', 'IDE v1', 'API Terminal', 'UI Kit', 'Neural Playground', 'Log Stream'].map((link, i) => `
-                <button onclick="showNxxtAlert('${link} is currently locked for stabilization.')" 
-                        class="flex-shrink-0 text-[10px] font-black uppercase tracking-[0.25em] ${i === 0 ? 'text-blue-500' : 'text-gray-500'} hover:text-white transition-all pb-2 relative whitespace-nowrap">
-                    ${link}
-                    ${i === 0 ? '<div class="absolute -bottom-[1px] left-0 w-full h-[2px] bg-blue-500 shadow-[0_0_10px_#3b82f6]"></div>' : ''}
+        <nav class="flex overflow-x-auto no-scrollbar gap-6 border-b border-white/5 pb-2 -mx-4 px-4 mask-edge-fade">
+            ${Object.keys(labModules).map((name, i) => `
+                <button id="nav-${name.replace(/\s/g, '')}" 
+                        onclick="switchLabTab('${name}')" 
+                        class="lab-nav-btn flex-shrink-0 text-[10px] font-black uppercase tracking-[0.25em] pb-3 border-b-2 transition-all duration-300 whitespace-nowrap
+                        ${i === 0 ? 'text-blue-500 border-blue-500' : 'text-gray-500 border-transparent'}">
+                    ${name}
                 </button>
             `).join('')}
         </nav>
     </div>
 
-    <div class="relative group border-2 border-dashed border-white/5 rounded-[3rem] py-24 flex flex-col items-center justify-center text-center bg-[#050505] overflow-hidden">
-        <div class="absolute inset-0 opacity-10 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:30px_30px]"></div>
-        
-        <div class="relative z-10 px-6">
-            <div class="w-20 h-20 bg-white/5 rounded-[1.5rem] flex items-center justify-center mb-8 mx-auto border border-white/5 shadow-2xl backdrop-blur-md">
-                <i class="fas fa-terminal text-2xl text-blue-500 animate-pulse"></i>
+    <div id="lab-content-area" class="transition-all duration-500 ease-out">
+        <div class="border-2 border-dashed border-white/5 rounded-[3rem] py-20 flex flex-col items-center justify-center text-center bg-[#050505]">
+             <div class="w-20 h-20 bg-white/5 rounded-2xl flex items-center justify-center mb-6 mx-auto border border-white/10">
+                <i class="fas fa-terminal text-3xl text-blue-500 animate-pulse"></i>
             </div>
-            <h4 class="text-white font-black uppercase italic tracking-tighter text-2xl">Sandbox Isolated</h4>
-            <p class="text-[10px] text-gray-500 font-bold uppercase tracking-[0.3em] mt-3 max-w-[340px] mx-auto leading-relaxed">
-                Coding environment is currently <span class="text-yellow-500">Read-Only</span>. The experimental kernel is being re-shielded for beta launch.
-            </p>
-            
-            <div class="mt-10 pt-10 border-t border-white/5 w-full max-w-[200px] mx-auto">
-                <div class="flex flex-col gap-4">
-                     <div class="flex justify-between items-center text-[8px] font-mono text-gray-600">
-                        <span>STABILITY</span>
-                        <span class="text-blue-500">72%</span>
-                     </div>
-                     <div class="w-full h-1 bg-white/5 rounded-full overflow-hidden">
-                        <div class="h-full bg-blue-600 w-[72%]"></div>
-                     </div>
-                </div>
-            </div>
+            <h4 class="text-white font-black uppercase italic tracking-tighter text-2xl">Sandbox Module</h4>
+            <p class="text-[10px] text-gray-500 font-bold uppercase tracking-[0.3em] mt-3">Initial Link Establishing...</p>
         </div>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        ${[
-            { name: 'JS Sandbox', desc: 'Code JavaScript in real-time', icon: 'fa-code' },
-            { name: 'API Docs', desc: 'Experimental endpoint access', icon: 'fa-project-diagram' },
-            { name: 'Asset Lab', desc: 'Generated design system keys', icon: 'fa-cubes' }
-        ].map(item => `
-            <div onclick="showNxxtAlert('${item.name} is offline.')" class="p-6 bg-white/[0.02] border border-white/5 rounded-[2rem] group hover:bg-white/[0.04] hover:border-blue-500/20 cursor-pointer transition-all">
-                <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center border border-white/5 group-hover:scale-110 transition-transform">
-                        <i class="fas ${item.icon} text-sm opacity-40 group-hover:text-blue-500 group-hover:opacity-100"></i>
-                    </div>
-                    <div>
-                        <p class="text-[9px] font-black text-white uppercase tracking-widest">${item.name}</p>
-                        <p class="text-[8px] text-gray-600 font-bold uppercase mt-1">${item.desc}</p>
-                    </div>
-                </div>
-            </div>
-        `).join('')}
+    <div class="grid grid-cols-2 gap-3 opacity-40">
+        <div class="p-4 border border-white/5 rounded-2xl bg-white/[0.01]">
+            <p class="text-[7px] font-black text-white uppercase tracking-widest mb-1">Compute Load</p>
+            <div class="h-1 bg-white/10 rounded-full"><div class="h-full bg-blue-600 w-1/3"></div></div>
+        </div>
+        <div class="p-4 border border-white/5 rounded-2xl bg-white/[0.01]">
+            <p class="text-[7px] font-black text-white uppercase tracking-widest mb-1">Neural Latency</p>
+            <p class="text-[10px] font-mono text-blue-500">0.002ms</p>
+        </div>
     </div>
 </div>
 `,
@@ -2712,36 +2677,54 @@ function showLabAlert(feature) {
     };
 }
  //// for the nXXT LAB 2
-function showNxxtAlert(message) {
-    // Create Backdrop
-    const backdrop = document.createElement('div');
-    backdrop.className = "modal-backdrop animate-in fade-in duration-300";
+const labModules = {
+    'Sandbox': { icon: 'fa-terminal', color: 'text-blue-500', desc: 'Secure environment for code execution.' },
+    'IDE v1': { icon: 'fa-code-branch', color: 'text-emerald-500', desc: 'Integrated workspace for project architecture.' },
+    'API Terminal': { icon: 'fa-microchip', color: 'text-purple-500', desc: 'Direct neural endpoint telemetry.' },
+    'UI Kit': { icon: 'fa-layer-group', color: 'text-pink-500', desc: 'Atomic design system and asset library.' },
+    'Neural Playground': { icon: 'fa-brain', color: 'text-orange-500', desc: 'Cognitive bias and weight adjustment.' },
+    'Log Stream': { icon: 'fa-stream', color: 'text-cyan-500', desc: 'Real-time kernel event monitoring.' }
+};
+
+function switchLabTab(tabName) {
+    const container = document.getElementById('lab-content-area');
+    const data = labModules[tabName];
     
-    // Create Modal
-    const modal = document.createElement('div');
-    modal.className = "fixed-alert-modal animate-in zoom-in-95 duration-300";
-    modal.innerHTML = `
-        <div class="mb-6 flex justify-center">
-            <div class="w-16 h-16 rounded-full bg-yellow-500/10 flex items-center justify-center border border-yellow-500/20">
-                <i class="fas fa-biohazard text-yellow-500 text-xl"></i>
+    // Add a fade-out effect before switching
+    container.classList.add('opacity-0', 'scale-95');
+    
+    setTimeout(() => {
+        container.innerHTML = `
+            <div class="animate-in fade-in zoom-in-95 duration-500">
+                <div class="border-2 border-dashed border-white/5 rounded-[3rem] py-20 flex flex-col items-center justify-center text-center bg-[#050505] relative overflow-hidden">
+                    <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-blue-600/5 via-transparent to-transparent opacity-50"></div>
+                    
+                    <div class="relative z-10 px-6">
+                        <div class="w-20 h-20 bg-white/5 rounded-2xl flex items-center justify-center mb-6 mx-auto border border-white/10 shadow-2xl">
+                            <i class="fas ${data.icon} text-3xl ${data.color} animate-pulse"></i>
+                        </div>
+                        <h4 class="text-white font-black uppercase italic tracking-tighter text-2xl">${tabName} Module</h4>
+                        <p class="text-[10px] text-gray-500 font-bold uppercase tracking-[0.3em] mt-3 max-w-[320px] mx-auto leading-relaxed">
+                            ${data.desc}<br><span class="text-yellow-500/80">Kernel stabilization in progress.</span>
+                        </p>
+                        
+                        <div class="mt-8 flex justify-center gap-1 opacity-20">
+                            ${[1,2,3,4,5].map(() => `<div class="w-6 h-1 bg-white/20 rounded-full"></div>`).join('')}
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-        <h3 class="text-white font-black uppercase italic tracking-tighter text-lg mb-2">Protocol Override</h3>
-        <p class="text-gray-500 text-[10px] uppercase font-bold tracking-widest leading-relaxed mb-8">${message}</p>
-        <button onclick="closeNxxtModal(this)" class="w-full py-4 bg-white text-black font-black uppercase text-[10px] tracking-widest rounded-2xl hover:bg-yellow-500 transition-all active:scale-95">
-            Acknowledge
-        </button>
-    `;
+        `;
+        container.classList.remove('opacity-0', 'scale-95');
+    }, 200);
 
-    document.body.appendChild(backdrop);
-    document.body.appendChild(modal);
-}
-
-function closeNxxtModal(btn) {
-    const modal = btn.closest('.fixed-alert-modal');
-    const backdrop = document.querySelector('.modal-backdrop');
-    modal.remove();
-    if(backdrop) backdrop.remove();
+    // Update Nav UI
+    document.querySelectorAll('.lab-nav-btn').forEach(btn => {
+        btn.classList.remove('text-blue-500', 'border-blue-500');
+        btn.classList.add('text-gray-500', 'border-transparent');
+    });
+    const activeBtn = document.getElementById(`nav-${tabName.replace(/\s/g, '')}`);
+    activeBtn.classList.add('text-blue-500', 'border-blue-500');
 }
 
 
