@@ -818,53 +818,32 @@ const views = {
 
 `,
 
-
 'Notifications': `
     <div id="notifications-container" class="max-w-md mx-auto content-card text-center animate-in">
         <div class="relative inline-block mb-6">
-            <i id="notif-bell-icon" class="fa-solid fa-bell text-5xl text-blue-500 animate-pulse"></i>
-            <span id="notif-badge" class="absolute -top-1 -right-1 w-5 h-5 bg-red-600 border-4 border-[#030816] rounded-full animate-bounce"></span>
+            <i id="notif-bell-icon" class="fa-solid fa-bell text-5xl text-blue-500"></i>
+            <span id="notif-badge" class="absolute -top-1 -right-1 w-5 h-5 bg-red-600 border-4 border-[#030816] rounded-full hidden"></span>
         </div>
         <h3 class="text-4xl font-black text-white italic mb-2 uppercase tracking-tighter">Transmissions</h3>
         <p class="text-gray-500 text-[10px] font-black uppercase tracking-[0.3em] mb-8 leading-relaxed">
-            System logs indicate <span id="notif-count" class="text-blue-500">3 new updates</span> <br> awaiting your review
+            System logs indicate <span id="notif-count" class="text-blue-500 font-black">0 new updates</span> <br> awaiting your review
         </p>
-        
+       
         <div id="notif-scroll-area" class="space-y-4 mb-8 max-h-[380px] overflow-y-auto pr-2 custom-scrollbar">
-            
+            <!-- Existing static notifications here -->
             <div class="notif-item p-5 bg-yellow-500/5 border border-yellow-500/20 rounded-3xl text-left relative overflow-hidden group hover:border-yellow-500/40 transition-all">
                 <div class="flex justify-between items-start mb-2">
                     <p class="text-[8px] font-black text-yellow-500 uppercase tracking-widest">Global Broadcast</p>
-                    <span class="text-[7px] text-gray-600 font-bold">2026.01.01</span>
+                    <span class="text-[7px] text-gray-600 font-bold uppercase">2026.01.01</span>
                 </div>
                 <p class="text-white text-[11px] font-bold leading-relaxed">
                     Happy New Year, Nxxters! The board is set for 2026. Let's work, build, and dominate this cycle together.
                 </p>
                 <i class="fas fa-crown absolute -bottom-2 -right-2 text-yellow-500/10 text-4xl group-hover:scale-110 transition-transform"></i>
             </div>
-
-            <div class="notif-item p-5 bg-blue-500/5 border border-blue-500/10 rounded-3xl text-left relative overflow-hidden group hover:border-blue-500/30 transition-all">
-                <div class="flex justify-between items-start mb-2">
-                    <p class="text-[8px] font-black text-blue-500 uppercase tracking-widest">Dev Protocol</p>
-                    <span class="text-[7px] text-gray-600 font-bold">JUST NOW</span>
-                </div>
-                <p class="text-white text-[11px] font-bold leading-relaxed">
-                    Prototype update is almost out. Nxxt engineers are currently building the next-gen framework. Standby for deployment.
-                </p>
-                <i class="fas fa-microchip absolute -bottom-2 -right-2 text-blue-500/10 text-4xl group-hover:rotate-12 transition-transform"></i>
-            </div>
-
-            <div class="notif-item p-5 bg-white/5 border border-white/5 rounded-3xl text-left hover:border-white/10 transition-all">
-                <div class="flex justify-between items-start mb-2">
-                    <p class="text-[8px] font-black text-gray-400 uppercase tracking-widest">Support Sync</p>
-                    <span class="text-[7px] text-gray-600 font-bold">1H AGO</span>
-                </div>
-                <p class="text-gray-400 text-[11px] font-bold">
-                    We apologize for the inactive sections. We urge you to stay with us as we build to your comfort.
-                </p>
-            </div>
+            <!-- ... other initial items ... -->
         </div>
-
+        
         <div class="grid grid-cols-2 gap-3">
             <button onclick="updateView('Overview')" class="py-4 bg-white/5 border border-white/10 rounded-2xl font-black uppercase text-[9px] tracking-widest text-white hover:bg-white hover:text-black transition-all">
                 Return Home
@@ -874,7 +853,7 @@ const views = {
             </button>
         </div>
     </div>
-`,
+`
     
 
 
@@ -1273,7 +1252,9 @@ function updateSettingsTab(tabId) {
                 </div>
                 <button class="w-full md:w-auto px-12 py-4 bg-white/5 border border-white/10 rounded-2xl text-[10px] font-black uppercase tracking-widest">Update Security</button>
             </div>`,
-        'Projects': `
+
+        
+    'Projects': `
     <div class="space-y-8 animate-in">
         <div class="space-y-6">
             <div>
@@ -1282,30 +1263,50 @@ function updateSettingsTab(tabId) {
             </div>
             <div class="relative group">
                 <i class="fas fa-search absolute left-5 top-1/2 -translate-y-1/2 text-gray-600 group-focus-within:text-blue-500 transition-colors"></i>
-                <input type="text"
+                <input type="text" id="projectSearchInput"
                        placeholder="SEARCH REPOSITORY BY NAME, TAG, OR TECH STACK..."
                        class="w-full bg-white/5 border border-white/10 rounded-2xl py-5 pl-14 pr-6 text-[10px] font-black text-white placeholder-gray-700 uppercase tracking-widest outline-none focus:border-blue-500/50 focus:bg-blue-500/5 transition-all">
             </div>
-           
+          
             <div class="flex items-center gap-3">
-                <button class="px-5 py-2 bg-white/5 rounded-lg border border-white/5 text-[8px] font-black text-gray-500 uppercase hover:text-white transition-colors">
+                <button id="selectAllBtn" class="px-5 py-2 bg-white/5 rounded-lg border border-white/5 text-[8px] font-black text-gray-500 uppercase hover:text-white transition-colors">
                     Select All
                 </button>
-                <button class="px-5 py-2 bg-red-500/5 rounded-lg border border-red-500/10 text-[8px] font-black text-red-500/40 uppercase cursor-not-allowed">
+                <button id="bulkDeleteBtn" class="px-5 py-2 bg-red-500/5 rounded-lg border border-red-500/10 text-[8px] font-black text-red-500/40 uppercase cursor-not-allowed opacity-50" disabled>
                     Bulk Delete (0)
                 </button>
             </div>
         </div>
-        <div id="projectContainer" class="min-h-[300px] flex flex-col items-center justify-center text-center border-2 border-dashed border-white/5 rounded-[2rem] px-6">
-            <div class="w-16 h-16 bg-blue-600/5 rounded-2xl flex items-center justify-center mb-6 rotate-3">
-                <i class="fas fa-folder-open text-2xl text-blue-500/20"></i>
+
+        <!-- Dynamic Project Container -->
+        <div id="projectContainer" class="space-y-4">
+            <!-- Empty State (shown when no projects) -->
+            <div id="emptyProjectState" class="border-2 border-dashed border-white/5 rounded-[3.5rem] py-24 flex flex-col items-center justify-center text-center bg-white/[0.01]">
+                <div class="w-20 h-20 bg-white/5 rounded-3xl flex items-center justify-center mb-6 border border-white/5">
+                    <i class="fas fa-folder-plus text-gray-700 text-3xl"></i>
+                </div>
+                <h4 class="text-white font-black uppercase italic tracking-tighter text-2xl">No Projects done</h4>
+                <p class="text-[10px] text-gray-500 font-bold uppercase tracking-[0.3em] mt-3 mb-10">System standby. Awaiting first deployment.</p>
+                <button onclick="openProjectNamingModal()" class="px-8 py-4 bg-blue-600 text-[#020617] text-[10px] font-black uppercase tracking-widest rounded-2xl hover:bg-blue-400 transition-all shadow-xl shadow-blue-500/10">
+                    Create First Project
+                </button>
             </div>
-            <h4 class="text-white font-black uppercase italic tracking-tighter text-lg">Repository Empty</h4>
-            <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest mt-2 max-w-[280px] leading-relaxed">
-                No archived projects match your current system state. <br>
-                <span class="text-blue-500/50">Awaiting your first deployment.</span>
-            </p>
+
+            <!-- Future projects will be inserted here dynamically -->
+            <!-- Example project card (for reference, will be added via JS later):
+            <div class="project-item p-6 bg-white/5 border border-white/10 rounded-3xl flex items-center justify-between hover:border-blue-500/30 transition-all">
+                <div class="flex items-center gap-4">
+                    <input type="checkbox" class="project-checkbox w-4 h-4 accent-blue-500">
+                    <div>
+                        <h5 class="text-white font-black text-sm uppercase">My Awesome App</h5>
+                        <p class="text-[9px] text-gray-500 uppercase tracking-wider">React • Node • Tailwind</p>
+                    </div>
+                </div>
+                <button class="text-red-500 hover:text-red-400 text-xs uppercase font-black">Delete</button>
+            </div>
+            -->
         </div>
+
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div class="p-6 bg-[#030816] border border-white/5 rounded-[1.5rem] flex items-center gap-5">
                 <div class="w-10 h-10 bg-blue-500/10 rounded-xl flex items-center justify-center text-blue-500">
@@ -1326,7 +1327,11 @@ function updateSettingsTab(tabId) {
                 </div>
             </div>
         </div>
-    </div>`,
+    </div>
+`,
+
+        
+        
         'Billing': `
     <div class="space-y-8 animate-in">
         <div class="content-card bg-blue-600/5 border-blue-500/10 text-center py-10">
@@ -3259,12 +3264,16 @@ function finalizeProject(name, desc) {
  * Updates the 'Transmissions' view dynamically
  */
 function addSystemNotification(projName, date, time) {
-    // 1. Define the new log HTML
+    // Format date and time nicely (fallback to current if not provided)
+    const formattedDate = date || new Date().toLocaleDateString('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\-/g, '.');
+    const formattedTime = time || new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }).toUpperCase();
+
+    // 1. Define the new notification HTML
     const logHtml = `
         <div class="notif-item p-5 bg-green-500/5 border border-green-500/20 rounded-3xl text-left relative overflow-hidden group hover:border-green-500/40 transition-all animate-in slide-in-from-top">
             <div class="flex justify-between items-start mb-2">
                 <p class="text-[8px] font-black text-green-500 uppercase tracking-widest">Build Successful</p>
-                <span class="text-[7px] text-gray-600 font-bold uppercase">${date} | ${time}</span>
+                <span class="text-[7px] text-gray-600 font-bold uppercase">${formattedDate} | ${formattedTime}</span>
             </div>
             <p class="text-white text-[11px] font-bold leading-relaxed">
                 New Core Module <span class="text-green-500 italic">"${projName}"</span> has been successfully compiled.
@@ -3273,46 +3282,195 @@ function addSystemNotification(projName, date, time) {
         </div>
     `;
 
-    // 2. CHECK THE LIVE DOM FIRST (If user is currently on the Transmissions page)
+    let wasUpdated = false;
+
+    // 2. LIVE DOM INJECTION (if user is on Notifications page)
     const activeScrollArea = document.getElementById('notif-scroll-area');
-    
     if (activeScrollArea) {
-        // User is looking at the notifications right now - inject live
         activeScrollArea.insertAdjacentHTML('afterbegin', logHtml);
-        updateNotificationUI();
-    } else {
-        // 3. FALLBACK: Update the raw string in your 'views' or 'templates' object
-        // Assuming your templates are stored in an object called 'views'
-        if (typeof views !== 'undefined' && views['Notifications']) {
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(views['Notifications'], 'text/html');
-            const scrollArea = doc.getElementById('notif-scroll-area');
-            
-            if (scrollArea) {
-                scrollArea.insertAdjacentHTML('afterbegin', logHtml);
-                views['Notifications'] = doc.body.innerHTML;
-                updateNotificationUI();
+        wasUpdated = true;
+    } else if (typeof views !== 'undefined' && views['Notifications']) {
+        // 3. FALLBACK: Update the stored template string safely
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(views['Notifications'], 'text/html');
+        const scrollArea = doc.getElementById('notif-scroll-area');
+
+        if (scrollArea) {
+            scrollArea.insertAdjacentHTML('afterbegin', logHtml);
+            // Properly serialize the full document or just the container?
+            // Since views['Notifications'] appears to be just the inner container HTML,
+            // we'll assume it's the content of #notifications-container or similar.
+            // So we extract the updated container:
+            const container = doc.getElementById('notifications-container');
+            if (container) {
+                views['Notifications'] = container.outerHTML;
+                wasUpdated = true;
             }
         }
     }
+
+    // 4. Always update UI indicators (badge, bell, count) if elements exist
+    if (wasUpdated || activeScrollArea) {
+        updateNotificationUI();
+    }
 }
 
-// Separate function to handle the visual bell and badge
 function updateNotificationUI() {
     const badge = document.getElementById('notif-badge');
     const bell = document.getElementById('notif-bell-icon');
     const countText = document.getElementById('notif-count');
 
-    if (badge) badge.classList.remove('hidden');
+    // Show badge
+    if (badge) {
+        badge.classList.remove('hidden');
+        badge.classList.add('animate-bounce');
+    }
+
+    // Bounce bell icon
     if (bell) {
         bell.classList.add('animate-bounce');
         setTimeout(() => bell.classList.remove('animate-bounce'), 2000);
     }
+
+    // Increment counter
     if (countText) {
-        let current = parseInt(countText.innerText) || 0;
-        countText.innerText = (current + 1) + " new updates";
+        const match = countText.innerText.match(/(\d+)/);
+        let current = match ? parseInt(match[1]) : 0;
+        current += 1;
+        countText.innerText = `${current} new updates`;
+        countText.classList.add('text-blue-500', 'font-black');
     }
 }
 // UTILITY CLOSERS
 function closeCenterModal() { const m = document.getElementById('centerModalOverlay'); if(m) m.remove(); }
 function closeRightSlide() { const m = document.getElementById('rightSlideOverlay'); if(m) m.remove(); }
+
+
+//// for the bulk delete
+// Run this after the Projects view is loaded
+
+function initProjectManagement() {
+    const selectAllBtn = document.getElementById('selectAllBtn');
+    const bulkDeleteBtn = document.getElementById('bulkDeleteBtn');
+    const projectContainer = document.getElementById('projectContainer');
+    const emptyState = document.getElementById('emptyProjectState');
+
+    if (!selectAllBtn || !bulkDeleteBtn) return;
+
+    // Update bulk delete button state
+    function updateBulkDelete() {
+        const checkboxes = document.querySelectorAll('.project-checkbox');
+        const checked = document.querySelectorAll('.project-checkbox:checked');
+        const count = checked.length;
+
+        bulkDeleteBtn.textContent = `Bulk Delete (${count})`;
+        if (count > 0) {
+            bulkDeleteBtn.disabled = false;
+            bulkDeleteBtn.classList.remove('opacity-50', 'text-red-500/40', 'cursor-not-allowed');
+            bulkDeleteBtn.classList.add('text-red-500', 'hover:bg-red-500/10');
+        } else {
+            bulkDeleteBtn.disabled = true;
+            bulkDeleteBtn.classList.add('opacity-50', 'text-red-500/40', 'cursor-not-allowed');
+            bulkDeleteBtn.classList.remove('text-red-500', 'hover:bg-red-500/10');
+        }
+
+        selectAllBtn.textContent = count === checkboxes.length && checkboxes.length > 0 ? 'Deselect All' : 'Select All';
+    }
+
+    // Select All / Deselect All
+    selectAllBtn.addEventListener('click', () => {
+        const checkboxes = document.querySelectorAll('.project-checkbox');
+        const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+
+        checkboxes.forEach(cb => {
+            cb.checked = !allChecked;
+        });
+        updateBulkDelete();
+    });
+
+    // Listen to individual checkbox changes
+    projectContainer.addEventListener('change', (e) => {
+        if (e.target.classList.contains('project-checkbox')) {
+            updateBulkDelete();
+        }
+    });
+
+    // Bulk Delete Action
+    bulkDeleteBtn.addEventListener('click', () => {
+        if (!confirm('Are you sure you want to permanently delete the selected projects?')) return;
+
+        const checked = document.querySelectorAll('.project-checkbox:checked');
+        checked.forEach(checkbox => {
+            const projectItem = checkbox.closest('.project-item');
+            if (projectItem) projectItem.remove();
+        });
+
+        updateBulkDelete();
+
+        // If no projects left, show empty state
+        const remainingProjects = document.querySelectorAll('.project-item');
+        if (remainingProjects.length === 0) {
+            emptyState.style.display = 'flex';
+        }
+    });
+
+    // Initial: hide empty state if projects exist
+    const hasProjects = document.querySelectorAll('.project-item').length > 0;
+    if (hasProjects) {
+        emptyState.style.display = 'none';
+    }
+    function addProjectToList(name, tech = '') {
+    // Safety check: ensure required elements exist
+    const emptyState = document.getElementById('emptyProjectState');
+    const projectContainer = document.getElementById('projectContainer');
+
+    if (!projectContainer) {
+        console.error('Project container not found!');
+        return;
+    }
+
+    // Hide empty state if it's visible
+    if (emptyState) {
+        emptyState.style.display = 'none';
+    }
+
+    // Sanitize name to prevent XSS (basic)
+    const safeName = name.trim() || 'Untitled Project';
+    const safeTech = tech.trim() || 'Unknown Stack';
+
+    // Create the project item HTML
+    const html = `
+        <div class="project-item p-6 bg-white/5 border border-white/10 rounded-3xl flex items-center justify-between hover:border-blue-500/30 transition-all animate-in slide-in-from-bottom">
+            <div class="flex items-center gap-4">
+                <input type="checkbox" class="project-checkbox w-4 h-4 accent-blue-500 rounded">
+                <div>
+                    <h5 class="text-white font-black text-sm uppercase">${safeName}</h5>
+                    <p class="text-[9px] text-gray-500 uppercase tracking-wider">${safeTech}</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <span class="text-[8px] text-gray-600 uppercase tracking-widest">Just now</span>
+                <button onclick="deleteProjectItem(this)" class="text-red-500 hover:text-red-400 text-xs uppercase font-black transition-colors">
+                    Delete
+                </button>
+            </div>
+        </div>
+    `;
+
+    // Insert at the top (newest first)
+    projectContainer.insertAdjacentHTML('afterbegin', html);
+
+    // Re-initialize management (updates Select All, count, etc.)
+    initProjectManagement();
+
+    // Optional: Trigger a success notification
+    const now = new Date();
+    const date = now.toLocaleDateString('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/-/g, '.');
+    const time = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }).toUpperCase();
+
+    addSystemNotification(safeName, date, time);
+}
+}
+
+// Call this when switching to Projects view
+// e.g., in your updateView('Projects') function, add: initProjectManagement();
