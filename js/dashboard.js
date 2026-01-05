@@ -3056,13 +3056,9 @@ function openProjectNamingModal() {
 
 // 3. RIGHT SIDE SLIDE-OUT MODAL
 function triggerRightSlideOut() {
-    const nameInput = document.getElementById('pName');
-    const descInput = document.getElementById('pDesc');
+    const name = document.getElementById('pName').value.trim();
+    const desc = document.getElementById('pDesc').value.trim() || "No detailed description provided.";
     
-    const name = nameInput.value.trim();
-    const desc = descInput.value.trim() || "No detailed description provided.";
-    
-    // Using Custom Modal Alert instead of standard alert
     if (!name) {
         showNxxtAlert("PROJECT NAME REQUIRED FOR INITIALIZATION");
         return;
@@ -3072,29 +3068,60 @@ function triggerRightSlideOut() {
 
     const slideOutHtml = `
         <div id="rightSlideOverlay" class="fixed inset-0 z-[110] bg-black/40 backdrop-blur-sm">
-            <div class="absolute right-0 top-0 h-full w-full max-w-md bg-[#02010a] border-l border-white/10 p-10 animate-in slide-in-from-right duration-500">
-                <div class="h-full flex flex-col justify-between">
-                    <div class="space-y-8">
-                        <div>
-                            <span class="text-[9px] text-blue-500 font-black uppercase tracking-widest">Advanced Config</span>
-                            <h6 class="text-white font-black text-2xl uppercase italic tracking-tighter mt-2">${name}</h6>
-                            <p class="text-gray-500 text-[10px] font-bold uppercase tracking-widest mt-4 leading-relaxed">${desc}</p>
-                        </div>
-                        <div class="p-6 bg-white/5 border border-white/5 rounded-2xl space-y-4">
-                             <p class="text-[9px] text-white font-black uppercase">Neural Parameters</p>
-                             <div class="flex justify-between text-[8px] text-gray-500 font-bold uppercase">
-                                <span>Optimization Status</span>
-                                <span class="text-blue-500 italic">Ready</span>
-                             </div>
-                             <div class="h-1 bg-white/10 w-full rounded-full overflow-hidden">
-                                <div class="h-full bg-blue-600 w-1/2 animate-pulse"></div>
-                             </div>
+            <div class="absolute right-0 top-0 h-full w-full max-w-md bg-[#02010a] border-l border-white/10 p-8 animate-in slide-in-from-right duration-500 overflow-y-auto">
+                <div class="flex flex-col gap-8">
+                    <div>
+                        <span class="text-[9px] text-blue-500 font-black uppercase tracking-widest">Advanced Config</span>
+                        <h6 class="text-white font-black text-2xl uppercase italic tracking-tighter mt-2">${name}</h6>
+                    </div>
+
+                    <div class="space-y-3">
+                        <p class="text-[9px] text-white font-black uppercase tracking-widest">Project Visual Overlay</p>
+                        <div onclick="document.getElementById('projectImgInput').click()" 
+                            class="group relative w-full h-32 bg-white/5 border border-dashed border-white/10 rounded-2xl flex flex-col items-center justify-center cursor-pointer hover:border-blue-500/50 transition-all overflow-hidden">
+                            <input type="file" id="projectImgInput" class="hidden" accept="image/*" onchange="previewProjectImage(this)">
+                            <div id="imgPreviewPlaceholder" class="flex flex-col items-center gap-2">
+                                <i class="fas fa-camera text-gray-700 group-hover:text-blue-500 transition-colors"></i>
+                                <span class="text-[8px] text-gray-600 font-black uppercase">Upload Wallpaper / PFP</span>
+                            </div>
+                            <img id="imgPreview" class="hidden absolute inset-0 w-full h-full object-cover">
                         </div>
                     </div>
-                    <div class="flex gap-4">
+
+                    <div class="h-[1px] w-full bg-white/5"></div> <div class="space-y-3">
+                        <p class="text-[9px] text-white font-black uppercase tracking-widest">Core Classification</p>
+                        <div class="flex flex-wrap gap-2">
+                            ${['Personal', 'School', 'Job', 'Commercial'].map(type => `
+                                <div onclick="selectProjectType(this)" class="project-type-chip px-4 py-2 bg-white/5 border border-white/5 rounded-xl text-[9px] text-gray-500 font-black uppercase cursor-pointer hover:bg-white/10 transition-all">
+                                    ${type}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center">
+                            <p class="text-[9px] text-white font-black uppercase tracking-widest">Neural Uplinks (Users)</p>
+                            <span id="userCount" class="text-blue-500 text-[10px] font-black">1</span>
+                        </div>
+                        <input type="range" min="1" max="10" value="1" 
+                            class="w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-blue-600"
+                            oninput="checkUserLimit(this)">
+                        <p class="text-[8px] text-gray-700 font-bold uppercase tracking-widest">Free Mode Limit: 4 Nodes</p>
+                    </div>
+
+                    <div class="h-[1px] w-full bg-white/5"></div> <div class="space-y-4">
+                        <input type="text" id="supName" placeholder="SUPERVISOR NAME (OPTIONAL)" 
+                            class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-[9px] font-black uppercase tracking-widest focus:border-blue-500 focus:outline-none">
+                        
+                        <textarea id="shortDesc" placeholder="SHORT SUMMARY (OPTIONAL)" 
+                            class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-[9px] font-black uppercase tracking-widest h-20 focus:border-blue-500 focus:outline-none resize-none"></textarea>
+                    </div>
+
+                    <div class="flex gap-4 pb-10">
                         <button onclick="closeRightSlide()" class="flex-1 py-4 bg-white/5 text-gray-500 text-[10px] font-black uppercase tracking-widest rounded-2xl">Cancel</button>
                         <button onclick="finalizeProject('${name.replace(/'/g, "\\'")}', '${desc.replace(/'/g, "\\'")}')" 
-                            class="flex-1 py-4 bg-blue-600 text-[#020617] text-[10px] font-black uppercase tracking-widest rounded-2xl shadow-lg shadow-blue-500/20 transition-all hover:bg-blue-400">
+                            class="flex-1 py-4 bg-blue-600 text-[#020617] text-[10px] font-black uppercase tracking-widest rounded-2xl shadow-lg">
                             Finalize & Deploy
                         </button>
                     </div>
@@ -3103,49 +3130,152 @@ function triggerRightSlideOut() {
         </div>`;
     document.body.insertAdjacentHTML('beforeend', slideOutHtml);
 }
+// Image Gallery Preview
+function previewProjectImage(input) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('imgPreview').src = e.target.result;
+            document.getElementById('imgPreview').classList.remove('hidden');
+            document.getElementById('imgPreviewPlaceholder').classList.add('hidden');
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
+}
 
+// Project Type Selection
+function selectProjectType(element) {
+    document.querySelectorAll('.project-type-chip').forEach(chip => {
+        chip.classList.remove('border-blue-500', 'text-blue-500', 'bg-blue-500/10');
+    });
+    element.classList.add('border-blue-500', 'text-blue-500', 'bg-blue-500/10');
+}
+
+// User Limit Check (Slide out notification)
+function checkUserLimit(input) {
+    const val = parseInt(input.value);
+    document.getElementById('userCount').innerText = val;
+    
+    if (val > 4) {
+        showTopRightToast("FREE MODE LIMIT EXCEEDED: Upgrade to Pro for 5+ users.");
+        input.value = 4; // Reset to 4
+        document.getElementById('userCount').innerText = 4;
+    }
+}
+
+// Right-Top Slide-out Notification
+function showTopRightToast(message) {
+    const toastId = 'toast-' + Date.now();
+    const toastHtml = `
+        <div id="${toastId}" class="fixed top-8 right-8 z-[200] bg-[#050b1d] border border-blue-500/30 p-5 rounded-2xl flex items-center gap-4 animate-in slide-in-from-right duration-500 shadow-2xl">
+            <div class="w-8 h-8 bg-blue-500/10 rounded-lg flex items-center justify-center">
+                <i class="fas fa-crown text-blue-500 text-xs"></i>
+            </div>
+            <div>
+                <p class="text-white font-black text-[9px] uppercase tracking-widest">System Restriction</p>
+                <p class="text-gray-500 text-[8px] font-bold uppercase mt-1">${message}</p>
+            </div>
+        </div>`;
+    document.body.insertAdjacentHTML('beforeend', toastHtml);
+    setTimeout(() => {
+        const t = document.getElementById(toastId);
+        if(t) t.classList.add('animate-out', 'fade-out', 'slide-out-to-right');
+        setTimeout(() => t?.remove(), 500);
+    }, 4000);
+}
 // 4. DEPLOYMENT & 6-SECOND LOADER
 function finalizeProject(name, desc) {
+    const pfpSrc = document.getElementById('imgPreview').src;
+    const hasPfp = !document.getElementById('imgPreview').classList.contains('hidden');
+    const supervisor = document.getElementById('supName').value || "N/A";
+    const category = document.querySelector('.project-type-chip.text-blue-500')?.innerText || "General";
+    
     closeRightSlide();
     
+    // 6-Second Loader
     const loaderHtml = `
         <div id="loaderOverlay" class="fixed inset-0 z-[200] bg-[#020617] flex flex-col items-center justify-center">
             <div class="w-16 h-16 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin mb-6"></div>
-            <p class="text-[10px] text-white font-black uppercase tracking-[0.5em] animate-pulse">Initializing Neural Node...</p>
-            <p class="text-[8px] text-gray-700 font-black uppercase tracking-[0.2em] mt-2">Uploading Packet Streams</p>
+            <p class="text-[10px] text-white font-black uppercase tracking-[0.5em] animate-pulse">Deploying Neural Node...</p>
         </div>`;
     document.body.insertAdjacentHTML('beforeend', loaderHtml);
 
     setTimeout(() => {
         document.getElementById('loaderOverlay').remove();
         
-        // Handle UI Transition from Empty to Grid
+        // Handle UI Transition
         const emptyState = document.getElementById('emptyProjectState');
         const gridState = document.getElementById('projectGrid');
-        
         if (emptyState) emptyState.classList.add('hidden');
         if (gridState) gridState.classList.remove('hidden');
-        
+
+        // Capture Date/Time
+        const now = new Date();
+        const timestamp = `${now.getFullYear()}.${String(now.getMonth() + 1).padStart(2, '0')}.${String(now.getDate()).padStart(2, '0')}`;
+        const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+        // Generate Project Card with Image and Status
         const newProject = `
-            <div class="bg-[#050b1d] border border-white/5 rounded-[2rem] p-6 group hover:border-blue-500/30 transition-all animate-in zoom-in-95">
-                <div class="flex justify-between items-start mb-6">
-                    <div class="w-10 h-10 bg-blue-500/10 rounded-xl flex items-center justify-center">
-                        <i class="fas fa-microchip text-blue-500 text-sm"></i>
-                    </div>
-                    <div class="w-2 h-2 bg-green-500 rounded-full shadow-[0_0_8px_#22c55e]"></div>
+            <div class="bg-[#050b1d] border border-white/5 rounded-[2rem] p-6 group hover:border-blue-500/30 transition-all animate-in zoom-in-95 relative overflow-hidden">
+                <div class="absolute top-0 right-0 px-3 py-1 bg-green-500/10 border-b border-l border-green-500/20 rounded-bl-xl">
+                    <span class="text-[7px] text-green-500 font-black uppercase tracking-widest">Build Successful</span>
                 </div>
-                <h6 class="text-white font-black uppercase italic text-xs mb-2 truncate">${name}</h6>
-                <p class="text-[9px] text-gray-600 font-bold uppercase line-clamp-2 leading-relaxed">${desc}</p>
-                <div class="mt-6 flex justify-between items-center opacity-40 group-hover:opacity-100 transition-opacity">
-                    <span class="text-[8px] text-blue-500 font-black tracking-widest">STABLE v1.0</span>
-                    <i class="fas fa-chevron-right text-[8px] text-gray-800"></i>
+
+                <div class="flex justify-between items-start mb-6">
+                    <div class="w-12 h-12 rounded-2xl border border-white/10 overflow-hidden bg-blue-500/5 flex items-center justify-center">
+                        ${hasPfp ? `<img src="${pfpSrc}" class="w-full h-full object-cover">` : `<i class="fas fa-microchip text-blue-500"></i>`}
+                    </div>
+                    <span class="text-[8px] text-gray-600 font-black uppercase mt-2">${category}</span>
+                </div>
+
+                <h6 class="text-white font-black uppercase italic text-xs mb-1 truncate">${name}</h6>
+                <p class="text-[8px] text-blue-400 font-bold mb-3 uppercase tracking-tighter">SV: ${supervisor}</p>
+                <p class="text-[9px] text-gray-500 font-medium line-clamp-2 leading-relaxed mb-6">${desc}</p>
+                
+                <div class="pt-4 border-t border-white/5 flex justify-between items-center">
+                    <div class="flex flex-col">
+                        <span class="text-[7px] text-gray-700 font-black uppercase tracking-widest">Deployed</span>
+                        <span class="text-[8px] text-white font-bold">${timestamp}</span>
+                    </div>
+                    <i class="fas fa-chevron-right text-[10px] text-gray-800 group-hover:text-blue-500 transition-colors"></i>
                 </div>
             </div>`;
-            
-        gridState.insertAdjacentHTML('beforeend', newProject);
+
+        gridState.insertAdjacentHTML('afterbegin', newProject);
+
+        // 2. LOG TO NOTIFICATIONS AREA
+        addSystemNotification(name, timestamp, timeStr);
+        
     }, 6000);
 }
 
+// Function to inject build log into the Notifications tab
+function addSystemNotification(projName, date, time) {
+    const notifScroll = document.getElementById('notif-scroll-area');
+    const notifCount = document.getElementById('notif-count');
+    
+    const logHtml = `
+        <div class="notif-item p-5 bg-green-500/5 border border-green-500/20 rounded-3xl text-left relative overflow-hidden group hover:border-green-500/40 transition-all animate-in slide-in-from-top">
+            <div class="flex justify-between items-start mb-2">
+                <p class="text-[8px] font-black text-green-500 uppercase tracking-widest">Build Successful</p>
+                <span class="text-[7px] text-gray-600 font-bold uppercase">${date} | ${time}</span>
+            </div>
+            <p class="text-white text-[11px] font-bold leading-relaxed">
+                New Core Module <span class="text-green-500 italic">"${projName}"</span> has been successfully compiled and deployed to the Neural Repository.
+            </p>
+            <i class="fas fa-check-circle absolute -bottom-2 -right-2 text-green-500/10 text-4xl"></i>
+        </div>
+    `;
+
+    if (notifScroll) {
+        notifScroll.insertAdjacentHTML('afterbegin', logHtml);
+        // Increment badge/count if desired
+        if (notifCount) {
+            let current = parseInt(notifCount.innerText) || 0;
+            notifCount.innerText = (current + 1) + " new updates";
+        }
+    }
+}
 // UTILITY CLOSERS
 function closeCenterModal() { const m = document.getElementById('centerModalOverlay'); if(m) m.remove(); }
 function closeRightSlide() { const m = document.getElementById('rightSlideOverlay'); if(m) m.remove(); }
