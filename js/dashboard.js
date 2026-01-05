@@ -679,69 +679,92 @@ const views = {
     
 
 
-    'Side Hustle Hub': `
-    <div id="side-hustle-root" class="space-y-8 animate-in relative transition-all duration-500">
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div>
-                <h3 class="text-xl font-black text-blue-500 italic uppercase tracking-tighter">Freelance Marketplace</h3>
-                <p class="text-[9px] text-blue-600/60 font-bold uppercase tracking-widest mt-1">Browse gigs and start earning with your skills</p>
-            </div>
-            <div class="px-4 py-2 bg-blue-500/5 border border-blue-500/20 rounded-xl">
-                 <p class="text-[8px] font-black text-blue-500 uppercase tracking-widest italic">Economy Engine Initializing</p>
-            </div>
+   'Side Hustle Hub': `
+<div id="side-hustle-root" class="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-700 max-w-6xl mx-auto px-4 pb-40">
+    
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-white/5 pb-8">
+        <div>
+            <h3 class="text-2xl font-black text-white italic uppercase tracking-tighter flex items-center gap-3">
+                Economy Hub 
+                <span class="text-[9px] not-italic font-bold bg-emerald-500/10 text-emerald-500 px-2 py-0.5 rounded border border-emerald-500/20">v1.0-BETA</span>
+            </h3>
+            <p class="text-[10px] text-gray-500 font-bold uppercase tracking-[0.3em] mt-1">Decentralized Gig Exchange</p>
         </div>
+        
+        <button onclick="openGigPanel('Post New Gig')" class="bg-emerald-600 hover:bg-emerald-500 text-white px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all shadow-lg shadow-emerald-900/20 active:scale-95">
+            <i class="fas fa-plus mr-2"></i> Post a Gig
+        </button>
+    </div>
 
-        <div class="border-2 border-dashed border-blue-500/20 rounded-[3rem] py-24 flex flex-col items-center justify-center text-center bg-blue-500/[0.02] relative overflow-hidden">
-            <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-blue-500/10 via-transparent to-transparent"></div>
-            
-            <div class="relative z-10 px-6">
-                <div class="w-24 h-24 bg-blue-500/10 rounded-[2rem] flex items-center justify-center mb-8 mx-auto border border-blue-500/20 shadow-2xl">
-                    <i class="fas fa-hand-holding-usd text-4xl text-blue-500 animate-pulse"></i>
-                </div>
-                <h4 class="text-blue-400 font-black uppercase italic tracking-tighter text-2xl">Hub Under Construction</h4>
-                <p class="text-[10px] text-blue-600/70 font-bold uppercase tracking-[0.3em] mt-3 max-w-[320px] mx-auto leading-relaxed">
-                    Our financial engineers are building the secure payment gateway and gig matching algorithm. Earning modules will be live shortly.
-                </p>
-                
-                <div class="mt-10 flex flex-col items-center gap-4">
-                    <div class="flex items-center gap-2">
-                         <div class="w-1 h-1 bg-blue-500 rounded-full animate-ping"></div>
-                         <div class="w-32 h-[2px] bg-blue-900/30 rounded-full overflow-hidden">
-                            <div class="h-full bg-blue-500 w-1/4 animate-pulse"></div>
-                         </div>
-                         <div class="w-1 h-1 bg-blue-500 rounded-full animate-ping"></div>
+    <nav class="flex overflow-x-auto no-scrollbar gap-4 py-2 mask-edge-fade">
+        ${['All Gigs', 'Development', 'Design', 'AI Training', 'Writing', 'Marketing'].map((cat, i) => `
+            <button onclick="showHustleAlert('Filter: ${cat}')" class="flex-shrink-0 px-4 py-2 rounded-xl border border-white/5 bg-white/5 text-[9px] font-black uppercase tracking-widest text-gray-400 hover:text-white transition-all">
+                ${cat}
+            </button>
+        `).join('')}
+    </nav>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        ${[
+            { title: 'Neural Network Labeling', client: 'Nxxt Labs', pay: '$250', time: '2 days left', icon: 'fa-brain' },
+            { title: 'Python Scraper for FinTech', client: 'Vector Corp', pay: '$800', time: '5 hours left', icon: 'fa-code' },
+            { title: 'Cyberpunk UI Kit Design', client: 'Neon Inc', pay: '$1,200', time: '1 week left', icon: 'fa-paint-brush' },
+            { title: 'API Documentation Audit', client: 'Nexus Soft', pay: '$450', time: '12 hours left', icon: 'fa-file-alt' }
+        ].map(gig => `
+            <div class="group p-6 bg-white/[0.02] border border-white/5 rounded-[2.5rem] hover:border-emerald-500/30 transition-all duration-500">
+                <div class="flex justify-between items-start mb-6">
+                    <div class="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-emerald-500/10 transition-colors">
+                        <i class="fas ${gig.icon} text-emerald-500/40 group-hover:text-emerald-500"></i>
                     </div>
-                    <button onclick="showHustleAlert('Marketplace Enrollment')" class="text-[8px] font-black text-blue-500/50 uppercase tracking-[0.5em] hover:text-blue-400 transition-colors cursor-pointer">
-                        Syncing Global Marketplace...
+                    <span class="text-[9px] font-mono text-emerald-500 bg-emerald-500/5 px-3 py-1 rounded-full border border-emerald-500/10">${gig.pay}</span>
+                </div>
+                
+                <h4 class="text-white font-black uppercase tracking-tight text-lg mb-1">${gig.title}</h4>
+                <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest mb-6">Client: ${gig.client}</p>
+                
+                <div class="flex items-center justify-between pt-6 border-t border-white/5">
+                    <span class="text-[8px] text-gray-600 font-bold uppercase"><i class="far fa-clock mr-1"></i> ${gig.time}</span>
+                    <button onclick="openGigPanel('Apply: ${gig.title}')" class="text-[9px] font-black text-emerald-500 uppercase tracking-[0.2em] hover:text-emerald-400 transition-colors">
+                        View Details <i class="fas fa-arrow-right ml-1"></i>
                     </button>
                 </div>
             </div>
-        </div>
+        `).join('')}
+    </div>
+</div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 opacity-40">
-            <div class="p-6 bg-blue-500/5 border border-blue-500/10 rounded-3xl flex items-center gap-4">
-                <div class="w-12 h-12 rounded-2xl bg-blue-500/10 flex items-center justify-center border border-blue-500/20">
-                    <i class="fas fa-code text-blue-500 text-sm"></i>
-                </div>
-                <div>
-                    <p class="text-[9px] font-black text-blue-400 uppercase tracking-widest">Web Development</p>
-                    <p class="text-[8px] text-blue-600/50 font-bold uppercase">Average: $450 - $1.2k</p>
-                </div>
+<div id="gig-side-panel" class="fixed top-0 right-0 h-full w-full md:w-[450px] bg-[#020617] border-l border-white/10 z-[2000] translate-x-full transition-transform duration-500 ease-in-out shadow-[-20px_0_50px_rgba(0,0,0,0.5)]">
+    <div class="flex flex-col h-full">
+        <div class="p-8 flex justify-between items-center border-b border-white/5">
+            <h3 id="panel-title" class="text-white font-black uppercase italic tracking-tighter">Application Terminal</h3>
+            <button onclick="closeGigPanel()" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10">
+                <i class="fas fa-times text-xs text-gray-500"></i>
+            </button>
+        </div>
+        
+        <div class="flex-1 p-8 flex flex-col items-center justify-center text-center">
+            <div class="w-20 h-20 bg-emerald-500/5 rounded-[2rem] border border-emerald-500/20 flex items-center justify-center mb-8">
+                <i class="fas fa-tools text-2xl text-emerald-500 animate-bounce"></i>
             </div>
-            <div class="p-6 bg-blue-500/5 border border-blue-500/10 rounded-3xl flex items-center gap-4">
-                <div class="w-12 h-12 rounded-2xl bg-blue-500/10 flex items-center justify-center border border-blue-500/20">
-                    <i class="fas fa-paint-brush text-blue-500 text-sm"></i>
-                </div>
-                <div>
-                    <p class="text-[9px] font-black text-blue-400 uppercase tracking-widest">UI/UX Design</p>
-                    <p class="text-[8px] text-blue-600/50 font-bold uppercase">Average: $300 - $800</p>
-                </div>
+            <h2 class="text-white font-black uppercase text-2xl tracking-tighter italic mb-4">Under Development</h2>
+            <p class="text-gray-500 text-[11px] font-bold uppercase tracking-[0.2em] leading-loose max-w-[280px]">
+                The interactive application flow and smart-contract verification are currently being stabilized. 
+            </p>
+            
+            <div class="mt-12 w-full space-y-4">
+                <div class="h-12 w-full bg-white/5 rounded-2xl border border-white/10 animate-pulse"></div>
+                <div class="h-32 w-full bg-white/5 rounded-2xl border border-white/10 animate-pulse"></div>
+                <button class="w-full py-5 bg-gray-800 text-gray-500 rounded-2xl text-[10px] font-black uppercase tracking-widest cursor-not-allowed">
+                    Submission Locked
+                </button>
             </div>
         </div>
     </div>
-
-
+</div>
+<div id="panel-backdrop" onclick="closeGigPanel()" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[1999] opacity-0 pointer-events-none transition-opacity duration-500"></div>
 `,
+
+    
 
 'Notifications': `
     <div id="notifications-container" class="max-w-md mx-auto content-card text-center animate-in">
@@ -2769,47 +2792,35 @@ function switchLabTab(tabName) {
 
 //// for the side hustle
 
-function showHustleAlert(feature) {
-    const root = document.getElementById('side-hustle-root');
-    if(root) root.style.filter = 'blur(15px)';
-
-    const modal = document.createElement('div');
-    modal.className = "fixed inset-0 z-[1000000] flex items-center justify-center p-6 bg-blue-950/40 backdrop-blur-sm animate-in fade-in duration-300 transition-opacity";
-    modal.innerHTML = `
-                <div id="hustle-modal-card" class="bg-[#050a1a] border border-blue-500/20 w-full max-w-sm rounded-[3rem] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300 transition-transform">
-                    <div class="p-10 text-center">
-                        <div class="w-20 h-20 bg-blue-500/10 rounded-3xl flex items-center justify-center mx-auto mb-6 border border-blue-500/20 rotate-12">
-                            <i class="fas fa-wallet text-blue-500 text-3xl animate-pulse"></i>
-                        </div>
-                        <h3 class="text-blue-500 font-black uppercase italic text-2xl tracking-tighter mb-2">${feature}</h3>
-                        <p class="text-blue-600/60 text-[11px] font-bold uppercase tracking-[0.2em] leading-relaxed">
-                            The Side Hustle Marketplace is currently being optimized for secure transactions.
-                        </p>
-                    </div>
-                    <div class="p-8 bg-blue-500/5 border-t border-blue-500/10">
-                        <button id="close-hustle-modal" class="w-full py-5 bg-blue-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-blue-500 transition-all active:scale-95">
-                            Understood
-                        </button>
-                    </div>
-                </div>`;
-
-    document.body.appendChild(modal);
-
-    document.getElementById('close-hustle-modal').onclick = () => {
-        const card = document.getElementById('hustle-modal-card');
-        if(card) card.style.transform = 'scale(0.9)';
-        modal.style.opacity = '0';
-
-        if(root) {
-            root.style.transition = 'filter 0.4s ease';
-            root.style.filter = 'none';
-        }
-
-        setTimeout(() => {
-            modal.remove();
-        }, 300);
-    };
+function openGigPanel(title) {
+    const panel = document.getElementById('gig-side-panel');
+    const backdrop = document.getElementById('panel-backdrop');
+    const titleEl = document.getElementById('panel-title');
+    
+    if(titleEl) titleEl.innerText = title;
+    
+    // Slide in
+    panel.classList.remove('translate-x-full');
+    backdrop.classList.add('opacity-100', 'pointer-events-auto');
+    
+    // Prevent main body scroll
+    document.body.style.overflow = 'hidden';
 }
+
+function closeGigPanel() {
+    const panel = document.getElementById('gig-side-panel');
+    const backdrop = document.getElementById('panel-backdrop');
+    
+    // Slide out
+    panel.classList.add('translate-x-full');
+    backdrop.classList.remove('opacity-100', 'pointer-events-auto');
+    
+    // Restore main body scroll
+    document.body.style.overflow = '';
+}
+
+
+
 
 
 ///// for the Xt pay
