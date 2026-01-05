@@ -2984,6 +2984,7 @@ renderUI();
 
 ///// for the projects 
 /**
+/**
  * FULLY WORKING & PERSISTENT NXXT PROJECT SYSTEM
  * - FIXED: Persistence bug (getItem instead of getElementById)
  * - Projects now truly persist across all tabs/switches/refresh
@@ -3139,13 +3140,10 @@ function showTopRightToast(message) {
 function updateProjectCounter() {
     const countElement = document.getElementById('projectCount');
     if (!countElement) return;
-
     const gridCount = document.querySelectorAll('#projectGrid .project-card').length;
     const listCount = document.querySelectorAll('#projectContainer .project-item').length;
     const total = Math.max(gridCount, listCount);
-
     countElement.textContent = total;
-
     if (total > (parseInt(countElement.dataset.last) || 0)) {
         countElement.classList.add('animate-pulse');
         setTimeout(() => countElement.classList.remove('animate-pulse'), 1000);
@@ -3159,22 +3157,17 @@ function finalizeProject(name, desc) {
     const hasPfp = pfpSrc && !document.getElementById('imgPreview')?.classList.contains('hidden');
     const supervisor = document.getElementById('supName')?.value.trim() || "N/A";
     const category = document.querySelector('.project-type-chip.text-blue-500')?.innerText || "General";
-
     closeRightSlide();
-
     const loaderHtml = `<div id="loaderOverlay" class="fixed inset-0 z-[200] bg-[#020617] flex flex-col items-center justify-center">
         <div class="w-16 h-16 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin mb-6"></div>
         <p class="text-[10px] text-white font-black uppercase tracking-[0.5em] animate-pulse">Deploying Module...</p>
     </div>`;
     document.body.insertAdjacentHTML('beforeend', loaderHtml);
-
     setTimeout(() => {
         document.getElementById('loaderOverlay')?.remove();
-
         const now = new Date();
         const timestamp = `${now.getFullYear()}.${String(now.getMonth() + 1).padStart(2, '0')}.${String(now.getDate()).padStart(2, '0')}`;
         const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }).toUpperCase();
-
         /* DASHBOARD GRID CARD */
         const grid = document.getElementById('projectGrid');
         if (grid) {
@@ -3203,29 +3196,22 @@ function finalizeProject(name, desc) {
                 </div>`;
             grid.insertAdjacentHTML('afterbegin', cardHtml);
         }
-
         /* MANAGEMENT LIST ITEM */
         addProjectToManagementList(name, category);
-
         /* NOTIFICATION */
         addSystemNotification(name, timestamp, timeStr);
-
         /* HIDE EMPTY STATES */
         document.querySelectorAll('#emptyProjectState').forEach(el => el.classList.add('hidden'));
-
         saveAllData();
         updateProjectCounter();
     }, 3000);
 }
-
 /* ADD TO MANAGEMENT LIST */
 function addProjectToManagementList(name, tech = 'General') {
     const container = document.getElementById('projectContainer');
     if (!container) return;
-
     const empty = document.getElementById('emptyProjectState');
     if (empty) empty.classList.add('hidden');
-
     const html = `
         <div class="project-item p-6 bg-white/5 border border-white/10 rounded-3xl flex items-center justify-between hover:border-blue-500/30 transition-all mb-4">
             <div class="flex items-center gap-4">
@@ -3235,19 +3221,17 @@ function addProjectToManagementList(name, tech = 'General') {
                     <p class="text-[9px] text-gray-500 uppercase tracking-wider">${tech}</p>
                 </div>
             </div>
-            <button onclick="deleteProjectEverywhere(this, '${name.replace(/'/g, "\\'")}')" 
+            <button onclick="deleteProjectEverywhere(this, '${name.replace(/'/g, "\\'")}')"
                     class="text-red-500 hover:text-red-400 text-xs uppercase font-black">
                 Delete
             </button>
         </div>`;
     container.insertAdjacentHTML('afterbegin', html);
 }
-
 /* DELETE FROM BOTH VIEWS */
 function deleteProjectEverywhere(button, projectName) {
     const item = button.closest('.project-item');
     if (item) item.remove();
-
     document.querySelectorAll('#projectGrid .project-card').forEach(card => {
         const title = card.querySelector('h6')?.innerText.trim();
         if (title === projectName) {
@@ -3255,23 +3239,19 @@ function deleteProjectEverywhere(button, projectName) {
             setTimeout(() => card.remove(), 400);
         }
     });
-
     if (document.querySelectorAll('#projectContainer .project-item').length === 0) {
         document.querySelectorAll('#emptyProjectState').forEach(el => el.classList.remove('hidden'));
     }
     if (document.querySelectorAll('#projectGrid .project-card').length === 0) {
         document.getElementById('projectGrid')?.classList.add('hidden');
     }
-
     saveAllData();
     updateProjectCounter();
 }
-
 /* NOTIFICATIONS */
 function addSystemNotification(projName, date, time) {
     const formattedDate = date || new Date().toLocaleDateString('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/-/g, '.');
     const formattedTime = time || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }).toUpperCase();
-
     const logHtml = `
         <div class="notif-item p-5 bg-green-500/5 border border-green-500/20 rounded-3xl text-left relative overflow-hidden group hover:border-green-500/40 transition-all animate-in slide-in-from-top mb-3">
             <div class="flex justify-between items-start mb-2">
@@ -3280,13 +3260,11 @@ function addSystemNotification(projName, date, time) {
             </div>
             <p class="text-white text-[11px] font-bold leading-relaxed">New Core Module <span class="text-green-500 italic">"${projName}"</span> successfully compiled.</p>
         </div>`;
-
     const scrollArea = document.getElementById('notif-scroll-area');
     if (scrollArea) {
         scrollArea.insertAdjacentHTML('afterbegin', logHtml);
         updateNotificationUI();
     }
-
     if (typeof views !== 'undefined' && views['Notifications']) {
         const temp = document.createElement('div');
         temp.innerHTML = views['Notifications'];
@@ -3302,10 +3280,8 @@ function addSystemNotification(projName, date, time) {
             views['Notifications'] = temp.innerHTML;
         }
     }
-
     saveAllData();
 }
-
 function updateNotificationUI() {
     const badge = document.getElementById('notif-badge');
     const countText = document.getElementById('notif-count');
@@ -3315,13 +3291,11 @@ function updateNotificationUI() {
         countText.innerText = `${current + 1} new updates`;
     }
 }
-
 /* BULK DELETE & SELECT ALL */
 function initProjectManagement() {
     const bulkBtn = document.getElementById('bulkDeleteBtn');
     const selectAllBtn = document.getElementById('selectAllBtn');
     if (!bulkBtn || !selectAllBtn) return;
-
     const updateUI = () => {
         const checked = document.querySelectorAll('.project-checkbox:checked');
         const total = document.querySelectorAll('.project-checkbox').length;
@@ -3331,18 +3305,15 @@ function initProjectManagement() {
         bulkBtn.classList.toggle('cursor-not-allowed', checked.length === 0);
         selectAllBtn.textContent = checked.length === total && total > 0 ? 'Deselect All' : 'Select All';
     };
-
     selectAllBtn.onclick = () => {
         const all = document.querySelectorAll('.project-checkbox');
         const allChecked = Array.from(all).every(c => c.checked);
         all.forEach(c => c.checked = !allChecked);
         updateUI();
     };
-
     document.getElementById('projectContainer')?.addEventListener('change', e => {
         if (e.target.classList.contains('project-checkbox')) updateUI();
     });
-
     bulkBtn.onclick = () => {
         if (!confirm('Permanently delete selected projects?')) return;
         const checked = document.querySelectorAll('.project-checkbox:checked');
@@ -3352,28 +3323,23 @@ function initProjectManagement() {
             if (name) names.push(name);
             cb.closest('.project-item').remove();
         });
-
         names.forEach(name => {
             document.querySelectorAll('#projectGrid .project-card').forEach(card => {
                 if (card.querySelector('h6')?.innerText.trim() === name) card.remove();
             });
         });
-
         if (document.querySelectorAll('#projectContainer .project-item').length === 0) {
             document.querySelectorAll('#emptyProjectState').forEach(el => el.classList.remove('hidden'));
         }
         if (document.querySelectorAll('#projectGrid .project-card').length === 0) {
             document.getElementById('projectGrid')?.classList.add('hidden');
         }
-
         updateUI();
         saveAllData();
         updateProjectCounter();
     };
-
     updateUI();
 }
-
 /* STORAGE */
 function saveAllData() {
     const data = {
@@ -3385,14 +3351,11 @@ function saveAllData() {
     };
     localStorage.setItem('nxxt_system_data_v5', JSON.stringify(data)); // New key to clear old data
 }
-
 function loadAllData() {
     const saved = localStorage.getItem('nxxt_system_data_v5');
     if (!saved) return;
-
     try {
         const data = JSON.parse(saved);
-
         const grid = document.getElementById('projectGrid');
         if (data.grid && grid) {
             grid.innerHTML = data.grid;
@@ -3401,37 +3364,30 @@ function loadAllData() {
                 document.querySelectorAll('#emptyProjectState').forEach(el => el.classList.add('hidden'));
             }
         }
-
         const container = document.getElementById('projectContainer');
         if (data.list && container) {
             container.innerHTML = data.list;
         }
-
         const scrollArea = document.getElementById('notif-scroll-area');
         if (data.notifs && scrollArea) {
             scrollArea.innerHTML = data.notifs;
         }
-
         const countText = document.getElementById('notif-count');
         if (data.notifCount && countText) {
             countText.innerText = data.notifCount;
             if (parseInt(data.notifCount) > 0) document.getElementById('notif-badge')?.classList.remove('hidden');
         }
-
         if (data.rawNotifs && typeof views !== 'undefined') {
             views['Notifications'] = data.rawNotifs;
         }
-
         updateProjectCounter();
         initProjectManagement();
     } catch (e) {
         console.error('Load failed:', e);
     }
 }
-
 function closeCenterModal() { document.getElementById('centerModalOverlay')?.remove(); }
 function closeRightSlide() { document.getElementById('rightSlideOverlay')?.remove(); }
-
 /* VIEW SWITCHING – FULL PERSISTENCE */
 const originalUpdateView = window.updateView;
 window.updateView = function(viewName) {
@@ -3440,14 +3396,12 @@ window.updateView = function(viewName) {
         const main = document.getElementById('main-content') || document.querySelector('main') || document.body;
         if (views && views[viewName]) main.innerHTML = views[viewName];
     }
-
     // Always restore + update after switch
     setTimeout(() => {
         loadAllData();
         updateProjectCounter();
     }, 50);
 };
-
 /* INITIAL LOAD */
 window.addEventListener('load', () => {
     loadAllData();
