@@ -3259,66 +3259,58 @@ function finalizeProject(name, desc) {
  * Updates the 'Transmissions' view dynamically
  */
 function addSystemNotification(projName, date, time) {
-    const notifScroll = document.getElementById('notif-scroll-area');
-    const notifCount = document.getElementById('notif-count');
-    const bellIcon = document.getElementById('notif-bell-icon');
-    const badge = document.getElementById('notif-badge');
-    
-    // Create the Success Transmission Entry
+    // 1. Define the new log HTML
     const logHtml = `
         <div class="notif-item p-5 bg-green-500/5 border border-green-500/20 rounded-3xl text-left relative overflow-hidden group hover:border-green-500/40 transition-all animate-in slide-in-from-top">
             <div class="flex justify-between items-start mb-2">
-                <div class="flex items-center gap-2">
-                    <div class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></div>
-                    <p class="text-[8px] font-black text-green-500 uppercase tracking-widest">Build Successful</p>
-                </div>
+                <p class="text-[8px] font-black text-green-500 uppercase tracking-widest">Build Successful</p>
                 <span class="text-[7px] text-gray-600 font-bold uppercase">${date} | ${time}</span>
             </div>
             <p class="text-white text-[11px] font-bold leading-relaxed">
-                New project <span class="text-green-500 italic">"${projName}"</span> has been successfully compiled and deployed to projects.
+                New Core Module <span class="text-green-500 italic">"${projName}"</span> has been successfully compiled.
             </p>
             <i class="fas fa-check-circle absolute -bottom-2 -right-2 text-green-500/10 text-4xl"></i>
         </div>
     `;
 
-    if (notifScroll) {
-        // Inject at top of list
-        notifScroll.insertAdjacentHTML('afterbegin', logHtml);
-
-        // Update Notification Counter
-        if (notifCount) {
-            let current = parseInt(notifCount.innerText) || 0;
-            notifCount.innerText = (current + 1) + " new updates";
-        }
-
-        // Visual Feedback: Shake the Bell and ensure badge is visible
-        if (bellIcon) {
-            bellIcon.classList.add('animate-shake');
-            setTimeout(() => bellIcon.classList.remove('animate-shake'), 1000);
-        }
-        if (badge) {
-            badge.classList.remove('hidden');
+    // 2. CHECK THE LIVE DOM FIRST (If user is currently on the Transmissions page)
+    const activeScrollArea = document.getElementById('notif-scroll-area');
+    
+    if (activeScrollArea) {
+        // User is looking at the notifications right now - inject live
+        activeScrollArea.insertAdjacentHTML('afterbegin', logHtml);
+        updateNotificationUI();
+    } else {
+        // 3. FALLBACK: Update the raw string in your 'views' or 'templates' object
+        // Assuming your templates are stored in an object called 'views'
+        if (typeof views !== 'undefined' && views['Notifications']) {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(views['Notifications'], 'text/html');
+            const scrollArea = doc.getElementById('notif-scroll-area');
+            
+            if (scrollArea) {
+                scrollArea.insertAdjacentHTML('afterbegin', logHtml);
+                views['Notifications'] = doc.body.innerHTML;
+                updateNotificationUI();
+            }
         }
     }
 }
 
-/**
- * UI UTILITY: CLEAR NOTIFICATIONS
- */
-function clearNotifications() {
-    const scrollArea = document.getElementById('notif-scroll-area');
-    const countText = document.getElementById('notif-count');
+// Separate function to handle the visual bell and badge
+function updateNotificationUI() {
     const badge = document.getElementById('notif-badge');
-    
-    if (scrollArea) {
-        scrollArea.innerHTML = `
-            <div class="py-20 text-center opacity-20 animate-in fade-in">
-                <i class="fas fa-satellite-dish text-3xl mb-4"></i>
-                <p class="text-[9px] font-black uppercase tracking-widest">No Active Transmissions</p>
-            </div>
-        `;
-        if (countText) countText.innerText = "0 new updates";
-        if (badge) badge.classList.add('hidden');
+    const bell = document.getElementById('notif-bell-icon');
+    const countText = document.getElementById('notif-count');
+
+    if (badge) badge.classList.remove('hidden');
+    if (bell) {
+        bell.classList.add('animate-bounce');
+        setTimeout(() => bell.classList.remove('animate-bounce'), 2000);
+    }
+    if (countText) {
+        let current = parseInt(countText.innerText) || 0;
+        countText.innerText = (current + 1) + " new updates";
     }
 }
 // UTILITY CLOSERS
