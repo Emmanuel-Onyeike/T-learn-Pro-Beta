@@ -3352,10 +3352,12 @@ function saveAllData() {
     localStorage.setItem('nxxt_system_data_v5', JSON.stringify(data)); // New key to clear old data
 }
 function loadAllData() {
-    const saved = localStorage.getItem('nxxt_system_data_v5');
+    const saved = localStorage.getItem('nxxt_system_data_v5'); // ← FIXED: getItem, not getElementById
     if (!saved) return;
+
     try {
         const data = JSON.parse(saved);
+
         const grid = document.getElementById('projectGrid');
         if (data.grid && grid) {
             grid.innerHTML = data.grid;
@@ -3364,22 +3366,27 @@ function loadAllData() {
                 document.querySelectorAll('#emptyProjectState').forEach(el => el.classList.add('hidden'));
             }
         }
+
         const container = document.getElementById('projectContainer');
         if (data.list && container) {
             container.innerHTML = data.list;
         }
+
         const scrollArea = document.getElementById('notif-scroll-area');
         if (data.notifs && scrollArea) {
             scrollArea.innerHTML = data.notifs;
         }
+
         const countText = document.getElementById('notif-count');
         if (data.notifCount && countText) {
             countText.innerText = data.notifCount;
             if (parseInt(data.notifCount) > 0) document.getElementById('notif-badge')?.classList.remove('hidden');
         }
+
         if (data.rawNotifs && typeof views !== 'undefined') {
             views['Notifications'] = data.rawNotifs;
         }
+
         updateProjectCounter();
         initProjectManagement();
     } catch (e) {
