@@ -384,51 +384,36 @@ const views = {
     
 
 
-   'Collaboration': `
-<div class="space-y-6 animate-in fade-in duration-500 pb-20">
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+ 'Collaboration': `
+<div class="space-y-6 animate-in fade-in duration-500 pb-24">
+    <div class="flex flex-col gap-6">
         <div>
-            <h3 class="text-xl font-black text-white italic uppercase tracking-tighter">Neural Network</h3>
-            <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest mt-1">Global Partner Discovery Protocol</p>
+            <h3 class="text-xl font-black text-white italic uppercase tracking-tighter">Neural Collaboration</h3>
+            <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest mt-1">Peer-to-Peer Project Uplinks</p>
         </div>
-        <div class="relative group">
-            <input type="text" placeholder="SEARCH BY TECH STACK..." 
-                class="bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-[16px] md:text-[10px] text-white font-black uppercase tracking-widest focus:border-cyan-500 focus:outline-none w-full md:w-64 transition-all">
-            <i class="fas fa-search absolute right-4 top-1/2 -translate-y-1/2 text-gray-600 text-[10px]"></i>
+        
+        <div class="flex gap-2 p-1 bg-white/5 border border-white/10 rounded-2xl w-fit">
+            <button onclick="switchCollabTab('create')" id="tab-create" class="px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all bg-cyan-600 text-black">Create Request</button>
+            <button onclick="switchCollabTab('join')" id="tab-join" class="px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all text-gray-500 hover:text-white">Join</button>
         </div>
     </div>
 
-    <div id="partnerGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        <div class="bg-[#050b1d] border border-white/5 rounded-[2rem] p-6 hover:border-cyan-500/30 transition-all group relative overflow-hidden">
-            <div class="flex items-center gap-4 mb-6">
-                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-600 p-[1px]">
-                    <div class="w-full h-full bg-[#050b1d] rounded-[calc(1rem-1px)] flex items-center justify-center">
-                        <i class="fas fa-user-astronaut text-cyan-500"></i>
-                    </div>
-                </div>
-                <div>
-                    <h6 class="text-white font-black uppercase italic text-[11px]">Alex Rivers</h6>
-                    <p class="text-[8px] text-cyan-500 font-bold uppercase">Full Stack Architect</p>
-                </div>
-            </div>
-            <div class="space-y-3 mb-6">
-                <div class="flex flex-wrap gap-2">
-                    <span class="px-2 py-1 bg-white/5 rounded-md text-[7px] text-gray-400 font-black uppercase tracking-widest">React</span>
-                    <span class="px-2 py-1 bg-white/5 rounded-md text-[7px] text-gray-400 font-black uppercase tracking-widest">Python</span>
-                </div>
-                <p class="text-[9px] text-gray-500 leading-relaxed font-medium">Looking for a designer to assist with a neural-interface dashboard project.</p>
-            </div>
-            <button onclick="openCollaborationRequest('Alex Rivers')" 
-                class="w-full py-3 bg-white/5 group-hover:bg-cyan-600 group-hover:text-black text-white text-[9px] font-black uppercase tracking-widest rounded-xl transition-all">
-                Initiate Uplink
-            </button>
+    <div id="collab-create-content" class="space-y-4">
+        <div class="border border-dashed border-white/10 rounded-[2.5rem] p-12 text-center bg-white/[0.01]">
+            <i class="fas fa-layer-group text-gray-800 text-3xl mb-4"></i>
+            <p class="text-gray-500 text-[10px] font-black uppercase tracking-[0.2em]">Tap the [+] to initialize a new collab stream</p>
         </div>
-        
+    </div>
+
+    <div id="collab-join-content" class="hidden grid grid-cols-1 md:grid-cols-2 gap-4">
         </div>
+
+    <button id="collabFAB" onclick="openCollabNamingModal()" class="fixed bottom-8 right-8 w-16 h-16 bg-cyan-600 text-black rounded-2xl shadow-[0_0_30px_rgba(8,145,178,0.3)] flex items-center justify-center hover:scale-110 active:scale-95 transition-all z-[90]">
+        <i class="fas fa-plus text-xl"></i>
+    </button>
 </div>`,
 
-
-
+    
     
 
     'Team': `
@@ -3419,72 +3404,201 @@ window.addEventListener('load', () => {
 /////// this is for the collaborationnnnn
 
 
-function openCollaborationRequest(partnerName) {
+// Switch between the 'Create' feed and the 'Join' feed
+function switchCollabTab(tab) {
+    const createBtn = document.getElementById('tab-create');
+    const joinBtn = document.getElementById('tab-join');
+    const createCont = document.getElementById('collab-create-content');
+    const joinCont = document.getElementById('collab-join-content');
+    const fab = document.getElementById('collabFAB');
+
+    if (tab === 'create') {
+        createBtn.className = "px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest bg-cyan-600 text-black";
+        joinBtn.className = "px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest text-gray-500 hover:text-white";
+        createCont.classList.remove('hidden');
+        joinCont.classList.add('hidden');
+        fab.classList.remove('hidden');
+    } else {
+        joinBtn.className = "px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest bg-cyan-600 text-black";
+        createBtn.className = "px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest text-gray-500 hover:text-white";
+        joinCont.classList.remove('hidden');
+        createCont.classList.add('hidden');
+        fab.classList.add('hidden');
+    }
+}
+
+// Generate 10-character Alphanumeric Code
+function generateCollabCode() {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    let code = '';
+    for (let i = 0; i < 10; i++) code += chars.charAt(Math.floor(Math.random() * chars.length));
+    const input = document.getElementById('collabCode');
+    if(input) input.value = code;
+}
+
+// STEP 1: Center Modal for Naming & Code
+function openCollabNamingModal() {
+    const modalHtml = `
+    <div id="collabCenterModal" class="fixed inset-0 z-[200] bg-black/90 backdrop-blur-md flex items-center justify-center p-6 touch-none">
+        <div class="bg-[#050b1d] border border-cyan-500/20 w-full max-w-md rounded-[2.5rem] p-8 space-y-6 animate-in zoom-in-95">
+            <div class="flex items-center gap-3">
+                <i class="fas fa-plus-square text-cyan-500"></i>
+                <h5 class="text-white font-black uppercase italic tracking-widest text-sm">Initialize Stream</h5>
+            </div>
+            <div class="space-y-4">
+                <input type="text" id="cName" placeholder="COLLAB NAME" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-4 text-white text-[16px] md:text-[10px] font-black uppercase tracking-widest focus:border-cyan-500 outline-none">
+                
+                <div class="relative">
+                    <input type="text" id="collabCode" maxlength="10" placeholder="10-DIGIT ACCESS CODE" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-4 text-white text-[16px] md:text-[10px] font-black uppercase tracking-widest focus:border-cyan-500 outline-none">
+                    <button onclick="generateCollabCode()" class="absolute right-2 top-1/2 -translate-y-1/2 bg-cyan-500 text-black text-[8px] font-black px-3 py-2 rounded-lg hover:bg-white transition-all">AUTO-GEN</button>
+                </div>
+            </div>
+            <div class="flex gap-4">
+                <button onclick="document.getElementById('collabCenterModal').remove()" class="flex-1 py-4 bg-white/5 text-gray-500 text-[10px] font-black uppercase rounded-xl">Cancel</button>
+                <button onclick="openCollabConfigModal()" class="flex-1 py-4 bg-cyan-600 text-black text-[10px] font-black uppercase rounded-xl">Next Step</button>
+            </div>
+        </div>
+    </div>`;
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+}
+
+// STEP 2: Right Modal for Advanced Config (Stack, Roles, Location)
+function openCollabConfigModal() {
+    const name = document.getElementById('cName').value;
+    const code = document.getElementById('collabCode').value;
+    if(!name || code.length < 5) { showNxxtAlert("NAME AND VALID CODE REQUIRED"); return; }
+    
+    document.getElementById('collabCenterModal').remove();
+
+    const stacks = ['HTML', 'CSS', 'JS', 'React', 'Tailwind', 'Node.js', 'Python', 'MongoDB', 'Swift', 'C++', 'Java', 'Three.js'];
+
     const slideHtml = `
-        <div id="collabSlideOverlay" class="fixed inset-0 z-[150] bg-black/60 backdrop-blur-sm touch-none">
-            <div class="absolute right-0 top-0 h-full w-full max-w-md bg-[#02010a] border-l border-white/10 p-8 animate-in slide-in-from-right duration-500 flex flex-col">
-                <div class="flex-1">
-                    <span class="text-[9px] text-cyan-500 font-black uppercase tracking-[0.3em]">Protocol 04: Request</span>
-                    <h2 class="text-white font-black text-3xl uppercase italic tracking-tighter mt-2">Connect with ${partnerName}</h2>
-                    
-                    <div class="mt-12 space-y-6">
-                        <div class="space-y-2">
-                            <label class="text-[8px] text-gray-500 font-black uppercase tracking-[0.2em] ml-1">Your Proposal</label>
-                            <textarea id="collabMessage" placeholder="TYPE YOUR MISSION OBJECTIVE..." 
-                                class="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-white text-[16px] md:text-[11px] font-bold uppercase tracking-widest h-48 focus:border-cyan-500 focus:outline-none resize-none transition-all"></textarea>
-                        </div>
-                        
-                        <div class="bg-cyan-500/5 border border-cyan-500/10 rounded-2xl p-4 flex gap-4">
-                            <i class="fas fa-shield-halved text-cyan-500 mt-1"></i>
-                            <p class="text-[9px] text-gray-400 leading-relaxed font-bold uppercase">
-                                Your profile and current active projects will be shared with <span class="text-white">${partnerName}</span> for verification.
-                            </p>
+    <div id="collabSlideModal" class="fixed inset-0 z-[200] bg-black/60 backdrop-blur-sm">
+        <div class="absolute right-0 top-0 h-full w-full max-w-lg bg-[#02010a] border-l border-white/10 p-8 overflow-y-auto animate-in slide-in-from-right duration-500">
+            <div class="space-y-8 pb-12">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <span class="text-cyan-500 text-[9px] font-black uppercase tracking-[0.3em]">Protocol: Create</span>
+                        <h2 class="text-white font-black text-2xl uppercase italic mt-1">${name}</h2>
+                    </div>
+                    <div class="flex flex-col items-end">
+                        <span class="text-gray-600 text-[8px] font-black uppercase">Stream Code</span>
+                        <div class="flex items-center gap-2 mt-1">
+                            <span class="text-white text-[14px] font-black tracking-widest">${code}</span>
+                            <i onclick="navigator.clipboard.writeText('${code}'); showNxxtAlert('CODE COPIED')" class="fas fa-copy text-cyan-500 cursor-pointer text-xs"></i>
                         </div>
                     </div>
                 </div>
 
-                <div class="flex gap-4 pt-6 border-t border-white/5">
-                    <button onclick="document.getElementById('collabSlideOverlay').remove()" 
-                        class="flex-1 py-4 bg-white/5 text-gray-500 text-[10px] font-black uppercase tracking-widest rounded-2xl hover:text-white transition-all">
-                        Abort
-                    </button>
-                    <button onclick="sendCollabRequest('${partnerName}')" 
-                        class="flex-1 py-4 bg-cyan-600 text-black text-[10px] font-black uppercase tracking-widest rounded-2xl shadow-lg shadow-cyan-600/20 active:scale-95 transition-all">
-                        Send Request
-                    </button>
+                <div class="space-y-5">
+                    <textarea id="cLongDesc" placeholder="COLLAB MISSION DESCRIPTION (OPTIONAL)..." class="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-white text-[16px] md:text-[10px] font-bold uppercase h-32 outline-none focus:border-cyan-500 transition-all"></textarea>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <select id="cPrivacy" class="bg-white/5 border border-white/10 rounded-xl p-4 text-white text-[10px] font-black uppercase outline-none focus:border-cyan-500">
+                            <option value="Open">Open Collab</option>
+                            <option value="Private">Private Collab</option>
+                        </select>
+                        <input type="number" id="cLimit" placeholder="MAX USERS" class="bg-white/5 border border-white/10 rounded-xl p-4 text-white text-[16px] md:text-[10px] outline-none focus:border-cyan-500">
+                    </div>
+
+                    <div class="space-y-3">
+                        <p class="text-[9px] text-white font-black uppercase opacity-50">Select Stack (Select up to 10)</p>
+                        <div class="flex flex-wrap gap-2">
+                            ${stacks.map(s => `<div onclick="this.classList.toggle('bg-cyan-600'); this.classList.toggle('text-black'); this.classList.toggle('border-cyan-600')" class="px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-[8px] text-gray-400 font-black uppercase cursor-pointer transition-all">${s}</div>`).join('')}
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <input type="text" id="pubName" placeholder="PUBLISHER NAME" class="bg-white/5 border border-white/10 rounded-xl p-4 text-white text-[16px] md:text-[10px] outline-none">
+                        <input type="text" id="pubRole" placeholder="PUBLISHER ROLE" class="bg-white/5 border border-white/10 rounded-xl p-4 text-white text-[16px] md:text-[10px] outline-none">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <input type="text" id="cLoc" placeholder="LOCATION" class="bg-white/5 border border-white/10 rounded-xl p-4 text-white text-[16px] md:text-[10px] outline-none">
+                        <select id="cGender" class="bg-white/5 border border-white/10 rounded-xl p-4 text-white text-[10px] font-black uppercase outline-none">
+                            <option>Male</option>
+                            <option>Female</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="flex gap-4 pt-6">
+                    <button onclick="document.getElementById('collabSlideModal').remove()" class="flex-1 py-4 bg-white/5 text-gray-500 text-[10px] font-black uppercase rounded-2xl">Abort</button>
+                    <button onclick="finalizeCollab('${name}', '${code}')" class="flex-1 py-4 bg-cyan-600 text-black text-[10px] font-black uppercase rounded-2xl shadow-lg shadow-cyan-600/20">Finalize & Deploy</button>
                 </div>
             </div>
-        </div>`;
-    document.body.insertAdjacentHTML('beforeend', slideHtml);
-}
-function sendCollabRequest(name) {
-    const msg = document.getElementById('collabMessage').value;
-    if(!msg) {
-        showNxxtAlert("PROPOSAL DESCRIPTION REQUIRED FOR UPLINK");
-        return;
-    }
-
-    // Close the slide-out
-    document.getElementById('collabSlideOverlay').remove();
-
-    // Show high-tech loading state
-    const loader = `<div id="uplinkLoader" class="fixed inset-0 z-[200] bg-black flex items-center justify-center">
-        <div class="text-center">
-            <div class="w-20 h-20 border-2 border-cyan-500/20 border-t-cyan-500 rounded-full animate-spin mb-4"></div>
-            <p class="text-cyan-500 text-[8px] font-black uppercase tracking-[0.8em] animate-pulse">Syncing Neural Link...</p>
         </div>
     </div>`;
-    document.body.insertAdjacentHTML('beforeend', loader);
+    document.body.insertAdjacentHTML('beforeend', slideHtml);
+}
 
-    setTimeout(() => {
-        document.getElementById('uplinkLoader').remove();
-        
-        // Final Success Alert (Centered as per your instruction)
-        showNxxtAlert(`REQUEST TRANSMITTED TO ${name.toUpperCase()}. AWAITING RESPONSE.`);
-        
-        // Optional: Add to system notifications
-        if(typeof addSystemNotification === 'function') {
-            addSystemNotification(`Uplink sent to ${name}`, "PENDING", "");
-        }
-    }, 2500);
+// STEP 3: Deploy to the Join Tab
+function finalizeCollab(name, code) {
+    const publisher = document.getElementById('pubName').value || "ANONYMOUS";
+    const role = document.getElementById('pubRole').value || "DEVELOPER";
+    const desc = document.getElementById('cLongDesc').value || "No mission description provided.";
+    
+    const cardHtml = `
+    <div class="bg-[#050b1d] border border-white/5 rounded-[2rem] p-6 hover:border-cyan-500/30 transition-all group animate-in zoom-in-95">
+        <div class="flex justify-between items-start mb-4">
+            <h6 class="text-white font-black uppercase italic text-[13px] tracking-tight">${name}</h6>
+            <div class="flex flex-col items-end">
+                <span class="text-[7px] text-gray-600 font-black uppercase mb-1">Status</span>
+                <span class="px-2 py-1 bg-cyan-500/10 text-cyan-500 text-[7px] font-black rounded-md border border-cyan-500/20 uppercase">Active</span>
+            </div>
+        </div>
+        <p class="text-[9px] text-gray-500 line-clamp-2 mb-6 uppercase font-bold tracking-wide leading-relaxed">${desc}</p>
+        <div class="flex items-center gap-3 mb-6 bg-white/[0.02] p-3 rounded-2xl border border-white/5">
+            <div class="w-8 h-8 rounded-xl bg-cyan-600 flex items-center justify-center text-[11px] text-black font-black">${publisher[0].toUpperCase()}</div>
+            <div>
+                <p class="text-[8px] text-white font-black uppercase">${publisher}</p>
+                <p class="text-[7px] text-cyan-500 font-bold uppercase opacity-70">${role}</p>
+            </div>
+        </div>
+        <button onclick="openJoinRequestModal('${name}')" class="w-full py-4 bg-white/5 group-hover:bg-cyan-600 group-hover:text-black text-white text-[9px] font-black uppercase tracking-[0.2em] rounded-xl transition-all">Join Stream</button>
+    </div>`;
+
+    document.getElementById('collab-join-content').insertAdjacentHTML('afterbegin', cardHtml);
+    document.getElementById('collabSlideModal').remove();
+    
+    // Centered Modal Alert as per Saved Instructions
+    showNxxtAlert("STREAM DEPLOYED TO NETWORK");
+    switchCollabTab('join');
+}
+
+// STEP 4: Joining an existing task
+function openJoinRequestModal(collabName) {
+    const slideHtml = `
+    <div id="joinModal" class="fixed inset-0 z-[200] bg-black/60 backdrop-blur-sm">
+        <div class="absolute right-0 top-0 h-full w-full max-w-md bg-[#02010a] border-l border-white/10 p-8 animate-in slide-in-from-right duration-500 overflow-y-auto">
+            <span class="text-cyan-500 text-[9px] font-black uppercase tracking-[0.3em]">Protocol: Join</span>
+            <h2 class="text-white font-black text-2xl uppercase italic mb-8 mt-1">Uplink to ${collabName}</h2>
+            <div class="space-y-4">
+                <input type="text" id="jCode" placeholder="ENTER 10-DIGIT ACCESS CODE" class="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white text-[16px] md:text-[10px] font-black uppercase outline-none focus:border-cyan-500">
+                <input type="text" id="jName" placeholder="YOUR FULL NAME" class="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white text-[16px] md:text-[10px] font-black uppercase outline-none">
+                <textarea id="jIdea" placeholder="HOW WILL YOU CONTRIBUTE?" class="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white text-[16px] md:text-[10px] font-black uppercase h-32 outline-none"></textarea>
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <input type="text" id="jRole" placeholder="YOUR ROLE (FRONTEND...)" class="bg-white/5 border border-white/10 rounded-xl p-4 text-white text-[16px] md:text-[10px] outline-none">
+                    <input type="text" id="jLoc" placeholder="LOCATION" class="bg-white/5 border border-white/10 rounded-xl p-4 text-white text-[16px] md:text-[10px] outline-none">
+                </div>
+                
+                <select id="jGender" class="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white text-[10px] font-black uppercase outline-none">
+                    <option>Male</option>
+                    <option>Female</option>
+                </select>
+            </div>
+            <div class="flex gap-4 mt-8 pb-10">
+                <button onclick="document.getElementById('joinModal').remove()" class="flex-1 py-4 bg-white/5 text-gray-500 text-[10px] font-black uppercase rounded-xl">Abort</button>
+                <button onclick="submitJoinRequest()" class="flex-1 py-4 bg-cyan-600 text-black text-[10px] font-black uppercase rounded-xl">Submit Request</button>
+            </div>
+        </div>
+    </div>`;
+    document.body.insertAdjacentHTML('beforeend', slideHtml);
+}
+
+function submitJoinRequest() {
+    document.getElementById('joinModal').remove();
+    showNxxtAlert("UPLINK REQUEST SENT. CHECK NOTIFICATIONS.");
 }
