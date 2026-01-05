@@ -326,22 +326,3 @@ nav.flex {
 }
 
 /* Gig Side Panel depth and blur */
-#gig-side-panel {
-    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-#panel-body::-webkit-scrollbar {
-    display: none;
-}
-
-/* Custom icon rotation for post button */
-button:hover .fa-plus {
-    transform: rotate(90deg);
-    transition: transform 0.3s ease;
-}
-
-/* Glassmorphism for the gig cards */
-.group:hover {
-    background: rgba(16, 185, 129, 0.04);
-    box-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.5);
-}
