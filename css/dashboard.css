@@ -191,26 +191,57 @@ body {
         }
  /* --- NXXT AI CORE STYLES --- */
 
+/* 1. The Intelligence Lane (Responsive Container) */
 #nxxt-chat-results {
     scroll-behavior: smooth;
-    /* Hide scrollbar for Chrome/Safari but keep functionality */
     -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Firefox */
 }
 
 #nxxt-chat-results::-webkit-scrollbar {
-    width: 3px;
+    display: none; /* Hide scrollbar for clean UI */
 }
 
-#nxxt-chat-results::-webkit-scrollbar-thumb {
-    background: rgba(59, 130, 246, 0.2);
-    border-radius: 10px;
+/* 2. PC vs Mobile Spacing Logic */
+@media (min-width: 1024px) {
+    /* PC: Tighten the lane for readability */
+    .message-unit {
+        max-width: 80%;
+        margin-left: auto;
+        margin-right: auto;
+    }
 }
 
-/* --- CUSTOM ANIMATIONS --- */
+@media (max-width: 768px) {
+    /* Mobile: Maximize screen real estate */
+    .message-unit {
+        max-width: 100%;
+    }
+    
+    /* Increase bottom padding to clear the floating input bar */
+    .pb-52 {
+        padding-bottom: 16rem; 
+    }
+}
+
+/* 3. High-End Glassmorphism & Depth */
+.glass-panel {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.user-gradient {
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.2) 0%, rgba(29, 78, 216, 0.05) 100%);
+}
+
+/* 4. CUSTOM ANIMATIONS */
 
 @keyframes scan {
-    0% { transform: translateY(-100%); }
-    100% { transform: translateY(100%); }
+    0% { transform: translateY(-100%); opacity: 0; }
+    50% { opacity: 1; }
+    100% { transform: translateY(100%); opacity: 0; }
 }
 
 @keyframes shimmer {
@@ -218,31 +249,37 @@ body {
     100% { transform: translateX(100%); }
 }
 
-/* --- UTILITY CLASSES --- */
-
-.animate-scan {
-    animation: scan 2s linear infinite;
+/* Neural pulse for the active thinking icon */
+@keyframes neural-pulse {
+    0%, 100% { transform: scale(1); opacity: 1; box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.7); }
+    50% { transform: scale(1.2); opacity: 0.8; box-shadow: 0 0 15px 5px rgba(37, 99, 235, 0); }
 }
 
-.animate-shimmer {
-    animation: shimmer 1.8s infinite;
+/* 5. UTILITY CLASSES */
+
+.animate-scan { animation: scan 2.5s ease-in-out infinite; }
+.animate-shimmer { animation: shimmer 2s infinite; }
+.neural-pulse { animation: neural-pulse 2s infinite; }
+
+/* 6. CENTER MODAL ALERT (Per Instruction) */
+.modal-center {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
 }
 
-/* Glassmorphism Polish */
-.backdrop-blur-2xl {
-    backdrop-filter: blur(40px);
-    -webkit-backdrop-filter: blur(40px);
+.modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(2, 6, 23, 0.85);
+    backdrop-filter: blur(12px);
+    z-index: 9998;
 }
 
-/* Prose override for AI responses */
-.prose {
-    word-spacing: 0.05em;
-    letter-spacing: -0.01em;
-}
-
-/* Center Modal Alert Styles */
-.modal-overlay {
-    background: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(8px);
-    transition: all 0.3s ease;
+/* Masking for horizontal scroll areas */
+.mask-edge-fade {
+    mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
 }
