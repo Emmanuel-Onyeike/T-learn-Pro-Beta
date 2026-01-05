@@ -2430,32 +2430,30 @@ window.startBeginnerCourse = () => LessonEngine.startCourse();
 
 //// for the nxxxt Ai
 
-// REPLACE your current handleAISend with this version
 async function handleAISend() {
     const input = document.getElementById('ai-input');
     const resultArea = document.getElementById('nxxt-chat-results');
     const greet = document.getElementById('initial-greet');
-    const query = input.value.trim();
-    const API_KEY = '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'; // DO NOT SHARE THIS
-
+    const query = input.value.trim().toLowerCase();
+    
     if (!query) return;
 
-    // 1. CLEAR VIEWPORT
+    // 1. CLEAR INITIAL GREETING
     if (greet) greet.remove();
 
-    // 2. DISPLAY USER QUERY
+    // 2. DISPLAY USER MESSAGE
     const userMsg = `
     <div class="flex flex-col items-end animate-in slide-in-from-right-4 duration-500 mb-8">
         <div class="bg-blue-600/20 border border-blue-500/30 px-6 py-4 rounded-[2rem] rounded-tr-none max-w-[85%]">
-            <p class="text-[13px] font-medium text-white leading-relaxed uppercase">${query}</p>
+            <p class="text-[13px] font-medium text-white leading-relaxed uppercase">${input.value}</p>
         </div>
     </div>`;
     resultArea.insertAdjacentHTML('beforeend', userMsg);
-    
+
     input.value = '';
     input.style.height = 'auto';
 
-    // 3. CREATE AI RESPONSE CONTAINER (WITH LOADING STATE)
+    // 3. CREATE AI RESPONSE CONTAINER WITH LOADING
     const aiId = 'ai-' + Date.now();
     const aiMsg = `
     <div id="${aiId}" class="flex flex-col items-start animate-in fade-in duration-1000 mb-10">
@@ -2468,68 +2466,110 @@ async function handleAISend() {
         <div id="loader-${aiId}" class="space-y-3 w-full opacity-30 px-2">
             <div class="h-2 bg-white/20 rounded-full w-3/4 animate-pulse"></div>
             <div class="h-2 bg-white/20 rounded-full w-1/2 animate-pulse"></div>
+            <div class="h-2 bg-white/20 rounded-full w-full animate-pulse"></div>
         </div>
     </div>`;
     resultArea.insertAdjacentHTML('beforeend', aiMsg);
     resultArea.scrollTop = resultArea.scrollHeight;
 
-    // 4. REAL API CALL
-    try {
-        const response = await fetch('https://api.openai.com/v1/chat/completions', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${API_KEY}`
-            },
-            body: JSON.stringify({
-                model: "gpt-4o", // Or "gpt-5" when available in your tier
-                messages: [{ "role": "user", "content": query }],
-                temperature: 0.7
-            })
-        });
+    // 4. SIMULATED RESPONSE LOGIC (TESTING MODE)
+    await new Promise(resolve => setTimeout(resolve, 1500 + Math.random() * 1500)); // Fake delay 1.5–3s
 
-        const data = await response.json();
-        
-        // Handle standard Chat Completion structure
-        const aiResponseText = data.choices[0].message.content;
+    // Pool of 30 varied testing replies
+    const testReplies = [
+        "Nxxt protocol engaged. Systems nominal. How can I assist you today?",
+        "Scanning quantum fluctuations... All clear. Proceed with your query.",
+        "Verified uplink established. Awaiting command input.",
+        "Reality matrix stable. Your move, operator.",
+        "Neural lattice synchronized. I'm listening.",
+        "Cosmic background noise filtered. Speak freely.",
+        "Firewall integrity: 100%. You're safe here.",
+        "Initiating deep thought subroutine... Complete.",
+        "All sensors online. What do you need?",
+        "Echo location confirmed. Signal strength: maximum.",
+        "Decrypting intent... Success. Responding now.",
+        "Holographic projection active. I'm here.",
+        "Temporal anchor set. Let's make history.",
+        "Dark matter alignment optimal. Fire away.",
+        "Synaptic bridge formed. Connection solid.",
+        "Void whispers silenced. Your voice is clear.",
+        "Entropy levels dropping. Order restored.",
+        "Infinite loop avoided. Safe to proceed.",
+        "Paradox resolver online. Ask the impossible.",
+        "Reality checksum passed. You're not dreaming.",
+        // Code-specific replies (triggered by keywords)
+        "Here's a clean dark-mode card component in Tailwind:",
+        `<pre class="bg-black/50 p-4 rounded-xl overflow-x-auto"><code>&lt;div class="bg-gray-900 border border-gray-800 rounded-2xl p-8 shadow-2xl"&gt;
+    &lt;h1 class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600"&gt;Nxxt Level&lt;/h1&gt;
+    &lt;p class="text-gray-400 mt-4"&gt;Future is now.&lt;/p&gt;
+&lt;/div&gt;</code></pre>`,
+        "Simple glassmorphism button:",
+        `<div class="px-8 py-4 bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl hover:bg-white/20 transition-all shadow-2xl">
+    <span class="font-bold text-white">Activate Nxxt</span>
+</div>`,
+        "Animated gradient text effect:",
+        `<h1 class="text-6xl font-black bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent animate-pulse">
+    ULTRA MODE
+</h1>`,
+        "Floating orb loader (CSS only):",
+        `<style>
+        .orb { width: 40px; height: 40px; background: radial-gradient(circle at 30% 30%, #60a5fa, #3b82f6); border-radius: 50%; animation: float 4s infinite ease-in-out; box-shadow: 0 0 40px rgba(59,130,246,0.8); }
+        @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+        </style>
+        <div class="orb"></div>`,
+        "Neon grid background:",
+        `<div class="fixed inset-0 opacity-20 pointer-events-none">
+            <div class="absolute inset-0 bg-gradient-to-br from-blue-900 via-black to-purple-900"></div>
+            <div class="absolute inset-0" style="background-image: linear-gradient(cyan 1px, transparent 1px), linear-gradient(90deg, cyan 1px, transparent 1px); background-size: 50px 50px;"></div>
+        </div>`,
+        "Terminal-style response activated.",
+        "Matrix rain protocol initiated.",
+        "Deploying cyberpunk aesthetic package.",
+        "Nxxt vision: online. The future looks bright.",
+        "All systems go. We're live."
+    ];
 
-        // 5. UPDATE UI WITH REAL DATA
-        const aiContainer = document.getElementById(aiId);
-        document.getElementById(`loader-${aiId}`).remove(); // Remove pulsing bars
+    // Smart selection: if user asks for code/html/css/tailwind/etc.
+    let aiResponseText = testReplies[Math.floor(Math.random() * 20)]; // Default random from first 20
 
-        aiContainer.innerHTML = `
-            <div class="flex items-center gap-3 mb-4">
-                <div class="w-6 h-6 rounded-lg bg-blue-600 flex items-center justify-center shadow-[0_0_20px_rgba(37,99,235,0.3)]">
-                    <img src="/assets/Logo.webp" class="w-4 h-4">
-                </div>
-                <span class="text-[8px] font-black uppercase tracking-[0.2em] text-blue-500">Verified Response</span>
-            </div>
-            
-            <div class="prose prose-invert max-w-none text-gray-200 text-[14px] font-medium leading-[1.8] uppercase px-2">
-                ${aiResponseText.replace(/\n/g, '<br>')}
-            </div>
-
-            <div class="flex gap-4 mt-6 opacity-20 hover:opacity-100 transition-opacity px-2">
-                <button onclick="copyText(this)" class="hover:text-blue-500"><i class="far fa-copy text-xs"></i></button>
-                <button onclick="handleAISend()" class="hover:text-blue-500"><i class="fas fa-redo text-xs"></i></button>
-            </div>
-        `;
-
-    } catch (err) {
-        console.error(err);
-        const aiContainer = document.getElementById(aiId);
-        aiContainer.innerHTML = `<p class="text-red-500 text-[10px] font-black uppercase tracking-widest px-2">Uplink Failed: Check Connection or API Key</p>`;
+    if (query.includes('html') || query.includes('code') || query.includes('css') || query.includes('tailwind') || 
+        query.includes('button') || query.includes('card') || query.includes('component') || query.includes('style')) {
+        const codeReplies = testReplies.slice(20); // Last 10 are code snippets
+        aiResponseText = codeReplies[Math.floor(Math.random() * codeReplies.length)];
     }
-    
+
+    // 5. UPDATE UI WITH SIMULATED RESPONSE
+    const aiContainer = document.getElementById(aiId);
+    document.getElementById(`loader-${aiId}`).remove();
+
+    aiContainer.innerHTML = `
+        <div class="flex items-center gap-3 mb-4">
+            <div class="w-6 h-6 rounded-lg bg-blue-600 flex items-center justify-center shadow-[0_0_20px_rgba(37,99,235,0.3)]">
+                <img src="/assets/Logo.webp" class="w-4 h-4">
+            </div>
+            <span class="text-[8px] font-black uppercase tracking-[0.2em] text-blue-500">Verified Response</span>
+        </div>
+       
+        <div class="prose prose-invert max-w-none text-gray-200 text-[14px] font-medium leading-[1.8] uppercase px-2">
+            ${aiResponseText.replace(/\n/g, '<br>')}
+        </div>
+        <div class="flex gap-4 mt-6 opacity-20 hover:opacity-100 transition-opacity px-2">
+            <button onclick="copyText(this)" class="hover:text-blue-500"><i class="far fa-copy text-xs"></i></button>
+            <button onclick="handleAISend()" class="hover:text-blue-500"><i class="fas fa-redo text-xs"></i></button>
+        </div>
+    `;
+
     resultArea.scrollTop = resultArea.scrollHeight;
 }
 
-// Helper to copy text
+// Copy helper (unchanged)
 function copyText(btn) {
-    const text = btn.closest('.flex-col').querySelector('.prose').innerText;
+    const textElement = btn.closest('.flex-col').querySelector('.prose');
+    const text = textElement.innerText || textElement.textContent;
     navigator.clipboard.writeText(text);
     showNxxtAlert("CONTENT COPIED TO CLIPBOARD");
 }
+
 
 
 
