@@ -471,23 +471,23 @@ const views = {
 
 
 'Inbox': `
-<div class="space-y-8 animate-in fade-in duration-700 pb-32 relative min-h-screen bg-[#02010a] text-white selection:bg-blue-500/30">
+<div class="space-y-8 animate-in fade-in duration-700 pb-32 relative min-h-screen bg-transparent text-white selection:bg-blue-500/30">
     
     <div class="px-6 pt-6 flex justify-between items-end">
         <div>
             <div class="flex items-center gap-2 mb-1">
-                <p class="text-[8px] font-black text-blue-500 uppercase tracking-[0.5em]">Neural Link v4.0.2</p>
+                <p class="text-[8px] font-black text-blue-500 uppercase tracking-[0.5em]">System Version 4.0.2</p>
                 <span class="w-1.5 h-1.5 rounded-full bg-red-600 animate-pulse"></span>
             </div>
-            <h3 class="text-3xl font-black italic uppercase tracking-tighter leading-none">Comms Hub</h3>
+            <h3 class="text-3xl font-black italic uppercase tracking-tighter leading-none">Inbox</h3>
         </div>
         <div class="flex flex-col items-end opacity-40">
-            <p class="text-[7px] font-black uppercase tracking-widest text-gray-500">Node Status</p>
-            <p class="text-[9px] font-black uppercase text-red-500">Building...</p>
+            <p class="text-[7px] font-black uppercase tracking-widest text-gray-500">Current Status</p>
+            <p class="text-[9px] font-black uppercase text-red-500">We Are Building...</p>
         </div>
     </div>
 
-    <div class="sticky top-0 z-[100] bg-[#02010a]/80 backdrop-blur-xl border-y border-white/5">
+    <div class="sticky top-0 z-[100] bg-white/5 backdrop-blur-xl border-y border-white/5">
         <div class="flex overflow-x-auto no-scrollbar py-4 px-6 gap-3 snap-x scroll-smooth">
             ${['Messages', 'Post', 'Live', 'Updates', 'Groups', 'Archived', 'Blocked', 'Friends'].map(tab => 
                 `<button onclick="switchInboxTab('${tab.toLowerCase()}')" id="itab-${tab.toLowerCase()}" 
@@ -507,8 +507,8 @@ const views = {
     </button>
 </div>`,
 
-    
 
+    
 
   'Nxxt AI': `
     <div id="nxxt-root" class="relative min-h-[700px] flex flex-col items-center justify-center overflow-hidden rounded-[3rem] md:rounded-[4.5rem] bg-[#020617] animate-in fade-in duration-1000 group">
