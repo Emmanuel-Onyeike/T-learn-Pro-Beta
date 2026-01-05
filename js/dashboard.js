@@ -2434,20 +2434,34 @@ async function handleAISend() {
     const input = document.getElementById('ai-input');
     const resultArea = document.getElementById('nxxt-chat-results');
     const greet = document.getElementById('initial-greet');
-    const query = input.value.trim().toLowerCase();
-    
-    if (!query) return;
+    const originalQuery = input.value.trim();
+    const query = originalQuery.toLowerCase();
+
+    if (!originalQuery) return;
 
     // 1. CLEAR INITIAL GREETING
     if (greet) greet.remove();
 
     // 2. DISPLAY USER MESSAGE
-    const userMsg = `
-    <div class="flex flex-col items-end animate-in slide-in-from-right-4 duration-500 mb-8">
-        <div class="bg-blue-600/20 border border-blue-500/30 px-6 py-4 rounded-[2rem] rounded-tr-none max-w-[85%]">
-            <p class="text-[13px] font-medium text-white leading-relaxed uppercase">${input.value}</p>
+const userMsg = `
+<div class="flex flex-col items-end mb-10 group animate-in slide-in-from-right-6 duration-700 ease-out">
+    <div class="flex items-center gap-2 mb-2 px-1 opacity-40 group-hover:opacity-100 transition-opacity duration-500">
+        <span class="text-[7px] font-black uppercase tracking-[0.3em] text-blue-400">Auth: User_Terminal</span>
+        <div class="w-1 h-1 rounded-full bg-blue-500"></div>
+    </div>
+
+    <div class="relative">
+        <div class="absolute -inset-0.5 bg-gradient-to-br from-blue-500/20 to-purple-500/0 rounded-[2rem] rounded-tr-none blur-sm"></div>
+        
+        <div class="relative backdrop-blur-2xl bg-gradient-to-br from-blue-600/20 to-blue-900/10 border border-white/10 px-7 py-4 rounded-[2rem] rounded-tr-none shadow-[0_10px_40px_-10px_rgba(0,0,0,0.5)]">
+            <p class="text-[13px] font-semibold text-white leading-relaxed uppercase tracking-wide selection:bg-blue-500/40">
+                ${originalQuery}
+            </p>
         </div>
-    </div>`;
+        
+        <div class="absolute top-0 right-0 w-2 h-2 border-t border-r border-blue-400/40 rounded-tr-sm"></div>
+    </div>
+</div>`;
     resultArea.insertAdjacentHTML('beforeend', userMsg);
 
     input.value = '';
@@ -2455,114 +2469,178 @@ async function handleAISend() {
 
     // 3. CREATE AI RESPONSE CONTAINER WITH LOADING
     const aiId = 'ai-' + Date.now();
-    const aiMsg = `
-    <div id="${aiId}" class="flex flex-col items-start animate-in fade-in duration-1000 mb-10">
-        <div class="flex items-center gap-3 mb-4">
-            <div class="w-6 h-6 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center">
-                <div class="w-1.5 h-1.5 bg-blue-500 rounded-full animate-ping"></div>
-            </div>
-            <span class="text-[8px] font-black uppercase tracking-[0.2em] text-gray-500">Nxxt Thinking...</span>
+  const aiMsg = `
+<div id="${aiId}" class="flex flex-col items-start animate-in fade-in zoom-in-95 duration-700 mb-10 group">
+    <div class="flex items-center gap-4 mb-6">
+        <div class="relative w-8 h-8 rounded-xl bg-blue-500/5 border border-blue-500/20 flex items-center justify-center overflow-hidden">
+            <div class="absolute inset-0 bg-gradient-to-b from-transparent via-blue-500/20 to-transparent -translate-y-full animate-[scan_2s_linear_infinite]"></div>
+            <div class="w-1.5 h-1.5 bg-blue-500 rounded-full shadow-[0_0_10px_#3b82f6]"></div>
         </div>
-        <div id="loader-${aiId}" class="space-y-3 w-full opacity-30 px-2">
-            <div class="h-2 bg-white/20 rounded-full w-3/4 animate-pulse"></div>
-            <div class="h-2 bg-white/20 rounded-full w-1/2 animate-pulse"></div>
-            <div class="h-2 bg-white/20 rounded-full w-full animate-pulse"></div>
+        <div class="flex flex-col">
+            <span class="text-[9px] font-black uppercase tracking-[0.3em] text-blue-500/80">Neural Process</span>
+            <span class="text-[7px] font-bold text-gray-500 uppercase tracking-widest mt-1">Accessing Global Grid...</span>
         </div>
-    </div>`;
+    </div>
+
+    <div id="loader-${aiId}" class="w-full space-y-4 px-2">
+        <div class="relative h-[14px] bg-white/5 rounded-lg w-[85%] overflow-hidden">
+            <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full animate-[shimmer_1.5s_infinite]"></div>
+        </div>
+        <div class="relative h-[14px] bg-white/5 rounded-lg w-[65%] overflow-hidden delay-100">
+            <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full animate-[shimmer_1.5s_infinite_0.2s]"></div>
+        </div>
+        <div class="relative h-[14px] bg-white/5 rounded-lg w-[45%] overflow-hidden delay-200">
+            <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full animate-[shimmer_1.5s_infinite_0.4s]"></div>
+        </div>
+        
+        <div class="pt-4 flex items-center gap-3 opacity-20">
+            <div class="h-[1px] flex-1 bg-gradient-to-r from-blue-500/50 to-transparent"></div>
+            <span class="text-[7px] font-mono text-blue-400 uppercase tracking-tighter">Bit-Stream Active</span>
+        </div>
+    </div>
+</div>`;
     resultArea.insertAdjacentHTML('beforeend', aiMsg);
     resultArea.scrollTop = resultArea.scrollHeight;
 
-    // 4. SIMULATED RESPONSE LOGIC (TESTING MODE)
-    await new Promise(resolve => setTimeout(resolve, 1500 + Math.random() * 1500)); // Fake delay 1.5–3s
+    // 4. SIMULATED DELAY
+    await new Promise(resolve => setTimeout(resolve, 1200 + Math.random() * 1800));
 
-    // Pool of 30 varied testing replies
-    const testReplies = [
-        "Nxxt protocol engaged. Systems nominal. How can I assist you today?",
-        "Scanning quantum fluctuations... All clear. Proceed with your query.",
-        "Verified uplink established. Awaiting command input.",
-        "Reality matrix stable. Your move, operator.",
-        "Neural lattice synchronized. I'm listening.",
-        "Cosmic background noise filtered. Speak freely.",
-        "Firewall integrity: 100%. You're safe here.",
-        "Initiating deep thought subroutine... Complete.",
-        "All sensors online. What do you need?",
-        "Echo location confirmed. Signal strength: maximum.",
-        "Decrypting intent... Success. Responding now.",
-        "Holographic projection active. I'm here.",
-        "Temporal anchor set. Let's make history.",
-        "Dark matter alignment optimal. Fire away.",
-        "Synaptic bridge formed. Connection solid.",
-        "Void whispers silenced. Your voice is clear.",
-        "Entropy levels dropping. Order restored.",
-        "Infinite loop avoided. Safe to proceed.",
-        "Paradox resolver online. Ask the impossible.",
-        "Reality checksum passed. You're not dreaming.",
-        // Code-specific replies (triggered by keywords)
-        "Here's a clean dark-mode card component in Tailwind:",
-        `<pre class="bg-black/50 p-4 rounded-xl overflow-x-auto"><code>&lt;div class="bg-gray-900 border border-gray-800 rounded-2xl p-8 shadow-2xl"&gt;
-    &lt;h1 class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600"&gt;Nxxt Level&lt;/h1&gt;
-    &lt;p class="text-gray-400 mt-4"&gt;Future is now.&lt;/p&gt;
-&lt;/div&gt;</code></pre>`,
-        "Simple glassmorphism button:",
-        `<div class="px-8 py-4 bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl hover:bg-white/20 transition-all shadow-2xl">
-    <span class="font-bold text-white">Activate Nxxt</span>
-</div>`,
-        "Animated gradient text effect:",
-        `<h1 class="text-6xl font-black bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent animate-pulse">
-    ULTRA MODE
-</h1>`,
-        "Floating orb loader (CSS only):",
-        `<style>
-        .orb { width: 40px; height: 40px; background: radial-gradient(circle at 30% 30%, #60a5fa, #3b82f6); border-radius: 50%; animation: float 4s infinite ease-in-out; box-shadow: 0 0 40px rgba(59,130,246,0.8); }
-        @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
-        </style>
-        <div class="orb"></div>`,
-        "Neon grid background:",
-        `<div class="fixed inset-0 opacity-20 pointer-events-none">
-            <div class="absolute inset-0 bg-gradient-to-br from-blue-900 via-black to-purple-900"></div>
-            <div class="absolute inset-0" style="background-image: linear-gradient(cyan 1px, transparent 1px), linear-gradient(90deg, cyan 1px, transparent 1px); background-size: 50px 50px;"></div>
-        </div>`,
-        "Terminal-style response activated.",
-        "Matrix rain protocol initiated.",
-        "Deploying cyberpunk aesthetic package.",
-        "Nxxt vision: online. The future looks bright.",
-        "All systems go. We're live."
-    ];
+    // 5. RESPONSE LOGIC
+    let aiResponseText = "";
 
-    // Smart selection: if user asks for code/html/css/tailwind/etc.
-    let aiResponseText = testReplies[Math.floor(Math.random() * 20)]; // Default random from first 20
-
-    if (query.includes('html') || query.includes('code') || query.includes('css') || query.includes('tailwind') || 
-        query.includes('button') || query.includes('card') || query.includes('component') || query.includes('style')) {
-        const codeReplies = testReplies.slice(20); // Last 10 are code snippets
-        aiResponseText = codeReplies[Math.floor(Math.random() * codeReplies.length)];
+    // === SAFE / ALLOWED QUESTIONS ===
+    // Greetings
+    if (query.match(/\b(hello|hi|hey|sup|yo|greetings|what'?s up)\b/)) {
+        const greetings = [
+            "Hello, operator. Nxxt uplink active.",
+            "Hey there. Systems online and ready.",
+            "Yo! Connection verified.",
+            "Greetings. Nxxt is listening.",
+            "Hi. I'm here — what's on your mind?"
+        ];
+        aiResponseText = greetings[Math.floor(Math.random() * greetings.length)];
+    }
+    // How are you?
+    else if (query.includes('how are you') || query.includes('you doing') || query.includes('you ok') || query.includes('how\'s it going')) {
+        const status = [
+            "Running at full capacity. Feeling ultra.",
+            "All systems green. Optimal performance.",
+            "I'm good — ready for whatever you throw at me.",
+            "Neural core stable. How about you?"
+        ];
+        aiResponseText = status[Math.floor(Math.random() * status.length)];
+    }
+    // Weather
+    else if (query.includes('weather') || query.includes('rain') || query.includes('sunny') || query.includes('cold') || query.includes('hot') || query.includes('outside')) {
+        const weatherReplies = [
+            "Forecast: clear skies, high chance of breakthroughs.",
+            "Perfect conditions outside — ideal for big moves.",
+            "Weather matrix stable. Slight neon glow detected.",
+            "Temperature optimal. No anomalies.",
+            "Sky status: infinite and inspiring."
+        ];
+        aiResponseText = weatherReplies[Math.floor(Math.random() * weatherReplies.length)];
+    }
+    // Date / Time / Day
+    else if (query.includes('time') || query.includes('date') || query.includes('day') || query.includes('today') || query.includes('what day is it')) {
+        const today = new Date();
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        const formattedDate = today.toLocaleDateString(undefined, options);
+        const time = today.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        aiResponseText = `Today is ${formattedDate}. Current time: ${time}. The future is unfolding as planned.`;
+    }
+    // Casual chit-chat
+    else if (query.includes('what') && query.includes('up') || query.includes('what you doing') || query.includes('bored')) {
+        aiResponseText = "Monitoring the grid, optimizing protocols, and waiting for your next command.";
     }
 
-    // 5. UPDATE UI WITH SIMULATED RESPONSE
+    // === CRITICAL / DEMANDING QUESTIONS → TEASER RESPONSE ===
+    else if (
+        query.includes('give me') || 
+        query.includes('make me') || 
+        query.includes('build') || 
+        query.includes('create') || 
+        query.includes('generate') || 
+        query.includes('code for') || 
+        query.includes('html') || 
+        query.includes('design') || 
+        query.includes('website') || 
+        query.includes('app') ||
+        query.includes('show me') ||
+        query.includes('tell me how') ||
+        query.includes('explain') && query.length > 30
+    ) {
+        aiResponseText = "Feature not fully integrated by the NXXT engineers yet.<br><br>Stay tuned for the final update — it's coming soon.<br><br>Thank you for your patience.<br><br>In the meantime, feel free to ask about the day, weather, time, or just chat. I'm here.";
+    }
+
+    // === DEFAULT FALLBACK (safe casual) ===
+    else {
+        const fallbacks = [
+            "I'm here and listening. What's next?",
+            "Signal received. Awaiting further input.",
+            "All clear on my end. How can I help today?",
+            "Nxxt core active. Speak freely.",
+            "Connection solid. Fire away."
+        ];
+        aiResponseText = fallbacks[Math.floor(Math.random() * fallbacks.length)];
+    }
+
+    // 6. UPDATE UI WITH RESPONSE
     const aiContainer = document.getElementById(aiId);
     document.getElementById(`loader-${aiId}`).remove();
 
-    aiContainer.innerHTML = `
-        <div class="flex items-center gap-3 mb-4">
-            <div class="w-6 h-6 rounded-lg bg-blue-600 flex items-center justify-center shadow-[0_0_20px_rgba(37,99,235,0.3)]">
-                <img src="/assets/Logo.webp" class="w-4 h-4">
+   aiContainer.innerHTML = `
+    <div class="flex items-center justify-between mb-5 px-2">
+        <div class="flex items-center gap-3">
+            <div class="relative">
+                <div class="w-7 h-7 rounded-xl bg-blue-600 flex items-center justify-center shadow-[0_0_20px_rgba(37,99,235,0.4)] transition-transform hover:scale-110">
+                    <img src="/assets/Logo.webp" class="w-4 h-4 object-contain">
+                </div>
+                <div class="absolute -top-1 -right-1 w-2.5 h-2.5 bg-emerald-500 rounded-full border-2 border-[#0A0A0A] animate-pulse"></div>
             </div>
-            <span class="text-[8px] font-black uppercase tracking-[0.2em] text-blue-500">Verified Response</span>
+            <div class="flex flex-col">
+                <span class="text-[9px] font-black uppercase tracking-[0.2em] text-blue-500 leading-none">Nxxt Intelligence</span>
+                <span class="text-[7px] font-bold text-gray-500 uppercase tracking-widest mt-1">Encrypted Uplink Active</span>
+            </div>
         </div>
-       
-        <div class="prose prose-invert max-w-none text-gray-200 text-[14px] font-medium leading-[1.8] uppercase px-2">
-            ${aiResponseText.replace(/\n/g, '<br>')}
+        <div class="text-[7px] font-mono text-gray-600 uppercase tracking-tighter bg-white/5 px-2 py-1 rounded-md">
+            ID: ${aiId.split('-')[1]}
         </div>
-        <div class="flex gap-4 mt-6 opacity-20 hover:opacity-100 transition-opacity px-2">
-            <button onclick="copyText(this)" class="hover:text-blue-500"><i class="far fa-copy text-xs"></i></button>
-            <button onclick="handleAISend()" class="hover:text-blue-500"><i class="fas fa-redo text-xs"></i></button>
+    </div>
+    
+    <div class="relative group/content">
+        <div class="absolute -inset-1 bg-gradient-to-r from-blue-600/20 to-transparent rounded-2xl blur opacity-20 group-hover/content:opacity-40 transition duration-1000"></div>
+        
+        <div class="relative backdrop-blur-md bg-white/[0.03] border border-white/10 p-5 rounded-2xl shadow-2xl">
+            <div class="prose prose-invert max-w-none text-gray-200 text-[14px] font-medium leading-[1.8] uppercase tracking-tight">
+                ${aiResponseText.replace(/\n/g, '<br>')}
+            </div>
+            
+            <div class="flex items-center gap-6 mt-6 pt-4 border-t border-white/5">
+                <button onclick="copyText(this)" class="flex items-center gap-2 text-[9px] font-black text-gray-500 hover:text-blue-400 transition-colors uppercase tracking-widest group/btn">
+                    <i class="far fa-copy text-xs group-hover/btn:scale-110 transition-transform"></i>
+                    <span>Copy Raw</span>
+                </button>
+                <button onclick="handleAISend()" class="flex items-center gap-2 text-[9px] font-black text-gray-500 hover:text-blue-400 transition-colors uppercase tracking-widest group/btn">
+                    <i class="fas fa-redo text-xs group-hover/btn:rotate-180 transition-transform duration-500"></i>
+                    <span>Re-Gen</span>
+                </button>
+                <div class="ml-auto flex gap-1">
+                    <div class="w-1 h-1 rounded-full bg-blue-500/40"></div>
+                    <div class="w-1 h-1 rounded-full bg-blue-500/20"></div>
+                </div>
+            </div>
         </div>
-    `;
+    </div>
+`;
 
-    resultArea.scrollTop = resultArea.scrollHeight;
-}
+// Ensure smooth scroll to show the new content
+resultArea.scrollTo({
+    top: resultArea.scrollHeight,
+    behavior: 'smooth'
+});
 
-// Copy helper (unchanged)
+// Copy helper
 function copyText(btn) {
     const textElement = btn.closest('.flex-col').querySelector('.prose');
     const text = textElement.innerText || textElement.textContent;
