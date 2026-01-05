@@ -3016,10 +3016,11 @@ function showNxxtAlert(message) {
 
 function openProjectNamingModal() {
     const modalHtml = `
-        <div id="centerModalOverlay" class="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex items-center justify-center p-6">
-            <div class="bg-[#050b1d] border border-white/10 w-full max-w-md rounded-[2.5rem] p-8 space-y-6 animate-in zoom-in-95">
+        <div id="centerModalOverlay" class="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6 touch-none">
+            <div class="bg-[#050b1d] border border-white/10 w-full max-w-md rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-8 space-y-6 animate-in zoom-in-95 duration-200">
+                
                 <div class="flex items-center gap-4 mb-2">
-                    <div class="w-10 h-10 bg-blue-500/10 rounded-xl flex items-center justify-center border border-blue-500/20">
+                    <div class="w-10 h-10 bg-blue-500/10 rounded-xl flex items-center justify-center border border-blue-500/20 shrink-0">
                         <i class="fas fa-project-diagram text-blue-500 text-sm"></i>
                     </div>
                     <div>
@@ -3027,19 +3028,35 @@ function openProjectNamingModal() {
                         <p class="text-[8px] text-gray-600 font-bold uppercase tracking-widest mt-1">Project Deployment Alpha</p>
                     </div>
                 </div>
+
                 <div class="space-y-4">
-                    <input type="text" id="pName" placeholder="PROJECT NAME" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-[10px] font-black uppercase tracking-widest focus:border-blue-500 focus:outline-none focus:bg-white/[0.07] transition-all">
-                    <textarea id="pDesc" placeholder="DESCRIPTION (OPTIONAL)" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-[10px] font-black uppercase tracking-widest h-24 focus:border-blue-500 focus:outline-none focus:bg-white/[0.07] transition-all resize-none"></textarea>
+                    <div class="relative">
+                        <input type="text" id="pName" placeholder="PROJECT NAME" 
+                            class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-4 text-white font-black uppercase tracking-widest focus:border-blue-500 focus:outline-none focus:bg-white/[0.07] transition-all
+                            text-[16px] sm:text-[10px]"> 
+                        </div>
+                    
+                    <div class="relative">
+                        <textarea id="pDesc" placeholder="DESCRIPTION (OPTIONAL)" 
+                            class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-4 text-white font-black uppercase tracking-widest h-28 focus:border-blue-500 focus:outline-none focus:bg-white/[0.07] transition-all resize-none
+                            text-[16px] sm:text-[10px]"></textarea>
+                    </div>
                 </div>
-                <div class="flex gap-4">
-                    <button onclick="closeCenterModal()" class="flex-1 py-3 bg-white/5 text-gray-500 text-[10px] font-black uppercase tracking-widest rounded-xl hover:text-white transition-all">Cancel</button>
-                    <button onclick="triggerRightSlideOut()" class="flex-1 py-3 bg-blue-600 text-[#020617] text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-blue-500 transition-all">Next Step</button>
+
+                <div class="flex flex-col sm:flex-row gap-3 sm:gap-4">
+                    <button onclick="closeCenterModal()" 
+                        class="order-2 sm:order-1 flex-1 py-4 sm:py-3 bg-white/5 text-gray-500 text-[10px] font-black uppercase tracking-widest rounded-xl hover:text-white transition-all">
+                        Cancel
+                    </button>
+                    <button onclick="triggerRightSlideOut()" 
+                        class="order-1 sm:order-2 flex-1 py-4 sm:py-3 bg-blue-600 text-[#020617] text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-blue-500 transition-all shadow-lg shadow-blue-600/10">
+                        Next Step
+                    </button>
                 </div>
             </div>
         </div>`;
     document.body.insertAdjacentHTML('beforeend', modalHtml);
 }
-
 function triggerRightSlideOut() {
     const name = document.getElementById('pName').value.trim();
     const desc = document.getElementById('pDesc').value.trim() || "No detailed description provided.";
