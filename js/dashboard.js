@@ -511,67 +511,79 @@ const views = {
 
     
 
- 'Nxxt AI': `
-<div id="nxxt-container" class="relative min-h-screen flex flex-col bg-transparent text-white animate-in fade-in duration-700">
+'Nxxt AI': `
+<div id="nxxt-container" class="relative min-h-screen flex flex-col bg-[#020617] text-white animate-in fade-in duration-700 font-sans selection:bg-blue-500/30">
     
-    <div class="flex-shrink-0 px-6 pt-8 pb-4 flex items-center justify-between">
-        <div class="flex items-center gap-4">
-             <div class="w-10 h-10 rounded-2xl border border-white/20 p-1 bg-white/5 flex items-center justify-center shadow-2xl">
+    <div class="sticky top-0 z-[110] backdrop-blur-md bg-[#020617]/80 border-b border-white/5 px-6 py-4 flex items-center justify-between">
+        <div class="flex items-center gap-4 max-w-5xl mx-auto w-full">
+            <div class="w-10 h-10 rounded-2xl border border-white/20 p-1 bg-white/5 flex items-center justify-center shadow-2xl transition-transform hover:scale-105">
                 <img src="/assets/Logo.webp" alt="Nxxt" class="w-full h-full object-cover rounded-xl">
             </div>
-            <div>
+            <div class="flex-1">
                 <h1 class="text-xl font-black italic tracking-tighter uppercase leading-none">Nxxt AI</h1>
                 <p class="text-[8px] font-black text-blue-500 uppercase tracking-[0.4em] mt-1">Intelligence v4.0</p>
             </div>
-        </div>
-        <div onclick="showNxxtAlert('Settings')" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center border border-white/10 cursor-pointer hover:bg-white/10">
-            <i class="fas fa-ellipsis-h text-xs"></i>
-        </div>
-    </div>
-
-    <div id="nxxt-chat-results" class="flex-1 overflow-y-auto px-6 py-4 space-y-8 no-scrollbar pb-40">
-        <div id="initial-greet" class="flex flex-col items-center justify-center py-20 text-center space-y-4">
-            <h2 class="text-4xl font-black tracking-tighter uppercase italic opacity-20">How can I help today?</h2>
-            <div class="flex gap-2 opacity-10">
-                <div class="w-1 h-1 bg-white rounded-full"></div>
-                <div class="w-1 h-1 bg-white rounded-full"></div>
-                <div class="w-1 h-1 bg-white rounded-full"></div>
+            <div onclick="showNxxtAlert('Settings')" class="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center border border-white/10 cursor-pointer hover:bg-white/10 transition-all">
+                <i class="fas fa-ellipsis-h text-xs text-gray-400"></i>
             </div>
         </div>
     </div>
 
-    <div class="fixed bottom-0 left-0 w-full p-6 bg-gradient-to-t from-[#020617] via-[#020617]/90 to-transparent z-[100]">
-        <div class="max-w-4xl mx-auto space-y-4">
+    <div id="nxxt-chat-results" class="flex-1 overflow-y-auto no-scrollbar pb-52 pt-10">
+        <div class="max-w-4xl mx-auto px-6 w-full space-y-12">
             
-            <div id="quick-actions" class="flex overflow-x-auto no-scrollbar gap-2 pb-2">
+            <div id="initial-greet" class="flex flex-col items-center justify-center py-32 text-center space-y-6">
+                <div class="relative">
+                    <div class="absolute inset-0 bg-blue-600/20 blur-3xl rounded-full"></div>
+                    <h2 class="relative text-4xl md:text-6xl font-black tracking-tighter uppercase italic opacity-20">How can I help today?</h2>
+                </div>
+                <div class="flex gap-3 opacity-10">
+                    <div class="w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse"></div>
+                    <div class="w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse delay-75"></div>
+                    <div class="w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse delay-150"></div>
+                </div>
+            </div>
+
+            <div id="message-container" class="space-y-12"></div>
+        </div>
+    </div>
+
+    <div class="fixed bottom-0 left-0 w-full p-6 bg-gradient-to-t from-[#020617] via-[#020617] to-transparent z-[100]">
+        <div class="max-w-3xl mx-auto space-y-6">
+            
+            <div id="quick-actions" class="flex overflow-x-auto no-scrollbar gap-3 pb-2 mask-fade-right">
                 ${['Explain Quantum', 'Write a Poem', 'Deep Research', 'Code a UI'].map(item => `
-                    <button onclick="fillAndSend('${item}')" class="flex-shrink-0 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-[9px] font-black uppercase tracking-widest hover:bg-blue-600/20 transition-all">
+                    <button onclick="fillAndSend('${item}')" class="flex-shrink-0 px-5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-[9px] font-black uppercase tracking-widest hover:bg-blue-600/20 hover:border-blue-500/50 transition-all whitespace-nowrap">
                         ${item}
                     </button>
                 `).join('')}
             </div>
 
             <div class="relative group">
-                <div class="absolute -inset-1 bg-gradient-to-r from-blue-600/40 to-cyan-500/40 rounded-[2.5rem] blur opacity-25 group-focus-within:opacity-100 transition duration-1000"></div>
-                <div class="relative bg-white/5 backdrop-blur-3xl border border-white/10 rounded-[2.5rem] p-2 flex flex-col shadow-3xl">
-                    <div class="flex items-center px-4 py-2">
+                <div class="absolute -inset-1 bg-gradient-to-r from-blue-600/30 to-indigo-500/30 rounded-[2rem] blur-xl opacity-0 group-focus-within:opacity-100 transition duration-700"></div>
+                <div class="relative bg-[#0f172a]/80 backdrop-blur-3xl border border-white/10 rounded-[2rem] p-3 shadow-2xl">
+                    <div class="flex items-end px-2 gap-2">
+                        <div class="p-3">
+                             <i onclick="showNxxtAlert('Upload')" class="fas fa-plus text-gray-500 hover:text-white cursor-pointer transition-colors"></i>
+                        </div>
                         <textarea id="ai-input" rows="1" placeholder="Type your request..." 
-                            class="bg-transparent border-none outline-none text-white text-md w-full placeholder:text-gray-600 font-bold tracking-tight resize-none py-2 px-2"
+                            class="bg-transparent border-none outline-none text-white text-[15px] w-full placeholder:text-gray-600 font-medium tracking-tight resize-none py-3 px-1 min-h-[48px] max-h-40"
                             oninput="this.style.height = '';this.style.height = this.scrollHeight + 'px'"></textarea>
                         
-                        <button onclick="handleAISend()" class="w-12 h-12 rounded-2xl bg-blue-600 text-white flex items-center justify-center shadow-lg hover:scale-105 active:scale-95 transition-all">
-                            <i class="fas fa-arrow-up"></i>
+                        <button onclick="handleAISend()" class="w-11 h-11 rounded-2xl bg-blue-600 text-white flex items-center justify-center shadow-lg shadow-blue-600/20 hover:bg-blue-500 active:scale-95 transition-all mb-1">
+                            <i class="fas fa-arrow-up text-sm"></i>
                         </button>
                     </div>
 
-                    <div class="flex items-center justify-between px-4 py-2 border-t border-white/5">
-                        <div class="flex gap-4">
-                            <i onclick="showNxxtAlert('Upload')" class="fas fa-plus text-gray-500 hover:text-white text-sm cursor-pointer"></i>
-                            <i onclick="showNxxtAlert('Web Search')" class="fas fa-globe text-gray-500 hover:text-white text-sm cursor-pointer"></i>
-                        </div>
-                        <div class="flex items-center gap-2 px-3 py-1 bg-white/5 rounded-full border border-white/10">
-                            <span class="text-[8px] font-black text-blue-400 uppercase tracking-widest">Neural v2.4</span>
-                        </div>
+                    <div class="flex items-center justify-between px-5 py-2 border-t border-white/5 mt-2">
+                         <div class="flex items-center gap-4">
+                            <i onclick="showNxxtAlert('Web Search')" class="fas fa-globe text-[10px] text-gray-500 hover:text-blue-400 cursor-pointer"></i>
+                            <i onclick="showNxxtAlert('Voice')" class="fas fa-microphone text-[10px] text-gray-500 hover:text-blue-400 cursor-pointer"></i>
+                         </div>
+                         <div class="flex items-center gap-2">
+                            <span class="text-[7px] font-black text-blue-500/50 uppercase tracking-[0.2em]">Neural v2.4 Active</span>
+                            <div class="w-1 h-1 rounded-full bg-blue-500 animate-pulse"></div>
+                         </div>
                     </div>
                 </div>
             </div>
@@ -579,6 +591,7 @@ const views = {
     </div>
 </div>
 `,
+
 
     
     
