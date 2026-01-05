@@ -283,3 +283,44 @@ body {
     mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
     -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
 }
+
+/* --- NXXT LAB SCROLLING --- */
+
+/* Hide scrollbars but keep functionality */
+.no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+/* Ensure smooth snapping and feel on mobile */
+nav.flex {
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Central Hazmat Modal Alert (Requested) */
+.fixed-alert-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: calc(100% - 40px);
+    max-width: 400px;
+    background: #050505;
+    border: 1px solid rgba(234, 179, 8, 0.3);
+    padding: 2.5rem;
+    border-radius: 2.5rem;
+    z-index: 9999;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.9), 0 0 30px rgba(234, 179, 8, 0.1);
+    text-align: center;
+}
+
+.modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(12px);
+    z-index: 9998;
+}
