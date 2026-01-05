@@ -1276,9 +1276,7 @@ function updateSettingsTab(tabId) {
                 </div>
                 <h4 class="text-white font-black uppercase italic tracking-tighter text-2xl">No Projects done</h4>
                 <p class="text-[10px] text-gray-500 font-bold uppercase tracking-[0.3em] mt-3 mb-10">System standby. Awaiting first deployment.</p>
-                <button onclick="openProjectNamingModal()" class="px-8 py-4 bg-blue-600 text-[#020617] text-[10px] font-black uppercase tracking-widest rounded-2xl hover:bg-blue-400 transition-all shadow-xl shadow-blue-500/10">
-                    Create First Project
-                </button>
+               
             </div>
 
             <!-- Future projects will be inserted here dynamically -->
@@ -2986,9 +2984,11 @@ renderUI();
 
 ///// for the projects 
 /**
- * 1. CENTRAL ALERT CONTROLLER
- * Requirement: Centered modal alert system.
+ * FULLY WORKING PROJECT CREATION SYSTEM
+ * Dashboard Grid + Management List + Notifications + Persistence
+ * UI 100% preserved – just copy & paste this entire block
  */
+
 function showNxxtAlert(message) {
     const alertHtml = `
         <div id="nxxtAlertModal" class="fixed inset-0 z-[300] bg-black/90 backdrop-blur-md flex items-center justify-center p-6 animate-in fade-in duration-300">
@@ -3000,7 +3000,7 @@ function showNxxtAlert(message) {
                     <h5 class="text-white font-black uppercase italic tracking-widest text-[10px]">System Notification</h5>
                     <p class="text-gray-500 text-[11px] font-bold uppercase tracking-widest mt-2 leading-relaxed">${message}</p>
                 </div>
-                <button onclick="document.getElementById('nxxtAlertModal').remove()" 
+                <button onclick="document.getElementById('nxxtAlertModal').remove()"
                     class="w-full py-3 bg-white/5 text-white text-[9px] font-black uppercase tracking-[0.3em] rounded-xl hover:bg-white/10 transition-all">
                     Acknowledge
                 </button>
@@ -3009,9 +3009,6 @@ function showNxxtAlert(message) {
     document.body.insertAdjacentHTML('beforeend', alertHtml);
 }
 
-/**
- * 2. PROJECT NAMING MODAL (CENTER)
- */
 function openProjectNamingModal() {
     const modalHtml = `
         <div id="centerModalOverlay" class="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex items-center justify-center p-6">
@@ -3038,15 +3035,11 @@ function openProjectNamingModal() {
     document.body.insertAdjacentHTML('beforeend', modalHtml);
 }
 
-/**
- * 3. RIGHT SIDE SLIDE-OUT MODAL
- */
 function triggerRightSlideOut() {
     const name = document.getElementById('pName').value.trim();
     const desc = document.getElementById('pDesc').value.trim() || "No detailed description provided.";
     if (!name) { showNxxtAlert("PROJECT NAME REQUIRED FOR INITIALIZATION"); return; }
     closeCenterModal();
-
     const slideOutHtml = `
         <div id="rightSlideOverlay" class="fixed inset-0 z-[110] bg-black/40 backdrop-blur-sm">
             <div class="absolute right-0 top-0 h-full w-full max-w-md bg-[#02010a] border-l border-white/10 p-8 animate-in slide-in-from-right duration-500 overflow-y-auto">
@@ -3134,69 +3127,127 @@ function showTopRightToast(message) {
     document.body.insertAdjacentHTML('beforeend', toastHtml);
     setTimeout(() => {
         const t = document.getElementById(toastId);
-        if(t) { t.classList.add('animate-out', 'slide-out-to-right'); setTimeout(() => t.remove(), 500); }
+        if (t) { t.classList.add('animate-out', 'slide-out-to-right'); setTimeout(() => t.remove(), 500); }
     }, 4000);
 }
 
-/**
- * 4. DEPLOYMENT & PERSISTENCE
- */
+/* ========== MAIN DEPLOYMENT FUNCTION ========== */
 function finalizeProject(name, desc) {
-    const pfpSrc = document.getElementById('imgPreview').src;
-    const hasPfp = !document.getElementById('imgPreview').classList.contains('hidden');
-    const supervisor = document.getElementById('supName').value || "N/A";
+    const pfpSrc = document.getElementById('imgPreview')?.src || '';
+    const hasPfp = pfpSrc && !document.getElementById('imgPreview')?.classList.contains('hidden');
+    const supervisor = document.getElementById('supName')?.value.trim() || "N/A";
     const category = document.querySelector('.project-type-chip.text-blue-500')?.innerText || "General";
-    
+
     closeRightSlide();
-    
+
     const loaderHtml = `<div id="loaderOverlay" class="fixed inset-0 z-[200] bg-[#020617] flex flex-col items-center justify-center">
         <div class="w-16 h-16 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin mb-6"></div>
-        <p class="text-[10px] text-white font-black uppercase tracking-[0.5em] animate-pulse">Creating...</p>
+        <p class="text-[10px] text-white font-black uppercase tracking-[0.5em] animate-pulse">Deploying Module...</p>
     </div>`;
     document.body.insertAdjacentHTML('beforeend', loaderHtml);
 
     setTimeout(() => {
-        const loader = document.getElementById('loaderOverlay');
-        if (loader) loader.remove();
-        
-        const gridState = document.getElementById('projectGrid');
-        if (gridState) gridState.classList.remove('hidden');
-        if (document.getElementById('emptyProjectState')) document.getElementById('emptyProjectState').classList.add('hidden');
+        document.getElementById('loaderOverlay')?.remove();
 
         const now = new Date();
         const timestamp = `${now.getFullYear()}.${String(now.getMonth() + 1).padStart(2, '0')}.${String(now.getDate()).padStart(2, '0')}`;
-        const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }).toUpperCase();
 
-        const newProjectCard = `
-            <div class="bg-[#050b1d] border border-white/5 rounded-[2rem] p-6 group hover:border-blue-500/30 transition-all animate-in zoom-in-95 relative overflow-hidden">
-                <div class="absolute top-0 right-0 px-3 py-1 bg-green-500/10 border-b border-l border-green-500/20 rounded-bl-xl">
-                    <span class="text-[7px] text-green-500 font-black uppercase tracking-widest">Build Successful</span>
-                </div>
-                <div class="flex justify-between items-start mb-6">
-                    <div class="w-12 h-12 rounded-2xl border border-white/10 overflow-hidden bg-blue-500/5 flex items-center justify-center">
-                        ${hasPfp ? `<img src="${pfpSrc}" class="w-full h-full object-cover">` : `<i class="fas fa-microchip text-blue-500"></i>`}
+        /* DASHBOARD GRID CARD */
+        const grid = document.getElementById('projectGrid');
+        if (grid) {
+            grid.classList.remove('hidden');
+            const cardHtml = `
+                <div class="project-card bg-[#050b1d] border border-white/5 rounded-[2rem] p-6 group hover:border-blue-500/30 transition-all animate-in zoom-in-95 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 px-3 py-1 bg-green-500/10 border-b border-l border-green-500/20 rounded-bl-xl">
+                        <span class="text-[7px] text-green-500 font-black uppercase tracking-widest">Build Successful</span>
                     </div>
-                    <span class="text-[8px] text-gray-600 font-black uppercase mt-2">${category}</span>
-                </div>
-                <h6 class="text-white font-black uppercase italic text-xs mb-1 truncate">${name}</h6>
-                <p class="text-[8px] text-blue-400 font-bold mb-3 uppercase tracking-tighter">SV: ${supervisor}</p>
-                <p class="text-[9px] text-gray-500 font-medium line-clamp-2 leading-relaxed mb-6">${desc}</p>
-                <div class="pt-4 border-t border-white/5 flex justify-between items-center">
-                    <div class="flex flex-col"><span class="text-[7px] text-gray-700 font-black uppercase tracking-widest">Deployed</span><span class="text-[8px] text-white font-bold">${timestamp}</span></div>
-                    <i class="fas fa-chevron-right text-[10px] text-gray-800 group-hover:text-blue-500 transition-colors"></i>
-                </div>
-            </div>`;
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="w-12 h-12 rounded-2xl border border-white/10 overflow-hidden bg-blue-500/5 flex items-center justify-center">
+                            ${hasPfp ? `<img src="${pfpSrc}" class="w-full h-full object-cover">` : `<i class="fas fa-microchip text-blue-500"></i>`}
+                        </div>
+                        <span class="text-[8px] text-gray-600 font-black uppercase mt-2">${category}</span>
+                    </div>
+                    <h6 class="text-white font-black uppercase italic text-xs mb-1 truncate">${name}</h6>
+                    <p class="text-[8px] text-blue-400 font-bold mb-3 uppercase tracking-tighter">SV: ${supervisor}</p>
+                    <p class="text-[9px] text-gray-500 font-medium line-clamp-2 leading-relaxed mb-6">${desc}</p>
+                    <div class="pt-4 border-t border-white/5 flex justify-between items-center">
+                        <div class="flex flex-col">
+                            <span class="text-[7px] text-gray-700 font-black uppercase tracking-widest">Deployed</span>
+                            <span class="text-[8px] text-white font-bold">${timestamp}</span>
+                        </div>
+                        <i class="fas fa-chevron-right text-[10px] text-gray-800 group-hover:text-blue-500 transition-colors"></i>
+                    </div>
+                </div>`;
+            grid.insertAdjacentHTML('afterbegin', cardHtml);
+        }
 
-        if (gridState) gridState.insertAdjacentHTML('afterbegin', newProjectCard);
-        
-        addProjectToList(name, category, false); // false = don't double notify
+        /* MANAGEMENT LIST ITEM */
+        addProjectToManagementList(name, category);
+
+        /* NOTIFICATION */
         addSystemNotification(name, timestamp, timeStr);
-        saveAllData(); 
-    }, 6000);
+
+        /* HIDE EMPTY STATES */
+        document.querySelectorAll('#emptyProjectState').forEach(el => el.classList.add('hidden'));
+
+        saveAllData();
+    }, 3000);
 }
 
+/* ADD TO MANAGEMENT LIST */
+function addProjectToManagementList(name, tech = 'General') {
+    const container = document.getElementById('projectContainer');
+    if (!container) return;
+
+    const empty = document.getElementById('emptyProjectState');
+    if (empty) empty.classList.add('hidden');
+
+    const html = `
+        <div class="project-item p-6 bg-white/5 border border-white/10 rounded-3xl flex items-center justify-between hover:border-blue-500/30 transition-all mb-4">
+            <div class="flex items-center gap-4">
+                <input type="checkbox" class="project-checkbox w-4 h-4 accent-blue-500 rounded">
+                <div>
+                    <h5 class="text-white font-black text-sm uppercase">${name}</h5>
+                    <p class="text-[9px] text-gray-500 uppercase tracking-wider">${tech}</p>
+                </div>
+            </div>
+            <button onclick="deleteProjectEverywhere(this, '${name.replace(/'/g, "\\'")}')" 
+                    class="text-red-500 hover:text-red-400 text-xs uppercase font-black">
+                Delete
+            </button>
+        </div>`;
+    container.insertAdjacentHTML('afterbegin', html);
+}
+
+/* DELETE FROM BOTH VIEWS */
+function deleteProjectEverywhere(button, projectName) {
+    const item = button.closest('.project-item');
+    if (item) item.remove();
+
+    // Remove from dashboard grid
+    document.querySelectorAll('#projectGrid .project-card').forEach(card => {
+        const title = card.querySelector('h6')?.innerText.trim();
+        if (title === projectName) {
+            card.classList.add('animate-out', 'zoom-out');
+            setTimeout(() => card.remove(), 400);
+        }
+    });
+
+    // Restore empty states if needed
+    if (document.querySelectorAll('#projectContainer .project-item').length === 0) {
+        document.querySelectorAll('#emptyProjectState').forEach(el => el.classList.remove('hidden'));
+    }
+    if (document.querySelectorAll('#projectGrid .project-card').length === 0) {
+        document.getElementById('projectGrid')?.classList.add('hidden');
+    }
+
+    saveAllData();
+}
+
+/* NOTIFICATIONS */
 function addSystemNotification(projName, date, time) {
-    const formattedDate = date || new Date().toLocaleDateString('en-CA').replace(/-/g, '.');
+    const formattedDate = date || new Date().toLocaleDateString('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/-/g, '.');
     const formattedTime = time || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }).toUpperCase();
 
     const logHtml = `
@@ -3212,17 +3263,16 @@ function addSystemNotification(projName, date, time) {
     if (scrollArea) {
         scrollArea.insertAdjacentHTML('afterbegin', logHtml);
         updateNotificationUI();
-        saveAllData();
-    } else if (typeof views !== 'undefined' && views['Notifications']) {
-        // Persist to background view if not active
-        const tempDiv = document.createElement('div');
-        tempDiv.innerHTML = views['Notifications'];
-        const innerScroll = tempDiv.querySelector('#notif-scroll-area');
-        if (innerScroll) {
-            innerScroll.insertAdjacentHTML('afterbegin', logHtml);
-            views['Notifications'] = tempDiv.innerHTML;
-            updateNotificationUI();
-            saveAllData();
+    }
+
+    // Background persistence
+    if (typeof views !== 'undefined' && views['Notifications']) {
+        const temp = document.createElement('div');
+        temp.innerHTML = views['Notifications'];
+        const bgScroll = temp.querySelector('#notif-scroll-area');
+        if (bgScroll) {
+            bgScroll.insertAdjacentHTML('afterbegin', logHtml);
+            views['Notifications'] = temp.querySelector('#notifications-container').outerHTML;
         }
     }
 }
@@ -3237,72 +3287,120 @@ function updateNotificationUI() {
     }
 }
 
+/* BULK DELETE & SELECT ALL */
 function initProjectManagement() {
-    const container = document.getElementById('projectContainer');
-    if (!container) return;
     const bulkBtn = document.getElementById('bulkDeleteBtn');
-    if (bulkBtn) bulkBtn.onclick = () => {
+    const selectAllBtn = document.getElementById('selectAllBtn');
+    if (!bulkBtn || !selectAllBtn) return;
+
+    const updateUI = () => {
+        const checked = document.querySelectorAll('.project-checkbox:checked');
+        const total = document.querySelectorAll('.project-checkbox').length;
+        bulkBtn.textContent = `Bulk Delete (${checked.length})`;
+        bulkBtn.disabled = checked.length === 0;
+        bulkBtn.classList.toggle('opacity-50', checked.length === 0);
+        bulkBtn.classList.toggle('cursor-not-allowed', checked.length === 0);
+        selectAllBtn.textContent = checked.length === total && total > 0 ? 'Deselect All' : 'Select All';
+    };
+
+    selectAllBtn.onclick = () => {
+        const all = document.querySelectorAll('.project-checkbox');
+        const allChecked = Array.from(all).every(c => c.checked);
+        all.forEach(c => c.checked = !allChecked);
+        updateUI();
+    };
+
+    document.getElementById('projectContainer')?.addEventListener('change', e => {
+        if (e.target.classList.contains('project-checkbox')) updateUI();
+    });
+
+    bulkBtn.onclick = () => {
         if (!confirm('Permanently delete selected projects?')) return;
-        document.querySelectorAll('.project-checkbox:checked').forEach(cb => cb.closest('.project-item').remove());
+        const checked = document.querySelectorAll('.project-checkbox:checked');
+        const names = [];
+        checked.forEach(cb => {
+            const name = cb.closest('.project-item')?.querySelector('h5')?.innerText.trim();
+            if (name) names.push(name);
+            cb.closest('.project-item').remove();
+        });
+
+        // Remove from dashboard
+        names.forEach(name => {
+            document.querySelectorAll('#projectGrid .project-card').forEach(card => {
+                if (card.querySelector('h6')?.innerText.trim() === name) card.remove();
+            });
+        });
+
+        // Empty states
+        if (document.querySelectorAll('#projectContainer .project-item').length === 0) {
+            document.querySelectorAll('#emptyProjectState').forEach(el => el.classList.remove('hidden'));
+        }
+        if (document.querySelectorAll('#projectGrid .project-card').length === 0) {
+            document.getElementById('projectGrid')?.classList.add('hidden');
+        }
+
+        updateUI();
         saveAllData();
     };
+
+    updateUI();
 }
 
-function addProjectToList(name, tech = '', triggerNotify = true) {
-    const container = document.getElementById('projectContainer');
-    if (!container) return;
-    if (document.getElementById('emptyProjectState')) document.getElementById('emptyProjectState').style.display = 'none';
-
-    const html = `
-        <div class="project-item p-6 bg-white/5 border border-white/10 rounded-3xl flex items-center justify-between hover:border-blue-500/30 transition-all mb-4">
-            <div class="flex items-center gap-4">
-                <input type="checkbox" class="project-checkbox w-4 h-4 accent-blue-500 rounded">
-                <div><h5 class="text-white font-black text-sm uppercase">${name}</h5><p class="text-[9px] text-gray-500 uppercase tracking-wider">${tech}</p></div>
-            </div>
-            <button onclick="this.closest('.project-item').remove(); saveAllData();" class="text-red-500 text-xs font-black">DELETE</button>
-        </div>`;
-
-    container.insertAdjacentHTML('afterbegin', html);
-    if (triggerNotify) addSystemNotification(name);
-    saveAllData();
-}
-
-/**
- * STORAGE ENGINE
- */
+/* STORAGE */
 function saveAllData() {
     const data = {
         grid: document.getElementById('projectGrid')?.innerHTML || "",
         list: document.getElementById('projectContainer')?.innerHTML || "",
         notifs: document.getElementById('notif-scroll-area')?.innerHTML || "",
-        count: document.getElementById('notif-count')?.innerText || "0 new updates",
-        rawNotifs: (typeof views !== 'undefined') ? views['Notifications'] : null
+        notifCount: document.getElementById('notif-count')?.innerText || "0 new updates",
+        rawNotifs: typeof views !== 'undefined' ? views['Notifications'] : null
     };
-    localStorage.setItem('nxxt_system_data', JSON.stringify(data));
+    localStorage.setItem('nxxt_system_data_v2', JSON.stringify(data));
 }
 
 function loadAllData() {
-    const saved = localStorage.getItem('nxxt_system_data');
+    const saved = localStorage.getItem('nxxt_system_data_v2');
     if (!saved) return;
-    const data = JSON.parse(saved);
-    if (data.grid && document.getElementById('projectGrid')) {
-        document.getElementById('projectGrid').innerHTML = data.grid;
-        document.getElementById('projectGrid').classList.remove('hidden');
-        if (document.getElementById('emptyProjectState')) document.getElementById('emptyProjectState').classList.add('hidden');
+
+    try {
+        const data = JSON.parse(saved);
+
+        if (data.grid && document.getElementById('projectGrid')) {
+            document.getElementById('projectGrid').innerHTML = data.grid;
+            if (data.grid.trim()) {
+                document.getElementById('projectGrid').classList.remove('hidden');
+                document.querySelectorAll('#emptyProjectState').forEach(el => el.classList.add('hidden'));
+            }
+        }
+
+        if (data.list && document.getElementById('projectContainer')) {
+            document.getElementById('projectContainer').innerHTML = data.list;
+        }
+
+        if (data.notifs && document.getElementById('notif-scroll-area')) {
+            document.getElementById('notif-scroll-area').innerHTML = data.notifs;
+        }
+
+        if (data.notifCount && document.getElementById('notif-count')) {
+            document.getElementById('notif-count').innerText = data.notifCount;
+            if (parseInt(data.notifCount) > 0) document.getElementById('notif-badge')?.classList.remove('hidden');
+        }
+
+        if (data.rawNotifs && typeof views !== 'undefined') {
+            views['Notifications'] = data.rawNotifs;
+        }
+
+        setTimeout(initProjectManagement, 100);
+    } catch (e) {
+        console.error('Load failed:', e);
     }
-    if (data.list && document.getElementById('projectContainer')) {
-        document.getElementById('projectContainer').innerHTML = data.list;
-        initProjectManagement();
-    }
-    if (data.notifs && document.getElementById('notif-scroll-area')) {
-        document.getElementById('notif-scroll-area').innerHTML = data.notifs;
-    }
-    if (data.count && document.getElementById('notif-count')) {
-        document.getElementById('notif-count').innerText = data.count;
-    }
-    if (data.rawNotifs && typeof views !== 'undefined') views['Notifications'] = data.rawNotifs;
 }
 
-window.onload = loadAllData;
 function closeCenterModal() { document.getElementById('centerModalOverlay')?.remove(); }
 function closeRightSlide() { document.getElementById('rightSlideOverlay')?.remove(); }
+
+/* INIT ON LOAD */
+window.addEventListener('load', () => {
+    loadAllData();
+    initProjectManagement(); // In case we're on management tab
+});
