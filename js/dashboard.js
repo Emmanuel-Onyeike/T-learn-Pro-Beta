@@ -679,8 +679,8 @@ const views = {
     
 
 
-   'Side Hustle Hub': `
-<div id="side-hustle-root" class="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-700 max-w-6xl mx-auto px-4 pb-40">
+  'Side Hustle Hub': `
+<div id="side-hustle-root" class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 max-w-6xl mx-auto px-4 pb-40">
     
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-white/5 pb-8">
         <div>
@@ -691,14 +691,15 @@ const views = {
             <p class="text-[10px] text-gray-500 font-bold uppercase tracking-[0.3em] mt-1">Decentralized Gig Exchange</p>
         </div>
         
-        <button onclick="openGigPanel('Post New Gig')" class="bg-emerald-600 hover:bg-emerald-500 text-white px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all shadow-lg shadow-emerald-900/20 active:scale-95">
+        <button onclick="openGigPanel('Post a New Gig', 'Create a detailed brief for the network to solve.')" 
+                class="bg-emerald-600 hover:bg-emerald-500 text-white px-8 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all shadow-lg shadow-emerald-900/40 active:scale-95">
             <i class="fas fa-plus mr-2"></i> Post a Gig
         </button>
     </div>
 
-    <nav class="flex overflow-x-auto no-scrollbar gap-4 py-2 mask-edge-fade">
+    <nav class="flex overflow-x-auto no-scrollbar gap-4 py-2 mask-edge-fade scroll-smooth">
         ${['All Gigs', 'Development', 'Design', 'AI Training', 'Writing', 'Marketing'].map((cat, i) => `
-            <button onclick="showHustleAlert('Filter: ${cat}')" class="flex-shrink-0 px-4 py-2 rounded-xl border border-white/5 bg-white/5 text-[9px] font-black uppercase tracking-widest text-gray-400 hover:text-white transition-all">
+            <button onclick="filterGigs('${cat}')" class="flex-shrink-0 px-5 py-2.5 rounded-xl border border-white/5 bg-white/5 text-[9px] font-black uppercase tracking-widest text-gray-400 hover:text-white hover:bg-white/10 transition-all">
                 ${cat}
             </button>
         `).join('')}
@@ -706,26 +707,35 @@ const views = {
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         ${[
-            { title: 'Neural Network Labeling', client: 'Nxxt Labs', pay: '$250', time: '2 days left', icon: 'fa-brain' },
-            { title: 'Python Scraper for FinTech', client: 'Vector Corp', pay: '$800', time: '5 hours left', icon: 'fa-code' },
-            { title: 'Cyberpunk UI Kit Design', client: 'Neon Inc', pay: '$1,200', time: '1 week left', icon: 'fa-paint-brush' },
-            { title: 'API Documentation Audit', client: 'Nexus Soft', pay: '$450', time: '12 hours left', icon: 'fa-file-alt' }
+            { title: 'Neural Network Labeling', client: 'Nxxt Labs', pay: '$250', time: '2 days left', icon: 'fa-brain', desc: 'Help train our v4.0 vision model by labeling datasets.' },
+            { title: 'Python Scraper for FinTech', client: 'Vector Corp', pay: '$800', time: '5 hours left', icon: 'fa-code', desc: 'Build a secure scraper for real-time market data extraction.' },
+            { title: 'Cyberpunk UI Kit Design', client: 'Neon Inc', pay: '$1,200', time: '1 week left', icon: 'fa-paint-brush', desc: 'Design high-fidelity glassmorphic components for an OS.' },
+            { title: 'API Documentation Audit', client: 'Nexus Soft', pay: '$450', time: '12 hours left', icon: 'fa-file-alt', desc: 'Review and refine technical documentation for public endpoints.' }
         ].map(gig => `
-            <div class="group p-6 bg-white/[0.02] border border-white/5 rounded-[2.5rem] hover:border-emerald-500/30 transition-all duration-500">
-                <div class="flex justify-between items-start mb-6">
-                    <div class="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-emerald-500/10 transition-colors">
-                        <i class="fas ${gig.icon} text-emerald-500/40 group-hover:text-emerald-500"></i>
+            <div class="group p-8 bg-white/[0.02] border border-white/5 rounded-[3rem] hover:border-emerald-500/30 transition-all duration-500 flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-emerald-500/10 transition-colors">
+                            <i class="fas ${gig.icon} text-emerald-500/40 group-hover:text-emerald-500 text-xl"></i>
+                        </div>
+                        <div class="text-right">
+                            <span class="block text-[10px] font-mono text-emerald-500 font-bold mb-1">${gig.pay}</span>
+                            <span class="block text-[8px] text-gray-600 font-bold uppercase tracking-tighter italic">Secured in Escrow</span>
+                        </div>
                     </div>
-                    <span class="text-[9px] font-mono text-emerald-500 bg-emerald-500/5 px-3 py-1 rounded-full border border-emerald-500/10">${gig.pay}</span>
+                    
+                    <h4 class="text-white font-black uppercase tracking-tight text-xl mb-2">${gig.title}</h4>
+                    <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest mb-4">Client: ${gig.client}</p>
+                    <p class="text-xs text-gray-400 leading-relaxed opacity-60 line-clamp-2 mb-8">${gig.desc}</p>
                 </div>
                 
-                <h4 class="text-white font-black uppercase tracking-tight text-lg mb-1">${gig.title}</h4>
-                <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest mb-6">Client: ${gig.client}</p>
-                
                 <div class="flex items-center justify-between pt-6 border-t border-white/5">
-                    <span class="text-[8px] text-gray-600 font-bold uppercase"><i class="far fa-clock mr-1"></i> ${gig.time}</span>
-                    <button onclick="openGigPanel('Apply: ${gig.title}')" class="text-[9px] font-black text-emerald-500 uppercase tracking-[0.2em] hover:text-emerald-400 transition-colors">
-                        View Details <i class="fas fa-arrow-right ml-1"></i>
+                    <span class="text-[8px] text-gray-600 font-bold uppercase flex items-center gap-2">
+                        <i class="far fa-clock text-emerald-500/50"></i> ${gig.time}
+                    </span>
+                    <button onclick="openGigPanel('Apply: ${gig.title}', '${gig.desc}')" 
+                            class="text-[10px] font-black text-emerald-500 uppercase tracking-[0.2em] hover:text-emerald-300 transition-colors flex items-center gap-2">
+                        View & Apply <i class="fas fa-arrow-right text-[8px]"></i>
                     </button>
                 </div>
             </div>
@@ -733,37 +743,60 @@ const views = {
     </div>
 </div>
 
-<div id="gig-side-panel" class="fixed top-0 right-0 h-full w-full md:w-[450px] bg-[#020617] border-l border-white/10 z-[2000] translate-x-full transition-transform duration-500 ease-in-out shadow-[-20px_0_50px_rgba(0,0,0,0.5)]">
+<div id="gig-side-panel" class="fixed top-0 right-0 h-full w-full md:w-[480px] bg-[#020617]/95 backdrop-blur-2xl border-l border-white/10 z-[5000] translate-x-full transition-transform duration-500 ease-out shadow-[-50px_0_100px_rgba(0,0,0,0.8)]">
     <div class="flex flex-col h-full">
         <div class="p-8 flex justify-between items-center border-b border-white/5">
-            <h3 id="panel-title" class="text-white font-black uppercase italic tracking-tighter">Application Terminal</h3>
-            <button onclick="closeGigPanel()" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10">
-                <i class="fas fa-times text-xs text-gray-500"></i>
+            <h3 id="panel-title" class="text-white font-black uppercase italic tracking-tighter text-sm">Application Terminal</h3>
+            <button onclick="closeGigPanel()" class="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center hover:bg-red-500/20 group transition-all">
+                <i class="fas fa-times text-gray-500 group-hover:text-red-500 transition-colors"></i>
             </button>
         </div>
         
-        <div class="flex-1 p-8 flex flex-col items-center justify-center text-center">
-            <div class="w-20 h-20 bg-emerald-500/5 rounded-[2rem] border border-emerald-500/20 flex items-center justify-center mb-8">
-                <i class="fas fa-tools text-2xl text-emerald-500 animate-bounce"></i>
+        <div id="panel-body" class="flex-1 overflow-y-auto p-10 space-y-10 no-scrollbar">
+            <div>
+                <div id="panel-icon-box" class="w-16 h-16 bg-emerald-500/10 rounded-2xl border border-emerald-500/20 flex items-center justify-center mb-6">
+                    <i class="fas fa-tools text-xl text-emerald-500 animate-pulse"></i>
+                </div>
+                <h2 id="panel-header" class="text-white font-black uppercase text-3xl tracking-tighter italic mb-4">Interface Stabilizing</h2>
+                <p id="panel-desc" class="text-gray-500 text-[11px] font-bold uppercase tracking-[0.2em] leading-loose">
+                    Establishing secure handshake with marketplace nodes...
+                </p>
             </div>
-            <h2 class="text-white font-black uppercase text-2xl tracking-tighter italic mb-4">Under Development</h2>
-            <p class="text-gray-500 text-[11px] font-bold uppercase tracking-[0.2em] leading-loose max-w-[280px]">
-                The interactive application flow and smart-contract verification are currently being stabilized. 
-            </p>
-            
-            <div class="mt-12 w-full space-y-4">
-                <div class="h-12 w-full bg-white/5 rounded-2xl border border-white/10 animate-pulse"></div>
-                <div class="h-32 w-full bg-white/5 rounded-2xl border border-white/10 animate-pulse"></div>
-                <button class="w-full py-5 bg-gray-800 text-gray-500 rounded-2xl text-[10px] font-black uppercase tracking-widest cursor-not-allowed">
-                    Submission Locked
+
+            <div class="space-y-6 pt-10 border-t border-white/5">
+                <div class="space-y-2">
+                    <div class="flex justify-between text-[8px] font-black text-gray-600 uppercase tracking-widest">
+                        <span>Terminal Verification</span>
+                        <span>0%</span>
+                    </div>
+                    <div class="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
+                        <div class="h-full bg-emerald-600 w-0"></div>
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <div class="h-14 w-full bg-white/[0.03] rounded-2xl border border-white/5 flex items-center px-4">
+                        <div class="w-4 h-4 rounded-full bg-white/5 animate-pulse"></div>
+                    </div>
+                    <div class="h-40 w-full bg-white/[0.03] rounded-2xl border border-white/5 p-4">
+                        <div class="w-2/3 h-2 bg-white/5 rounded mb-3 animate-pulse"></div>
+                        <div class="w-full h-2 bg-white/5 rounded mb-3 animate-pulse"></div>
+                        <div class="w-1/2 h-2 bg-white/5 rounded animate-pulse"></div>
+                    </div>
+                </div>
+
+                <button class="w-full py-6 bg-white/5 border border-white/10 text-gray-600 rounded-3xl text-[11px] font-black uppercase tracking-[0.3em] cursor-not-allowed">
+                    Uplink Blocked
                 </button>
             </div>
         </div>
     </div>
 </div>
-<div id="panel-backdrop" onclick="closeGigPanel()" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[1999] opacity-0 pointer-events-none transition-opacity duration-500"></div>
+
+<div id="panel-backdrop" onclick="closeGigPanel()" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[4999] opacity-0 pointer-events-none transition-opacity duration-500"></div>
 `,
 
+    
     
 
 'Notifications': `
@@ -2792,33 +2825,72 @@ function switchLabTab(tabName) {
 
 //// for the side hustle
 
-function openGigPanel(title) {
+/**
+ * Opens the Side Panel and updates content based on user action
+ * @param {string} title - The Header Title
+ * @param {string} desc - The Gig Description
+ */
+function openGigPanel(title, desc) {
     const panel = document.getElementById('gig-side-panel');
     const backdrop = document.getElementById('panel-backdrop');
-    const titleEl = document.getElementById('panel-title');
-    
-    if(titleEl) titleEl.innerText = title;
-    
-    // Slide in
+    const header = document.getElementById('panel-header');
+    const descEl = document.getElementById('panel-desc');
+
+    // Update Content
+    if (header) header.innerText = title;
+    if (descEl) descEl.innerText = desc;
+
+    // Trigger Animations
     panel.classList.remove('translate-x-full');
     backdrop.classList.add('opacity-100', 'pointer-events-auto');
-    
-    // Prevent main body scroll
+
+    // Lock body scroll
     document.body.style.overflow = 'hidden';
+
+    // Per instruction: If this is an "alert" style action, center it.
+    // However, since this is a Sidebar UI, we keep it as a Slide-Out per your requirement.
 }
 
 function closeGigPanel() {
     const panel = document.getElementById('gig-side-panel');
     const backdrop = document.getElementById('panel-backdrop');
-    
-    // Slide out
+
     panel.classList.add('translate-x-full');
     backdrop.classList.remove('opacity-100', 'pointer-events-auto');
-    
-    // Restore main body scroll
+
+    // Restore body scroll
     document.body.style.overflow = '';
 }
 
+/**
+ * Filter Logic (Under Development Alert)
+ */
+function filterGigs(category) {
+    // Uses your requested central modal alert style
+    showHustleAlert(`Filtering for ${category} nodes... Access Denied.`);
+}
+
+/**
+ * Global Hustle Alert (Modal at the center of the page)
+ */
+function showHustleAlert(message) {
+    const modal = document.createElement('div');
+    modal.className = "fixed inset-0 z-[99999] flex items-center justify-center px-6";
+    modal.innerHTML = `
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-xl"></div>
+        <div class="relative bg-[#020617] border border-emerald-500/30 p-10 rounded-[3rem] shadow-[0_0_80px_rgba(16,185,129,0.1)] text-center max-w-sm w-full animate-in zoom-in-95">
+            <div class="w-16 h-16 bg-emerald-500/10 rounded-2xl flex items-center justify-center mx-auto mb-6 border border-emerald-500/20">
+                <i class="fas fa-shield-alt text-emerald-500 text-xl"></i>
+            </div>
+            <h3 class="text-white font-black uppercase tracking-[0.2em] text-sm mb-4 italic">Security Protocol</h3>
+            <p class="text-gray-500 text-[10px] uppercase font-bold leading-loose mb-8 tracking-widest">${message}</p>
+            <button onclick="this.parentElement.parentElement.remove()" class="w-full py-5 bg-emerald-600 text-white font-black uppercase text-[10px] tracking-widest rounded-2xl hover:bg-emerald-500 transition-all">
+                Confirm
+            </button>
+        </div>
+    `;
+    document.body.appendChild(modal);
+}
 
 
 
