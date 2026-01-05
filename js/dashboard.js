@@ -121,21 +121,10 @@ const views = {
             <h3 class="text-lg font-black text-white italic uppercase tracking-tighter">Activity</h3>
             <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest mt-1">Tracking session</p>
 
-
-
-
-
-
         </div>
         <div class="flex gap-2 flex-wrap">
             <button class="px-4 py-2 bg-gray-800 rounded-lg text-[9px] font-black uppercase tracking-widest text-white shadow-lg shadow-gray-800/20">2025</button>
             <button class="px-4 py-2 bg-blue-600 rounded-lg text-[9px] font-black uppercase tracking-widest text-white shadow-lg shadow-blue-600/20">2026</button>
-
-
-
-
-
-
 
         </div>
     </div>
@@ -2996,10 +2985,10 @@ renderUI();
 
 
 ///// for the projects 
-// Modal 1: Center Naming Modal
-
-// 1. CENTRAL ALERT CONTROLLER
-// This replaces browser alerts with a centered Nxxt-themed modal
+/**
+ * 1. CENTRAL ALERT CONTROLLER
+ * Requirement: Centered modal alert system.
+ */
 function showNxxtAlert(message) {
     const alertHtml = `
         <div id="nxxtAlertModal" class="fixed inset-0 z-[300] bg-black/90 backdrop-blur-md flex items-center justify-center p-6 animate-in fade-in duration-300">
@@ -3020,7 +3009,9 @@ function showNxxtAlert(message) {
     document.body.insertAdjacentHTML('beforeend', alertHtml);
 }
 
-// 2. PROJECT NAMING MODAL (CENTER)
+/**
+ * 2. PROJECT NAMING MODAL (CENTER)
+ */
 function openProjectNamingModal() {
     const modalHtml = `
         <div id="centerModalOverlay" class="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex items-center justify-center p-6">
@@ -3034,40 +3025,26 @@ function openProjectNamingModal() {
                         <p class="text-[8px] text-gray-600 font-bold uppercase tracking-widest mt-1">Project Deployment Alpha</p>
                     </div>
                 </div>
-
                 <div class="space-y-4">
-                    <input type="text" id="pName" placeholder="PROJECT NAME" 
-                        class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-[10px] font-black uppercase tracking-widest focus:border-blue-500 focus:outline-none focus:bg-white/[0.07] transition-all">
-                    
-                    <textarea id="pDesc" placeholder="DESCRIPTION (OPTIONAL)" 
-                        class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-[10px] font-black uppercase tracking-widest h-24 focus:border-blue-500 focus:outline-none focus:bg-white/[0.07] transition-all resize-none"></textarea>
+                    <input type="text" id="pName" placeholder="PROJECT NAME" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-[10px] font-black uppercase tracking-widest focus:border-blue-500 focus:outline-none focus:bg-white/[0.07] transition-all">
+                    <textarea id="pDesc" placeholder="DESCRIPTION (OPTIONAL)" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-[10px] font-black uppercase tracking-widest h-24 focus:border-blue-500 focus:outline-none focus:bg-white/[0.07] transition-all resize-none"></textarea>
                 </div>
-
                 <div class="flex gap-4">
-                    <button onclick="closeCenterModal()" 
-                        class="flex-1 py-3 bg-white/5 text-gray-500 text-[10px] font-black uppercase tracking-widest rounded-xl hover:text-white transition-all">
-                        Cancel
-                    </button>
-                    <button onclick="triggerRightSlideOut()" 
-                        class="flex-1 py-3 bg-blue-600 text-[#020617] text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-blue-500 transition-all">
-                        Next Step
-                    </button>
+                    <button onclick="closeCenterModal()" class="flex-1 py-3 bg-white/5 text-gray-500 text-[10px] font-black uppercase tracking-widest rounded-xl hover:text-white transition-all">Cancel</button>
+                    <button onclick="triggerRightSlideOut()" class="flex-1 py-3 bg-blue-600 text-[#020617] text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-blue-500 transition-all">Next Step</button>
                 </div>
             </div>
         </div>`;
     document.body.insertAdjacentHTML('beforeend', modalHtml);
 }
 
-// 3. RIGHT SIDE SLIDE-OUT MODAL
+/**
+ * 3. RIGHT SIDE SLIDE-OUT MODAL
+ */
 function triggerRightSlideOut() {
     const name = document.getElementById('pName').value.trim();
     const desc = document.getElementById('pDesc').value.trim() || "No detailed description provided.";
-    
-    if (!name) {
-        showNxxtAlert("PROJECT NAME REQUIRED FOR INITIALIZATION");
-        return;
-    }
-
+    if (!name) { showNxxtAlert("PROJECT NAME REQUIRED FOR INITIALIZATION"); return; }
     closeCenterModal();
 
     const slideOutHtml = `
@@ -3078,11 +3055,9 @@ function triggerRightSlideOut() {
                         <span class="text-[9px] text-blue-500 font-black uppercase tracking-widest">Advanced Config</span>
                         <h6 class="text-white font-black text-2xl uppercase italic tracking-tighter mt-2">${name}</h6>
                     </div>
-
                     <div class="space-y-3">
                         <p class="text-[9px] text-white font-black uppercase tracking-widest">Project Visual Overlay</p>
-                        <div onclick="document.getElementById('projectImgInput').click()" 
-                            class="group relative w-full h-32 bg-white/5 border border-dashed border-white/10 rounded-2xl flex flex-col items-center justify-center cursor-pointer hover:border-blue-500/50 transition-all overflow-hidden">
+                        <div onclick="document.getElementById('projectImgInput').click()" class="group relative w-full h-32 bg-white/5 border border-dashed border-white/10 rounded-2xl flex flex-col items-center justify-center cursor-pointer hover:border-blue-500/50 transition-all overflow-hidden">
                             <input type="file" id="projectImgInput" class="hidden" accept="image/*" onchange="previewProjectImage(this)">
                             <div id="imgPreviewPlaceholder" class="flex flex-col items-center gap-2">
                                 <i class="fas fa-camera text-gray-700 group-hover:text-blue-500 transition-colors"></i>
@@ -3091,110 +3066,80 @@ function triggerRightSlideOut() {
                             <img id="imgPreview" class="hidden absolute inset-0 w-full h-full object-cover">
                         </div>
                     </div>
-
-                    <div class="h-[1px] w-full bg-white/5"></div> <div class="space-y-3">
+                    <div class="h-[1px] w-full bg-white/5"></div>
+                    <div class="space-y-3">
                         <p class="text-[9px] text-white font-black uppercase tracking-widest">Core Classification</p>
                         <div class="flex flex-wrap gap-2">
                             ${['Personal', 'School', 'Job', 'Commercial'].map(type => `
-                                <div onclick="selectProjectType(this)" class="project-type-chip px-4 py-2 bg-white/5 border border-white/5 rounded-xl text-[9px] text-gray-500 font-black uppercase cursor-pointer hover:bg-white/10 transition-all">
-                                    ${type}
-                                </div>
+                                <div onclick="selectProjectType(this)" class="project-type-chip px-4 py-2 bg-white/5 border border-white/5 rounded-xl text-[9px] text-gray-500 font-black uppercase cursor-pointer hover:bg-white/10 transition-all">${type}</div>
                             `).join('')}
                         </div>
                     </div>
-
                     <div class="space-y-3">
                         <div class="flex justify-between items-center">
                             <p class="text-[9px] text-white font-black uppercase tracking-widest">Neural Uplinks (Users)</p>
                             <span id="userCount" class="text-blue-500 text-[10px] font-black">1</span>
                         </div>
-                        <input type="range" min="1" max="10" value="1" 
-                            class="w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-blue-600"
-                            oninput="checkUserLimit(this)">
-                        <p class="text-[8px] text-gray-700 font-bold uppercase tracking-widest">Free Mode Limit: 4 Nodes</p>
+                        <input type="range" min="1" max="10" value="1" class="w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-blue-600" oninput="checkUserLimit(this)">
                     </div>
-
-                    <div class="h-[1px] w-full bg-white/5"></div> <div class="space-y-4">
-                        <input type="text" id="supName" placeholder="SUPERVISOR NAME (OPTIONAL)" 
-                            class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-[9px] font-black uppercase tracking-widest focus:border-blue-500 focus:outline-none">
-                        
-                        <textarea id="shortDesc" placeholder="SHORT SUMMARY (OPTIONAL)" 
-                            class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-[9px] font-black uppercase tracking-widest h-20 focus:border-blue-500 focus:outline-none resize-none"></textarea>
+                    <div class="h-[1px] w-full bg-white/5"></div>
+                    <div class="space-y-4">
+                        <input type="text" id="supName" placeholder="SUPERVISOR NAME (OPTIONAL)" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-[9px] font-black uppercase tracking-widest focus:border-blue-500 focus:outline-none">
+                        <textarea id="shortDesc" placeholder="SHORT SUMMARY (OPTIONAL)" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-[9px] font-black uppercase tracking-widest h-20 focus:border-blue-500 focus:outline-none resize-none"></textarea>
                     </div>
-
                     <div class="flex gap-4 pb-10">
                         <button onclick="closeRightSlide()" class="flex-1 py-4 bg-white/5 text-gray-500 text-[10px] font-black uppercase tracking-widest rounded-2xl">Cancel</button>
-                        <button onclick="finalizeProject('${name.replace(/'/g, "\\'")}', '${desc.replace(/'/g, "\\'")}')" 
-                            class="flex-1 py-4 bg-blue-600 text-[#020617] text-[10px] font-black uppercase tracking-widest rounded-2xl shadow-lg">
-                            Finalize & Deploy
-                        </button>
+                        <button onclick="finalizeProject('${name.replace(/'/g, "\\'")}', '${desc.replace(/'/g, "\\'")}')" class="flex-1 py-4 bg-blue-600 text-[#020617] text-[10px] font-black uppercase tracking-widest rounded-2xl shadow-lg">Finalize & Deploy</button>
                     </div>
                 </div>
             </div>
         </div>`;
     document.body.insertAdjacentHTML('beforeend', slideOutHtml);
 }
-// Image Gallery Preview
+
 function previewProjectImage(input) {
     if (input.files && input.files[0]) {
         const reader = new FileReader();
-        reader.onload = function(e) {
-            document.getElementById('imgPreview').src = e.target.result;
-            document.getElementById('imgPreview').classList.remove('hidden');
+        reader.onload = (e) => {
+            const preview = document.getElementById('imgPreview');
+            preview.src = e.target.result;
+            preview.classList.remove('hidden');
             document.getElementById('imgPreviewPlaceholder').classList.add('hidden');
-        }
+        };
         reader.readAsDataURL(input.files[0]);
     }
 }
 
-// Project Type Selection
 function selectProjectType(element) {
-    document.querySelectorAll('.project-type-chip').forEach(chip => {
-        chip.classList.remove('border-blue-500', 'text-blue-500', 'bg-blue-500/10');
-    });
+    document.querySelectorAll('.project-type-chip').forEach(chip => chip.classList.remove('border-blue-500', 'text-blue-500', 'bg-blue-500/10'));
     element.classList.add('border-blue-500', 'text-blue-500', 'bg-blue-500/10');
 }
 
-// User Limit Check (Slide out notification)
 function checkUserLimit(input) {
     const val = parseInt(input.value);
     document.getElementById('userCount').innerText = val;
-    
     if (val > 4) {
         showTopRightToast("FREE MODE LIMIT EXCEEDED: Upgrade to Pro for 5+ users.");
-        input.value = 4; // Reset to 4
+        input.value = 4;
         document.getElementById('userCount').innerText = 4;
     }
 }
 
-// Right-Top Slide-out Notification
 function showTopRightToast(message) {
     const toastId = 'toast-' + Date.now();
-    const toastHtml = `
-        <div id="${toastId}" class="fixed top-8 right-8 z-[200] bg-[#050b1d] border border-blue-500/30 p-5 rounded-2xl flex items-center gap-4 animate-in slide-in-from-right duration-500 shadow-2xl">
-            <div class="w-8 h-8 bg-blue-500/10 rounded-lg flex items-center justify-center">
-                <i class="fas fa-crown text-blue-500 text-xs"></i>
-            </div>
-            <div>
-                <p class="text-white font-black text-[9px] uppercase tracking-widest">System Restriction</p>
-                <p class="text-gray-500 text-[8px] font-bold uppercase mt-1">${message}</p>
-            </div>
-        </div>`;
+    const toastHtml = `<div id="${toastId}" class="fixed top-8 right-8 z-[200] bg-[#050b1d] border border-blue-500/30 p-5 rounded-2xl flex items-center gap-4 animate-in slide-in-from-right duration-500 shadow-2xl">
+        <div class="w-8 h-8 bg-blue-500/10 rounded-lg flex items-center justify-center"><i class="fas fa-crown text-blue-500 text-xs"></i></div>
+        <div><p class="text-white font-black text-[9px] uppercase tracking-widest">System Restriction</p><p class="text-gray-500 text-[8px] font-bold uppercase mt-1">${message}</p></div>
+    </div>`;
     document.body.insertAdjacentHTML('beforeend', toastHtml);
     setTimeout(() => {
         const t = document.getElementById(toastId);
-        if(t) t.classList.add('animate-out', 'fade-out', 'slide-out-to-right');
-        setTimeout(() => t?.remove(), 500);
+        if(t) { t.classList.add('animate-out', 'slide-out-to-right'); setTimeout(() => t.remove(), 500); }
     }, 4000);
 }
-// 4. DEPLOYMENT & 6-SECOND LOADER
+
 /**
- * FINALIZE PROJECT & DEPLOYMENT LOGIC
- * Includes UI Transition, Card Generation, and Notification Sync
- */
-/**
- * CORE DEPLOYMENT LOGIC
- * Handled by finalizeProject
+ * 4. DEPLOYMENT & PERSISTENCE
  */
 function finalizeProject(name, desc) {
     const pfpSrc = document.getElementById('imgPreview').src;
@@ -3204,187 +3149,126 @@ function finalizeProject(name, desc) {
     
     closeRightSlide();
     
-    const loaderHtml = `
-        <div id="loaderOverlay" class="fixed inset-0 z-[200] bg-[#020617] flex flex-col items-center justify-center">
-            <div class="w-16 h-16 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin mb-6"></div>
-            <p class="text-[10px] text-white font-black uppercase tracking-[0.5em] animate-pulse">Creating...</p>
-        </div>`;
+    const loaderHtml = `<div id="loaderOverlay" class="fixed inset-0 z-[200] bg-[#020617] flex flex-col items-center justify-center">
+        <div class="w-16 h-16 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin mb-6"></div>
+        <p class="text-[10px] text-white font-black uppercase tracking-[0.5em] animate-pulse">Creating...</p>
+    </div>`;
     document.body.insertAdjacentHTML('beforeend', loaderHtml);
 
     setTimeout(() => {
         const loader = document.getElementById('loaderOverlay');
         if (loader) loader.remove();
         
-        const emptyState = document.getElementById('emptyProjectState');
         const gridState = document.getElementById('projectGrid');
-        if (emptyState) emptyState.classList.add('hidden');
         if (gridState) gridState.classList.remove('hidden');
+        if (document.getElementById('emptyProjectState')) document.getElementById('emptyProjectState').classList.add('hidden');
 
         const now = new Date();
         const timestamp = `${now.getFullYear()}.${String(now.getMonth() + 1).padStart(2, '0')}.${String(now.getDate()).padStart(2, '0')}`;
         const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-        const newProject = `
+        const newProjectCard = `
             <div class="bg-[#050b1d] border border-white/5 rounded-[2rem] p-6 group hover:border-blue-500/30 transition-all animate-in zoom-in-95 relative overflow-hidden">
                 <div class="absolute top-0 right-0 px-3 py-1 bg-green-500/10 border-b border-l border-green-500/20 rounded-bl-xl">
                     <span class="text-[7px] text-green-500 font-black uppercase tracking-widest">Build Successful</span>
                 </div>
-
                 <div class="flex justify-between items-start mb-6">
                     <div class="w-12 h-12 rounded-2xl border border-white/10 overflow-hidden bg-blue-500/5 flex items-center justify-center">
                         ${hasPfp ? `<img src="${pfpSrc}" class="w-full h-full object-cover">` : `<i class="fas fa-microchip text-blue-500"></i>`}
                     </div>
                     <span class="text-[8px] text-gray-600 font-black uppercase mt-2">${category}</span>
                 </div>
-
                 <h6 class="text-white font-black uppercase italic text-xs mb-1 truncate">${name}</h6>
                 <p class="text-[8px] text-blue-400 font-bold mb-3 uppercase tracking-tighter">SV: ${supervisor}</p>
                 <p class="text-[9px] text-gray-500 font-medium line-clamp-2 leading-relaxed mb-6">${desc}</p>
-                
                 <div class="pt-4 border-t border-white/5 flex justify-between items-center">
-                    <div class="flex flex-col">
-                        <span class="text-[7px] text-gray-700 font-black uppercase tracking-widest">Deployed</span>
-                        <span class="text-[8px] text-white font-bold">${timestamp}</span>
-                    </div>
+                    <div class="flex flex-col"><span class="text-[7px] text-gray-700 font-black uppercase tracking-widest">Deployed</span><span class="text-[8px] text-white font-bold">${timestamp}</span></div>
                     <i class="fas fa-chevron-right text-[10px] text-gray-800 group-hover:text-blue-500 transition-colors"></i>
                 </div>
             </div>`;
 
-        if (gridState) gridState.insertAdjacentHTML('afterbegin', newProject);
+        if (gridState) gridState.insertAdjacentHTML('afterbegin', newProjectCard);
         
+        addProjectToList(name, category, false); // false = don't double notify
         addSystemNotification(name, timestamp, timeStr);
-        saveAllData(); // <--- PERSISTENCE TRIGGER
+        saveAllData(); 
     }, 6000);
 }
 
-/**
- * NOTIFICATION SYSTEM
- */
 function addSystemNotification(projName, date, time) {
-    const formattedDate = date || new Date().toLocaleDateString('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\-/g, '.');
-    const formattedTime = time || new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }).toUpperCase();
+    const formattedDate = date || new Date().toLocaleDateString('en-CA').replace(/-/g, '.');
+    const formattedTime = time || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }).toUpperCase();
 
     const logHtml = `
-        <div class="notif-item p-5 bg-green-500/5 border border-green-500/20 rounded-3xl text-left relative overflow-hidden group hover:border-green-500/40 transition-all animate-in slide-in-from-top">
+        <div class="notif-item p-5 bg-green-500/5 border border-green-500/20 rounded-3xl text-left relative overflow-hidden group hover:border-green-500/40 transition-all animate-in slide-in-from-top mb-3">
             <div class="flex justify-between items-start mb-2">
                 <p class="text-[8px] font-black text-green-500 uppercase tracking-widest">Build Successful</p>
                 <span class="text-[7px] text-gray-600 font-bold uppercase">${formattedDate} | ${formattedTime}</span>
             </div>
-            <p class="text-white text-[11px] font-bold leading-relaxed">
-                New Core Module <span class="text-green-500 italic">"${projName}"</span> has been successfully compiled.
-            </p>
-            <i class="fas fa-check-circle absolute -bottom-2 -right-2 text-green-500/10 text-4xl"></i>
+            <p class="text-white text-[11px] font-bold leading-relaxed">New Core Module <span class="text-green-500 italic">"${projName}"</span> successfully compiled.</p>
         </div>`;
 
-    const activeScrollArea = document.getElementById('notif-scroll-area');
-    if (activeScrollArea) {
-        activeScrollArea.insertAdjacentHTML('afterbegin', logHtml);
+    const scrollArea = document.getElementById('notif-scroll-area');
+    if (scrollArea) {
+        scrollArea.insertAdjacentHTML('afterbegin', logHtml);
         updateNotificationUI();
-        saveAllData(); // <--- PERSISTENCE TRIGGER
+        saveAllData();
     } else if (typeof views !== 'undefined' && views['Notifications']) {
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(views['Notifications'], 'text/html');
-        const scrollArea = doc.getElementById('notif-scroll-area');
-        if (scrollArea) {
-            scrollArea.insertAdjacentHTML('afterbegin', logHtml);
-            const container = doc.getElementById('notifications-container') || doc.body.firstChild;
-            if (container) {
-                views['Notifications'] = container.outerHTML;
-                updateNotificationUI();
-            }
+        // Persist to background view if not active
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = views['Notifications'];
+        const innerScroll = tempDiv.querySelector('#notif-scroll-area');
+        if (innerScroll) {
+            innerScroll.insertAdjacentHTML('afterbegin', logHtml);
+            views['Notifications'] = tempDiv.innerHTML;
+            updateNotificationUI();
+            saveAllData();
         }
     }
 }
 
 function updateNotificationUI() {
     const badge = document.getElementById('notif-badge');
-    const bell = document.getElementById('notif-bell-icon');
     const countText = document.getElementById('notif-count');
-    if (badge) { badge.classList.remove('hidden'); badge.classList.add('animate-bounce'); }
-    if (bell) { bell.classList.add('animate-bounce'); setTimeout(() => bell.classList.remove('animate-bounce'), 2000); }
+    if (badge) badge.classList.remove('hidden');
     if (countText) {
-        const match = countText.innerText.match(/(\d+)/);
-        let current = match ? parseInt(match[1]) : 0;
+        let current = parseInt(countText.innerText) || 0;
         countText.innerText = `${current + 1} new updates`;
     }
 }
 
-/**
- * PROJECT MANAGEMENT (BULK ACTIONS)
- */
 function initProjectManagement() {
-    const selectAllBtn = document.getElementById('selectAllBtn');
-    const bulkDeleteBtn = document.getElementById('bulkDeleteBtn');
-    const projectContainer = document.getElementById('projectContainer');
-    const emptyState = document.getElementById('emptyProjectState');
-
-    if (!selectAllBtn || !bulkDeleteBtn || !projectContainer) return;
-
-    function updateBulkDelete() {
-        const checkboxes = document.querySelectorAll('.project-checkbox');
-        const checked = document.querySelectorAll('.project-checkbox:checked');
-        const count = checked.length;
-        bulkDeleteBtn.textContent = `Bulk Delete (${count})`;
-        if (count > 0) {
-            bulkDeleteBtn.disabled = false;
-            bulkDeleteBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-        } else {
-            bulkDeleteBtn.disabled = true;
-            bulkDeleteBtn.classList.add('opacity-50', 'cursor-not-allowed');
-        }
-        selectAllBtn.textContent = count === checkboxes.length && checkboxes.length > 0 ? 'Deselect All' : 'Select All';
-    }
-
-    selectAllBtn.onclick = () => {
-        const checkboxes = document.querySelectorAll('.project-checkbox');
-        const allChecked = Array.from(checkboxes).every(cb => cb.checked);
-        checkboxes.forEach(cb => cb.checked = !allChecked);
-        updateBulkDelete();
-    };
-
-    projectContainer.onchange = (e) => {
-        if (e.target.classList.contains('project-checkbox')) updateBulkDelete();
-    };
-
-    bulkDeleteBtn.onclick = () => {
+    const container = document.getElementById('projectContainer');
+    if (!container) return;
+    const bulkBtn = document.getElementById('bulkDeleteBtn');
+    if (bulkBtn) bulkBtn.onclick = () => {
         if (!confirm('Permanently delete selected projects?')) return;
         document.querySelectorAll('.project-checkbox:checked').forEach(cb => cb.closest('.project-item').remove());
-        updateBulkDelete();
-        if (document.querySelectorAll('.project-item').length === 0 && emptyState) emptyState.style.display = 'flex';
-        saveAllData(); // <--- PERSISTENCE TRIGGER
+        saveAllData();
     };
-
-    if (document.querySelectorAll('.project-item').length > 0 && emptyState) emptyState.style.display = 'none';
 }
 
-function addProjectToList(name, tech = '') {
-    const emptyState = document.getElementById('emptyProjectState');
-    const projectContainer = document.getElementById('projectContainer');
-    if (!projectContainer) return;
-    if (emptyState) emptyState.style.display = 'none';
-
-    const safeName = name.trim() || 'Untitled Project';
-    const safeTech = tech.trim() || 'Unknown Stack';
+function addProjectToList(name, tech = '', triggerNotify = true) {
+    const container = document.getElementById('projectContainer');
+    if (!container) return;
+    if (document.getElementById('emptyProjectState')) document.getElementById('emptyProjectState').style.display = 'none';
 
     const html = `
-        <div class="project-item p-6 bg-white/5 border border-white/10 rounded-3xl flex items-center justify-between hover:border-blue-500/30 transition-all animate-in slide-in-from-bottom">
+        <div class="project-item p-6 bg-white/5 border border-white/10 rounded-3xl flex items-center justify-between hover:border-blue-500/30 transition-all mb-4">
             <div class="flex items-center gap-4">
                 <input type="checkbox" class="project-checkbox w-4 h-4 accent-blue-500 rounded">
-                <div><h5 class="text-white font-black text-sm uppercase">${safeName}</h5><p class="text-[9px] text-gray-500 uppercase tracking-wider">${safeTech}</p></div>
+                <div><h5 class="text-white font-black text-sm uppercase">${name}</h5><p class="text-[9px] text-gray-500 uppercase tracking-wider">${tech}</p></div>
             </div>
-            <div class="flex items-center gap-4">
-                <button onclick="this.closest('.project-item').remove(); saveAllData();" class="text-red-500 hover:text-red-400 text-xs uppercase font-black transition-colors">Delete</button>
-            </div>
+            <button onclick="this.closest('.project-item').remove(); saveAllData();" class="text-red-500 text-xs font-black">DELETE</button>
         </div>`;
 
-    projectContainer.insertAdjacentHTML('afterbegin', html);
-    initProjectManagement();
-    addSystemNotification(safeName);
-    saveAllData(); // <--- PERSISTENCE TRIGGER
+    container.insertAdjacentHTML('afterbegin', html);
+    if (triggerNotify) addSystemNotification(name);
+    saveAllData();
 }
 
 /**
- * PERSISTENCE ENGINE (LOCAL STORAGE)
+ * STORAGE ENGINE
  */
 function saveAllData() {
     const data = {
@@ -3401,30 +3285,24 @@ function loadAllData() {
     const saved = localStorage.getItem('nxxt_system_data');
     if (!saved) return;
     const data = JSON.parse(saved);
-    
-    if (data.grid) {
-        const grid = document.getElementById('projectGrid');
-        if (grid) { grid.innerHTML = data.grid; grid.classList.remove('hidden'); }
-        const empty = document.getElementById('emptyProjectState');
-        if (empty) empty.classList.add('hidden');
+    if (data.grid && document.getElementById('projectGrid')) {
+        document.getElementById('projectGrid').innerHTML = data.grid;
+        document.getElementById('projectGrid').classList.remove('hidden');
+        if (document.getElementById('emptyProjectState')) document.getElementById('emptyProjectState').classList.add('hidden');
     }
-    if (data.list) {
-        const list = document.getElementById('projectContainer');
-        if (list) { list.innerHTML = data.list; initProjectManagement(); }
+    if (data.list && document.getElementById('projectContainer')) {
+        document.getElementById('projectContainer').innerHTML = data.list;
+        initProjectManagement();
     }
-    if (data.notifs) {
-        const area = document.getElementById('notif-scroll-area');
-        if (area) area.innerHTML = data.notifs;
+    if (data.notifs && document.getElementById('notif-scroll-area')) {
+        document.getElementById('notif-scroll-area').innerHTML = data.notifs;
     }
     if (data.count && document.getElementById('notif-count')) {
         document.getElementById('notif-count').innerText = data.count;
     }
-    if (data.rawNotifs && typeof views !== 'undefined') {
-        views['Notifications'] = data.rawNotifs;
-    }
+    if (data.rawNotifs && typeof views !== 'undefined') views['Notifications'] = data.rawNotifs;
 }
 
-// Startup
 window.onload = loadAllData;
-function closeCenterModal() { const m = document.getElementById('centerModalOverlay'); if(m) m.remove(); }
-function closeRightSlide() { const m = document.getElementById('rightSlideOverlay'); if(m) m.remove(); }
+function closeCenterModal() { document.getElementById('centerModalOverlay')?.remove(); }
+function closeRightSlide() { document.getElementById('rightSlideOverlay')?.remove(); }
