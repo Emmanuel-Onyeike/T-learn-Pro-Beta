@@ -3184,6 +3184,10 @@ function showTopRightToast(message) {
     }, 4000);
 }
 // 4. DEPLOYMENT & 6-SECOND LOADER
+/**
+ * FINALIZE PROJECT & DEPLOYMENT LOGIC
+ * Includes UI Transition, Card Generation, and Notification Sync
+ */
 function finalizeProject(name, desc) {
     const pfpSrc = document.getElementById('imgPreview').src;
     const hasPfp = !document.getElementById('imgPreview').classList.contains('hidden');
@@ -3192,29 +3196,31 @@ function finalizeProject(name, desc) {
     
     closeRightSlide();
     
-    // 6-Second Loader
+    // 1. Show Tactical 6-Second Loader
     const loaderHtml = `
         <div id="loaderOverlay" class="fixed inset-0 z-[200] bg-[#020617] flex flex-col items-center justify-center">
             <div class="w-16 h-16 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin mb-6"></div>
-            <p class="text-[10px] text-white font-black uppercase tracking-[0.5em] animate-pulse">Deploying Neural Node...</p>
+            <p class="text-[10px] text-white font-black uppercase tracking-[0.5em] animate-pulse">Creating...</p>
         </div>`;
     document.body.insertAdjacentHTML('beforeend', loaderHtml);
 
     setTimeout(() => {
-        document.getElementById('loaderOverlay').remove();
+        // Remove Loader
+        const loader = document.getElementById('loaderOverlay');
+        if (loader) loader.remove();
         
-        // Handle UI Transition
+        // 2. UI Transition: Swap Empty State for Grid
         const emptyState = document.getElementById('emptyProjectState');
         const gridState = document.getElementById('projectGrid');
         if (emptyState) emptyState.classList.add('hidden');
         if (gridState) gridState.classList.remove('hidden');
 
-        // Capture Date/Time
+        // Capture Deployment Metadata
         const now = new Date();
         const timestamp = `${now.getFullYear()}.${String(now.getMonth() + 1).padStart(2, '0')}.${String(now.getDate()).padStart(2, '0')}`;
         const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-        // Generate Project Card with Image and Status
+        // 3. Generate High-Tech Project Card
         const newProject = `
             <div class="bg-[#050b1d] border border-white/5 rounded-[2rem] p-6 group hover:border-blue-500/30 transition-all animate-in zoom-in-95 relative overflow-hidden">
                 <div class="absolute top-0 right-0 px-3 py-1 bg-green-500/10 border-b border-l border-green-500/20 rounded-bl-xl">
@@ -3243,37 +3249,77 @@ function finalizeProject(name, desc) {
 
         gridState.insertAdjacentHTML('afterbegin', newProject);
 
-        // 2. LOG TO NOTIFICATIONS AREA
+        // 4. Trigger the Notification System Update
         addSystemNotification(name, timestamp, timeStr);
         
     }, 6000);
 }
 
-// Function to inject build log into the Notifications tab
+/**
+ * NOTIFICATION SYSTEM CONTROLLER
+ * Updates the 'Transmissions' view dynamically
+ */
 function addSystemNotification(projName, date, time) {
     const notifScroll = document.getElementById('notif-scroll-area');
     const notifCount = document.getElementById('notif-count');
+    const bellIcon = document.getElementById('notif-bell-icon');
+    const badge = document.getElementById('notif-badge');
     
+    // Create the Success Transmission Entry
     const logHtml = `
         <div class="notif-item p-5 bg-green-500/5 border border-green-500/20 rounded-3xl text-left relative overflow-hidden group hover:border-green-500/40 transition-all animate-in slide-in-from-top">
             <div class="flex justify-between items-start mb-2">
-                <p class="text-[8px] font-black text-green-500 uppercase tracking-widest">Build Successful</p>
+                <div class="flex items-center gap-2">
+                    <div class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></div>
+                    <p class="text-[8px] font-black text-green-500 uppercase tracking-widest">Build Successful</p>
+                </div>
                 <span class="text-[7px] text-gray-600 font-bold uppercase">${date} | ${time}</span>
             </div>
             <p class="text-white text-[11px] font-bold leading-relaxed">
-                New Core Module <span class="text-green-500 italic">"${projName}"</span> has been successfully compiled and deployed to the Neural Repository.
+                New project <span class="text-green-500 italic">"${projName}"</span> has been successfully compiled and deployed to projects.
             </p>
             <i class="fas fa-check-circle absolute -bottom-2 -right-2 text-green-500/10 text-4xl"></i>
         </div>
     `;
 
     if (notifScroll) {
+        // Inject at top of list
         notifScroll.insertAdjacentHTML('afterbegin', logHtml);
-        // Increment badge/count if desired
+
+        // Update Notification Counter
         if (notifCount) {
             let current = parseInt(notifCount.innerText) || 0;
             notifCount.innerText = (current + 1) + " new updates";
         }
+
+        // Visual Feedback: Shake the Bell and ensure badge is visible
+        if (bellIcon) {
+            bellIcon.classList.add('animate-shake');
+            setTimeout(() => bellIcon.classList.remove('animate-shake'), 1000);
+        }
+        if (badge) {
+            badge.classList.remove('hidden');
+        }
+    }
+}
+
+/**
+ * UI UTILITY: CLEAR NOTIFICATIONS
+ */
+function clearNotifications() {
+    const scrollArea = document.getElementById('notif-scroll-area');
+    const countText = document.getElementById('notif-count');
+    const badge = document.getElementById('notif-badge');
+    
+    if (scrollArea) {
+        scrollArea.innerHTML = `
+            <div class="py-20 text-center opacity-20 animate-in fade-in">
+                <i class="fas fa-satellite-dish text-3xl mb-4"></i>
+                <p class="text-[9px] font-black uppercase tracking-widest">No Active Transmissions</p>
+            </div>
+        `;
+        if (countText) countText.innerText = "0 new updates";
+        if (badge) badge.classList.add('hidden');
     }
 }
 // UTILITY CLOSERS
