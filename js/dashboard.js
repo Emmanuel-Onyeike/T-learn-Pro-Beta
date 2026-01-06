@@ -752,25 +752,7 @@ const views = {
         </div>
     </div>
 
-    <div id="gig-side-panel" class="fixed top-0 right-0 h-full w-full md:w-[400px] bg-[#050a1a] border-l border-blue-500/20 z-[10000] translate-x-full transition-transform duration-500 ease-in-out">
-        <div class="flex flex-col h-full">
-            <div class="p-8 flex justify-between items-center border-b border-blue-500/10">
-                <h3 id="panel-title" class="text-blue-500 font-black uppercase italic tracking-tighter text-sm italic">Terminal</h3>
-                <button onclick="closeGigPanel()" class="text-blue-500/40 hover:text-blue-500 transition-colors">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="flex-1 p-8 flex flex-col items-center justify-center text-center">
-                <div class="w-20 h-20 bg-blue-500/5 rounded-3xl border border-blue-500/20 flex items-center justify-center mb-6">
-                    <i class="fas fa-satellite-dish text-2xl text-blue-500 animate-pulse"></i>
-                </div>
-                <h4 class="text-white font-black uppercase italic tracking-tighter text-xl">Uplink Restricted</h4>
-                <p class="text-blue-600/60 text-[10px] font-bold uppercase tracking-[0.2em] mt-4 leading-relaxed">
-                    Module currently under construction. Gig application flow is being encrypted.
-                </p>
-            </div>
-        </div>
-    </div>
+    
     <div id="panel-backdrop" onclick="closeGigPanel()" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[9999] opacity-0 pointer-events-none transition-opacity duration-500"></div>
 `,
     
