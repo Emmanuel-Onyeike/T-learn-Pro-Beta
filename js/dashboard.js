@@ -679,71 +679,100 @@ const views = {
     
 
 
-   'Side Hustle Hub': `
-    <div id="side-hustle-root" class="space-y-8 animate-in relative transition-all duration-500">
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div>
-                <h3 class="text-xl font-black text-blue-500 italic uppercase tracking-tighter">Freelance Marketplace</h3>
-                <p class="text-[9px] text-blue-600/60 font-bold uppercase tracking-widest mt-1">Browse gigs and start earning with your skills</p>
-            </div>
-            <div class="px-4 py-2 bg-blue-500/5 border border-blue-500/20 rounded-xl">
-                 <p class="text-[8px] font-black text-blue-500 uppercase tracking-widest italic">Economy Engine Initializing</p>
-            </div>
-        </div>
+ 'Side Hustle Hub': `
+    <div id="side-hustle-root" class="space-y-8 animate-in relative transition-all duration-500 max-w-6xl mx-auto">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+                <h3 class="text-xl font-black text-blue-500 italic uppercase tracking-tighter">Freelance Marketplace</h3>
+                <p class="text-[9px] text-blue-600/60 font-bold uppercase tracking-widest mt-1">Browse gigs and start earning with your skills</p>
+            </div>
+            <div class="flex items-center gap-3">
+                <button onclick="openGigPanel('Post New Gig')" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-[8px] font-black uppercase tracking-widest rounded-xl transition-all active:scale-95 shadow-lg shadow-blue-900/20">
+                    <i class="fas fa-plus mr-1"></i> Post a Gig
+                </button>
+                <div class="px-4 py-2 bg-blue-500/5 border border-blue-500/20 rounded-xl">
+                     <p class="text-[8px] font-black text-blue-500 uppercase tracking-widest italic">Economy Engine Initializing</p>
+                </div>
+            </div>
+        </div>
 
-        <div class="border-2 border-dashed border-blue-500/20 rounded-[3rem] py-24 flex flex-col items-center justify-center text-center bg-blue-500/[0.02] relative overflow-hidden">
-            <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-blue-500/10 via-transparent to-transparent"></div>
-            
-            <div class="relative z-10 px-6">
-                <div class="w-24 h-24 bg-blue-500/10 rounded-[2rem] flex items-center justify-center mb-8 mx-auto border border-blue-500/20 shadow-2xl">
-                    <i class="fas fa-hand-holding-usd text-4xl text-blue-500 animate-pulse"></i>
-                </div>
-                <h4 class="text-blue-400 font-black uppercase italic tracking-tighter text-2xl">Hub Under Construction</h4>
-                <p class="text-[10px] text-blue-600/70 font-bold uppercase tracking-[0.3em] mt-3 max-w-[320px] mx-auto leading-relaxed">
-                    Our financial engineers are building the secure payment gateway and gig matching algorithm. Earning modules will be live shortly.
-                </p>
-                
-                <div class="mt-10 flex flex-col items-center gap-4">
-                    <div class="flex items-center gap-2">
-                         <div class="w-1 h-1 bg-blue-500 rounded-full animate-ping"></div>
-                         <div class="w-32 h-[2px] bg-blue-900/30 rounded-full overflow-hidden">
-                            <div class="h-full bg-blue-500 w-1/4 animate-pulse"></div>
-                         </div>
-                         <div class="w-1 h-1 bg-blue-500 rounded-full animate-ping"></div>
-                    </div>
-                    <button onclick="showHustleAlert('Marketplace Enrollment')" class="text-[8px] font-black text-blue-500/50 uppercase tracking-[0.5em] hover:text-blue-400 transition-colors cursor-pointer">
-                        Syncing Global Marketplace...
-                    </button>
-                </div>
-            </div>
-        </div>
+        <div class="border-2 border-dashed border-blue-500/20 rounded-[3rem] py-24 flex flex-col items-center justify-center text-center bg-blue-500/[0.02] relative overflow-hidden">
+            <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-blue-500/10 via-transparent to-transparent"></div>
+            
+            <div class="relative z-10 px-6">
+                <div class="w-24 h-24 bg-blue-500/10 rounded-[2rem] flex items-center justify-center mb-8 mx-auto border border-blue-500/20 shadow-2xl">
+                    <i class="fas fa-hand-holding-usd text-4xl text-blue-500 animate-pulse"></i>
+                </div>
+                <h4 class="text-blue-400 font-black uppercase italic tracking-tighter text-2xl">Hub Under Construction</h4>
+                <p class="text-[10px] text-blue-600/70 font-bold uppercase tracking-[0.3em] mt-3 max-w-[320px] mx-auto leading-relaxed">
+                    Our financial engineers are building the secure payment gateway and gig matching algorithm. Earning modules will be live shortly.
+                </p>
+                
+                <div class="mt-10 flex flex-col items-center gap-4">
+                    <div class="flex items-center gap-2">
+                         <div class="w-1 h-1 bg-blue-500 rounded-full animate-ping"></div>
+                         <div class="w-32 h-[2px] bg-blue-900/30 rounded-full overflow-hidden">
+                            <div class="h-full bg-blue-500 w-1/4 animate-pulse"></div>
+                         </div>
+                         <div class="w-1 h-1 bg-blue-500 rounded-full animate-ping"></div>
+                    </div>
+                    <button onclick="showHustleAlert('Marketplace Enrollment')" class="text-[8px] font-black text-blue-500/50 uppercase tracking-[0.5em] hover:text-blue-400 transition-colors cursor-pointer bg-transparent border-none">
+                        Syncing Global Marketplace...
+                    </button>
+                </div>
+            </div>
+        </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 opacity-40">
-            <div class="p-6 bg-blue-500/5 border border-blue-500/10 rounded-3xl flex items-center gap-4">
-                <div class="w-12 h-12 rounded-2xl bg-blue-500/10 flex items-center justify-center border border-blue-500/20">
-                    <i class="fas fa-code text-blue-500 text-sm"></i>
-                </div>
-                <div>
-                    <p class="text-[9px] font-black text-blue-400 uppercase tracking-widest">Web Development</p>
-                    <p class="text-[8px] text-blue-600/50 font-bold uppercase">Average: $450 - $1.2k</p>
-                </div>
-            </div>
-            <div class="p-6 bg-blue-500/5 border border-blue-500/10 rounded-3xl flex items-center gap-4">
-                <div class="w-12 h-12 rounded-2xl bg-blue-500/10 flex items-center justify-center border border-blue-500/20">
-                    <i class="fas fa-paint-brush text-blue-500 text-sm"></i>
-                </div>
-                <div>
-                    <p class="text-[9px] font-black text-blue-400 uppercase tracking-widest">UI/UX Design</p>
-                    <p class="text-[8px] text-blue-600/50 font-bold uppercase">Average: $300 - $800</p>
-                </div>
-            </div>
-        </div>
-    </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div onclick="openGigPanel('Web Development')" class="p-6 bg-blue-500/5 border border-blue-500/10 rounded-3xl flex items-center justify-between group hover:bg-blue-500/10 transition-all cursor-pointer">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-2xl bg-blue-500/10 flex items-center justify-center border border-blue-500/20">
+                        <i class="fas fa-code text-blue-500 text-sm"></i>
+                    </div>
+                    <div>
+                        <p class="text-[9px] font-black text-blue-400 uppercase tracking-widest">Web Development</p>
+                        <p class="text-[8px] text-blue-600/50 font-bold uppercase">Average: $450 - $1.2k</p>
+                    </div>
+                </div>
+                <i class="fas fa-arrow-right text-[10px] text-blue-500/30 group-hover:text-blue-500 transition-colors"></i>
+            </div>
+            
+            <div onclick="openGigPanel('UI/UX Design')" class="p-6 bg-blue-500/5 border border-blue-500/10 rounded-3xl flex items-center justify-between group hover:bg-blue-500/10 transition-all cursor-pointer">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-2xl bg-blue-500/10 flex items-center justify-center border border-blue-500/20">
+                        <i class="fas fa-paint-brush text-blue-500 text-sm"></i>
+                    </div>
+                    <div>
+                        <p class="text-[9px] font-black text-blue-400 uppercase tracking-widest">UI/UX Design</p>
+                        <p class="text-[8px] text-blue-600/50 font-bold uppercase">Average: $300 - $800</p>
+                    </div>
+                </div>
+                <i class="fas fa-arrow-right text-[10px] text-blue-500/30 group-hover:text-blue-500 transition-colors"></i>
+            </div>
+        </div>
+    </div>
 
-
+    <div id="gig-side-panel" class="fixed top-0 right-0 h-full w-full md:w-[400px] bg-[#050a1a] border-l border-blue-500/20 z-[10000] translate-x-full transition-transform duration-500 ease-in-out">
+        <div class="flex flex-col h-full">
+            <div class="p-8 flex justify-between items-center border-b border-blue-500/10">
+                <h3 id="panel-title" class="text-blue-500 font-black uppercase italic tracking-tighter text-sm italic">Terminal</h3>
+                <button onclick="closeGigPanel()" class="text-blue-500/40 hover:text-blue-500 transition-colors">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="flex-1 p-8 flex flex-col items-center justify-center text-center">
+                <div class="w-20 h-20 bg-blue-500/5 rounded-3xl border border-blue-500/20 flex items-center justify-center mb-6">
+                    <i class="fas fa-satellite-dish text-2xl text-blue-500 animate-pulse"></i>
+                </div>
+                <h4 class="text-white font-black uppercase italic tracking-tighter text-xl">Uplink Restricted</h4>
+                <p class="text-blue-600/60 text-[10px] font-bold uppercase tracking-[0.2em] mt-4 leading-relaxed">
+                    Module currently under construction. Gig application flow is being encrypted.
+                </p>
+            </div>
+        </div>
+    </div>
+    <div id="panel-backdrop" onclick="closeGigPanel()" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[9999] opacity-0 pointer-events-none transition-opacity duration-500"></div>
 `,
-    
-    
     
 
 'Notifications': `
