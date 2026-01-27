@@ -134,13 +134,8 @@ const views = {
     </div>
   </div>
 
-  <!-- Activity Grid -->
-  <div class="overflow-x-auto pb-4 no-scrollbar">
-    <div
-      id="activity-grid"
-      class="inline-grid grid-rows-7 grid-flow-col gap-1.5 min-w-[850px]"
-    ></div>
-  </div>
+  <!-- Canvas for galaxy -->
+  <canvas id="activity-canvas" width="850" height="200" class="rounded-lg w-full"></canvas>
 
   <!-- Legend -->
   <div class="flex justify-between items-center mt-4">
@@ -3896,129 +3891,92 @@ function openCreatePostModal() {
 
 /////// for the `activity progress
 
-
 /* ================= CONFIG ================= */
-const YEAR = 2026;
-const GRID = document.getElementById("activity-grid");
-const STORAGE_KEY = "activity-2026-v2";
-
-/* ================= SETTINGS ================= */
-const TICK_RATE = 1000;        // tick every 1s
-const IDLE_LIMIT = 30000;      // 30s of inactivity => idle
-
-/* ================= COLORS ================= */
-function getColor(seconds) {
-  if (seconds < 60) return "bg-white/[0.03]";
-  if (seconds < 300) return "bg-green-900";
-  if (seconds < 600) return "bg-green-700";
-  if (seconds < 1800) return "bg-green-500";
-  return "bg-green-400";
-}
+const STORAGE_KEY = "activity-galaxy";
+const canvas = document.getElementById('activity-canvas');
+const ctx = canvas.getContext('2d');
+const WIDTH = canvas.width;
+const HEIGHT = canvas.height;
+const MAX_STARS = 150;
 
 /* ================= STATE ================= */
 let activity = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
-let todayKey = new Date().toISOString().slice(0, 10);
-let totalSecondsToday = activity[todayKey] || 0;
+let todayKey = new Date().toISOString().slice(0,10);
+let totalToday = activity[todayKey] || 0;
+
+let stars = [];
+for(let i=0;i<MAX_STARS;i++){
+  stars.push({
+    x: Math.random()*WIDTH,
+    y: Math.random()*HEIGHT,
+    size: Math.random()*2 + 1,
+    brightness: Math.random()*0.5 + 0.5,
+    date: new Date(2026,0,Math.floor(Math.random()*365)).toISOString().slice(0,10)
+  });
+}
 
 let lastTick = Date.now();
-let lastActive = Date.now();
-let interval = null;
-let isIdle = false;
 
-/* ================= GRID ================= */
-function generateGrid() {
-  GRID.innerHTML = "";
-  const start = new Date(YEAR, 0, 1);
-
-  for (let i = 0; i < 365; i++) {
-    const d = new Date(start);
-    d.setDate(d.getDate() + i);
-    const key = d.toISOString().slice(0, 10);
-    const seconds = activity[key] || 0;
-
-    const box = document.createElement("div");
-    box.dataset.date = key;
-    box.title = `${key} — ${Math.floor(seconds / 60)} min`;
-    box.className = `w-3 h-3 rounded-sm ${getColor(seconds)} transition-colors duration-300`;
-    GRID.appendChild(box);
-  }
+/* ================= HELPERS ================= */
+function getStarColor(seconds){
+  if(seconds < 60) return `rgba(255,255,255,0.03)`;
+  if(seconds < 300) return `rgba(5,150,105,0.5)`;    // green-900
+  if(seconds < 600) return `rgba(22,101,52,0.6)`;    // green-700
+  if(seconds < 1800) return `rgba(34,197,94,0.7)`;   // green-500
+  return `rgba(74,222,128,0.8)`;                      // green-400
 }
 
-function updateBox(key) {
-  const box = GRID.querySelector(`[data-date="${key}"]`);
-  if (!box) return;
-  const seconds = activity[key] || 0;
-  box.className = `w-3 h-3 rounded-sm ${getColor(seconds)} transition-colors duration-300`;
-  box.title = `${key} — ${Math.floor(seconds / 60)} min`;
+/* ================= DRAW ================= */
+function drawGalaxy(){
+  ctx.clearRect(0,0,WIDTH,HEIGHT);
+  stars.forEach(s=>{
+    const seconds = activity[s.date] || 0;
+    const scale = 1 + Math.min(seconds/1800,1)*3; // bigger for more activity
+    const glow = Math.min(seconds/1800,1);
+    
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, s.size*scale, 0, Math.PI*2);
+    ctx.fillStyle = getStarColor(seconds);
+    ctx.shadowColor = getStarColor(seconds);
+    ctx.shadowBlur = 10*glow;
+    ctx.fill();
+  });
 }
 
-/* ================= TRACKING CORE ================= */
-function tick() {
-  if (document.visibilityState !== "visible") return;
-
+/* ================= TICK ================= */
+function tick(){
   const now = Date.now();
-
-  // Idle detection
-  if (now - lastActive > IDLE_LIMIT) {
-    isIdle = true;
-    lastTick = now;
-    return;
-  }
-
-  isIdle = false;
-  const delta = Math.floor((now - lastTick) / 1000);
-  if (delta <= 0) return;
-
+  const delta = Math.floor((now - lastTick)/1000);
   lastTick = now;
-  totalSecondsToday += delta;
-  activity[todayKey] = totalSecondsToday;
 
+  totalToday += delta;
+  activity[todayKey] = totalToday;
   localStorage.setItem(STORAGE_KEY, JSON.stringify(activity));
-  updateBox(todayKey);
+
+  drawGalaxy();
 }
 
-function startTracking() {
-  if (interval) clearInterval(interval);
-  lastTick = Date.now();
-  interval = setInterval(tick, TICK_RATE);
-}
-
-function stopTracking() {
-  if (interval) clearInterval(interval);
-  interval = null;
-  activity[todayKey] = totalSecondsToday;
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(activity));
-  updateBox(todayKey);
-}
-
-/* ================= ACTIVITY LISTENERS ================= */
-function markActive() {
-  lastActive = Date.now();
-}
-["mousemove","keydown","scroll","touchstart"].forEach(event =>
-  window.addEventListener(event, markActive, { passive:true })
-);
-
-/* ================= VISIBILITY ================= */
-document.addEventListener("visibilitychange", () => {
-  document.visibilityState === "visible" ? startTracking() : stopTracking();
+/* ================= IDLE DETECTION ================= */
+let lastActive = Date.now();
+const IDLE_LIMIT = 30000;
+["mousemove","keydown","scroll","touchstart"].forEach(ev=>{
+  window.addEventListener(ev,()=> lastActive=Date.now(), {passive:true});
 });
 
-/* ================= DAY ROLLOVER ================= */
-setInterval(() => {
-  const nowKey = new Date().toISOString().slice(0, 10);
-  if (nowKey !== todayKey) {
-    stopTracking();
-    todayKey = nowKey;
-    totalSecondsToday = activity[todayKey] || 0;
-    startTracking();
+/* ================= LOOP ================= */
+function loop(){
+  if(Date.now() - lastActive < IDLE_LIMIT){
+    tick();
   }
-}, 60000);
+  requestAnimationFrame(loop);
+}
+loop();
 
-/* ================= SAFETY ================= */
-window.addEventListener("beforeunload", stopTracking);
-
-/* ================= INIT ================= */
-generateGrid();
-startTracking();
-
+/* ================= DAY ROLLOVER ================= */
+setInterval(()=>{
+  const newKey = new Date().toISOString().slice(0,10);
+  if(newKey !== todayKey){
+    todayKey = newKey;
+    totalToday = activity[todayKey] || 0;
+  }
+},60000);
