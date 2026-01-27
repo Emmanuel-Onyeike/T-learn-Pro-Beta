@@ -3858,26 +3858,20 @@ function openCreatePostModal() {
 const stats = {
     projects: 12,
     level: 5,
-    rank: 88,
-    semester: 2,
-    streak: 15,
-    xp: 2450
+    rank: 81, // Updated to match your screenshot
+    semester: 0,
+    streak: 0,
+    xp: 0
 };
 
 // --- INITIALIZATION ---
 document.addEventListener('DOMContentLoaded', () => {
-    // Render Overview by default
-    const container = document.getElementById('main-content');
-    if (container) {
-        container.innerHTML = views['Overview'];
-        updateDashboardStats();
-        initNebulaAnimation();
-    }
+    // Default view
+    switchView('Overview');
 });
 
 // --- STATS UPDATE LOGIC ---
 function updateDashboardStats() {
-    // Helper to safely set innerText if element exists
     const setVal = (id, val) => {
         const el = document.getElementById(id);
         if (el) el.innerText = val;
@@ -3897,21 +3891,29 @@ function initNebulaAnimation() {
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     
-    // Set internal resolution
-    canvas.width = canvas.offsetWidth;
-    canvas.height = canvas.offsetHeight;
+    // Fix: Ensure canvas has dimensions before starting
+    const resize = () => {
+        canvas.width = canvas.offsetWidth;
+        canvas.height = canvas.offsetHeight;
+    };
+    window.addEventListener('resize', resize);
+    resize();
 
     const particles = [];
-    const particleCount = 60;
+    const particleCount = 80; // Increased for better density
 
     class Particle {
         constructor() {
+            this.reset();
+        }
+
+        reset() {
             this.x = Math.random() * canvas.width;
             this.y = Math.random() * canvas.height;
-            this.size = Math.random() * 2 + 1;
-            this.speedX = Math.random() * 0.5 - 0.25;
-            this.speedY = Math.random() * 0.5 - 0.25;
-            this.opacity = Math.random() * 0.5 + 0.2;
+            this.size = Math.random() * 2 + 1.5; // Slightly larger nodes
+            this.speedX = Math.random() * 0.4 - 0.2;
+            this.speedY = Math.random() * 0.4 - 0.2;
+            this.opacity = Math.random() * 0.6 + 0.3; // Higher base opacity
         }
 
         update() {
@@ -3925,8 +3927,8 @@ function initNebulaAnimation() {
         }
 
         draw() {
-            ctx.fillStyle = `rgba(59, 130, 246, ${this.opacity})`; // Blue nodes
-            ctx.shadowBlur = 10;
+            ctx.fillStyle = `rgba(59, 130, 246, ${this.opacity})`; 
+            ctx.shadowBlur = 12; // Brighter glow
             ctx.shadowColor = '#3b82f6';
             ctx.beginPath();
             ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
@@ -3939,18 +3941,20 @@ function initNebulaAnimation() {
     }
 
     function animate() {
+        if (!document.getElementById('nebula')) return; // Stop if view changed
+        
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         
-        // Connect lines
-        ctx.strokeStyle = 'rgba(59, 130, 246, 0.05)';
+        ctx.strokeStyle = 'rgba(59, 130, 246, 0.08)'; // Slightly more visible lines
         ctx.lineWidth = 1;
+        
         for (let i = 0; i < particles.length; i++) {
             for (let j = i; j < particles.length; j++) {
                 const dx = particles[i].x - particles[j].x;
                 const dy = particles[i].y - particles[j].y;
                 const distance = Math.sqrt(dx * dx + dy * dy);
 
-                if (distance < 100) {
+                if (distance < 110) {
                     ctx.beginPath();
                     ctx.moveTo(particles[i].x, particles[i].y);
                     ctx.lineTo(particles[j].x, particles[j].y);
@@ -3965,12 +3969,26 @@ function initNebulaAnimation() {
     animate();
 }
 
+// --- VIEW SWITCHING LOGIC ---
+window.switchView = function(viewName) {
+    const container = document.getElementById('main-content');
+    if (views[viewName]) {
+        container.innerHTML = views[viewName];
+        
+        // Critical Fix: Wait for DOM to paint before initializing canvas/stats
+        setTimeout(() => {
+            if (viewName === 'Overview') {
+                updateDashboardStats();
+                initNebulaAnimation();
+            }
+        }, 30); 
+    } else {
+        showSystemAlert(`The view "${viewName}" is currently locked or under construction.`, "Access Restricted");
+    }
+};
+
 // --- CENTERED MODAL ALERTS ---
-/**
- * Triggers a centered modal alert per user instructions
- */
 function showSystemAlert(message, title = "System Notification") {
-    // Remove existing modal if any
     const existing = document.getElementById('modal-overlay');
     if (existing) existing.remove();
 
@@ -3979,40 +3997,23 @@ function showSystemAlert(message, title = "System Notification") {
         <div class="bg-[#0b1224] border border-white/10 p-8 rounded-[2.5rem] max-w-sm w-full shadow-2xl transform animate-in zoom-in-95 duration-300">
             <div class="text-center">
                 <div class="w-16 h-16 bg-blue-500/10 rounded-full flex items-center justify-center mx-auto mb-6 border border-blue-500/20">
-                    <i class="fas fa-exclamation-triangle text-blue-500 text-xl"></i>
+                    <i class="fas fa-terminal text-blue-500 text-xl"></i>
                 </div>
                 <h3 class="text-xl font-black text-white uppercase italic tracking-tighter mb-2">${title}</h3>
-                <p class="text-gray-400 text-[10px] font-bold uppercase tracking-widest leading-relaxed mb-8">
-                    ${message}
-                </p>
-                <button onclick="closeModal()" class="w-full py-4 bg-white text-black rounded-2xl text-[11px] font-black uppercase tracking-[0.2em] hover:bg-blue-600 hover:text-white transition-all shadow-lg shadow-white/5">
+                <p class="text-gray-400 text-[10px] font-bold uppercase tracking-widest leading-relaxed mb-8">${message}</p>
+                <button onclick="closeModal()" class="w-full py-4 bg-white text-black rounded-2xl text-[11px] font-black uppercase tracking-[0.2em] hover:bg-blue-600 hover:text-white transition-all">
                     Acknowledge
                 </button>
             </div>
         </div>
-    </div>
-    `;
+    </div>`;
     document.body.insertAdjacentHTML('beforeend', modalHTML);
 }
 
 function closeModal() {
     const modal = document.getElementById('modal-overlay');
     if (modal) {
-        modal.classList.add('fade-out');
+        modal.classList.add('opacity-0');
         setTimeout(() => modal.remove(), 300);
     }
 }
-
-// --- VIEW SWITCHING LOGIC ---
-window.switchView = function(viewName) {
-    const container = document.getElementById('main-content');
-    if (views[viewName]) {
-        container.innerHTML = views[viewName];
-        if (viewName === 'Overview') {
-            updateDashboardStats();
-            initNebulaAnimation();
-        }
-    } else {
-        showSystemAlert(`The view "${viewName}" is still under development.`, "Development Notice");
-    }
-};
