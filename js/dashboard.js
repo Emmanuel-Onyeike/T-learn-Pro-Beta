@@ -116,44 +116,11 @@ const views = {
 
 
 <div class="mt-8 bg-[#050b1d] border border-white/5 p-8 rounded-[2.5rem] relative overflow-hidden">
-
-  <!-- Tailwind SAFELIST (DO NOT REMOVE) -->
-  <div class="hidden">
-    <div class="bg-white/[0.03] bg-green-900 bg-green-700 bg-green-500 bg-green-400"></div>
-  </div>
-
-  <!-- Header -->
-  <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
-    <div>
-      <h3 class="text-lg font-black text-white italic uppercase tracking-tighter">Activity</h3>
-      <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest mt-1">Tracking session</p>
-    </div>
-    <div class="flex gap-2 flex-wrap">
-      <button class="px-4 py-2 bg-gray-800 rounded-lg text-[9px] font-black uppercase tracking-widest text-white">2025</button>
-      <button class="px-4 py-2 bg-blue-600 rounded-lg text-[9px] font-black uppercase tracking-widest text-white">2026</button>
-    </div>
-  </div>
-
-  <!-- Canvas for galaxy -->
-  <canvas id="activity-canvas" width="850" height="200" class="rounded-lg w-full"></canvas>
-
-  <!-- Legend -->
-  <div class="flex justify-between items-center mt-4">
-    <p class="text-[8px] text-gray-600 font-bold uppercase tracking-widest italic">
-      Density increases with page engagement time
-    </p>
-    <div class="flex items-center gap-2">
-      <span class="text-[8px] text-gray-600 font-bold uppercase tracking-widest">Low</span>
-      <div class="flex gap-1">
-        <div class="w-2.5 h-2.5 rounded-sm bg-white/[0.03]"></div>
-        <div class="w-2.5 h-2.5 rounded-sm bg-green-900"></div>
-        <div class="w-2.5 h-2.5 rounded-sm bg-green-700"></div>
-        <div class="w-2.5 h-2.5 rounded-sm bg-green-500"></div>
-        <div class="w-2.5 h-2.5 rounded-sm bg-green-400"></div>
-      </div>
-      <span class="text-[8px] text-gray-600 font-bold uppercase tracking-widest">NXXT</span>
-    </div>
-  </div>
+  <h3 class="text-lg font-black text-white italic uppercase tracking-tighter mb-4">Activity Nebula</h3>
+  <canvas id="nebula" width="850" height="250" class="rounded-lg w-full"></canvas>
+  <p class="text-[8px] text-gray-600 font-bold uppercase tracking-widest italic mt-4">
+    More activity = brighter nodes, faster motion
+  </p>
 </div>
 
 
