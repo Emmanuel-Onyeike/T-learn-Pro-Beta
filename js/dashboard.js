@@ -3854,98 +3854,165 @@ function openCreatePostModal() {
 
 /////// for the `activity progress
 
+// --- DATA & STATE ---
+const stats = {
+    projects: 12,
+    level: 5,
+    rank: 88,
+    semester: 2,
+    streak: 15,
+    xp: 2450
+};
 
-const canvas = document.getElementById("nebula");
-const ctx = canvas.getContext("2d");
-const WIDTH = canvas.width;
-const HEIGHT = canvas.height;
+// --- INITIALIZATION ---
+document.addEventListener('DOMContentLoaded', () => {
+    // Render Overview by default
+    const container = document.getElementById('main-content');
+    if (container) {
+        container.innerHTML = views['Overview'];
+        updateDashboardStats();
+        initNebulaAnimation();
+    }
+});
 
-// ================== SETTINGS ==================
-const STORAGE_KEY = "activity-nebula";
-let activity = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
-let today = new Date().toISOString().slice(0,10);
-let totalSeconds = activity[today] || 0;
-let lastTick = Date.now();
+// --- STATS UPDATE LOGIC ---
+function updateDashboardStats() {
+    // Helper to safely set innerText if element exists
+    const setVal = (id, val) => {
+        const el = document.getElementById(id);
+        if (el) el.innerText = val;
+    };
 
-const NODES = 50;       // number of floating nodes
-const MAX_RADIUS = 15;  // max node size
-const SPEED = 0.2;      // movement speed
-const IDLE_LIMIT = 30000;
-
-// ================== NODE STATE ==================
-let nodes = [];
-for(let i=0;i<NODES;i++){
-  nodes.push({
-    x: Math.random()*WIDTH,
-    y: Math.random()*HEIGHT,
-    vx: (Math.random()-0.5)*SPEED,
-    vy: (Math.random()-0.5)*SPEED,
-    baseRadius: Math.random()*5 + 2
-  });
+    setVal('projectCount', stats.projects);
+    setVal('dash-level-val', stats.level.toString().padStart(3, '0'));
+    setVal('ui-rank', `#${stats.rank}`);
+    setVal('dash-semester-val', stats.semester);
+    setVal('ui-streak', stats.streak);
+    setVal('dash-xp-val', stats.xp.toLocaleString());
 }
 
-// ================== HELPERS ==================
-function nodeColor(seconds){
-  const t = Math.min(seconds/1800,1); // max activity effect
-  const r = 20 + t*100;
-  const g = 200 + t*55;
-  const b = 80 + t*50;
-  return `rgba(${r},${g},${b},0.8)`; // greenish nebula glow
+// --- NEBULA CANVAS ANIMATION ---
+function initNebulaAnimation() {
+    const canvas = document.getElementById('nebula');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    
+    // Set internal resolution
+    canvas.width = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+
+    const particles = [];
+    const particleCount = 60;
+
+    class Particle {
+        constructor() {
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height;
+            this.size = Math.random() * 2 + 1;
+            this.speedX = Math.random() * 0.5 - 0.25;
+            this.speedY = Math.random() * 0.5 - 0.25;
+            this.opacity = Math.random() * 0.5 + 0.2;
+        }
+
+        update() {
+            this.x += this.speedX;
+            this.y += this.speedY;
+
+            if (this.x > canvas.width) this.x = 0;
+            if (this.x < 0) this.x = canvas.width;
+            if (this.y > canvas.height) this.y = 0;
+            if (this.y < 0) this.y = canvas.height;
+        }
+
+        draw() {
+            ctx.fillStyle = `rgba(59, 130, 246, ${this.opacity})`; // Blue nodes
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = '#3b82f6';
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    }
+
+    for (let i = 0; i < particleCount; i++) {
+        particles.push(new Particle());
+    }
+
+    function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // Connect lines
+        ctx.strokeStyle = 'rgba(59, 130, 246, 0.05)';
+        ctx.lineWidth = 1;
+        for (let i = 0; i < particles.length; i++) {
+            for (let j = i; j < particles.length; j++) {
+                const dx = particles[i].x - particles[j].x;
+                const dy = particles[i].y - particles[j].y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+
+                if (distance < 100) {
+                    ctx.beginPath();
+                    ctx.moveTo(particles[i].x, particles[i].y);
+                    ctx.lineTo(particles[j].x, particles[j].y);
+                    ctx.stroke();
+                }
+            }
+            particles[i].update();
+            particles[i].draw();
+        }
+        requestAnimationFrame(animate);
+    }
+    animate();
 }
 
-// ================== DRAW ==================
-function draw(){
-  ctx.clearRect(0,0,WIDTH,HEIGHT);
-  nodes.forEach(n=>{
-    const scale = 1 + Math.min(totalSeconds/1800,1)*2;
-    ctx.beginPath();
-    ctx.arc(n.x, n.y, n.baseRadius*scale, 0, Math.PI*2);
-    ctx.fillStyle = nodeColor(totalSeconds);
-    ctx.shadowColor = nodeColor(totalSeconds);
-    ctx.shadowBlur = 15;
-    ctx.fill();
-  });
+// --- CENTERED MODAL ALERTS ---
+/**
+ * Triggers a centered modal alert per user instructions
+ */
+function showSystemAlert(message, title = "System Notification") {
+    // Remove existing modal if any
+    const existing = document.getElementById('modal-overlay');
+    if (existing) existing.remove();
+
+    const modalHTML = `
+    <div id="modal-overlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[9999] flex items-center justify-center p-4 animate-in fade-in duration-300">
+        <div class="bg-[#0b1224] border border-white/10 p-8 rounded-[2.5rem] max-w-sm w-full shadow-2xl transform animate-in zoom-in-95 duration-300">
+            <div class="text-center">
+                <div class="w-16 h-16 bg-blue-500/10 rounded-full flex items-center justify-center mx-auto mb-6 border border-blue-500/20">
+                    <i class="fas fa-exclamation-triangle text-blue-500 text-xl"></i>
+                </div>
+                <h3 class="text-xl font-black text-white uppercase italic tracking-tighter mb-2">${title}</h3>
+                <p class="text-gray-400 text-[10px] font-bold uppercase tracking-widest leading-relaxed mb-8">
+                    ${message}
+                </p>
+                <button onclick="closeModal()" class="w-full py-4 bg-white text-black rounded-2xl text-[11px] font-black uppercase tracking-[0.2em] hover:bg-blue-600 hover:text-white transition-all shadow-lg shadow-white/5">
+                    Acknowledge
+                </button>
+            </div>
+        </div>
+    </div>
+    `;
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
 }
 
-// ================== MOVE ==================
-function moveNodes(){
-  nodes.forEach(n=>{
-    n.x += n.vx;
-    n.y += n.vy;
-    if(n.x<0||n.x>WIDTH) n.vx*=-1;
-    if(n.y<0||n.y>HEIGHT) n.vy*=-1;
-  });
+function closeModal() {
+    const modal = document.getElementById('modal-overlay');
+    if (modal) {
+        modal.classList.add('fade-out');
+        setTimeout(() => modal.remove(), 300);
+    }
 }
 
-// ================== TICK ==================
-let lastActive = Date.now();
-["mousemove","keydown","scroll","touchstart"].forEach(ev=>window.addEventListener(ev,()=>lastActive=Date.now(),{passive:true}));
-
-function tick(){
-  const now = Date.now();
-  if(now - lastActive > IDLE_LIMIT) return; // idle
-  const delta = Math.floor((now-lastTick)/1000);
-  lastTick = now;
-  totalSeconds += delta;
-  activity[today] = totalSeconds;
-  localStorage.setItem(STORAGE_KEY,JSON.stringify(activity));
-}
-
-// ================== LOOP ==================
-function loop(){
-  tick();
-  moveNodes();
-  draw();
-  requestAnimationFrame(loop);
-}
-loop();
-
-// ================== DAY ROLLOVER ==================
-setInterval(()=>{
-  const t = new Date().toISOString().slice(0,10);
-  if(t!==today){
-    today = t;
-    totalSeconds = activity[today] || 0;
-  }
-},60000);
-
+// --- VIEW SWITCHING LOGIC ---
+window.switchView = function(viewName) {
+    const container = document.getElementById('main-content');
+    if (views[viewName]) {
+        container.innerHTML = views[viewName];
+        if (viewName === 'Overview') {
+            updateDashboardStats();
+            initNebulaAnimation();
+        }
+    } else {
+        showSystemAlert(`The view "${viewName}" is still under development.`, "Development Notice");
+    }
+};
