@@ -244,65 +244,65 @@ const views = {
 
 
 'Projects': `
-<div class="space-y-10 md:space-y-12 animate-in pb-24 md:pb-32 px-4 sm:px-6 lg:px-8">
-  <!-- Header with animated indicator -->
-  <div class="space-y-3 md:space-y-4 text-center md:text-left">
-    <div class="flex items-center justify-center md:justify-start gap-3 md:gap-4">
-      <div class="w-2.5 h-2.5 md:w-3 md:h-3 bg-blue-500 rounded-full animate-pulse shadow-[0_0_12px_#3b82f6]"></div>
-      <span class="text-[10px] md:text-xs text-blue-400 font-black uppercase tracking-[0.4em] md:tracking-[0.5em]">
-        What projects are you working on today?
+<div class="space-y-12 animate-in pb-32 px-4 md:px-8">
+  <!-- Header -->
+  <div class="space-y-2">
+    <div class="flex items-center gap-4">
+      <div class="w-2 h-2 bg-blue-500 rounded-full animate-pulse shadow-[0_0_10px_#3b82f6]"></div>
+      <span class="text-[10px] text-blue-400 font-black uppercase tracking-[0.5em]">
+        What projects are you doing today?
       </span>
     </div>
-    <h3 class="text-4xl sm:text-5xl md:text-6xl font-black italic uppercase tracking-[-0.04em] text-white leading-tight">
-      <span class="text-blue-500">Projects</span>
+    <h3 class="text-4xl md:text-5xl font-black italic uppercase tracking-tighter text-white">
+      <span class="text-blue-500">Projects</span> <!-- fixed typo -->
     </h3>
   </div>
 
-  <!-- Search + Create Button (centered on mobile) -->
-  <div class="relative w-full max-w-4xl mx-auto group">
-    <div class="flex items-center bg-[#050b1d] border border-white/10 rounded-2xl h-14 sm:h-16 px-5 sm:px-6 transition-all duration-300 focus-within:border-blue-500/60 focus-within:shadow-[0_0_20px_rgba(59,130,246,0.15)]">
-      <i class="fas fa-search text-gray-500 group-focus-within:text-blue-400 mr-3 sm:mr-4 text-lg"></i>
-      
-      <input type="text" id="projectSearch" placeholder="SEARCH PROJECTS..."
-        class="flex-1 bg-transparent border-none text-[11px] sm:text-sm font-black uppercase tracking-[0.18em] text-white placeholder-gray-600 focus:outline-none">
-      
+  <!-- Search + Create -->
+  <div class="relative w-full group">
+    <div class="flex items-center bg-[#050b1d] border border-white/10 rounded-2xl h-16 px-6 transition-all focus-within:border-blue-500/50">
+      <i class="fas fa-search text-gray-600 mr-4"></i>
+      <input type="text" id="projectSearch" placeholder="SEARCH PROJECTS ..."
+        class="flex-1 bg-transparent border-none text-[11px] font-black uppercase tracking-[0.2em] text-white focus:outline-none" />
       <button onclick="openProjectNamingModal()"
-        class="group flex items-center bg-blue-600 hover:bg-blue-500 text-[#020617] font-black rounded-xl h-10 sm:h-11 px-4 sm:px-5 transition-all duration-500 ease-in-out max-w-[44px] sm:max-w-[52px] hover:max-w-[240px] overflow-hidden whitespace-nowrap shadow-lg shadow-blue-600/20">
-        <i class="fas fa-plus text-base sm:text-lg transition-transform duration-500 group-hover:rotate-90"></i>
-        <span class="ml-3 text-[10px] sm:text-xs uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity duration-400">
+        class="group flex items-center bg-blue-600 hover:bg-blue-500 text-[#020617] rounded-xl h-10 px-4 transition-all duration-500 ease-in-out max-w-[40px] hover:max-w-[220px] overflow-hidden whitespace-nowrap shadow-lg">
+        <i class="fas fa-plus transition-transform group-hover:rotate-90"></i>
+        <span class="ml-3 text-[10px] font-black uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity duration-300">
           Initialize New Project
         </span>
       </button>
     </div>
   </div>
 
-  <!-- Projects container -->
-  <div id="projectContainer" class="relative">
-    <!-- Empty state (shown when no projects exist) -->
-    <div id="emptyProjectState" class="border-2 border-dashed border-white/10 rounded-[2.5rem] md:rounded-[3.5rem] py-20 md:py-28 flex flex-col items-center justify-center text-center bg-gradient-to-b from-white/[0.02] to-transparent">
-      <div class="w-20 h-20 md:w-24 md:h-24 bg-white/5 rounded-3xl flex items-center justify-center mb-6 md:mb-8 border border-white/10 shadow-inner">
-        <i class="fas fa-folder-plus text-gray-600 text-4xl md:text-5xl"></i>
+  <!-- Container for grid + empty state -->
+  <div id="projectContainer">
+    <!-- Empty State -->
+    <div id="emptyProjectState" class="border-2 border-dashed border-white/5 rounded-[3.5rem] py-24 flex flex-col items-center justify-center text-center bg-white/[0.01]">
+      <div class="w-20 h-20 bg-white/5 rounded-3xl flex items-center justify-center mb-6 border border-white/5">
+        <i class="fas fa-folder-plus text-gray-700 text-3xl"></i>
       </div>
-      <h4 class="text-white font-black uppercase italic tracking-tighter text-2xl md:text-3xl mb-3 md:mb-4">
-        No Projects Yet
+      <h4 class="text-white font-black uppercase italic tracking-tighter text-2xl">
+        No Projects done
       </h4>
-      <p class="text-[10px] md:text-xs text-gray-500 font-bold uppercase tracking-[0.25em] md:tracking-[0.3em] mb-8 md:mb-12 max-w-md">
-        System standby. Ready for your first deployment.
+      <p class="text-[10px] text-gray-500 font-bold uppercase tracking-[0.3em] mt-3 mb-10">
+        System standby. Awaiting first deployment.
       </p>
       <button onclick="openProjectNamingModal()"
-        class="px-8 md:px-10 py-4 md:py-5 bg-blue-600 hover:bg-blue-500 text-white text-[10px] md:text-xs font-black uppercase tracking-widest rounded-2xl transition-all duration-300 shadow-xl shadow-blue-600/20 hover:shadow-blue-500/30">
+        class="px-8 py-4 bg-blue-600 text-[#020617] text-[10px] font-black uppercase tracking-widest rounded-2xl hover:bg-blue-400 transition-all shadow-xl shadow-blue-500/10">
         Create First Project
       </button>
     </div>
 
-    <!-- Grid for project cards (hidden until projects exist) -->
-    <div id="projectGrid" class="hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 md:gap-6">
-      <!-- Dynamically populated by addProjectToUI(project) -->
+    <!-- Project Grid -->
+    <div id="projectGrid" class="hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <!-- Cards inserted here dynamically -->
     </div>
   </div>
 </div>
 `,
 
+
+    
 'Leaderboard': `
     <div class="space-y-10 animate-in">
         <div class="space-y-4">
