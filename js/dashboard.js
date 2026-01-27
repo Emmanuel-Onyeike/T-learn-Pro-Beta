@@ -116,23 +116,34 @@ const views = {
 
 
 <div class="mt-8 bg-[#050b1d] border border-white/5 p-8 rounded-[2.5rem] relative overflow-hidden">
+
+  <!-- Tailwind SAFELIST (DO NOT REMOVE) -->
+  <div class="hidden">
+    <div class="bg-white/[0.03] bg-green-900 bg-green-700 bg-green-500 bg-green-400"></div>
+  </div>
+
   <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
     <div>
       <h3 class="text-lg font-black text-white italic uppercase tracking-tighter">Activity</h3>
       <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest mt-1">Tracking session</p>
     </div>
     <div class="flex gap-2 flex-wrap">
-      <button class="px-4 py-2 bg-gray-800 rounded-lg text-[9px] font-black uppercase tracking-widest text-white shadow-lg shadow-gray-800/20">2025</button>
-      <button class="px-4 py-2 bg-blue-600 rounded-lg text-[9px] font-black uppercase tracking-widest text-white shadow-lg shadow-blue-600/20">2026</button>
+      <button class="px-4 py-2 bg-gray-800 rounded-lg text-[9px] font-black uppercase tracking-widest text-white">2025</button>
+      <button class="px-4 py-2 bg-blue-600 rounded-lg text-[9px] font-black uppercase tracking-widest text-white">2026</button>
     </div>
   </div>
 
   <div class="overflow-x-auto pb-4 no-scrollbar">
-    <div id="activity-grid" class="inline-grid grid-rows-7 grid-flow-col gap-1.5 min-w-[850px]"></div>
+    <div
+      id="activity-grid"
+      class="inline-grid grid-rows-7 grid-flow-col gap-1.5 min-w-[850px]"
+    ></div>
   </div>
 
   <div class="flex justify-between items-center mt-4">
-    <p class="text-[8px] text-gray-600 font-bold uppercase tracking-widest italic">Density increases with page engagement time</p>
+    <p class="text-[8px] text-gray-600 font-bold uppercase tracking-widest italic">
+      Density increases with page engagement time
+    </p>
     <div class="flex items-center gap-2">
       <span class="text-[8px] text-gray-600 font-bold uppercase tracking-widest">Low</span>
       <div class="flex gap-1">
@@ -146,6 +157,7 @@ const views = {
     </div>
   </div>
 </div>
+
 
 
 
@@ -3883,149 +3895,111 @@ function openCreatePostModal() {
 
 /////// for the `activity progress
 
-/* =======================
-   CONFIG
-======================= */
+
+/* ================= CONFIG ================= */
 const YEAR = 2026;
 const GRID = document.getElementById("activity-grid");
 const STORAGE_KEY = "activity-2026";
-const MS = 1000;
 
-/* =======================
-   COLOR SCALE (GitHub-style)
-======================= */
+/* ================= COLORS ================= */
 function getColor(seconds) {
   if (seconds < 60) return "bg-white/[0.03]";
   if (seconds < 300) return "bg-green-900";
-  if (seconds < 900) return "bg-green-700";
+  if (seconds < 600) return "bg-green-700";
   if (seconds < 1800) return "bg-green-500";
   return "bg-green-400";
 }
 
-/* =======================
-   DATA
-======================= */
+/* ================= DATA ================= */
 let activity = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
-let today = new Date();
-let todayKey = today.toISOString().slice(0, 10);
-let lastActive = Date.now();
-let rafId = null;
+let todayKey = new Date().toISOString().slice(0, 10);
+let totalSecondsToday = activity[todayKey] || 0;
+let lastTick = Date.now();
+let interval = null;
 
-/* =======================
-   DATE HELPERS
-======================= */
-function startOfYear(year) {
-  return new Date(year, 0, 1);
-}
-
-function endOfYear(year) {
-  return new Date(year, 11, 31);
-}
-
-/* =======================
-   GRID GENERATION (GITHUB STYLE)
-======================= */
+/* ================= GRID ================= */
 function generateGrid() {
   GRID.innerHTML = "";
+  const start = new Date(YEAR, 0, 1);
 
-  const start = startOfYear(YEAR);
-  const end = endOfYear(YEAR);
-
-  // GitHub grid starts on Sunday
-  const firstSunday = new Date(start);
-  firstSunday.setDate(start.getDate() - start.getDay());
-
-  for (
-    let d = new Date(firstSunday);
-    d <= end;
-    d.setDate(d.getDate() + 1)
-  ) {
-    const dateStr = d.toISOString().slice(0, 10);
-    const seconds = activity[dateStr] || 0;
+  for (let i = 0; i < 365; i++) {
+    const d = new Date(start);
+    d.setDate(d.getDate() + i);
+    const key = d.toISOString().slice(0, 10);
+    const seconds = activity[key] || 0;
 
     const box = document.createElement("div");
+    box.dataset.date = key;
+    box.title = `${key} — ${Math.floor(seconds / 60)} min`;
     box.className = `
       w-3 h-3 rounded-sm
       ${getColor(seconds)}
       transition-colors duration-300
     `;
-    box.dataset.date = dateStr;
-    box.title = `${dateStr} — ${Math.floor(seconds / 60)} min`;
-
     GRID.appendChild(box);
   }
 }
 
-/* =======================
-   UPDATE SINGLE DAY
-======================= */
-function updateDay(dateStr) {
-  const box = GRID.querySelector(`[data-date="${dateStr}"]`);
+function updateBox(key) {
+  const box = GRID.querySelector(`[data-date="${key}"]`);
   if (!box) return;
-
-  const seconds = activity[dateStr] || 0;
+  const seconds = activity[key] || 0;
   box.className = `
     w-3 h-3 rounded-sm
     ${getColor(seconds)}
     transition-colors duration-300
   `;
-  box.title = `${dateStr} — ${Math.floor(seconds / 60)} min`;
+  box.title = `${key} — ${Math.floor(seconds / 60)} min`;
 }
 
-/* =======================
-   TRACK ACTIVE TIME (REAL)
-======================= */
-function track() {
-  const now = Date.now();
-  const delta = (now - lastActive) / MS;
-  lastActive = now;
+/* ================= TRACKING ================= */
+function startTracking() {
+  if (interval) clearInterval(interval);
+  lastTick = Date.now();
 
-  activity[todayKey] = (activity[todayKey] || 0) + delta;
+  interval = setInterval(() => {
+    if (document.visibilityState !== "visible") return;
 
-  rafId = requestAnimationFrame(track);
+    const now = Date.now();
+    const delta = (now - lastTick) / 1000;
+    lastTick = now;
+
+    totalSecondsToday += delta;
+    activity[todayKey] = Math.floor(totalSecondsToday);
+
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(activity));
+    updateBox(todayKey);
+  }, 5000);
 }
 
-/* =======================
-   VISIBILITY HANDLING
-======================= */
-function pause() {
-  cancelAnimationFrame(rafId);
-  rafId = null;
-
-  activity[todayKey] = Math.floor(activity[todayKey] || 0);
+function stopTracking() {
+  if (interval) clearInterval(interval);
+  activity[todayKey] = Math.floor(totalSecondsToday);
   localStorage.setItem(STORAGE_KEY, JSON.stringify(activity));
-  updateDay(todayKey);
+  updateBox(todayKey);
 }
 
-function resume() {
-  lastActive = Date.now();
-  if (!rafId) rafId = requestAnimationFrame(track);
-}
-
-/* =======================
-   MIDNIGHT ROLLOVER
-======================= */
+/* ================= DAY CHANGE ================= */
 setInterval(() => {
   const nowKey = new Date().toISOString().slice(0, 10);
   if (nowKey !== todayKey) {
-    pause();
+    stopTracking();
     todayKey = nowKey;
-    resume();
+    totalSecondsToday = activity[todayKey] || 0;
+    startTracking();
   }
 }, 60000);
 
-/* =======================
-   EVENTS
-======================= */
+/* ================= EVENTS ================= */
 document.addEventListener("visibilitychange", () => {
-  document.visibilityState === "visible" ? resume() : pause();
+  document.visibilityState === "visible"
+    ? startTracking()
+    : stopTracking();
 });
 
-window.addEventListener("beforeunload", pause);
+window.addEventListener("beforeunload", stopTracking);
 
-/* =======================
-   INIT
-======================= */
+/* ================= INIT ================= */
 generateGrid();
-resume();
+startTracking();
 
