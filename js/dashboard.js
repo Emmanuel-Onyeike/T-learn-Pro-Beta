@@ -22,20 +22,22 @@ const ActivityEngine = {
 };
 ActivityEngine.track();
 const views = {
-    'Overview': `
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 md:gap-6 animate-in">
-    <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-blue-500/30 transition-all">
-        <div class="flex items-center gap-4 relative z-10">
-            <div class="w-12 h-12 bg-blue-600/10 rounded-2xl flex items-center justify-center border border-blue-500/20">
-                <i class="fas fa-code-branch text-blue-500"></i>
+  'Overview': `
+<div class="space-y-8 animate-in">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+        
+        <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-blue-500/30 transition-all">
+            <div class="flex items-center gap-4 relative z-10">
+                <div class="w-12 h-12 bg-blue-600/10 rounded-2xl flex items-center justify-center border border-blue-500/20">
+                    <i class="fas fa-code-branch text-blue-500"></i>
+                </div>
+                <div>
+                    <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Projects</p>
+                    <h3 id="projectCount" class="text-3xl font-black text-white mt-1">0</h3>
+                </div>
             </div>
-            <div>
-                <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Projects</p>
-                <h3 id="projectCount" class="text-3xl font-black text-white mt-1">0</h3>
-            </div>
+            <i class="fas fa-project-diagram absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-blue-500/[0.05] transition-all"></i>
         </div>
-        <i class="fas fa-project-diagram absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-blue-500/[0.05] transition-all"></i>
-    </div>
 
         <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-purple-500/30 transition-all">
             <div class="flex items-center gap-4 relative z-10">
@@ -50,81 +52,74 @@ const views = {
             <i class="fas fa-users-cog absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-purple-500/[0.05] transition-all"></i>
         </div>
 
-     <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-green-500/30 transition-all">
-    <div class="flex items-center gap-4 relative z-10">
-        <div class="w-12 h-12 bg-green-600/10 rounded-2xl flex items-center justify-center border border-green-500/20">
-            <i class="fas fa-layer-group text-green-500"></i>
-        </div>
-        <div>
-            <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Level</p>
-            <h3 id="dash-level-val" class="text-3xl font-black text-white mt-1">000</h3>
-        </div>
-    </div>
-    <i class="fas fa-chart-line absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-green-500/[0.05] transition-all"></i>
-</div>
-
-<div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-orange-500/30 transition-all">
-    <div id="rank-glow" class="absolute inset-0 bg-yellow-500/0 transition-all duration-700"></div>
-
-    <div class="flex items-center gap-4 relative z-10">
-        <div class="w-12 h-12 bg-orange-600/10 rounded-2xl flex items-center justify-center border border-orange-500/20 group-hover:border-orange-500/50 transition-all">
-            <i class="fas fa-medal text-orange-500"></i>
-        </div>
-        
-        <div>
-            <div class="flex items-center gap-2">
-                <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Current Rank</p>
-                <span class="w-1 h-1 rounded-full bg-orange-500 animate-pulse"></span>
+        <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-green-500/30 transition-all">
+            <div class="flex items-center gap-4 relative z-10">
+                <div class="w-12 h-12 bg-green-600/10 rounded-2xl flex items-center justify-center border border-green-500/20">
+                    <i class="fas fa-layer-group text-green-500"></i>
+                </div>
+                <div>
+                    <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Level</p>
+                    <h3 id="dash-level-val" class="text-3xl font-black text-white mt-1">000</h3>
+                </div>
             </div>
-            
-            <h3 id="ui-rank" class="text-3xl font-black text-white mt-1 italic tracking-tighter">
-                #100
-            </h3>
+            <i class="fas fa-chart-line absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-green-500/[0.05] transition-all"></i>
         </div>
-    </div>
 
-    <i id="rank-crown-icon" class="fas fa-crown absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:rotate-0 group-hover:text-orange-500/[0.08] transition-all duration-500"></i>
-</div>
-        
+        <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-orange-500/30 transition-all">
+            <div id="rank-glow" class="absolute inset-0 bg-yellow-500/0 transition-all duration-700"></div>
+            <div class="flex items-center gap-4 relative z-10">
+                <div class="w-12 h-12 bg-orange-600/10 rounded-2xl flex items-center justify-center border border-orange-500/20 group-hover:border-orange-500/50 transition-all">
+                    <i class="fas fa-medal text-orange-500"></i>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Current Rank</p>
+                        <span class="w-1 h-1 rounded-full bg-orange-500 animate-pulse"></span>
+                    </div>
+                    <h3 id="ui-rank" class="text-3xl font-black text-white mt-1 italic tracking-tighter">#100</h3>
+                </div>
+            </div>
+            <i id="rank-crown-icon" class="fas fa-crown absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:rotate-0 group-hover:text-orange-500/[0.08] transition-all duration-500"></i>
+        </div>
+
         <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-blue-400/30 transition-all">
-    <div class="flex items-center gap-4 relative z-10">
-        <div class="w-12 h-12 bg-blue-400/10 rounded-2xl flex items-center justify-center border border-blue-400/20">
-            <i class="fas fa-graduation-cap text-blue-400"></i>
+            <div class="flex items-center gap-4 relative z-10">
+                <div class="w-12 h-12 bg-blue-400/10 rounded-2xl flex items-center justify-center border border-blue-400/20">
+                    <i class="fas fa-graduation-cap text-blue-400"></i>
+                </div>
+                <div>
+                    <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Semester</p>
+                    <h3 id="dash-semester-val" class="text-3xl font-black text-white mt-1">0</h3>
+                </div>
+            </div>
+            <i class="fas fa-graduation-cap absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-blue-400/[0.05] transition-all"></i>
         </div>
-        <div>
-            <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Semester</p>
-            <h3 id="dash-semester-val" class="text-3xl font-black text-white mt-1">0</h3>
+
+        <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-red-500/30 transition-all">
+            <div class="flex items-center gap-4 relative z-10">
+                <div class="w-12 h-12 bg-red-600/10 rounded-2xl flex items-center justify-center border border-red-500/20">
+                    <i class="fas fa-fire text-red-500"></i>
+                </div>
+                <div>
+                    <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Streaks</p>
+                    <h3 id="ui-streak" class="text-3xl font-black text-white mt-1">0</h3>
+                </div>
+            </div>
+            <i class="fas fa-fire-alt absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-red-500/[0.05] transition-all"></i>
         </div>
     </div>
-    <i class="fas fa-graduation-cap absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-blue-400/[0.05] transition-all"></i>
-</div>
 
-
-<div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-red-500/30 transition-all">
-    <div class="flex items-center gap-4 relative z-10">
-        <div class="w-12 h-12 bg-red-600/10 rounded-2xl flex items-center justify-center border border-red-500/20">
-            <i class="fas fa-fire text-red-500"></i>
+    <div class="bg-[#050b1d] border border-white/5 p-8 rounded-[2.5rem] relative overflow-hidden">
+        <h3 class="text-lg font-black text-white italic uppercase tracking-tighter mb-4">Activity Nebula</h3>
+        <div class="relative w-full h-[250px] bg-black/20 rounded-2xl border border-white/5">
+            <canvas id="nebula" class="w-full h-full"></canvas>
         </div>
-        <div>
-            <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Streaks</p>
-            <h3 id="ui-streak" class="text-3xl font-black text-white mt-1">0</h3>
-        </div>
+        <p class="text-[8px] text-gray-600 font-bold uppercase tracking-widest italic mt-4">
+            More activity = brighter nodes, faster motion
+        </p>
     </div>
-    <i class="fas fa-fire-alt absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-red-500/[0.05] transition-all"></i>
-</div>
-</div>
 
-
-<div class="mt-8 bg-[#050b1d] border border-white/5 p-8 rounded-[2.5rem] relative overflow-hidden">
-  <h3 class="text-lg font-black text-white italic uppercase tracking-tighter mb-4">Activity Nebula</h3>
-  <canvas id="nebula" width="850" height="250" class="rounded-lg w-full"></canvas>
-  <p class="text-[8px] text-gray-600 font-bold uppercase tracking-widest italic mt-4">
-    More activity = brighter nodes, faster motion
-  </p>
-</div>
-
-
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mt-8">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
         <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-emerald-500/30 transition-all">
             <div class="flex items-center gap-4 relative z-10">
                 <div class="w-12 h-12 bg-emerald-600/10 rounded-2xl flex items-center justify-center border border-emerald-500/20">
@@ -137,21 +132,22 @@ const views = {
             </div>
             <i class="fas fa-search-dollar absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-emerald-500/[0.05] transition-all"></i>
         </div>
-<div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-yellow-500/30 transition-all">
-    <div class="flex items-center gap-4 relative z-10">
-        <div class="w-12 h-12 bg-yellow-600/10 rounded-2xl flex items-center justify-center border border-yellow-500/20">
-            <i class="fas fa-star text-yellow-500"></i>
+
+        <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-yellow-500/30 transition-all">
+            <div class="flex items-center gap-4 relative z-10">
+                <div class="w-12 h-12 bg-yellow-600/10 rounded-2xl flex items-center justify-center border border-yellow-500/20">
+                    <i class="fas fa-star text-yellow-500"></i>
+                </div>
+                <div>
+                    <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">XT Points</p>
+                    <h3 class="text-3xl font-black text-white mt-1">
+                        <span id="dash-xp-val">0</span> 
+                        <span class="text-xs text-yellow-500/50 uppercase">XP</span>
+                    </h3>
+                </div>
+            </div>
+            <i class="fas fa-trophy absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-yellow-500/[0.05] transition-all"></i>
         </div>
-        <div>
-            <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">XT Points</p>
-            <h3 class="text-3xl font-black text-white mt-1">
-                <span id="dash-xp-val">0</span> 
-                <span class="text-xs text-yellow-500/50 uppercase">XP</span>
-            </h3>
-        </div>
-    </div>
-    <i class="fas fa-trophy absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-yellow-500/[0.05] transition-all"></i>
-</div>
 
         <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-indigo-500/30 transition-all">
             <div class="flex items-center gap-4 relative z-10">
@@ -166,10 +162,10 @@ const views = {
             <i class="fas fa-server absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-indigo-500/[0.05] transition-all"></i>
         </div>
     </div>
+</div>
 `,
 
-
-
+    
     'Lessons': `
     <div class="space-y-6 animate-in">
         <div class="flex justify-center mb-8">
