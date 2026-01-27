@@ -3858,92 +3858,98 @@ function openCreatePostModal() {
 
 /////// for the `activity progress
 
-/* ================= CONFIG ================= */
-const STORAGE_KEY = "activity-galaxy";
-const canvas = document.getElementById('activity-canvas');
-const ctx = canvas.getContext('2d');
+
+const canvas = document.getElementById("nebula");
+const ctx = canvas.getContext("2d");
 const WIDTH = canvas.width;
 const HEIGHT = canvas.height;
-const MAX_STARS = 150;
 
-/* ================= STATE ================= */
+// ================== SETTINGS ==================
+const STORAGE_KEY = "activity-nebula";
 let activity = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
-let todayKey = new Date().toISOString().slice(0,10);
-let totalToday = activity[todayKey] || 0;
+let today = new Date().toISOString().slice(0,10);
+let totalSeconds = activity[today] || 0;
+let lastTick = Date.now();
 
-let stars = [];
-for(let i=0;i<MAX_STARS;i++){
-  stars.push({
+const NODES = 50;       // number of floating nodes
+const MAX_RADIUS = 15;  // max node size
+const SPEED = 0.2;      // movement speed
+const IDLE_LIMIT = 30000;
+
+// ================== NODE STATE ==================
+let nodes = [];
+for(let i=0;i<NODES;i++){
+  nodes.push({
     x: Math.random()*WIDTH,
     y: Math.random()*HEIGHT,
-    size: Math.random()*2 + 1,
-    brightness: Math.random()*0.5 + 0.5,
-    date: new Date(2026,0,Math.floor(Math.random()*365)).toISOString().slice(0,10)
+    vx: (Math.random()-0.5)*SPEED,
+    vy: (Math.random()-0.5)*SPEED,
+    baseRadius: Math.random()*5 + 2
   });
 }
 
-let lastTick = Date.now();
-
-/* ================= HELPERS ================= */
-function getStarColor(seconds){
-  if(seconds < 60) return `rgba(255,255,255,0.03)`;
-  if(seconds < 300) return `rgba(5,150,105,0.5)`;    // green-900
-  if(seconds < 600) return `rgba(22,101,52,0.6)`;    // green-700
-  if(seconds < 1800) return `rgba(34,197,94,0.7)`;   // green-500
-  return `rgba(74,222,128,0.8)`;                      // green-400
+// ================== HELPERS ==================
+function nodeColor(seconds){
+  const t = Math.min(seconds/1800,1); // max activity effect
+  const r = 20 + t*100;
+  const g = 200 + t*55;
+  const b = 80 + t*50;
+  return `rgba(${r},${g},${b},0.8)`; // greenish nebula glow
 }
 
-/* ================= DRAW ================= */
-function drawGalaxy(){
+// ================== DRAW ==================
+function draw(){
   ctx.clearRect(0,0,WIDTH,HEIGHT);
-  stars.forEach(s=>{
-    const seconds = activity[s.date] || 0;
-    const scale = 1 + Math.min(seconds/1800,1)*3; // bigger for more activity
-    const glow = Math.min(seconds/1800,1);
-    
+  nodes.forEach(n=>{
+    const scale = 1 + Math.min(totalSeconds/1800,1)*2;
     ctx.beginPath();
-    ctx.arc(s.x, s.y, s.size*scale, 0, Math.PI*2);
-    ctx.fillStyle = getStarColor(seconds);
-    ctx.shadowColor = getStarColor(seconds);
-    ctx.shadowBlur = 10*glow;
+    ctx.arc(n.x, n.y, n.baseRadius*scale, 0, Math.PI*2);
+    ctx.fillStyle = nodeColor(totalSeconds);
+    ctx.shadowColor = nodeColor(totalSeconds);
+    ctx.shadowBlur = 15;
     ctx.fill();
   });
 }
 
-/* ================= TICK ================= */
-function tick(){
-  const now = Date.now();
-  const delta = Math.floor((now - lastTick)/1000);
-  lastTick = now;
-
-  totalToday += delta;
-  activity[todayKey] = totalToday;
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(activity));
-
-  drawGalaxy();
+// ================== MOVE ==================
+function moveNodes(){
+  nodes.forEach(n=>{
+    n.x += n.vx;
+    n.y += n.vy;
+    if(n.x<0||n.x>WIDTH) n.vx*=-1;
+    if(n.y<0||n.y>HEIGHT) n.vy*=-1;
+  });
 }
 
-/* ================= IDLE DETECTION ================= */
+// ================== TICK ==================
 let lastActive = Date.now();
-const IDLE_LIMIT = 30000;
-["mousemove","keydown","scroll","touchstart"].forEach(ev=>{
-  window.addEventListener(ev,()=> lastActive=Date.now(), {passive:true});
-});
+["mousemove","keydown","scroll","touchstart"].forEach(ev=>window.addEventListener(ev,()=>lastActive=Date.now(),{passive:true}));
 
-/* ================= LOOP ================= */
+function tick(){
+  const now = Date.now();
+  if(now - lastActive > IDLE_LIMIT) return; // idle
+  const delta = Math.floor((now-lastTick)/1000);
+  lastTick = now;
+  totalSeconds += delta;
+  activity[today] = totalSeconds;
+  localStorage.setItem(STORAGE_KEY,JSON.stringify(activity));
+}
+
+// ================== LOOP ==================
 function loop(){
-  if(Date.now() - lastActive < IDLE_LIMIT){
-    tick();
-  }
+  tick();
+  moveNodes();
+  draw();
   requestAnimationFrame(loop);
 }
 loop();
 
-/* ================= DAY ROLLOVER ================= */
+// ================== DAY ROLLOVER ==================
 setInterval(()=>{
-  const newKey = new Date().toISOString().slice(0,10);
-  if(newKey !== todayKey){
-    todayKey = newKey;
-    totalToday = activity[todayKey] || 0;
+  const t = new Date().toISOString().slice(0,10);
+  if(t!==today){
+    today = t;
+    totalSeconds = activity[today] || 0;
   }
 },60000);
+
