@@ -122,6 +122,7 @@ const views = {
     <div class="bg-white/[0.03] bg-green-900 bg-green-700 bg-green-500 bg-green-400"></div>
   </div>
 
+  <!-- Header -->
   <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
     <div>
       <h3 class="text-lg font-black text-white italic uppercase tracking-tighter">Activity</h3>
@@ -133,6 +134,7 @@ const views = {
     </div>
   </div>
 
+  <!-- Activity Grid -->
   <div class="overflow-x-auto pb-4 no-scrollbar">
     <div
       id="activity-grid"
@@ -140,6 +142,7 @@ const views = {
     ></div>
   </div>
 
+  <!-- Legend -->
   <div class="flex justify-between items-center mt-4">
     <p class="text-[8px] text-gray-600 font-bold uppercase tracking-widest italic">
       Density increases with page engagement time
@@ -157,8 +160,6 @@ const views = {
     </div>
   </div>
 </div>
-
-
 
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mt-8">
@@ -3899,7 +3900,11 @@ function openCreatePostModal() {
 /* ================= CONFIG ================= */
 const YEAR = 2026;
 const GRID = document.getElementById("activity-grid");
-const STORAGE_KEY = "activity-2026";
+const STORAGE_KEY = "activity-2026-v2";
+
+/* ================= SETTINGS ================= */
+const TICK_RATE = 1000;        // tick every 1s
+const IDLE_LIMIT = 30000;      // 30s of inactivity => idle
 
 /* ================= COLORS ================= */
 function getColor(seconds) {
@@ -3910,12 +3915,15 @@ function getColor(seconds) {
   return "bg-green-400";
 }
 
-/* ================= DATA ================= */
+/* ================= STATE ================= */
 let activity = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
 let todayKey = new Date().toISOString().slice(0, 10);
 let totalSecondsToday = activity[todayKey] || 0;
+
 let lastTick = Date.now();
+let lastActive = Date.now();
 let interval = null;
+let isIdle = false;
 
 /* ================= GRID ================= */
 function generateGrid() {
@@ -3931,11 +3939,7 @@ function generateGrid() {
     const box = document.createElement("div");
     box.dataset.date = key;
     box.title = `${key} — ${Math.floor(seconds / 60)} min`;
-    box.className = `
-      w-3 h-3 rounded-sm
-      ${getColor(seconds)}
-      transition-colors duration-300
-    `;
+    box.className = `w-3 h-3 rounded-sm ${getColor(seconds)} transition-colors duration-300`;
     GRID.appendChild(box);
   }
 }
@@ -3944,42 +3948,63 @@ function updateBox(key) {
   const box = GRID.querySelector(`[data-date="${key}"]`);
   if (!box) return;
   const seconds = activity[key] || 0;
-  box.className = `
-    w-3 h-3 rounded-sm
-    ${getColor(seconds)}
-    transition-colors duration-300
-  `;
+  box.className = `w-3 h-3 rounded-sm ${getColor(seconds)} transition-colors duration-300`;
   box.title = `${key} — ${Math.floor(seconds / 60)} min`;
 }
 
-/* ================= TRACKING ================= */
-function startTracking() {
-  if (interval) clearInterval(interval);
-  lastTick = Date.now();
+/* ================= TRACKING CORE ================= */
+function tick() {
+  if (document.visibilityState !== "visible") return;
 
-  interval = setInterval(() => {
-    if (document.visibilityState !== "visible") return;
+  const now = Date.now();
 
-    const now = Date.now();
-    const delta = (now - lastTick) / 1000;
+  // Idle detection
+  if (now - lastActive > IDLE_LIMIT) {
+    isIdle = true;
     lastTick = now;
+    return;
+  }
 
-    totalSecondsToday += delta;
-    activity[todayKey] = Math.floor(totalSecondsToday);
+  isIdle = false;
+  const delta = Math.floor((now - lastTick) / 1000);
+  if (delta <= 0) return;
 
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(activity));
-    updateBox(todayKey);
-  }, 5000);
-}
+  lastTick = now;
+  totalSecondsToday += delta;
+  activity[todayKey] = totalSecondsToday;
 
-function stopTracking() {
-  if (interval) clearInterval(interval);
-  activity[todayKey] = Math.floor(totalSecondsToday);
   localStorage.setItem(STORAGE_KEY, JSON.stringify(activity));
   updateBox(todayKey);
 }
 
-/* ================= DAY CHANGE ================= */
+function startTracking() {
+  if (interval) clearInterval(interval);
+  lastTick = Date.now();
+  interval = setInterval(tick, TICK_RATE);
+}
+
+function stopTracking() {
+  if (interval) clearInterval(interval);
+  interval = null;
+  activity[todayKey] = totalSecondsToday;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(activity));
+  updateBox(todayKey);
+}
+
+/* ================= ACTIVITY LISTENERS ================= */
+function markActive() {
+  lastActive = Date.now();
+}
+["mousemove","keydown","scroll","touchstart"].forEach(event =>
+  window.addEventListener(event, markActive, { passive:true })
+);
+
+/* ================= VISIBILITY ================= */
+document.addEventListener("visibilitychange", () => {
+  document.visibilityState === "visible" ? startTracking() : stopTracking();
+});
+
+/* ================= DAY ROLLOVER ================= */
 setInterval(() => {
   const nowKey = new Date().toISOString().slice(0, 10);
   if (nowKey !== todayKey) {
@@ -3990,13 +4015,7 @@ setInterval(() => {
   }
 }, 60000);
 
-/* ================= EVENTS ================= */
-document.addEventListener("visibilitychange", () => {
-  document.visibilityState === "visible"
-    ? startTracking()
-    : stopTracking();
-});
-
+/* ================= SAFETY ================= */
 window.addEventListener("beforeunload", stopTracking);
 
 /* ================= INIT ================= */
