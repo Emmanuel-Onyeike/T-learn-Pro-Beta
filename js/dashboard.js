@@ -117,59 +117,35 @@ const views = {
 
 
 <div class="mt-8 bg-[#050b1d] border border-white/5 p-8 rounded-[2.5rem] relative overflow-hidden">
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
-        <div>
-            <h3 class="text-lg font-black text-white italic uppercase tracking-tighter">Activity</h3>
-            <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest mt-1">Tracking session</p>
-
-        </div>
-        <div class="flex gap-2 flex-wrap">
-            <button class="px-4 py-2 bg-gray-800 rounded-lg text-[9px] font-black uppercase tracking-widest text-white shadow-lg shadow-gray-800/20">2025</button>
-            <button class="px-4 py-2 bg-blue-600 rounded-lg text-[9px] font-black uppercase tracking-widest text-white shadow-lg shadow-blue-600/20">2026</button>
-
-        </div>
+  <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+    <div>
+      <h3 class="text-lg font-black text-white italic uppercase tracking-tighter">Activity</h3>
+      <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest mt-1">Tracking session</p>
     </div>
-    <div class="overflow-x-auto pb-4 no-scrollbar">
-        <div class="inline-grid grid-rows-7 grid-flow-col gap-1.5 min-w-[850px]">
-            <!-- 2026 Activity Grid (365 days starting Jan 1, 2026) -->
-            <!-- Example with very light early activity + mostly empty for future days -->
-            <div class="w-3 h-3 rounded-sm bg-white/[0.03] transition-all duration-500 cursor-pointer" title="2026-01-01"></div>
-            <div class="w-3 h-3 rounded-sm bg-green-900 transition-all duration-500 cursor-pointer" title="2026-01-02"></div>
-            <div class="w-3 h-3 rounded-sm bg-green-900 transition-all duration-500 cursor-pointer" title="2026-01-03"></div>
-            <!-- The rest of the year continues with mostly low/no activity yet -->
-            <div class="w-3 h-3 rounded-sm bg-white/[0.03] transition-all duration-500 cursor-pointer" title="2026-01-04"></div>
-            <div class="w-3 h-3 rounded-sm bg-white/[0.03] transition-all duration-500 cursor-pointer" title="2026-01-05"></div>
-            <!-- ... (repeat pattern for all 365 days, thickening based on real future engagement) ... -->
-            <!-- Placeholder for the remaining ~360 boxes (they would be generated dynamically) -->
-            ${(() => {
-                let boxes = '';
-                for (let i = 3; i < 365; i++) {
-                    // Most future days = no activity yet
-                    const thickness = 'bg-white/[0.03]';
-                    const d = new Date(2026, 0, i + 1);
-                    const dateStr = d.toISOString().split('T')[0];
-                    boxes += `<div class="w-3 h-3 rounded-sm ${thickness} transition-all duration-500 cursor-pointer" title="${dateStr}"></div>`;
-                }
-                return boxes;
-            })()}
-
-        </div>
+    <div class="flex gap-2 flex-wrap">
+      <button class="px-4 py-2 bg-gray-800 rounded-lg text-[9px] font-black uppercase tracking-widest text-white shadow-lg shadow-gray-800/20">2025</button>
+      <button class="px-4 py-2 bg-blue-600 rounded-lg text-[9px] font-black uppercase tracking-widest text-white shadow-lg shadow-blue-600/20">2026</button>
     </div>
-    <div class="flex justify-between items-center mt-4">
-        <p class="text-[8px] text-gray-600 font-bold uppercase tracking-widest italic">Density increases with page engagement time</p>
-        <div class="flex items-center gap-2">
-            <span class="text-[8px] text-gray-600 font-bold uppercase tracking-widest">Low</span>
-            <div class="flex gap-1">
-                <div class="w-2.5 h-2.5 rounded-sm bg-white/[0.03]"></div>
-                <div class="w-2.5 h-2.5 rounded-sm bg-green-900"></div>
-                <div class="w-2.5 h-2.5 rounded-sm bg-green-700"></div>
-                <div class="w-2.5 h-2.5 rounded-sm bg-green-500"></div>
-                <div class="w-2.5 h-2.5 rounded-sm bg-green-400"></div>
-            </div>
-            <span class="text-[8px] text-gray-600 font-bold uppercase tracking-widest">NXXT</span>
-        </div>
+  </div>
 
+  <div class="overflow-x-auto pb-4 no-scrollbar">
+    <div id="activity-grid" class="inline-grid grid-rows-7 grid-flow-col gap-1.5 min-w-[850px]"></div>
+  </div>
+
+  <div class="flex justify-between items-center mt-4">
+    <p class="text-[8px] text-gray-600 font-bold uppercase tracking-widest italic">Density increases with page engagement time</p>
+    <div class="flex items-center gap-2">
+      <span class="text-[8px] text-gray-600 font-bold uppercase tracking-widest">Low</span>
+      <div class="flex gap-1">
+        <div class="w-2.5 h-2.5 rounded-sm bg-white/[0.03]"></div>
+        <div class="w-2.5 h-2.5 rounded-sm bg-green-900"></div>
+        <div class="w-2.5 h-2.5 rounded-sm bg-green-700"></div>
+        <div class="w-2.5 h-2.5 rounded-sm bg-green-500"></div>
+        <div class="w-2.5 h-2.5 rounded-sm bg-green-400"></div>
+      </div>
+      <span class="text-[8px] text-gray-600 font-bold uppercase tracking-widest">NXXT</span>
     </div>
+  </div>
 </div>
 
 
@@ -3907,3 +3883,134 @@ function showNxxtAlert(message) {
 function openCreatePostModal() {
     showNxxtAlert("BROADCASTING MODULE: WE ARE BUILDING NOW.");
 }
+
+/////// for the `activity progress
+  // === CONFIG ===
+  const YEAR = 2026;
+  const GRID = document.getElementById('activity-grid');
+  const STORAGE_KEY = 'activity2026';
+
+  // Color mapping based on total seconds spent that day
+  function getColor(seconds) {
+    if (seconds < 60) return 'bg-white/[0.03]';       // < 1 min
+    if (seconds < 300) return 'bg-green-900';         // 1-5 min
+    if (seconds < 600) return 'bg-green-700';         // 5-10 min
+    if (seconds < 1800) return 'bg-green-500';        // 10-30 min
+    return 'bg-green-400';                            // 30+ min → NXXT level
+  }
+
+  // Load saved activity data
+  let activity = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+
+  // Current day tracking
+  let currentDate = new Date();
+  let currentDateStr = currentDate.toISOString().split('T')[0];
+  let totalSecondsToday = activity[currentDateStr] || 0;
+  let lastCheckTime = Date.now();
+  let timerInterval = null;
+  let dayCheckInterval = null;
+
+  // Generate all 365 boxes once (on load)
+  function generateGrid() {
+    GRID.innerHTML = ''; // Clear any existing
+    const startDate = new Date(YEAR, 0, 1);
+    for (let i = 0; i < 365; i++) {
+      const d = new Date(startDate);
+      d.setDate(d.getDate() + i);
+      const dateStr = d.toISOString().split('T')[0];
+      const seconds = activity[dateStr] || 0;
+      const color = getColor(seconds);
+
+      const box = document.createElement('div');
+      box.className = `w-3 h-3 rounded-sm ${color} transition-all duration-500 cursor-pointer`;
+      box.title = `${dateStr} — ${Math.floor(seconds / 60)} min`;
+      box.dataset.date = dateStr;
+      GRID.appendChild(box);
+    }
+  }
+
+  // Update a single box's color & tooltip
+  function updateBox(dateStr, seconds) {
+    const box = GRID.querySelector(`[data-date="${dateStr}"]`);
+    if (box) {
+      box.className = `w-3 h-3 rounded-sm ${getColor(seconds)} transition-all duration-500 cursor-pointer`;
+      box.title = `${dateStr} — ${Math.floor(seconds / 60)} min`;
+    }
+  }
+
+  // Start/resume counting when visible
+  function startTracking() {
+    if (timerInterval) clearInterval(timerInterval);
+    lastCheckTime = Date.now();
+
+    timerInterval = setInterval(() => {
+      if (document.visibilityState === 'visible') {
+        const now = Date.now();
+        const delta = (now - lastCheckTime) / 1000;
+        totalSecondsToday += delta;
+        lastCheckTime = now;
+
+        // Update live every ~10 seconds to reduce DOM thrashing
+        if (Math.floor(totalSecondsToday) % 10 === 0) {
+          updateBox(currentDateStr, totalSecondsToday);
+        }
+
+        // Save every minute
+        if (Math.floor(totalSecondsToday) % 60 === 0) {
+          activity[currentDateStr] = Math.floor(totalSecondsToday);
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(activity));
+        }
+      }
+    }, 1000);
+  }
+
+  // Pause & save when hidden
+  function pauseTracking() {
+    if (timerInterval) clearInterval(timerInterval);
+    const now = Date.now();
+    const delta = (now - lastCheckTime) / 1000;
+    totalSecondsToday += delta;
+    activity[currentDateStr] = Math.floor(totalSecondsToday);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(activity));
+    updateBox(currentDateStr, totalSecondsToday);
+  }
+
+  // Check for day change (midnight rollover)
+  function checkDayChange() {
+    const now = new Date();
+    const nowStr = now.toISOString().split('T')[0];
+    if (nowStr !== currentDateStr) {
+      // Save old day
+      activity[currentDateStr] = Math.floor(totalSecondsToday);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(activity));
+      updateBox(currentDateStr, totalSecondsToday);
+
+      // Start new day
+      currentDateStr = nowStr;
+      totalSecondsToday = activity[currentDateStr] || 0;
+      lastCheckTime = Date.now();
+      updateBox(currentDateStr, totalSecondsToday);
+    }
+  }
+
+  // Event listeners
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') {
+      startTracking();
+    } else {
+      pauseTracking();
+    }
+  });
+
+  window.addEventListener('beforeunload', () => {
+    pauseTracking();
+  });
+
+  // Start everything
+  generateGrid();           // Draw initial grid
+  updateBox(currentDateStr, totalSecondsToday); // Refresh today's box
+  dayCheckInterval = setInterval(checkDayChange, 60000); // Check day change every minute
+  if (document.visibilityState === 'visible') {
+    startTracking();
+  }
+
