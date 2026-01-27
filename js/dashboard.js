@@ -23,19 +23,19 @@ const ActivityEngine = {
 ActivityEngine.track();
 const views = {
     'Overview': `
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 md:gap-6 animate-in">
-        <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-blue-500/30 transition-all">
-            <div class="flex items-center gap-4 relative z-10">
-                <div class="w-12 h-12 bg-blue-600/10 rounded-2xl flex items-center justify-center border border-blue-500/20">
-                    <i class="fas fa-code-branch text-blue-500"></i>
-                </div>
-                <div>
-                    <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Projects</p>
-                    <h3 id="projectCount" class="text-3xl font-black text-white mt-1">0</h3>
-                </div>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 md:gap-6 animate-in">
+    <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-blue-500/30 transition-all">
+        <div class="flex items-center gap-4 relative z-10">
+            <div class="w-12 h-12 bg-blue-600/10 rounded-2xl flex items-center justify-center border border-blue-500/20">
+                <i class="fas fa-code-branch text-blue-500"></i>
             </div>
-            <i class="fas fa-project-diagram absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-blue-500/[0.05] transition-all"></i>
+            <div>
+                <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Projects</p>
+                <h3 id="projectCount" class="text-3xl font-black text-white mt-1">0</h3>
+            </div>
         </div>
+        <i class="fas fa-project-diagram absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-blue-500/[0.05] transition-all"></i>
+    </div>
 
         <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-purple-500/30 transition-all">
             <div class="flex items-center gap-4 relative z-10">
@@ -50,71 +50,79 @@ const views = {
             <i class="fas fa-users-cog absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-purple-500/[0.05] transition-all"></i>
         </div>
 
-        <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-green-500/30 transition-all">
-            <div class="flex items-center gap-4 relative z-10">
-                <div class="w-12 h-12 bg-green-600/10 rounded-2xl flex items-center justify-center border border-green-500/20">
-                    <i class="fas fa-layer-group text-green-500"></i>
-                </div>
-                <div>
-                    <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Level</p>
-                    <h3 id="dash-level-val" class="text-3xl font-black text-white mt-1">000</h3>
-                </div>
-            </div>
-            <i class="fas fa-chart-line absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-green-500/[0.05] transition-all"></i>
+     <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-green-500/30 transition-all">
+    <div class="flex items-center gap-4 relative z-10">
+        <div class="w-12 h-12 bg-green-600/10 rounded-2xl flex items-center justify-center border border-green-500/20">
+            <i class="fas fa-layer-group text-green-500"></i>
         </div>
+        <div>
+            <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Level</p>
+            <h3 id="dash-level-val" class="text-3xl font-black text-white mt-1">000</h3>
+        </div>
+    </div>
+    <i class="fas fa-chart-line absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-green-500/[0.05] transition-all"></i>
+</div>
 
-        <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-orange-500/30 transition-all">
-            <div id="rank-glow" class="absolute inset-0 bg-yellow-500/0 transition-all duration-700"></div>
-            <div class="flex items-center gap-4 relative z-10">
-                <div class="w-12 h-12 bg-orange-600/10 rounded-2xl flex items-center justify-center border border-orange-500/20 group-hover:border-orange-500/50 transition-all">
-                    <i class="fas fa-medal text-orange-500"></i>
-                </div>
-                <div>
-                    <div class="flex items-center gap-2">
-                        <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Current Rank</p>
-                        <span class="w-1 h-1 rounded-full bg-orange-500 animate-pulse"></span>
-                    </div>
-                    <h3 id="ui-rank" class="text-3xl font-black text-white mt-1 italic tracking-tighter">#100</h3>
-                </div>
-            </div>
-            <i id="rank-crown-icon" class="fas fa-crown absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:rotate-0 group-hover:text-orange-500/[0.08] transition-all duration-500"></i>
+<div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-orange-500/30 transition-all">
+    <div id="rank-glow" class="absolute inset-0 bg-yellow-500/0 transition-all duration-700"></div>
+
+    <div class="flex items-center gap-4 relative z-10">
+        <div class="w-12 h-12 bg-orange-600/10 rounded-2xl flex items-center justify-center border border-orange-500/20 group-hover:border-orange-500/50 transition-all">
+            <i class="fas fa-medal text-orange-500"></i>
         </div>
         
+        <div>
+            <div class="flex items-center gap-2">
+                <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Current Rank</p>
+                <span class="w-1 h-1 rounded-full bg-orange-500 animate-pulse"></span>
+            </div>
+            
+            <h3 id="ui-rank" class="text-3xl font-black text-white mt-1 italic tracking-tighter">
+                #100
+            </h3>
+        </div>
+    </div>
+
+    <i id="rank-crown-icon" class="fas fa-crown absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:rotate-0 group-hover:text-orange-500/[0.08] transition-all duration-500"></i>
+</div>
+        
         <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-blue-400/30 transition-all">
-            <div class="flex items-center gap-4 relative z-10">
-                <div class="w-12 h-12 bg-blue-400/10 rounded-2xl flex items-center justify-center border border-blue-400/20">
-                    <i class="fas fa-graduation-cap text-blue-400"></i>
-                </div>
-                <div>
-                    <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Semester</p>
-                    <h3 id="dash-semester-val" class="text-3xl font-black text-white mt-1">0</h3>
-                </div>
-            </div>
-            <i class="fas fa-graduation-cap absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-blue-400/[0.05] transition-all"></i>
+    <div class="flex items-center gap-4 relative z-10">
+        <div class="w-12 h-12 bg-blue-400/10 rounded-2xl flex items-center justify-center border border-blue-400/20">
+            <i class="fas fa-graduation-cap text-blue-400"></i>
         </div>
-
-        <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-red-500/30 transition-all">
-            <div class="flex items-center gap-4 relative z-10">
-                <div class="w-12 h-12 bg-red-600/10 rounded-2xl flex items-center justify-center border border-red-500/20">
-                    <i class="fas fa-fire text-red-500"></i>
-                </div>
-                <div>
-                    <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Streaks</p>
-                    <h3 id="ui-streak" class="text-3xl font-black text-white mt-1">0</h3>
-                </div>
-            </div>
-            <i class="fas fa-fire-alt absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-red-500/[0.05] transition-all"></i>
+        <div>
+            <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Semester</p>
+            <h3 id="dash-semester-val" class="text-3xl font-black text-white mt-1">0</h3>
         </div>
     </div>
+    <i class="fas fa-graduation-cap absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-blue-400/[0.05] transition-all"></i>
+</div>
 
-    <div class="mt-8 bg-[#050b1d] border border-white/5 p-8 rounded-[2.5rem] relative overflow-hidden">
-        <h3 class="text-lg font-black text-white italic uppercase tracking-tighter mb-4">Activity Nebula</h3>
-        <div id="nebula-grid" class="flex flex-wrap gap-1.5 opacity-80">
-            </div>
-        <p class="text-[8px] text-gray-600 font-bold uppercase tracking-widest italic mt-4">
-            Brighter squares indicate heavy coding days
-        </p>
+
+<div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-red-500/30 transition-all">
+    <div class="flex items-center gap-4 relative z-10">
+        <div class="w-12 h-12 bg-red-600/10 rounded-2xl flex items-center justify-center border border-red-500/20">
+            <i class="fas fa-fire text-red-500"></i>
+        </div>
+        <div>
+            <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Streaks</p>
+            <h3 id="ui-streak" class="text-3xl font-black text-white mt-1">0</h3>
+        </div>
     </div>
+    <i class="fas fa-fire-alt absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-red-500/[0.05] transition-all"></i>
+</div>
+</div>
+
+
+<div class="mt-8 bg-[#050b1d] border border-white/5 p-8 rounded-[2.5rem] relative overflow-hidden">
+  <h3 class="text-lg font-black text-white italic uppercase tracking-tighter mb-4">Activity Nebula</h3>
+  <canvas id="nebula" width="850" height="250" class="rounded-lg w-full"></canvas>
+  <p class="text-[8px] text-gray-600 font-bold uppercase tracking-widest italic mt-4">
+    More activity = brighter nodes, faster motion
+  </p>
+</div>
+
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mt-8">
         <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-emerald-500/30 transition-all">
@@ -129,22 +137,21 @@ const views = {
             </div>
             <i class="fas fa-search-dollar absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-emerald-500/[0.05] transition-all"></i>
         </div>
-        
-        <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-yellow-500/30 transition-all">
-            <div class="flex items-center gap-4 relative z-10">
-                <div class="w-12 h-12 bg-yellow-600/10 rounded-2xl flex items-center justify-center border border-yellow-500/20">
-                    <i class="fas fa-star text-yellow-500"></i>
-                </div>
-                <div>
-                    <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">XT Points</p>
-                    <h3 class="text-3xl font-black text-white mt-1">
-                        <span id="dash-xp-val">0</span> 
-                        <span class="text-xs text-yellow-500/50 uppercase">XP</span>
-                    </h3>
-                </div>
-            </div>
-            <i class="fas fa-trophy absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-yellow-500/[0.05] transition-all"></i>
+<div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-yellow-500/30 transition-all">
+    <div class="flex items-center gap-4 relative z-10">
+        <div class="w-12 h-12 bg-yellow-600/10 rounded-2xl flex items-center justify-center border border-yellow-500/20">
+            <i class="fas fa-star text-yellow-500"></i>
         </div>
+        <div>
+            <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">XT Points</p>
+            <h3 class="text-3xl font-black text-white mt-1">
+                <span id="dash-xp-val">0</span> 
+                <span class="text-xs text-yellow-500/50 uppercase">XP</span>
+            </h3>
+        </div>
+    </div>
+    <i class="fas fa-trophy absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-yellow-500/[0.05] transition-all"></i>
+</div>
 
         <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-indigo-500/30 transition-all">
             <div class="flex items-center gap-4 relative z-10">
@@ -159,7 +166,9 @@ const views = {
             <i class="fas fa-server absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-indigo-500/[0.05] transition-all"></i>
         </div>
     </div>
-    `,
+`,
+
+
 
     'Lessons': `
     <div class="space-y-6 animate-in">
@@ -182,7 +191,7 @@ const views = {
                         <i class="fas fa-layer-group text-green-500"></i>
                     </div>
                     <div>
-                        <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Current Level</p>
+                        <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Level</p>
                         <h3 id="lesson-level-val" class="text-3xl font-black text-white mt-1">000</h3>
                     </div>
                 </div>
@@ -195,7 +204,7 @@ const views = {
                         <i class="fas fa-graduation-cap text-blue-400"></i>
                     </div>
                     <div>
-                        <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Active Semester</p>
+                        <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Semester</p>
                         <h3 id="lesson-semester-val" class="text-3xl font-black text-white mt-1">0</h3>
                     </div>
                 </div>
@@ -204,44 +213,16 @@ const views = {
         </div>
 
         <div id="lesson-sub-content">
-            <div class="bg-[#050b1d] border border-white/5 p-12 rounded-[2.5rem] text-center">
-                <div class="w-16 h-16 bg-blue-500/10 rounded-full flex items-center justify-center mx-auto mb-6 border border-blue-500/20">
-                    <i class="fas fa-bolt text-blue-500 text-xl"></i>
-                </div>
-                <h3 class="text-2xl font-black text-white uppercase tracking-tighter mb-4 italic">Ready to advance?</h3>
-                <p class="text-gray-500 text-[10px] font-bold uppercase tracking-widest mb-8 max-w-xs mx-auto leading-relaxed">
-                    Unlock your potential. Begin your fundamental course to master HTML, CSS, and modern web development.
-                </p>
-                <button onclick="startBeginnerCourse()" class="px-12 py-5 bg-white text-black rounded-2xl text-[11px] font-black uppercase tracking-[0.2em] hover:bg-blue-600 hover:text-white transition-all transform hover:scale-105 active:scale-95 shadow-xl shadow-white/5">
-                    Begin Journey
+            <div class="bg-[#050b1d] border border-white/5 p-8 rounded-[2.5rem] text-center">
+                <h3 class="text-xl font-black text-white uppercase tracking-tighter mb-4 italic">Ready to advance?</h3>
+                <p class="text-gray-500 text-[10px] font-bold uppercase tracking-widest mb-6">Begin your beginner course to unlock HTML, CSS, and more.</p>
+                <button onclick="startBeginnerCourse()" class="px-10 py-4 bg-white text-black rounded-2xl text-[11px] font-black uppercase tracking-[0.2em] hover:bg-blue-500 hover:text-white transition-all">
+                    Begin Course
                 </button>
             </div>
         </div>
     </div>
-    `,
-};
-
-// HELPER: Generate Activity Grid for Overview
-function initActivityGrid() {
-    const grid = document.getElementById('nebula-grid');
-    if (!grid) return;
-    
-    grid.innerHTML = '';
-    for (let i = 0; i < 154; i++) { // approx 22 weeks
-        const square = document.createElement('div');
-        square.className = 'w-[10px] h-[10px] rounded-[2px] bg-white/[0.03] transition-colors duration-500';
-        
-        // Randomly highlight to mimic the screenshot
-        if (Math.random() > 0.85) {
-            square.classList.replace('bg-white/[0.03]', 'bg-blue-500');
-            square.style.boxShadow = '0 0 8px rgba(59, 130, 246, 0.4)';
-        } else if (Math.random() > 0.95) {
-            square.classList.replace('bg-white/[0.03]', 'bg-purple-500');
-        }
-        
-        grid.appendChild(square);
-    }
-}
+`,
 
 
 'Projects': `
