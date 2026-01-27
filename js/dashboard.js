@@ -3882,132 +3882,150 @@ function openCreatePostModal() {
 }
 
 /////// for the `activity progress
-  // === CONFIG ===
-  const YEAR = 2026;
-  const GRID = document.getElementById('activity-grid');
-  const STORAGE_KEY = 'activity2026';
 
-  // Color mapping based on total seconds spent that day
-  function getColor(seconds) {
-    if (seconds < 60) return 'bg-white/[0.03]';       // < 1 min
-    if (seconds < 300) return 'bg-green-900';         // 1-5 min
-    if (seconds < 600) return 'bg-green-700';         // 5-10 min
-    if (seconds < 1800) return 'bg-green-500';        // 10-30 min
-    return 'bg-green-400';                            // 30+ min → NXXT level
+/* =======================
+   CONFIG
+======================= */
+const YEAR = 2026;
+const GRID = document.getElementById("activity-grid");
+const STORAGE_KEY = "activity-2026";
+const MS = 1000;
+
+/* =======================
+   COLOR SCALE (GitHub-style)
+======================= */
+function getColor(seconds) {
+  if (seconds < 60) return "bg-white/[0.03]";
+  if (seconds < 300) return "bg-green-900";
+  if (seconds < 900) return "bg-green-700";
+  if (seconds < 1800) return "bg-green-500";
+  return "bg-green-400";
+}
+
+/* =======================
+   DATA
+======================= */
+let activity = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+let today = new Date();
+let todayKey = today.toISOString().slice(0, 10);
+let lastActive = Date.now();
+let rafId = null;
+
+/* =======================
+   DATE HELPERS
+======================= */
+function startOfYear(year) {
+  return new Date(year, 0, 1);
+}
+
+function endOfYear(year) {
+  return new Date(year, 11, 31);
+}
+
+/* =======================
+   GRID GENERATION (GITHUB STYLE)
+======================= */
+function generateGrid() {
+  GRID.innerHTML = "";
+
+  const start = startOfYear(YEAR);
+  const end = endOfYear(YEAR);
+
+  // GitHub grid starts on Sunday
+  const firstSunday = new Date(start);
+  firstSunday.setDate(start.getDate() - start.getDay());
+
+  for (
+    let d = new Date(firstSunday);
+    d <= end;
+    d.setDate(d.getDate() + 1)
+  ) {
+    const dateStr = d.toISOString().slice(0, 10);
+    const seconds = activity[dateStr] || 0;
+
+    const box = document.createElement("div");
+    box.className = `
+      w-3 h-3 rounded-sm
+      ${getColor(seconds)}
+      transition-colors duration-300
+    `;
+    box.dataset.date = dateStr;
+    box.title = `${dateStr} — ${Math.floor(seconds / 60)} min`;
+
+    GRID.appendChild(box);
   }
+}
 
-  // Load saved activity data
-  let activity = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+/* =======================
+   UPDATE SINGLE DAY
+======================= */
+function updateDay(dateStr) {
+  const box = GRID.querySelector(`[data-date="${dateStr}"]`);
+  if (!box) return;
 
-  // Current day tracking
-  let currentDate = new Date();
-  let currentDateStr = currentDate.toISOString().split('T')[0];
-  let totalSecondsToday = activity[currentDateStr] || 0;
-  let lastCheckTime = Date.now();
-  let timerInterval = null;
-  let dayCheckInterval = null;
+  const seconds = activity[dateStr] || 0;
+  box.className = `
+    w-3 h-3 rounded-sm
+    ${getColor(seconds)}
+    transition-colors duration-300
+  `;
+  box.title = `${dateStr} — ${Math.floor(seconds / 60)} min`;
+}
 
-  // Generate all 365 boxes once (on load)
-  function generateGrid() {
-    GRID.innerHTML = ''; // Clear any existing
-    const startDate = new Date(YEAR, 0, 1);
-    for (let i = 0; i < 365; i++) {
-      const d = new Date(startDate);
-      d.setDate(d.getDate() + i);
-      const dateStr = d.toISOString().split('T')[0];
-      const seconds = activity[dateStr] || 0;
-      const color = getColor(seconds);
+/* =======================
+   TRACK ACTIVE TIME (REAL)
+======================= */
+function track() {
+  const now = Date.now();
+  const delta = (now - lastActive) / MS;
+  lastActive = now;
 
-      const box = document.createElement('div');
-      box.className = `w-3 h-3 rounded-sm ${color} transition-all duration-500 cursor-pointer`;
-      box.title = `${dateStr} — ${Math.floor(seconds / 60)} min`;
-      box.dataset.date = dateStr;
-      GRID.appendChild(box);
-    }
+  activity[todayKey] = (activity[todayKey] || 0) + delta;
+
+  rafId = requestAnimationFrame(track);
+}
+
+/* =======================
+   VISIBILITY HANDLING
+======================= */
+function pause() {
+  cancelAnimationFrame(rafId);
+  rafId = null;
+
+  activity[todayKey] = Math.floor(activity[todayKey] || 0);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(activity));
+  updateDay(todayKey);
+}
+
+function resume() {
+  lastActive = Date.now();
+  if (!rafId) rafId = requestAnimationFrame(track);
+}
+
+/* =======================
+   MIDNIGHT ROLLOVER
+======================= */
+setInterval(() => {
+  const nowKey = new Date().toISOString().slice(0, 10);
+  if (nowKey !== todayKey) {
+    pause();
+    todayKey = nowKey;
+    resume();
   }
+}, 60000);
 
-  // Update a single box's color & tooltip
-  function updateBox(dateStr, seconds) {
-    const box = GRID.querySelector(`[data-date="${dateStr}"]`);
-    if (box) {
-      box.className = `w-3 h-3 rounded-sm ${getColor(seconds)} transition-all duration-500 cursor-pointer`;
-      box.title = `${dateStr} — ${Math.floor(seconds / 60)} min`;
-    }
-  }
+/* =======================
+   EVENTS
+======================= */
+document.addEventListener("visibilitychange", () => {
+  document.visibilityState === "visible" ? resume() : pause();
+});
 
-  // Start/resume counting when visible
-  function startTracking() {
-    if (timerInterval) clearInterval(timerInterval);
-    lastCheckTime = Date.now();
+window.addEventListener("beforeunload", pause);
 
-    timerInterval = setInterval(() => {
-      if (document.visibilityState === 'visible') {
-        const now = Date.now();
-        const delta = (now - lastCheckTime) / 1000;
-        totalSecondsToday += delta;
-        lastCheckTime = now;
-
-        // Update live every ~10 seconds to reduce DOM thrashing
-        if (Math.floor(totalSecondsToday) % 10 === 0) {
-          updateBox(currentDateStr, totalSecondsToday);
-        }
-
-        // Save every minute
-        if (Math.floor(totalSecondsToday) % 60 === 0) {
-          activity[currentDateStr] = Math.floor(totalSecondsToday);
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(activity));
-        }
-      }
-    }, 1000);
-  }
-
-  // Pause & save when hidden
-  function pauseTracking() {
-    if (timerInterval) clearInterval(timerInterval);
-    const now = Date.now();
-    const delta = (now - lastCheckTime) / 1000;
-    totalSecondsToday += delta;
-    activity[currentDateStr] = Math.floor(totalSecondsToday);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(activity));
-    updateBox(currentDateStr, totalSecondsToday);
-  }
-
-  // Check for day change (midnight rollover)
-  function checkDayChange() {
-    const now = new Date();
-    const nowStr = now.toISOString().split('T')[0];
-    if (nowStr !== currentDateStr) {
-      // Save old day
-      activity[currentDateStr] = Math.floor(totalSecondsToday);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(activity));
-      updateBox(currentDateStr, totalSecondsToday);
-
-      // Start new day
-      currentDateStr = nowStr;
-      totalSecondsToday = activity[currentDateStr] || 0;
-      lastCheckTime = Date.now();
-      updateBox(currentDateStr, totalSecondsToday);
-    }
-  }
-
-  // Event listeners
-  document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'visible') {
-      startTracking();
-    } else {
-      pauseTracking();
-    }
-  });
-
-  window.addEventListener('beforeunload', () => {
-    pauseTracking();
-  });
-
-  // Start everything
-  generateGrid();           // Draw initial grid
-  updateBox(currentDateStr, totalSecondsToday); // Refresh today's box
-  dayCheckInterval = setInterval(checkDayChange, 60000); // Check day change every minute
-  if (document.visibilityState === 'visible') {
-    startTracking();
-  }
+/* =======================
+   INIT
+======================= */
+generateGrid();
+resume();
 
