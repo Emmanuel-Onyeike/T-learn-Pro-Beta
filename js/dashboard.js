@@ -3582,64 +3582,82 @@ function openCreatePostModal() {
 /// for the projects 
 
 
-// ──────────────────────────────────────────────
-// Wait for DOM to be ready before attaching listeners
-// ──────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
-  // Mock data & limits (can be replaced with real storage later)
-  let projects = [];
+  console.log('Projects script initialized');
+
+  // ─── State & Limits ─────────────────────────────────────────────
+  let projects = []; // ← this will hold all projects (mock / in-memory for now)
   const MAX_PROJECTS = 10;
-  const MAX_COLLABS = 5;
+  const MAX_COLLABS  = 5;
 
-  // DOM elements
-  const createBtn       = document.getElementById('createProjectBtn');
-  const modal           = document.getElementById('projectModal');
-  const closeBtn        = document.getElementById('closeModalBtn');
-  const discardBtn      = document.getElementById('discardBtn');
-  const form            = document.getElementById('projectForm');
-  const nameInput       = document.getElementById('projName');
-  const descInput       = document.getElementById('projDesc');
-  const imgInput        = document.getElementById('projImg');
-  const typeSelect      = document.getElementById('projType');
-  const supervisorInput = document.getElementById('projSupervisor');
-  const userInput       = document.getElementById('addUserInput');
-  const addUserBtn      = document.getElementById('addUserBtn');
-  const collabList      = document.getElementById('collaboratorsList');
-  const collabCount     = document.getElementById('collabCount');
-  const grid            = document.getElementById('projectGrid');
-  const emptyState      = document.getElementById('emptyProjectState');
-  const loading         = document.getElementById('loadingOverlay');
-  const projectCountEl  = document.getElementById('projectCount') || { textContent: '0' };
+  // ─── DOM Elements (with null-safety) ────────────────────────────
+  const els = {
+    createBtn:       document.getElementById('createProjectBtn'),
+    modal:           document.getElementById('projectModal'),
+    closeBtn:        document.getElementById('closeModalBtn'),
+    discardBtn:      document.getElementById('discardBtn'),
+    form:            document.getElementById('projectForm'),
+    nameInput:       document.getElementById('projName'),
+    descInput:       document.getElementById('projDesc'),
+    imgInput:        document.getElementById('projImg'),
+    typeSelect:      document.getElementById('projType'),
+    supervisorInput: document.getElementById('projSupervisor'),
+    userInput:       document.getElementById('addUserInput'),
+    addUserBtn:      document.getElementById('addUserBtn'),
+    collabList:      document.getElementById('collaboratorsList'),
+    collabCount:     document.getElementById('collabCount'),
+    grid:            document.getElementById('projectGrid'),
+    emptyState:      document.getElementById('emptyProjectState'),
+    loading:         document.getElementById('loadingOverlay'),
+    projectCountEl:  document.getElementById('projectCount') || { textContent: '0' },
+    // Settings tab elements (may be null if not on that tab)
+    settingsList:    document.getElementById('settingsProjectList'),
+    settingsEmpty:   document.getElementById('settingsEmptyState'),
+    settingsTotalXP: document.getElementById('settingsTotalXP'),
+    // Activity section (may be null if not present)
+    activityEmpty:   document.getElementById('activity-empty'),
+    activityTimeline:document.getElementById('activity-timeline'),
+  };
 
-  // ─── Helpers ────────────────────────────────────────
+  // Quick check – critical elements must exist
+  if (!els.createBtn || !els.modal) {
+    console.error('Critical elements missing (createBtn or modal). Check HTML structure and IDs.');
+    return;
+  }
+
+  // ─── Helper Functions ───────────────────────────────────────────
   function generateProjectID(name) {
-    const slug = name.toLowerCase().replace(/\s+/g, '').slice(0,8);
-    const rand = Math.random().toString(36).slice(2,14);
-    return (slug + rand).slice(0,20).padEnd(20, '0');
+    const slug = name.toLowerCase().replace(/\s+/g, '').slice(0, 8);
+    const rand = Math.random().toString(36).slice(2, 14);
+    return (slug + rand).slice(0, 20).padEnd(20, '0');
   }
 
   function randomStatus() {
     const r = Math.random();
-    if (r < 0.4) return { label: 'Complete', color: 'green' };
-    if (r < 0.7) return { label: 'Pending',   color: 'yellow' };
-    return                  { label: 'Rejected', color: 'red' };
+    if (r < 0.4) return { label: 'Complete', color: 'green'  };
+    if (r < 0.7) return { label: 'Pending',  color: 'yellow' };
+    return                { label: 'Rejected', color: 'red'   };
   }
 
-  function updateCount() {
-    projectCountEl.textContent = projects.length;
+  function updateProjectCount() {
+    els.projectCountEl.textContent = projects.length;
     if (projects.length === 0) {
-      emptyState.classList.remove('hidden');
-      grid.classList.add('hidden');
+      els.emptyState?.classList.remove('hidden');
+      els.grid?.classList.add('hidden');
     } else {
-      emptyState.classList.add('hidden');
-      grid.classList.remove('hidden');
+      els.emptyState?.classList.add('hidden');
+      els.grid?.classList.remove('hidden');
     }
   }
 
+  // ─── Core Render Function (Main Projects Grid) ──────────────────
   function renderProjects() {
-    grid.innerHTML = '';
+    if (!els.grid) return;
+
+    els.grid.innerHTML = '';
     projects.forEach((proj, idx) => {
       const status = proj.status || randomStatus();
+
       const card = document.createElement('div');
       card.className = 'bg-[#0a1125] border border-white/5 rounded-2xl overflow-hidden group hover:border-blue-500/30 transition-all relative';
       card.innerHTML = `
@@ -3677,86 +3695,100 @@ document.addEventListener('DOMContentLoaded', () => {
           </div>
         </div>
       `;
-      grid.appendChild(card);
+      els.grid.appendChild(card);
 
-      // Mock XP gain
+      // Mock XP award
       if (status.label === 'Complete') {
         const xpEl = document.getElementById('dash-xp-val');
         if (xpEl) xpEl.textContent = (parseInt(xpEl.textContent || '0') + 10).toString();
       }
     });
-    updateCount();
-    if (typeof updateActivitySection === 'function') updateActivitySection();
-    if (typeof renderSettingsProjects === 'function') renderSettingsProjects();
+
+    updateProjectCount();
+
+    // Sync other views if they exist on the page
+    updateActivitySection();
+    renderSettingsProjects();
   }
 
-  // ─── Modal Controls ─────────────────────────────────
+  // ─── Modal Open / Close ─────────────────────────────────────────
   function openModal() {
     if (projects.length >= MAX_PROJECTS) {
       alert('Free limit reached: 10 projects max. Upgrade for more.');
       return;
     }
-    modal.classList.remove('hidden');
-    modal.classList.remove('translate-x-full');
-    modal.classList.add('translate-x-0');
+    els.modal.classList.remove('hidden');
+    // Small reflow trick sometimes needed
+    void els.modal.offsetWidth;
+    els.modal.classList.remove('translate-x-full');
+    els.modal.classList.add('translate-x-0');
   }
 
   function closeModal() {
-    modal.classList.remove('translate-x-0');
-    modal.classList.add('translate-x-full');
-    // Wait for animation to finish before hiding
+    els.modal.classList.remove('translate-x-0');
+    els.modal.classList.add('translate-x-full');
     setTimeout(() => {
-      modal.classList.add('hidden');
-    }, 300);
+      els.modal.classList.add('hidden');
+    }, 350);
   }
 
-  createBtn.addEventListener('click', openModal);
-  closeBtn.addEventListener('click', closeModal);
-  discardBtn.addEventListener('click', () => {
+  // ─── Event Listeners ────────────────────────────────────────────
+  els.createBtn.addEventListener('click', openModal);
+  els.closeBtn?.addEventListener('click', closeModal);
+  els.discardBtn?.addEventListener('click', () => {
     if (confirm('Discard changes?')) closeModal();
   });
 
-  // Collaborators add/remove
-  addUserBtn.addEventListener('click', () => {
-    const val = userInput.value.trim();
+  // Add collaborator
+  els.addUserBtn?.addEventListener('click', () => {
+    const val = els.userInput?.value.trim();
     if (!val || !val.startsWith('@')) return;
-    const current = collabList.children.length;
-    if (current >= MAX_COLLABS) {
+
+    const currentCount = els.collabList.children.length;
+    if (currentCount >= MAX_COLLABS) {
       alert('Free limit: 5 collaborators max per project.');
       return;
     }
+
     const tag = document.createElement('div');
     tag.className = 'px-3 py-1 bg-blue-500/10 border border-blue-500/20 rounded-full text-[10px] text-blue-300 flex items-center gap-2';
     tag.innerHTML = `${val} <button type="button" class="text-red-400 hover:text-red-300">×</button>`;
-    tag.querySelector('button').onclick = () => { tag.remove(); updateCollabCount(); };
-    collabList.appendChild(tag);
-    userInput.value = '';
+    tag.querySelector('button').onclick = () => {
+      tag.remove();
+      updateCollabCount();
+    };
+    els.collabList.appendChild(tag);
+    els.userInput.value = '';
     updateCollabCount();
   });
 
   function updateCollabCount() {
-    const count = collabList.children.length;
-    collabCount.textContent = `${count} / ${MAX_COLLABS}`;
+    if (!els.collabCount) return;
+    const count = els.collabList.children.length;
+    els.collabCount.textContent = `${count} / ${MAX_COLLABS}`;
   }
 
-  // Form submit → create project
-  form.addEventListener('submit', e => {
+  // Form submit → create new project
+  els.form?.addEventListener('submit', e => {
     e.preventDefault();
-    const name = nameInput.value.trim();
+    const name = els.nameInput?.value.trim();
     if (!name) return alert('Project name is required');
 
-    const collabs = Array.from(collabList.children).map(el => el.textContent.replace(/ ×$/, '').trim());
+    const collabs = Array.from(els.collabList.children).map(el =>
+      el.textContent.replace(/ ×$/, '').trim()
+    );
 
-    loading.classList.remove('hidden');
+    els.loading?.classList.remove('hidden');
 
+    // Simulate build time
     setTimeout(() => {
       const newProj = {
         id: generateProjectID(name),
         name,
-        desc: descInput.value.trim(),
-        img: imgInput.value.trim() || '',
-        type: typeSelect.value,
-        supervisor: supervisorInput.value.trim() || '',
+        desc: els.descInput?.value.trim() || '',
+        img: els.imgInput?.value.trim() || '',
+        type: els.typeSelect?.value || 'private',
+        supervisor: els.supervisorInput?.value.trim() || '',
         collabs,
         status: randomStatus()
       };
@@ -3769,16 +3801,16 @@ document.addEventListener('DOMContentLoaded', () => {
         addNotification(`Project "${name}" created. ID: ${newProj.id}`);
       }
 
-      // Reset & close
-      form.reset();
-      collabList.innerHTML = '';
+      // Reset form
+      els.form.reset();
+      els.collabList.innerHTML = '';
       updateCollabCount();
-      loading.classList.add('hidden');
+      els.loading?.classList.add('hidden');
       closeModal();
     }, 5000);
   });
 
-  // Menu toggle
+  // ─── Global helper functions (used in onclick attributes) ───────
   window.showMenu = function(idx) {
     document.querySelectorAll('[id^="menu-"]').forEach(m => m.classList.add('hidden'));
     const menu = document.getElementById(`menu-${idx}`);
@@ -3787,24 +3819,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.editProject = function(idx) {
     const p = projects[idx];
-    nameInput.value       = p.name;
-    descInput.value       = p.desc;
-    imgInput.value        = p.img || '';
-    typeSelect.value      = p.type;
-    supervisorInput.value = p.supervisor || '';
+    if (!p) return;
 
-    collabList.innerHTML = '';
+    els.nameInput.value       = p.name;
+    els.descInput.value       = p.desc || '';
+    els.imgInput.value        = p.img || '';
+    els.typeSelect.value      = p.type;
+    els.supervisorInput.value = p.supervisor || '';
+
+    els.collabList.innerHTML = '';
     p.collabs.forEach(u => {
       const tag = document.createElement('div');
       tag.className = 'px-3 py-1 bg-blue-500/10 border border-blue-500/20 rounded-full text-[10px] text-blue-300 flex items-center gap-2';
       tag.innerHTML = `${u} <button type="button" class="text-red-400 hover:text-red-300">×</button>`;
       tag.querySelector('button').onclick = () => { tag.remove(); updateCollabCount(); };
-      collabList.appendChild(tag);
+      els.collabList.appendChild(tag);
     });
     updateCollabCount();
 
     openModal();
-    // Note: current submit logic always creates new → for real edit you'd need update logic
+    // Note: submit currently always creates new. For real edit → add update logic later
   };
 
   window.deleteProject = function(idx) {
@@ -3816,121 +3850,101 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  // Initial render
+  // ─── Settings Tab Render (if elements exist) ────────────────────
+  function renderSettingsProjects() {
+    if (!els.settingsList || !els.settingsEmpty) return;
+
+    if (projects.length === 0) {
+      els.settingsEmpty.style.display = 'flex';
+      els.settingsList.classList.add('hidden');
+      if (els.settingsTotalXP) els.settingsTotalXP.textContent = '0';
+      return;
+    }
+
+    els.settingsEmpty.style.display = 'none';
+    els.settingsList.classList.remove('hidden');
+    els.settingsList.innerHTML = '';
+
+    let totalXP = 0;
+
+    projects.forEach((proj, index) => {
+      const status = proj.status || { label: 'Unknown', color: 'gray' };
+      const xpEarned = status.label === 'Complete' ? 10 : 0;
+      totalXP += xpEarned;
+
+      const card = document.createElement('div');
+      card.className = 'bg-[#0f172a] border border-white/5 rounded-2xl p-5 hover:border-blue-500/30 transition-all group relative overflow-hidden';
+      card.innerHTML = `
+        <div class="flex justify-between items-start mb-4">
+          <div>
+            <h4 class="font-black text-lg text-white group-hover:text-blue-300 transition-colors">${proj.name}</h4>
+            <p class="text-[10px] text-gray-500 uppercase tracking-widest mt-1">
+              ${proj.type.charAt(0).toUpperCase() + proj.type.slice(1)} • ${proj.collabs.length} user${proj.collabs.length !== 1 ? 's' : ''}
+            </p>
+          </div>
+          <span class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-${status.color}-500/20 text-${status.color}-300 border border-${status.color}-500/30">
+            ${status.label}
+          </span>
+        </div>
+        <div class="flex justify-between items-end text-[10px] font-black uppercase tracking-widest text-gray-400">
+          <div>
+            <p>ID: <span class="text-white">${proj.id}</span></p>
+            ${xpEarned > 0 ? `<p class="text-yellow-400 mt-1">+${xpEarned} XP earned</p>` : ''}
+          </div>
+          <div class="flex gap-3">
+            <button onclick="editProjectFromSettings(${index})" class="text-blue-400 hover:text-blue-300">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button onclick="deleteProjectFromSettings(${index})" class="text-red-400 hover:text-red-300">
+              <i class="fas fa-trash-alt"></i>
+            </button>
+          </div>
+        </div>
+      `;
+      els.settingsList.appendChild(card);
+    });
+
+    if (els.settingsTotalXP) els.settingsTotalXP.textContent = totalXP;
+  }
+
+  window.editProjectFromSettings = function(index) {
+    // For now: just open main modal pre-filled (same as editProject)
+    editProject(index);
+    console.log('Edit from settings → index:', index);
+  };
+
+  window.deleteProjectFromSettings = function(index) {
+    if (confirm('Delete this project?')) {
+      projects.splice(index, 1);
+      renderProjects();           // main view
+      renderSettingsProjects();   // settings view
+    }
+  };
+
+  window.switchToMainProjectsView = function() {
+    console.log('Switching to main Projects view...');
+    // → call your real tab switching function here, e.g. updateView('Projects')
+  };
+
+  // ─── Activity Timeline Sync (if present) ────────────────────────
+  function updateActivitySection() {
+    if (!els.activityEmpty || !els.activityTimeline) return;
+
+    if (projects.length === 0) {
+      els.activityEmpty.style.display = 'block';
+      els.activityTimeline.classList.add('hidden');
+    } else {
+      els.activityEmpty.style.display = 'none';
+      els.activityTimeline.classList.remove('hidden');
+      // Future: dynamically populate timeline items here
+    }
+  }
+
+  // ─── Initial Render ─────────────────────────────────────────────
   renderProjects();
+
+  console.log('Projects module fully loaded • ready for interaction');
 });
-
-
-// Add this logic – call it whenever projects array changes (e.g. after create/delete)
-function updateActivitySection() {
-  const emptyEl = document.getElementById('activity-empty');
-  const timelineEl = document.getElementById('activity-timeline');
-
-  if (projects.length === 0) {
-    emptyEl.style.display = 'block';
-    timelineEl.classList.add('hidden');
-  } else {
-    emptyEl.style.display = 'none';
-    timelineEl.classList.remove('hidden');
-    
-    // Optional: dynamically build timeline items from projects array
-    // For example:
-    // timelineEl.innerHTML = ''; // then loop through projects and append timeline entries
-  }
-}
-
-// Call this function:
-// - After renderProjects()
-// - After creating/deleting a project
-// - On page load
-updateActivitySection();
-
-// Assuming 'projects' array is global / shared from main Projects page
-// If not, you can use localStorage, context, or a global state manager
-
-function renderSettingsProjects() {
-  const listEl = document.getElementById('settingsProjectList');
-  const emptyEl = document.getElementById('settingsEmptyState');
-  const totalXPEl = document.getElementById('settingsTotalXP');
-
-  if (!projects || projects.length === 0) {
-    emptyEl.style.display = 'flex';
-    listEl.classList.add('hidden');
-    if (totalXPEl) totalXPEl.textContent = '0';
-    return;
-  }
-
-  emptyEl.style.display = 'none';
-  listEl.classList.remove('hidden');
-  listEl.innerHTML = '';
-
-  let totalXP = 0;
-
-  projects.forEach((proj, index) => {
-    const status = proj.status || { label: 'Unknown', color: 'gray' };
-    const xpEarned = (status.label === 'Complete') ? 10 : 0;
-    totalXP += xpEarned;
-
-    const card = document.createElement('div');
-    card.className = 'bg-[#0f172a] border border-white/5 rounded-2xl p-5 hover:border-blue-500/30 transition-all group relative overflow-hidden';
-    card.innerHTML = `
-      <div class="flex justify-between items-start mb-4">
-        <div>
-          <h4 class="font-black text-lg text-white group-hover:text-blue-300 transition-colors">${proj.name}</h4>
-          <p class="text-[10px] text-gray-500 uppercase tracking-widest mt-1">
-            ${proj.type.charAt(0).toUpperCase() + proj.type.slice(1)} • ${proj.collabs.length} user${proj.collabs.length !== 1 ? 's' : ''}
-          </p>
-        </div>
-        <span class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-${status.color}-500/20 text-${status.color}-300 border border-${status.color}-500/30">
-          ${status.label}
-        </span>
-      </div>
-
-      <div class="flex justify-between items-end text-[10px] font-black uppercase tracking-widest text-gray-400">
-        <div>
-          <p>ID: <span class="text-white">${proj.id}</span></p>
-          ${xpEarned > 0 ? `<p class="text-yellow-400 mt-1">+${xpEarned} XP earned</p>` : ''}
-        </div>
-        <div class="flex gap-3">
-          <button onclick="editProjectFromSettings(${index})" class="text-blue-400 hover:text-blue-300">
-            <i class="fas fa-edit"></i>
-          </button>
-          <button onclick="deleteProjectFromSettings(${index})" class="text-red-400 hover:text-red-300">
-            <i class="fas fa-trash-alt"></i>
-          </button>
-        </div>
-      </div>
-    `;
-    listEl.appendChild(card);
-  });
-
-  if (totalXPEl) totalXPEl.textContent = totalXP;
-}
-
-// Example placeholder functions (connect to your real logic)
-function switchToMainProjectsView() {
-  // Your tab/view switching logic, e.g. updateView('Projects')
-  console.log("Switching to main Projects view...");
-}
-
-function editProjectFromSettings(index) {
-  // Open modal or navigate with pre-filled data
-  console.log("Edit project at index:", index);
-}
-
-function deleteProjectFromSettings(index) {
-  if (confirm("Delete this project?")) {
-    // Remove from projects array, re-render both views
-    projects.splice(index, 1);
-    renderSettingsProjects();
-    // Also call renderProjects() from main view if needed
-  }
-}
-
-// Call on tab load / when projects change
-// renderSettingsProjects();
-
-
 
 
 
