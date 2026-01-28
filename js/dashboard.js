@@ -1196,82 +1196,86 @@ function updateSettingsTab(tabId) {
                 <button class="w-full md:w-auto px-12 py-4 bg-white/5 border border-white/10 rounded-2xl text-[10px] font-black uppercase tracking-widest">Update Security</button>
             </div>`,
 
-
-    'Projects': `
-    <div class="space-y-8 animate-in">
-        <div class="space-y-6">
+'Projects': `
+<div class="space-y-8 animate-in pb-20">
+    <div class="space-y-6">
+        <div class="flex justify-between items-start">
             <div>
                 <h3 class="text-xl font-black text-white italic uppercase tracking-tighter">Project Management</h3>
-                <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest mt-1">Manage and bulk delete your projects</p>
+                <p class="text-[9px] text-yellow-500/60 font-bold uppercase tracking-widest mt-1 italic">
+                    <i class="fas fa-exclamation-triangle mr-1"></i> Maintenance Mode Active
+                </p>
             </div>
-            <div class="relative group">
-                <i class="fas fa-search absolute left-5 top-1/2 -translate-y-1/2 text-gray-600 group-focus-within:text-blue-500 transition-colors"></i>
-                <input type="text" id="projectSearchInput"
-                       placeholder="SEARCH REPOSITORY BY NAME, TAG, OR TECH STACK..."
-                       class="w-full bg-white/5 border border-white/10 rounded-2xl py-5 pl-14 pr-6 text-[10px] font-black text-white placeholder-gray-700 uppercase tracking-widest outline-none focus:border-blue-500/50 focus:bg-blue-500/5 transition-all">
-            </div>
-          
-            <div class="flex items-center gap-3">
-                <button id="selectAllBtn" class="px-5 py-2 bg-white/5 rounded-lg border border-white/5 text-[8px] font-black text-gray-500 uppercase hover:text-white transition-colors">
-                    Select All
-                </button>
-                <button id="bulkDeleteBtn" class="px-5 py-2 bg-red-500/5 rounded-lg border border-red-500/10 text-[8px] font-black text-red-500/40 uppercase cursor-not-allowed opacity-50" disabled>
-                    Bulk Delete (0)
-                </button>
+            <div class="flex items-center gap-2 px-3 py-1 bg-yellow-500/10 border border-yellow-500/20 rounded-full">
+                <div class="w-1.5 h-1.5 bg-yellow-500 rounded-full animate-pulse"></div>
+                <span class="text-[8px] font-black text-yellow-500 uppercase">Under Construction</span>
             </div>
         </div>
 
-        <!-- Dynamic Project Container -->
-        <div id="projectContainer" class="space-y-4">
-            <!-- Empty State (shown when no projects) -->
-            <div id="emptyProjectState" class="border-2 border-dashed border-white/5 rounded-[3.5rem] py-24 flex flex-col items-center justify-center text-center bg-white/[0.01]">
-                <div class="w-20 h-20 bg-white/5 rounded-3xl flex items-center justify-center mb-6 border border-white/5">
-                    <i class="fas fa-folder-plus text-gray-700 text-3xl"></i>
-                </div>
-                <h4 class="text-white font-black uppercase italic tracking-tighter text-2xl">No Projects done</h4>
-                <p class="text-[10px] text-gray-500 font-bold uppercase tracking-[0.3em] mt-3 mb-10">System standby. Awaiting first deployment.</p>
-               
-            </div>
-
-            <!-- Future projects will be inserted here dynamically -->
-            <!-- Example project card (for reference, will be added via JS later):
-            <div class="project-item p-6 bg-white/5 border border-white/10 rounded-3xl flex items-center justify-between hover:border-blue-500/30 transition-all">
-                <div class="flex items-center gap-4">
-                    <input type="checkbox" class="project-checkbox w-4 h-4 accent-blue-500">
-                    <div>
-                        <h5 class="text-white font-black text-sm uppercase">My Awesome App</h5>
-                        <p class="text-[9px] text-gray-500 uppercase tracking-wider">React • Node • Tailwind</p>
-                    </div>
-                </div>
-                <button class="text-red-500 hover:text-red-400 text-xs uppercase font-black">Delete</button>
-            </div>
-            -->
+        <div class="relative group opacity-40">
+            <i class="fas fa-lock absolute left-5 top-1/2 -translate-y-1/2 text-gray-600"></i>
+            <input type="text" disabled
+                   placeholder="SEARCH TEMPORARILY OFFLINE..."
+                   class="w-full bg-white/5 border border-white/10 rounded-2xl py-5 pl-14 pr-6 text-[10px] font-black text-gray-600 placeholder-gray-700 uppercase tracking-widest outline-none cursor-not-allowed">
         </div>
+      
+        <div class="flex items-center gap-3 opacity-30">
+            <button disabled class="px-5 py-2 bg-white/5 rounded-lg border border-white/5 text-[8px] font-black text-gray-500 uppercase cursor-not-allowed">
+                Select All
+            </button>
+            <button disabled class="px-5 py-2 bg-red-500/5 rounded-lg border border-red-500/10 text-[8px] font-black text-red-500/40 uppercase cursor-not-allowed">
+                Bulk Delete (0)
+            </button>
+        </div>
+    </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div class="p-6 bg-[#030816] border border-white/5 rounded-[1.5rem] flex items-center gap-5">
-                <div class="w-10 h-10 bg-blue-500/10 rounded-xl flex items-center justify-center text-blue-500">
-                    <i class="fas fa-microchip text-xs"></i>
-                </div>
-                <div>
-                    <p class="text-[9px] font-black text-white uppercase">Cloud Hosting</p>
-                    <p class="text-[8px] text-gray-600 font-bold uppercase mt-1">Projects auto-deploy to edge nodes.</p>
-                </div>
+    <div id="projectContainer" class="space-y-4">
+        <div id="emptyProjectState" class="relative border-2 border-dashed border-yellow-500/10 rounded-[3.5rem] py-24 flex flex-col items-center justify-center text-center bg-yellow-500/[0.01] overflow-hidden">
+            
+            <div class="absolute inset-0 opacity-[0.02] pointer-events-none" 
+                 style="background-image: linear-gradient(45deg, #fbbf24 25%, transparent 25%, transparent 50%, #fbbf24 50%, #fbbf24 75%, transparent 75%, transparent); background-size: 60px 60px;">
             </div>
-            <div class="p-6 bg-[#030816] border border-white/5 rounded-[1.5rem] flex items-center gap-5">
-                <div class="w-10 h-10 bg-purple-500/10 rounded-xl flex items-center justify-center text-purple-500">
-                    <i class="fas fa-terminal text-xs"></i>
+
+            <div class="relative z-10">
+                <div class="w-20 h-20 bg-yellow-500/5 rounded-3xl flex items-center justify-center mb-6 border border-yellow-500/10 mx-auto">
+                    <i class="fas fa-hammer text-yellow-500/40 text-3xl animate-bounce"></i>
                 </div>
-                <div>
-                    <p class="text-[9px] font-black text-white uppercase">Build History</p>
-                    <p class="text-[8px] text-gray-600 font-bold uppercase mt-1">Failed builds auto-purge after 30 days.</p>
-                </div>
+                <h4 class="text-white font-black uppercase italic tracking-tighter text-2xl">Module Rebuilding</h4>
+                <p class="text-[10px] text-gray-500 font-bold uppercase tracking-[0.3em] mt-3 mb-10 max-w-[280px]">
+                    Project repository is currently being migrated to a new architecture.
+                </p>
+                
+                <button onclick="showAlert('System Maintenance', 'The Project Management module is currently offline for scheduled upgrades. Check back soon!')" 
+                        class="px-8 py-3 bg-yellow-500/10 hover:bg-yellow-500/20 border border-yellow-500/20 text-yellow-500 text-[9px] font-black uppercase tracking-widest rounded-xl transition-all">
+                    View Status Report
+                </button>
             </div>
         </div>
     </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="p-6 bg-[#030816] border border-white/5 rounded-[1.5rem] flex items-center gap-5 group hover:border-blue-500/20 transition-all">
+            <div class="w-10 h-10 bg-blue-500/10 rounded-xl flex items-center justify-center text-blue-500">
+                <i class="fas fa-microchip text-xs"></i>
+            </div>
+            <div>
+                <p class="text-[9px] font-black text-white uppercase">Cloud Hosting</p>
+                <p class="text-[8px] text-gray-600 font-bold uppercase mt-1">Status: <span class="text-blue-500">Standby</span></p>
+            </div>
+        </div>
+        <div class="p-6 bg-[#030816] border border-white/5 rounded-[1.5rem] flex items-center gap-5 group hover:border-purple-500/20 transition-all">
+            <div class="w-10 h-10 bg-purple-500/10 rounded-xl flex items-center justify-center text-purple-500">
+                <i class="fas fa-terminal text-xs"></i>
+            </div>
+            <div>
+                <p class="text-[9px] font-black text-white uppercase">Build History</p>
+                <p class="text-[8px] text-gray-600 font-bold uppercase mt-1">Status: <span class="text-purple-500">Encrypted</span></p>
+            </div>
+        </div>
+    </div>
+</div>
 `,
-
-
+        
 
         'Billing': `
     <div class="space-y-8 animate-in">
