@@ -23,18 +23,19 @@ ActivityEngine.track();
 const views = {
     'Overview': `
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 md:gap-6 animate-in">
-    <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-blue-500/30 transition-all">
-        <div class="flex items-center gap-4 relative z-10">
-            <div class="w-12 h-12 bg-blue-600/10 rounded-2xl flex items-center justify-center border border-blue-500/20">
-                <i class="fas fa-code-branch text-blue-500"></i>
-            </div>
-            <div>
-                <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Projects</p>
-                <h3 id="projectCount" class="text-3xl font-black text-white mt-1">0</h3>
-            </div>
-        </div>
-        <i class="fas fa-project-diagram absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-blue-500/[0.05] transition-all"></i>
+  
+  <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-blue-500/30 transition-all">
+  <div class="flex items-center gap-4 relative z-10">
+    <div class="w-12 h-12 bg-blue-600/10 rounded-2xl flex items-center justify-center border border-blue-500/20">
+      <i class="fas fa-code-branch text-blue-500"></i>
     </div>
+    <div>
+      <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Projects</p>
+      <h3 id="projectCount" class="text-3xl font-black text-white mt-1">0</h3>
+    </div>
+  </div>
+  <i class="fas fa-project-diagram absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-blue-500/[0.05] transition-all"></i>
+</div>
 
         <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-purple-500/30 transition-all">
             <div class="flex items-center gap-4 relative z-10">
@@ -115,16 +116,10 @@ const views = {
 
 
 <div class="mt-8 bg-[#050b1d] border border-white/5 p-8 rounded-[2.5rem] relative overflow-hidden">
-
-  <!-- Tailwind SAFELIST (DO NOT REMOVE) -->
-  <div class="hidden">
-    <div class="bg-white/[0.03] bg-green-900 bg-green-700 bg-green-500 bg-green-400"></div>
-  </div>
-
   <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
     <div>
-      <h3 class="text-lg font-black text-white italic uppercase tracking-tighter">Activity</h3>
-      <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest mt-1">Tracking session</p>
+      <h3 class="text-lg font-black text-white italic uppercase tracking-tighter">Projects Activity</h3>
+      <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest mt-1">Project creation & build timeline</p>
     </div>
     <div class="flex gap-2 flex-wrap">
       <button class="px-4 py-2 bg-gray-800 rounded-lg text-[9px] font-black uppercase tracking-widest text-white">2025</button>
@@ -132,27 +127,54 @@ const views = {
     </div>
   </div>
 
-  <div class="overflow-x-auto pb-4 no-scrollbar">
-    <div
-      id="activity-grid"
-      class="inline-grid grid-rows-7 grid-flow-col gap-1.5 min-w-[850px]"
-    ></div>
-  </div>
-
-  <div class="flex justify-between items-center mt-4">
-    <p class="text-[8px] text-gray-600 font-bold uppercase tracking-widest italic">
-      Density increases with page engagement time
-    </p>
-    <div class="flex items-center gap-2">
-      <span class="text-[8px] text-gray-600 font-bold uppercase tracking-widest">Low</span>
-      <div class="flex gap-1">
-        <div class="w-2.5 h-2.5 rounded-sm bg-white/[0.03]"></div>
-        <div class="w-2.5 h-2.5 rounded-sm bg-green-900"></div>
-        <div class="w-2.5 h-2.5 rounded-sm bg-green-700"></div>
-        <div class="w-2.5 h-2.5 rounded-sm bg-green-500"></div>
-        <div class="w-2.5 h-2.5 rounded-sm bg-green-400"></div>
+  <!-- Main content area – starts empty / shows placeholder -->
+  <div id="activity-content" class="min-h-[180px] flex items-center justify-center text-center">
+    
+    <!-- Empty state (shown by default when no projects) -->
+    <div id="activity-empty" class="py-12">
+      <div class="w-16 h-16 mx-auto mb-6 bg-blue-500/5 rounded-2xl flex items-center justify-center border border-blue-500/10">
+        <i class="fas fa-stream text-blue-500/40 text-3xl"></i>
       </div>
-      <span class="text-[8px] text-gray-600 font-bold uppercase tracking-widest">NXXT</span>
+      <h4 class="text-white font-black uppercase italic tracking-tighter text-xl mb-3">No Activity Yet</h4>
+      <p class="text-[10px] text-gray-500 font-bold uppercase tracking-[0.3em] max-w-md mx-auto">
+        Create and build projects to see your activity timeline appear here
+      </p>
+    </div>
+
+    <!-- Actual activity visualization (hidden until projects exist) -->
+    <div id="activity-timeline" class="hidden w-full space-y-6">
+      <!-- Simple horizontal timeline or list – appears only when there are projects -->
+      <div class="relative">
+        <div class="absolute left-4 top-0 bottom-0 w-0.5 bg-white/5"></div>
+        
+        <!-- Example timeline items – these would be dynamically generated -->
+        <!-- For now showing placeholder structure -->
+        <div class="relative pl-10 pb-8">
+          <div class="absolute left-0 w-8 h-8 bg-blue-600/20 rounded-full border-2 border-blue-500/30 flex items-center justify-center">
+            <i class="fas fa-code text-blue-400 text-sm"></i>
+          </div>
+          <p class="text-[11px] font-black text-gray-400 uppercase">Jan 28, 2026</p>
+          <p class="text-white font-bold mt-1">First project created</p>
+          <p class="text-[10px] text-gray-500 mt-1">Project "MyApp v1" – Private</p>
+        </div>
+
+        <!-- More items would stack here -->
+      </div>
+
+      <!-- Legend only shown when timeline is visible -->
+      <div class="flex justify-between items-center pt-4 border-t border-white/5">
+        <p class="text-[8px] text-gray-600 font-bold uppercase tracking-widest italic">
+          Timeline grows as you build & complete projects
+        </p>
+        <div class="flex items-center gap-3">
+          <span class="text-[8px] text-gray-600 font-bold uppercase tracking-widest">Activity</span>
+          <div class="flex gap-2">
+            <div class="w-3 h-3 rounded-full bg-blue-950"></div>
+            <div class="w-3 h-3 rounded-full bg-blue-700"></div>
+            <div class="w-3 h-3 rounded-full bg-blue-400"></div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -173,20 +195,21 @@ const views = {
             </div>
             <i class="fas fa-search-dollar absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-emerald-500/[0.05] transition-all"></i>
         </div>
+        
 <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-yellow-500/30 transition-all">
-    <div class="flex items-center gap-4 relative z-10">
-        <div class="w-12 h-12 bg-yellow-600/10 rounded-2xl flex items-center justify-center border border-yellow-500/20">
-            <i class="fas fa-star text-yellow-500"></i>
-        </div>
-        <div>
-            <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">XT Points</p>
-            <h3 class="text-3xl font-black text-white mt-1">
-                <span id="dash-xp-val">0</span> 
-                <span class="text-xs text-yellow-500/50 uppercase">XP</span>
-            </h3>
-        </div>
+  <div class="flex items-center gap-4 relative z-10">
+    <div class="w-12 h-12 bg-yellow-600/10 rounded-2xl flex items-center justify-center border border-yellow-500/20">
+      <i class="fas fa-star text-yellow-500"></i>
     </div>
-    <i class="fas fa-trophy absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-yellow-500/[0.05] transition-all"></i>
+    <div>
+      <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">XT Points</p>
+      <h3 class="text-3xl font-black text-white mt-1">
+        <span id="dash-xp-val">0</span> 
+        <span class="text-xs text-yellow-500/50 uppercase">XP</span>
+      </h3>
+    </div>
+  </div>
+  <i class="fas fa-trophy absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-yellow-500/[0.05] transition-all"></i>
 </div>
 
         <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-indigo-500/30 transition-all">
@@ -265,66 +288,116 @@ const views = {
 
 'Projects': `
 <div class="space-y-12 animate-in pb-32 px-4 md:px-8">
-    <div class="space-y-2">
-        <div class="flex items-center gap-4">
-            <div class="w-2 h-2 bg-yellow-500 rounded-full animate-pulse shadow-[0_0_10px_#eab308]"></div>
-            <span class="text-[10px] text-yellow-500 font-black uppercase tracking-[0.5em]">Module Status: Maintenance Mode</span>
-        </div>
-        <h3 class="text-4xl md:text-5xl font-black italic uppercase tracking-tighter text-white"> 
-            <span class="text-blue-500">Projects</span>
-        </h3>
+  <div class="space-y-2">
+    <div class="flex items-center gap-4">
+      <div class="w-2 h-2 bg-yellow-500 rounded-full animate-pulse shadow-[0_0_10px_#eab308]"></div>
+      <span class="text-[10px] text-yellow-500 font-black uppercase tracking-[0.5em]">Module Status: Maintenance Mode</span>
+    </div>
+    <div class="flex justify-between items-center">
+      <h3 class="text-4xl md:text-5xl font-black italic uppercase tracking-tighter text-white">
+        <span class="text-blue-500">Projects</span>
+      </h3>
+      <button id="createProjectBtn" class="px-6 py-3 bg-blue-600 hover:bg-blue-500 rounded-xl font-black uppercase text-sm tracking-widest transition-all">
+        + Create Project
+      </button>
+    </div>
+  </div>
+
+  <div class="relative w-full group opacity-50">
+    <div class="flex items-center bg-[#050b1d] border border-white/10 rounded-2xl h-16 px-6">
+      <i class="fas fa-search text-gray-600 mr-4"></i>
+      <input type="text" placeholder="SEARCH DISABLED ..." disabled class="flex-1 bg-transparent border-none text-[11px] font-black uppercase tracking-[0.2em] text-gray-700 focus:outline-none cursor-not-allowed">
+      <div class="bg-gray-800 text-gray-600 rounded-xl h-10 px-4 flex items-center">
+        <i class="fas fa-lock"></i>
+      </div>
+    </div>
+  </div>
+
+  <div id="projectContainer" class="relative">
+    <!-- Loading Overlay (centered, shown during 5s create) -->
+    <div id="loadingOverlay" class="hidden fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+      <div class="flex flex-col items-center">
+        <div class="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+        <p class="text-white font-black uppercase tracking-widest mt-4">Building Project...</p>
+      </div>
     </div>
 
-    <div class="relative w-full group opacity-50">
-        <div class="flex items-center bg-[#050b1d] border border-white/10 rounded-2xl h-16 px-6">
-            <i class="fas fa-search text-gray-600 mr-4"></i>
-            <input type="text" placeholder="SEARCH DISABLED ..." disabled
-                class="flex-1 bg-transparent border-none text-[11px] font-black uppercase tracking-[0.2em] text-gray-700 focus:outline-none cursor-not-allowed">
-            
-            <div class="bg-gray-800 text-gray-600 rounded-xl h-10 px-4 flex items-center">
-                <i class="fas fa-lock"></i>
-            </div>
-        </div>
+    <!-- Empty State -->
+    <div id="emptyProjectState" class="relative border-2 border-dashed border-white/5 rounded-[3.5rem] py-24 flex flex-col items-center justify-center text-center bg-white/[0.01]">
+      <div class="w-24 h-24 bg-blue-500/10 rounded-3xl flex items-center justify-center mb-6 border border-blue-500/20 mx-auto">
+        <i class="fas fa-folder-open text-blue-500 text-4xl"></i>
+      </div>
+      <h4 class="text-white font-black uppercase italic tracking-tighter text-3xl">No Projects Yet</h4>
+      <p class="text-[10px] text-gray-500 font-bold uppercase tracking-[0.3em] mt-4 max-w-sm mx-auto">Create your first project to get started.</p>
     </div>
 
-    <div id="projectContainer">
-        <div id="underConstructionState" class="relative border-2 border-dashed border-white/5 rounded-[3.5rem] py-24 flex flex-col items-center justify-center text-center bg-white/[0.01] overflow-hidden">
-            
-            <div class="absolute inset-0 opacity-[0.03] pointer-events-none" 
-                 style="background-image: repeating-linear-gradient(-45deg, #fff, #fff 40px, transparent 40px, transparent 80px);">
-            </div>
+    <!-- Project Grid -->
+    <div id="projectGrid" class="hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
+  </div>
+</div>
 
-            <div class="relative z-10">
-                <div class="w-24 h-24 bg-yellow-500/10 rounded-3xl flex items-center justify-center mb-6 border border-yellow-500/20 mx-auto">
-                    <i class="fas fa-tools text-yellow-500 text-4xl"></i>
-                </div>
-                
-                <h4 class="text-white font-black uppercase italic tracking-tighter text-3xl">Under Construction</h4>
-                <p class="text-[10px] text-gray-500 font-bold uppercase tracking-[0.3em] mt-4 mb-10 max-w-sm mx-auto leading-relaxed">
-                    The project database is currently undergoing a scheduled architecture upgrade. Access is temporarily restricted.
-                </p>
-
-                <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-                    <div class="flex items-center gap-3 px-6 py-3 bg-white/5 rounded-2xl border border-white/10">
-                        <div class="flex gap-1">
-                            <div class="w-1.5 h-1.5 bg-blue-500 rounded-full animate-bounce"></div>
-                            <div class="w-1.5 h-1.5 bg-blue-500 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
-                            <div class="w-1.5 h-1.5 bg-blue-500 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
-                        </div>
-                        <span class="text-[9px] font-black text-blue-400 uppercase tracking-widest">Rebuilding Core UI</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="projectGrid" class="hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        </div>
+<!-- Right-Slide Modal -->
+<div id="projectModal" class="fixed top-0 right-0 h-full w-full md:w-96 bg-[#050b1d] border-l border-white/10 transform translate-x-full transition-transform duration-300 ease-in-out z-50 overflow-y-auto">
+  <div class="p-8">
+    <div class="flex justify-between items-center mb-8">
+      <h3 class="text-2xl font-black text-white">New Project</h3>
+      <button id="closeModalBtn" class="text-gray-400 hover:text-white">
+        <i class="fas fa-times text-2xl"></i>
+      </button>
     </div>
+
+    <form id="projectForm" class="space-y-6">
+      <div>
+        <label class="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2">Project Name *</label>
+        <input type="text" id="projName" required class="w-full bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-white placeholder-gray-600 focus:border-blue-500 outline-none">
+      </div>
+
+      <div>
+        <label class="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2">Description</label>
+        <textarea id="projDesc" rows="4" class="w-full bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-white placeholder-gray-600 focus:border-blue-500 outline-none"></textarea>
+      </div>
+
+      <div>
+        <label class="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2">Image URL (optional)</label>
+        <input type="url" id="projImg" placeholder="https://example.com/image.jpg" class="w-full bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-white placeholder-gray-600 focus:border-blue-500 outline-none">
+      </div>
+
+      <div>
+        <label class="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2">Project Type *</label>
+        <select id="projType" required class="w-full bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-white focus:border-blue-500 outline-none">
+          <option value="school">School</option>
+          <option value="private" selected>Private</option>
+          <option value="job" disabled>Job (Coming Next Update)</option>
+          <option value="community" disabled>Community (Coming Next Update)</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2">Supervisor Name (optional)</label>
+        <input type="text" id="projSupervisor" class="w-full bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-white placeholder-gray-600 focus:border-blue-500 outline-none">
+      </div>
+
+      <div>
+        <label class="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2">Collaborators (max 5 on free)</label>
+        <div class="flex gap-2">
+          <input type="text" id="addUserInput" placeholder="@username" class="flex-1 bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-white placeholder-gray-600 focus:border-blue-500 outline-none">
+          <button type="button" id="addUserBtn" class="px-4 bg-blue-600 hover:bg-blue-500 rounded-xl font-black uppercase text-xs">Add</button>
+        </div>
+        <div id="collaboratorsList" class="mt-3 flex flex-wrap gap-2"></div>
+        <p id="collabCount" class="text-[9px] text-gray-500 mt-1">0 / 5</p>
+      </div>
+
+      <div class="flex gap-4 pt-6">
+        <button type="button" id="discardBtn" class="flex-1 py-4 bg-white/5 border border-white/10 rounded-xl font-black uppercase text-[9px] tracking-widest text-gray-400 hover:bg-white/10">Discard</button>
+        <button type="submit" class="flex-1 py-4 bg-blue-600 hover:bg-blue-500 rounded-xl font-black uppercase text-[9px] tracking-widest">Done</button>
+      </div>
+    </form>
+  </div>
 </div>
 `,
 
 
-
+    
 
 'Leaderboard': `
     <div class="space-y-10 animate-in">
@@ -762,40 +835,31 @@ const views = {
 
 
 'Notifications': `
-    <div id="notifications-container" class="max-w-md mx-auto content-card text-center animate-in">
-        <div class="relative inline-block mb-6">
-            <i id="notif-bell-icon" class="fa-solid fa-bell text-5xl text-blue-500"></i>
-            <span id="notif-badge" class="absolute -top-1 -right-1 w-5 h-5 bg-red-600 border-4 border-[#030816] rounded-full hidden"></span>
-        </div>
-        <h3 class="text-4xl font-black text-white italic mb-2 uppercase tracking-tighter">Transmissions</h3>
-        <p class="text-gray-500 text-[10px] font-black uppercase tracking-[0.3em] mb-8 leading-relaxed">
-            System logs indicate <span id="notif-count" class="text-blue-500 font-black">0 new updates</span> <br> awaiting your review
-        </p>
-       
-        <div id="notif-scroll-area" class="space-y-4 mb-8 max-h-[380px] overflow-y-auto pr-2 custom-scrollbar">
-            <!-- Existing static notifications here -->
-            <div class="notif-item p-5 bg-yellow-500/5 border border-yellow-500/20 rounded-3xl text-left relative overflow-hidden group hover:border-yellow-500/40 transition-all">
-                <div class="flex justify-between items-start mb-2">
-                    <p class="text-[8px] font-black text-yellow-500 uppercase tracking-widest">Global Broadcast</p>
-                    <span class="text-[7px] text-gray-600 font-bold uppercase">2026.01.01</span>
-                </div>
-                <p class="text-white text-[11px] font-bold leading-relaxed">
-                    Happy New Year, Nxxters! The board is set for 2026. Let's work, build, and dominate this cycle together.
-                </p>
-                <i class="fas fa-crown absolute -bottom-2 -right-2 text-yellow-500/10 text-4xl group-hover:scale-110 transition-transform"></i>
-            </div>
-            <!-- ... other initial items ... -->
-        </div>
-        
-        <div class="grid grid-cols-2 gap-3">
-            <button onclick="updateView('Overview')" class="py-4 bg-white/5 border border-white/10 rounded-2xl font-black uppercase text-[9px] tracking-widest text-white hover:bg-white hover:text-black transition-all">
-                Return Home
-            </button>
-            <button onclick="clearNotifications()" class="py-4 bg-red-500/10 border border-red-500/20 rounded-2xl font-black uppercase text-[9px] tracking-widest text-red-500 hover:bg-red-500 hover:text-white transition-all">
-                Clear Alerts
-            </button>
-        </div>
-    </div>
+   <div id="notifications-container" class="max-w-md mx-auto content-card text-center animate-in">
+  <div class="relative inline-block mb-6">
+    <i id="notif-bell-icon" class="fa-solid fa-bell text-5xl text-blue-500"></i>
+    <span id="notif-badge" class="absolute -top-1 -right-1 w-5 h-5 bg-red-600 border-4 border-[#030816] rounded-full hidden"></span>
+  </div>
+  <h3 class="text-4xl font-black text-white italic mb-2 uppercase tracking-tighter">Transmissions</h3>
+  <p class="text-gray-500 text-[10px] font-black uppercase tracking-[0.3em] mb-8 leading-relaxed">
+    System logs indicate <span id="notif-count" class="text-blue-500 font-black">0 new updates</span><br>awaiting your review
+  </p>
+
+  <div id="notif-scroll-area" class="space-y-4 mb-8 max-h-[380px] overflow-y-auto pr-2 custom-scrollbar">
+    <!-- Dynamic notifications inserted here -->
+  </div>
+
+  <div class="grid grid-cols-2 gap-3">
+    <button onclick="updateView('Overview')" class="py-4 bg-white/5 border border-white/10 rounded-2xl font-black uppercase text-[9px] tracking-widest text-white hover:bg-white hover:text-black transition-all">
+      Return Home
+    </button>
+    <button onclick="clearNotifications()" class="py-4 bg-red-500/10 border border-red-500/20 rounded-2xl font-black uppercase text-[9px] tracking-widest text-red-500 hover:bg-red-500 hover:text-white transition-all">
+      Clear Alerts
+    </button>
+  </div>
+</div>
+
+
 `,
 
 
@@ -1197,82 +1261,115 @@ function updateSettingsTab(tabId) {
             </div>`,
 
 'Projects': `
-<div class="space-y-8 animate-in pb-20">
-    <div class="space-y-6">
-        <div class="flex justify-between items-start">
-            <div>
-                <h3 class="text-xl font-black text-white italic uppercase tracking-tighter">Project Management</h3>
-                <p class="text-[9px] text-yellow-500/60 font-bold uppercase tracking-widest mt-1 italic">
-                    <i class="fas fa-exclamation-triangle mr-1"></i> Maintenance Mode Active
-                </p>
-            </div>
-            <div class="flex items-center gap-2 px-3 py-1 bg-yellow-500/10 border border-yellow-500/20 rounded-full">
-                <div class="w-1.5 h-1.5 bg-yellow-500 rounded-full animate-pulse"></div>
-                <span class="text-[8px] font-black text-yellow-500 uppercase">Under Construction</span>
-            </div>
+<div class="space-y-8 animate-in pb-20 px-4 md:px-6">
+  <!-- Header -->
+  <div class="space-y-5">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <div>
+        <h3 class="text-2xl md:text-3xl font-black text-white italic uppercase tracking-tighter">
+          My Projects
+        </h3>
+        <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1.5">
+          Manage all projects created on your account
+        </p>
+      </div>
+      <div class="flex items-center gap-3">
+        <div class="px-4 py-2 bg-yellow-500/5 border border-yellow-500/20 rounded-xl text-[9px] font-black text-yellow-400 uppercase tracking-widest flex items-center gap-2">
+          <div class="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></div>
+          Settings View • Limited
         </div>
-
-        <div class="relative group opacity-40">
-            <i class="fas fa-lock absolute left-5 top-1/2 -translate-y-1/2 text-gray-600"></i>
-            <input type="text" disabled
-                   placeholder="SEARCH TEMPORARILY OFFLINE..."
-                   class="w-full bg-white/5 border border-white/10 rounded-2xl py-5 pl-14 pr-6 text-[10px] font-black text-gray-600 placeholder-gray-700 uppercase tracking-widest outline-none cursor-not-allowed">
-        </div>
-      
-        <div class="flex items-center gap-3 opacity-30">
-            <button disabled class="px-5 py-2 bg-white/5 rounded-lg border border-white/5 text-[8px] font-black text-gray-500 uppercase cursor-not-allowed">
-                Select All
-            </button>
-            <button disabled class="px-5 py-2 bg-red-500/5 rounded-lg border border-red-500/10 text-[8px] font-black text-red-500/40 uppercase cursor-not-allowed">
-                Bulk Delete (0)
-            </button>
-        </div>
+        <button 
+          onclick="switchToMainProjectsView()" 
+          class="px-5 py-2.5 bg-blue-600 hover:bg-blue-500 rounded-xl font-black uppercase text-xs tracking-widest transition-all">
+          Go to Full Projects
+        </button>
+      </div>
     </div>
 
-    <div id="projectContainer" class="space-y-4">
-        <div id="emptyProjectState" class="relative border-2 border-dashed border-yellow-500/10 rounded-[3.5rem] py-24 flex flex-col items-center justify-center text-center bg-yellow-500/[0.01] overflow-hidden">
-            
-            <div class="absolute inset-0 opacity-[0.02] pointer-events-none" 
-                 style="background-image: linear-gradient(45deg, #fbbf24 25%, transparent 25%, transparent 50%, #fbbf24 50%, #fbbf24 75%, transparent 75%, transparent); background-size: 60px 60px;">
-            </div>
+    <!-- Disabled Search + Bulk (future-proof) -->
+    <div class="flex flex-col sm:flex-row gap-4 opacity-50 pointer-events-none">
+      <div class="relative flex-1">
+        <i class="fas fa-search absolute left-5 top-1/2 -translate-y-1/2 text-gray-500"></i>
+        <input 
+          type="text" disabled 
+          placeholder="SEARCH PROJECTS (OFFLINE)" 
+          class="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-14 pr-6 text-[10px] font-black uppercase tracking-widest text-gray-600 placeholder-gray-600 outline-none cursor-not-allowed">
+      </div>
+      <div class="flex gap-3 shrink-0">
+        <button disabled class="px-6 py-3 bg-white/5 border border-white/10 rounded-xl text-[9px] font-black uppercase text-gray-500 cursor-not-allowed">
+          Select All
+        </button>
+        <button disabled class="px-6 py-3 bg-red-500/5 border border-red-500/15 rounded-xl text-[9px] font-black uppercase text-red-400/50 cursor-not-allowed">
+          Bulk Delete (0)
+        </button>
+      </div>
+    </div>
+  </div>
 
-            <div class="relative z-10">
-                <div class="w-20 h-20 bg-yellow-500/5 rounded-3xl flex items-center justify-center mb-6 border border-yellow-500/10 mx-auto">
-                    <i class="fas fa-hammer text-yellow-500/40 text-3xl animate-bounce"></i>
-                </div>
-                <h4 class="text-white font-black uppercase italic tracking-tighter text-2xl">Module Rebuilding</h4>
-                <p class="text-[10px] text-gray-500 font-bold uppercase tracking-[0.3em] mt-3 mb-10 max-w-[280px]">
-                    Project repository is currently being migrated to a new architecture.
-                </p>
-                
-                <button onclick="showAlert('System Maintenance', 'The Project Management module is currently offline for scheduled upgrades. Check back soon!')" 
-                        class="px-8 py-3 bg-yellow-500/10 hover:bg-yellow-500/20 border border-yellow-500/20 text-yellow-500 text-[9px] font-black uppercase tracking-widest rounded-xl transition-all">
-                    View Status Report
-                </button>
-            </div>
-        </div>
+  <!-- Projects List Container -->
+  <div id="settingsProjectContainer" class="space-y-5">
+    <!-- Empty State -->
+    <div id="settingsEmptyState" class="relative border-2 border-dashed border-white/10 rounded-3xl py-20 flex flex-col items-center justify-center text-center bg-white/[0.005]">
+      <div class="w-20 h-20 bg-blue-500/5 rounded-3xl flex items-center justify-center mb-6 border border-blue-500/15 mx-auto">
+        <i class="fas fa-folder-open text-blue-400/50 text-4xl"></i>
+      </div>
+      <h4 class="text-white font-black uppercase italic tracking-tighter text-2xl mb-3">
+        No Projects Created Yet
+      </h4>
+      <p class="text-[10px] text-gray-500 font-bold uppercase tracking-[0.25em] max-w-md mx-auto leading-relaxed mb-8">
+        Projects you create in the main Projects section will appear here for quick management.
+      </p>
+      <button 
+        onclick="switchToMainProjectsView()" 
+        class="px-8 py-4 bg-blue-600/10 hover:bg-blue-600/20 border border-blue-500/20 text-blue-400 font-black uppercase text-xs tracking-widest rounded-2xl transition-all">
+        Create Your First Project →
+      </button>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div class="p-6 bg-[#030816] border border-white/5 rounded-[1.5rem] flex items-center gap-5 group hover:border-blue-500/20 transition-all">
-            <div class="w-10 h-10 bg-blue-500/10 rounded-xl flex items-center justify-center text-blue-500">
-                <i class="fas fa-microchip text-xs"></i>
-            </div>
-            <div>
-                <p class="text-[9px] font-black text-white uppercase">Cloud Hosting</p>
-                <p class="text-[8px] text-gray-600 font-bold uppercase mt-1">Status: <span class="text-blue-500">Standby</span></p>
-            </div>
-        </div>
-        <div class="p-6 bg-[#030816] border border-white/5 rounded-[1.5rem] flex items-center gap-5 group hover:border-purple-500/20 transition-all">
-            <div class="w-10 h-10 bg-purple-500/10 rounded-xl flex items-center justify-center text-purple-500">
-                <i class="fas fa-terminal text-xs"></i>
-            </div>
-            <div>
-                <p class="text-[9px] font-black text-white uppercase">Build History</p>
-                <p class="text-[8px] text-gray-600 font-bold uppercase mt-1">Status: <span class="text-purple-500">Encrypted</span></p>
-            </div>
-        </div>
+    <!-- Actual Project List (hidden until projects exist) -->
+    <div id="settingsProjectList" class="hidden space-y-4">
+      <!-- Projects will be injected here as cards -->
     </div>
+  </div>
+
+  <!-- Bottom Status Cards -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mt-10">
+    <div class="p-6 bg-[#0a1125] border border-white/5 rounded-2xl flex items-center gap-5 group hover:border-blue-500/20 transition-all">
+      <div class="w-12 h-12 bg-blue-500/10 rounded-2xl flex items-center justify-center border border-blue-500/20 shrink-0">
+        <i class="fas fa-cloud-upload-alt text-blue-400 text-xl"></i>
+      </div>
+      <div>
+        <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Cloud Hosting</p>
+        <p class="text-sm text-gray-300 mt-1">
+          Status: <span class="text-blue-400 font-bold">Standby</span>
+        </p>
+      </div>
+    </div>
+
+    <div class="p-6 bg-[#0a1125] border border-white/5 rounded-2xl flex items-center gap-5 group hover:border-purple-500/20 transition-all">
+      <div class="w-12 h-12 bg-purple-500/10 rounded-2xl flex items-center justify-center border border-purple-500/20 shrink-0">
+        <i class="fas fa-history text-purple-400 text-xl"></i>
+      </div>
+      <div>
+        <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Build History</p>
+        <p class="text-sm text-gray-300 mt-1">
+          Status: <span class="text-purple-400 font-bold">Encrypted</span>
+        </p>
+      </div>
+    </div>
+
+    <div class="p-6 bg-[#0a1125] border border-white/5 rounded-2xl flex items-center gap-5 group hover:border-yellow-500/20 transition-all">
+      <div class="w-12 h-12 bg-yellow-500/10 rounded-2xl flex items-center justify-center border border-yellow-500/20 shrink-0">
+        <i class="fas fa-star text-yellow-400 text-xl"></i>
+      </div>
+      <div>
+        <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Total XP Earned</p>
+        <p class="text-xl font-black text-white mt-1">
+          <span id="settingsTotalXP">0</span> <span class="text-sm text-yellow-500/70">XP</span>
+        </p>
+      </div>
+    </div>
+  </div>
 </div>
 `,
         
@@ -3473,4 +3570,365 @@ function showNxxtAlert(message) {
 function openCreatePostModal() {
     showNxxtAlert("BROADCASTING MODULE: WE ARE BUILDING NOW.");
 }
+
+
+
+/// for the projects 
+
+// Mock data & limits
+let projects = [];
+const MAX_PROJECTS = 10;
+const MAX_COLLABS = 5;
+
+// DOM
+const createBtn = document.getElementById('createProjectBtn');
+const modal = document.getElementById('projectModal');
+const closeBtn = document.getElementById('closeModalBtn');
+const form = document.getElementById('projectForm');
+const nameInput = document.getElementById('projName');
+const descInput = document.getElementById('projDesc');
+const imgInput = document.getElementById('projImg');
+const typeSelect = document.getElementById('projType');
+const supervisorInput = document.getElementById('projSupervisor');
+const userInput = document.getElementById('addUserInput');
+const addUserBtn = document.getElementById('addUserBtn');
+const collabList = document.getElementById('collaboratorsList');
+const collabCount = document.getElementById('collabCount');
+const grid = document.getElementById('projectGrid');
+const emptyState = document.getElementById('emptyProjectState');
+const loading = document.getElementById('loadingOverlay');
+const projectCountEl = document.getElementById('projectCount') || { textContent: '0' };
+
+// Helpers
+function generateProjectID(name) {
+  const slug = name.toLowerCase().replace(/\s+/g, '').slice(0,8);
+  const rand = Math.random().toString(36).slice(2,14);
+  return (slug + rand).slice(0,20).padEnd(20,'0');
+}
+
+function randomStatus() {
+  const r = Math.random();
+  if (r < 0.4) return { label: 'Complete', color: 'green' };
+  if (r < 0.7) return { label: 'Pending', color: 'yellow' };
+  return { label: 'Rejected', color: 'red' };
+}
+
+function updateCount() {
+  projectCountEl.textContent = projects.length;
+  if (projects.length === 0) {
+    emptyState.classList.remove('hidden');
+    grid.classList.add('hidden');
+  } else {
+    emptyState.classList.add('hidden');
+    grid.classList.remove('hidden');
+  }
+}
+
+function renderProjects() {
+  grid.innerHTML = '';
+  projects.forEach((proj, idx) => {
+    const status = proj.status || randomStatus();
+    const card = document.createElement('div');
+    card.className = 'bg-[#0a1125] border border-white/5 rounded-2xl overflow-hidden group hover:border-blue-500/30 transition-all relative';
+    card.innerHTML = `
+      <div class="relative h-40 bg-gradient-to-br from-blue-900/20 to-black flex items-center justify-center">
+        ${proj.img ? `<img src="${proj.img}" alt="${proj.name}" class="object-cover w-full h-full">` : '<i class="fas fa-code text-6xl text-blue-500/30"></i>'}
+      </div>
+      <div class="p-5">
+        <div class="flex justify-between items-start">
+          <div>
+            <h4 class="font-black text-lg text-white">${proj.name}</h4>
+            <p class="text-[11px] text-gray-400 mt-1 line-clamp-2">${proj.desc || 'No description'}</p>
+          </div>
+          <div class="relative">
+            <button class="text-gray-400 hover:text-white" onclick="showMenu(${idx})">
+              <i class="fas fa-ellipsis-v"></i>
+            </button>
+            <div id="menu-${idx}" class="hidden absolute right-0 mt-2 w-40 bg-[#0f1a3a] border border-white/10 rounded-xl shadow-2xl z-10 py-2">
+              <button onclick="editProject(${idx})" class="w-full text-left px-4 py-2 text-[11px] hover:bg-white/5">Edit</button>
+              <button disabled class="w-full text-left px-4 py-2 text-[11px] text-gray-600 cursor-not-allowed">Re-node (Locked)</button>
+              <button onclick="deleteProject(${idx})" class="w-full text-left px-4 py-2 text-[11px] hover:bg-red-500/10 text-red-400">Delete</button>
+            </div>
+          </div>
+        </div>
+        <div class="mt-6 flex justify-between items-end text-[10px] font-black uppercase tracking-widest">
+          <div>
+            <p class="text-gray-500">Users</p>
+            <p class="text-white">${proj.collabs.length}</p>
+            <p class="text-gray-600 mt-1 break-all">ID: ${proj.id}</p>
+          </div>
+          <div class="text-right">
+            <span class="px-3 py-1 rounded-full bg-${status.color}-500/20 text-${status.color}-400 border border-${status.color}-500/30">
+              ${status.label}
+            </span>
+          </div>
+        </div>
+      </div>
+    `;
+    grid.appendChild(card);
+
+    // Mock XP gain on complete
+    if (status.label === 'Complete') {
+      const xpEl = document.getElementById('dash-xp-val');
+      if (xpEl) xpEl.textContent = parseInt(xpEl.textContent || 0) + 10;
+    }
+  });
+  updateCount();
+}
+
+// Modal controls
+createBtn.onclick = () => {
+  if (projects.length >= MAX_PROJECTS) {
+    alert('Free limit reached: 10 projects max. Upgrade for more.');
+    return;
+  }
+  modal.classList.remove('translate-x-full');
+  modal.classList.add('translate-x-0');
+};
+
+closeBtn.onclick = () => modal.classList.add('translate-x-full');
+
+addUserBtn.onclick = () => {
+  const val = userInput.value.trim();
+  if (!val || !val.startsWith('@')) return;
+  const current = parseInt(collabCount.textContent.split('/')[0]);
+  if (current >= MAX_COLLABS) {
+    alert('Free limit: 5 collaborators max per project.');
+    return;
+  }
+  const tag = document.createElement('div');
+  tag.className = 'px-3 py-1 bg-blue-500/10 border border-blue-500/20 rounded-full text-[10px] text-blue-300 flex items-center gap-2';
+  tag.innerHTML = `${val} <button type="button" class="text-red-400 hover:text-red-300">×</button>`;
+  tag.querySelector('button').onclick = () => { tag.remove(); updateCollabCount(); };
+  collabList.appendChild(tag);
+  userInput.value = '';
+  updateCollabCount();
+};
+
+function updateCollabCount() {
+  const count = collabList.children.length;
+  collabCount.textContent = `${count} / ${MAX_COLLABS}`;
+}
+
+form.onsubmit = e => {
+  e.preventDefault();
+  const name = nameInput.value.trim();
+  if (!name) return alert('Project name required');
+
+  const collabs = Array.from(collabList.children).map(el => el.textContent.replace(' ×','').trim());
+
+  loading.classList.remove('hidden');
+  setTimeout(() => {
+    const newProj = {
+      id: generateProjectID(name),
+      name,
+      desc: descInput.value.trim(),
+      img: imgInput.value.trim(),
+      type: typeSelect.value,
+      supervisor: supervisorInput.value.trim(),
+      collabs,
+      status: randomStatus()
+    };
+    projects.push(newProj);
+    renderProjects();
+
+    // Notification mock
+    addNotification(`Project "${name}" created. ID: ${newProj.id}`);
+
+    // Reset form & close
+    form.reset();
+    collabList.innerHTML = '';
+    updateCollabCount();
+    loading.classList.add('hidden');
+    modal.classList.add('translate-x-full');
+  }, 5000);
+};
+
+// Menu toggle (simple)
+window.showMenu = idx => {
+  document.querySelectorAll('[id^="menu-"]').forEach(m => m.classList.add('hidden'));
+  document.getElementById(`menu-${idx}`).classList.toggle('hidden');
+};
+
+window.editProject = idx => {
+  // Re-open modal pre-filled (simplified mock)
+  const p = projects[idx];
+  nameInput.value = p.name;
+  descInput.value = p.desc;
+  imgInput.value = p.img || '';
+  typeSelect.value = p.type;
+  supervisorInput.value = p.supervisor || '';
+  collabList.innerHTML = '';
+  p.collabs.forEach(u => {
+    const tag = document.createElement('div');
+    tag.className = 'px-3 py-1 bg-blue-500/10 border border-blue-500/20 rounded-full text-[10px] text-blue-300 flex items-center gap-2';
+    tag.innerHTML = `${u} <button type="button" class="text-red-400 hover:text-red-300">×</button>`;
+    tag.querySelector('button').onclick = () => { tag.remove(); updateCollabCount(); };
+    collabList.appendChild(tag);
+  });
+  updateCollabCount();
+  modal.classList.remove('translate-x-full');
+  modal.classList.add('translate-x-0');
+  // On submit would overwrite, but for simplicity we re-create
+};
+
+window.deleteProject = idx => {
+  if (!confirm('Delete project?')) return;
+  projects.splice(idx, 1);
+  renderProjects();
+  addNotification(`Project deleted.`);
+};
+
+// Init
+renderProjects();
+
+
+// Add this logic – call it whenever projects array changes (e.g. after create/delete)
+function updateActivitySection() {
+  const emptyEl = document.getElementById('activity-empty');
+  const timelineEl = document.getElementById('activity-timeline');
+
+  if (projects.length === 0) {
+    emptyEl.style.display = 'block';
+    timelineEl.classList.add('hidden');
+  } else {
+    emptyEl.style.display = 'none';
+    timelineEl.classList.remove('hidden');
+    
+    // Optional: dynamically build timeline items from projects array
+    // For example:
+    // timelineEl.innerHTML = ''; // then loop through projects and append timeline entries
+  }
+}
+
+// Call this function:
+// - After renderProjects()
+// - After creating/deleting a project
+// - On page load
+updateActivitySection();
+
+// Assuming 'projects' array is global / shared from main Projects page
+// If not, you can use localStorage, context, or a global state manager
+
+function renderSettingsProjects() {
+  const listEl = document.getElementById('settingsProjectList');
+  const emptyEl = document.getElementById('settingsEmptyState');
+  const totalXPEl = document.getElementById('settingsTotalXP');
+
+  if (!projects || projects.length === 0) {
+    emptyEl.style.display = 'flex';
+    listEl.classList.add('hidden');
+    if (totalXPEl) totalXPEl.textContent = '0';
+    return;
+  }
+
+  emptyEl.style.display = 'none';
+  listEl.classList.remove('hidden');
+  listEl.innerHTML = '';
+
+  let totalXP = 0;
+
+  projects.forEach((proj, index) => {
+    const status = proj.status || { label: 'Unknown', color: 'gray' };
+    const xpEarned = (status.label === 'Complete') ? 10 : 0;
+    totalXP += xpEarned;
+
+    const card = document.createElement('div');
+    card.className = 'bg-[#0f172a] border border-white/5 rounded-2xl p-5 hover:border-blue-500/30 transition-all group relative overflow-hidden';
+    card.innerHTML = `
+      <div class="flex justify-between items-start mb-4">
+        <div>
+          <h4 class="font-black text-lg text-white group-hover:text-blue-300 transition-colors">${proj.name}</h4>
+          <p class="text-[10px] text-gray-500 uppercase tracking-widest mt-1">
+            ${proj.type.charAt(0).toUpperCase() + proj.type.slice(1)} • ${proj.collabs.length} user${proj.collabs.length !== 1 ? 's' : ''}
+          </p>
+        </div>
+        <span class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-${status.color}-500/20 text-${status.color}-300 border border-${status.color}-500/30">
+          ${status.label}
+        </span>
+      </div>
+
+      <div class="flex justify-between items-end text-[10px] font-black uppercase tracking-widest text-gray-400">
+        <div>
+          <p>ID: <span class="text-white">${proj.id}</span></p>
+          ${xpEarned > 0 ? `<p class="text-yellow-400 mt-1">+${xpEarned} XP earned</p>` : ''}
+        </div>
+        <div class="flex gap-3">
+          <button onclick="editProjectFromSettings(${index})" class="text-blue-400 hover:text-blue-300">
+            <i class="fas fa-edit"></i>
+          </button>
+          <button onclick="deleteProjectFromSettings(${index})" class="text-red-400 hover:text-red-300">
+            <i class="fas fa-trash-alt"></i>
+          </button>
+        </div>
+      </div>
+    `;
+    listEl.appendChild(card);
+  });
+
+  if (totalXPEl) totalXPEl.textContent = totalXP;
+}
+
+// Example placeholder functions (connect to your real logic)
+function switchToMainProjectsView() {
+  // Your tab/view switching logic, e.g. updateView('Projects')
+  console.log("Switching to main Projects view...");
+}
+
+function editProjectFromSettings(index) {
+  // Open modal or navigate with pre-filled data
+  console.log("Edit project at index:", index);
+}
+
+function deleteProjectFromSettings(index) {
+  if (confirm("Delete this project?")) {
+    // Remove from projects array, re-render both views
+    projects.splice(index, 1);
+    renderSettingsProjects();
+    // Also call renderProjects() from main view if needed
+  }
+}
+
+// Call on tab load / when projects change
+// renderSettingsProjects();
+
+
+
+
+
+
+////// for the notification
+
+// Notification helper (call from project actions)
+let notifCount = 0;
+const notifArea = document.getElementById('notif-scroll-area');
+const notifBadge = document.getElementById('notif-badge');
+const notifCountEl = document.getElementById('notif-count');
+
+function addNotification(msg) {
+  const item = document.createElement('div');
+  item.className = 'notif-item p-5 bg-yellow-500/5 border border-yellow-500/20 rounded-3xl text-left relative overflow-hidden group hover:border-yellow-500/40 transition-all';
+  item.innerHTML = `
+    <div class="flex justify-between items-start mb-2">
+      <p class="text-[8px] font-black text-yellow-500 uppercase tracking-widest">Project Event</p>
+      <span class="text-[7px] text-gray-600 font-bold uppercase">${new Date().toLocaleDateString()}</span>
+    </div>
+    <p class="text-white text-[11px] font-bold leading-relaxed">${msg}</p>
+    <i class="fas fa-crown absolute -bottom-2 -right-2 text-yellow-500/10 text-4xl group-hover:scale-110 transition-transform"></i>
+  `;
+  notifArea.prepend(item);
+  notifCount++;
+  notifCountEl.textContent = `${notifCount} new updates`;
+  notifBadge.classList.remove('hidden');
+}
+
+function clearNotifications() {
+  notifArea.innerHTML = '';
+  notifCount = 0;
+  notifCountEl.textContent = '0 new updates';
+  notifBadge.classList.add('hidden');
+}
+
+
+
 
