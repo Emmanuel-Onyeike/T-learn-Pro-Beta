@@ -1,4 +1,3 @@
-
 const ActivityEngine = {
     track() {
         const today = new Date().toISOString().split('T')[0];
@@ -22,27 +21,20 @@ const ActivityEngine = {
 };
 ActivityEngine.track();
 const views = {
-'Overview': `
-<div class="space-y-8 animate-in">
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-        
-      <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-blue-500/30 transition-all duration-300">
-  <div class="flex items-center gap-4 relative z-10">
-    <div class="w-12 h-12 bg-blue-600/10 rounded-2xl flex items-center justify-center border border-blue-500/20 shrink-0">
-      <i class="fas fa-code-branch text-blue-500 text-xl"></i>
+    'Overview': `
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 md:gap-6 animate-in">
+    <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-blue-500/30 transition-all">
+        <div class="flex items-center gap-4 relative z-10">
+            <div class="w-12 h-12 bg-blue-600/10 rounded-2xl flex items-center justify-center border border-blue-500/20">
+                <i class="fas fa-code-branch text-blue-500"></i>
+            </div>
+            <div>
+                <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Projects</p>
+                <h3 id="projectCount" class="text-3xl font-black text-white mt-1">0</h3>
+            </div>
+        </div>
+        <i class="fas fa-project-diagram absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-blue-500/[0.05] transition-all"></i>
     </div>
-    <div>
-      <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Active Projects</p>
-      <h3 id="projectCount" class="text-3xl md:text-4xl font-black text-white mt-1 transition-transform group-hover:scale-105">0</h3>
-    </div>
-  </div>
-  
-  <!-- Background icon -->
-  <i class="fas fa-project-diagram absolute -bottom-6 -right-6 text-white/[0.03] text-9xl rotate-12 group-hover:text-blue-500/[0.08] transition-all duration-500"></i>
-  
-  <!-- Optional subtle pulse when count changes (handled via JS) -->
-</div>
-
 
         <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-purple-500/30 transition-all">
             <div class="flex items-center gap-4 relative z-10">
@@ -57,91 +49,118 @@ const views = {
             <i class="fas fa-users-cog absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-purple-500/[0.05] transition-all"></i>
         </div>
 
-        <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-green-500/30 transition-all">
-            <div class="flex items-center gap-4 relative z-10">
-                <div class="w-12 h-12 bg-green-600/10 rounded-2xl flex items-center justify-center border border-green-500/20">
-                    <i class="fas fa-layer-group text-green-500"></i>
-                </div>
-                <div>
-                    <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Level</p>
-                    <h3 id="dash-level-val" class="text-3xl font-black text-white mt-1">000</h3>
-                </div>
-            </div>
-            <i class="fas fa-chart-line absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-green-500/[0.05] transition-all"></i>
+     <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-green-500/30 transition-all">
+    <div class="flex items-center gap-4 relative z-10">
+        <div class="w-12 h-12 bg-green-600/10 rounded-2xl flex items-center justify-center border border-green-500/20">
+            <i class="fas fa-layer-group text-green-500"></i>
         </div>
-
-        <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-orange-500/30 transition-all">
-            <div id="rank-glow" class="absolute inset-0 bg-yellow-500/0 transition-all duration-700"></div>
-            <div class="flex items-center gap-4 relative z-10">
-                <div class="w-12 h-12 bg-orange-600/10 rounded-2xl flex items-center justify-center border border-orange-500/20 group-hover:border-orange-500/50 transition-all">
-                    <i class="fas fa-medal text-orange-500"></i>
-                </div>
-                <div>
-                    <div class="flex items-center gap-2">
-                        <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Current Rank</p>
-                        <span class="w-1 h-1 rounded-full bg-orange-500 animate-pulse"></span>
-                    </div>
-                    <h3 id="ui-rank" class="text-3xl font-black text-white mt-1 italic tracking-tighter">#100</h3>
-                </div>
-            </div>
-            <i id="rank-crown-icon" class="fas fa-crown absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:rotate-0 group-hover:text-orange-500/[0.08] transition-all duration-500"></i>
+        <div>
+            <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Level</p>
+            <h3 id="dash-level-val" class="text-3xl font-black text-white mt-1">000</h3>
         </div>
+    </div>
+    <i class="fas fa-chart-line absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-green-500/[0.05] transition-all"></i>
+</div>
 
-        <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-blue-400/30 transition-all">
-            <div class="flex items-center gap-4 relative z-10">
-                <div class="w-12 h-12 bg-blue-400/10 rounded-2xl flex items-center justify-center border border-blue-400/20">
-                    <i class="fas fa-graduation-cap text-blue-400"></i>
-                </div>
-                <div>
-                    <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Semester</p>
-                    <h3 id="dash-semester-val" class="text-3xl font-black text-white mt-1">0</h3>
-                </div>
-            </div>
-            <i class="fas fa-graduation-cap absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-blue-400/[0.05] transition-all"></i>
+<div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-orange-500/30 transition-all">
+    <div id="rank-glow" class="absolute inset-0 bg-yellow-500/0 transition-all duration-700"></div>
+
+    <div class="flex items-center gap-4 relative z-10">
+        <div class="w-12 h-12 bg-orange-600/10 rounded-2xl flex items-center justify-center border border-orange-500/20 group-hover:border-orange-500/50 transition-all">
+            <i class="fas fa-medal text-orange-500"></i>
         </div>
-
-        <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-red-500/30 transition-all">
-            <div class="flex items-center gap-4 relative z-10">
-                <div class="w-12 h-12 bg-red-600/10 rounded-2xl flex items-center justify-center border border-red-500/20">
-                    <i class="fas fa-fire text-red-500"></i>
-                </div>
-                <div>
-                    <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Streaks</p>
-                    <h3 id="ui-streak" class="text-3xl font-black text-white mt-1">0</h3>
-                </div>
+        
+        <div>
+            <div class="flex items-center gap-2">
+                <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Current Rank</p>
+                <span class="w-1 h-1 rounded-full bg-orange-500 animate-pulse"></span>
             </div>
-            <i class="fas fa-fire-alt absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-red-500/[0.05] transition-all"></i>
+            
+            <h3 id="ui-rank" class="text-3xl font-black text-white mt-1 italic tracking-tighter">
+                #100
+            </h3>
         </div>
     </div>
 
-<!-- Project History / Activity Feed Section -->
-<div class="bg-[#050b1d] border border-white/5 p-8 rounded-[2.5rem] relative overflow-hidden">
-  <div class="flex justify-between items-center mb-6">
-    <h3 class="text-lg font-black text-white italic uppercase tracking-tighter">Project History</h3>
-    <span class="px-3 py-1 bg-white/5 rounded-full text-[10px] text-gray-400 font-bold uppercase tracking-widest">
-      Tracking Live Session
-    </span>
+    <i id="rank-crown-icon" class="fas fa-crown absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:rotate-0 group-hover:text-orange-500/[0.08] transition-all duration-500"></i>
+</div>
+        
+        <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-blue-400/30 transition-all">
+    <div class="flex items-center gap-4 relative z-10">
+        <div class="w-12 h-12 bg-blue-400/10 rounded-2xl flex items-center justify-center border border-blue-400/20">
+            <i class="fas fa-graduation-cap text-blue-400"></i>
+        </div>
+        <div>
+            <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Semester</p>
+            <h3 id="dash-semester-val" class="text-3xl font-black text-white mt-1">0</h3>
+        </div>
+    </div>
+    <i class="fas fa-graduation-cap absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-blue-400/[0.05] transition-all"></i>
+</div>
+
+
+<div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-red-500/30 transition-all">
+    <div class="flex items-center gap-4 relative z-10">
+        <div class="w-12 h-12 bg-red-600/10 rounded-2xl flex items-center justify-center border border-red-500/20">
+            <i class="fas fa-fire text-red-500"></i>
+        </div>
+        <div>
+            <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Streaks</p>
+            <h3 id="ui-streak" class="text-3xl font-black text-white mt-1">0</h3>
+        </div>
+    </div>
+    <i class="fas fa-fire-alt absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-red-500/[0.05] transition-all"></i>
+</div>
+</div>
+
+
+<div class="mt-8 bg-[#050b1d] border border-white/5 p-8 rounded-[2.5rem] relative overflow-hidden">
+
+  <!-- Tailwind SAFELIST (DO NOT REMOVE) -->
+  <div class="hidden">
+    <div class="bg-white/[0.03] bg-green-900 bg-green-700 bg-green-500 bg-green-400"></div>
   </div>
 
-  <!-- This is where dynamic project entries go -->
-  <div id="project-feed" class="space-y-4">
-    <!-- Empty state (shown by default or when no projects) -->
-    <div id="feed-empty-state" class="flex flex-col items-center justify-center py-12 text-center">
-      <div class="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mb-4 border border-white/10">
-        <i class="fas fa-folder-open text-gray-600 text-xl"></i>
+  <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+    <div>
+      <h3 class="text-lg font-black text-white italic uppercase tracking-tighter">Activity</h3>
+      <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest mt-1">Tracking session</p>
+    </div>
+    <div class="flex gap-2 flex-wrap">
+      <button class="px-4 py-2 bg-gray-800 rounded-lg text-[9px] font-black uppercase tracking-widest text-white">2025</button>
+      <button class="px-4 py-2 bg-blue-600 rounded-lg text-[9px] font-black uppercase tracking-widest text-white">2026</button>
+    </div>
+  </div>
+
+  <div class="overflow-x-auto pb-4 no-scrollbar">
+    <div
+      id="activity-grid"
+      class="inline-grid grid-rows-7 grid-flow-col gap-1.5 min-w-[850px]"
+    ></div>
+  </div>
+
+  <div class="flex justify-between items-center mt-4">
+    <p class="text-[8px] text-gray-600 font-bold uppercase tracking-widest italic">
+      Density increases with page engagement time
+    </p>
+    <div class="flex items-center gap-2">
+      <span class="text-[8px] text-gray-600 font-bold uppercase tracking-widest">Low</span>
+      <div class="flex gap-1">
+        <div class="w-2.5 h-2.5 rounded-sm bg-white/[0.03]"></div>
+        <div class="w-2.5 h-2.5 rounded-sm bg-green-900"></div>
+        <div class="w-2.5 h-2.5 rounded-sm bg-green-700"></div>
+        <div class="w-2.5 h-2.5 rounded-sm bg-green-500"></div>
+        <div class="w-2.5 h-2.5 rounded-sm bg-green-400"></div>
       </div>
-      <h4 class="text-white font-black uppercase italic tracking-tighter">No projects yet</h4>
-      <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest mt-1">
-        Start a new workspace to see your activity here
-      </p>
-      <button onclick="openProjectNamingModal()"
-        class="mt-6 px-6 py-3 bg-white text-black rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-blue-500 hover:text-white transition-all">
-        Initialize Workspace
-      </button>
+      <span class="text-[8px] text-gray-600 font-bold uppercase tracking-widest">NXXT</span>
     </div>
   </div>
 </div>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+
+
+
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mt-8">
         <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-emerald-500/30 transition-all">
             <div class="flex items-center gap-4 relative z-10">
                 <div class="w-12 h-12 bg-emerald-600/10 rounded-2xl flex items-center justify-center border border-emerald-500/20">
@@ -154,22 +173,21 @@ const views = {
             </div>
             <i class="fas fa-search-dollar absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-emerald-500/[0.05] transition-all"></i>
         </div>
-
-        <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-yellow-500/30 transition-all">
-            <div class="flex items-center gap-4 relative z-10">
-                <div class="w-12 h-12 bg-yellow-600/10 rounded-2xl flex items-center justify-center border border-yellow-500/20">
-                    <i class="fas fa-star text-yellow-500"></i>
-                </div>
-                <div>
-                    <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">XT Points</p>
-                    <h3 class="text-3xl font-black text-white mt-1">
-                        <span id="dash-xp-val">0</span> 
-                        <span class="text-xs text-yellow-500/50 uppercase">XP</span>
-                    </h3>
-                </div>
-            </div>
-            <i class="fas fa-trophy absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-yellow-500/[0.05] transition-all"></i>
+<div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-yellow-500/30 transition-all">
+    <div class="flex items-center gap-4 relative z-10">
+        <div class="w-12 h-12 bg-yellow-600/10 rounded-2xl flex items-center justify-center border border-yellow-500/20">
+            <i class="fas fa-star text-yellow-500"></i>
         </div>
+        <div>
+            <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">XT Points</p>
+            <h3 class="text-3xl font-black text-white mt-1">
+                <span id="dash-xp-val">0</span> 
+                <span class="text-xs text-yellow-500/50 uppercase">XP</span>
+            </h3>
+        </div>
+    </div>
+    <i class="fas fa-trophy absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-yellow-500/[0.05] transition-all"></i>
+</div>
 
         <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-indigo-500/30 transition-all">
             <div class="flex items-center gap-4 relative z-10">
@@ -184,10 +202,10 @@ const views = {
             <i class="fas fa-server absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-indigo-500/[0.05] transition-all"></i>
         </div>
     </div>
-</div>
 `,
 
-    
+
+
     'Lessons': `
     <div class="space-y-6 animate-in">
         <div class="flex justify-center mb-8">
@@ -245,64 +263,49 @@ const views = {
 
 'Projects': `
 <div class="space-y-12 animate-in pb-32 px-4 md:px-8">
-  <!-- Header -->
-  <div class="space-y-2">
-    <div class="flex items-center gap-4">
-      <div class="w-2 h-2 bg-blue-500 rounded-full animate-pulse shadow-[0_0_10px_#3b82f6]"></div>
-      <span class="text-[10px] text-blue-400 font-black uppercase tracking-[0.5em]">
-        What projects are you doing today?
-      </span>
-    </div>
-    <h3 class="text-4xl md:text-5xl font-black italic uppercase tracking-tighter text-white">
-      <span class="text-blue-500">Projects</span> <!-- fixed typo -->
-    </h3>
-  </div>
-
-  <!-- Search + Create -->
-  <div class="relative w-full group">
-    <div class="flex items-center bg-[#050b1d] border border-white/10 rounded-2xl h-16 px-6 transition-all focus-within:border-blue-500/50">
-      <i class="fas fa-search text-gray-600 mr-4"></i>
-      <input type="text" id="projectSearch" placeholder="SEARCH PROJECTS ..."
-        class="flex-1 bg-transparent border-none text-[11px] font-black uppercase tracking-[0.2em] text-white focus:outline-none" />
-      <button onclick="openProjectNamingModal()"
-        class="group flex items-center bg-blue-600 hover:bg-blue-500 text-[#020617] rounded-xl h-10 px-4 transition-all duration-500 ease-in-out max-w-[40px] hover:max-w-[220px] overflow-hidden whitespace-nowrap shadow-lg">
-        <i class="fas fa-plus transition-transform group-hover:rotate-90"></i>
-        <span class="ml-3 text-[10px] font-black uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-          Initialize New Project
-        </span>
-      </button>
-    </div>
-  </div>
-
-  <!-- Container for grid + empty state -->
-  <div id="projectContainer">
-    <!-- Empty State -->
-    <div id="emptyProjectState" class="border-2 border-dashed border-white/5 rounded-[3.5rem] py-24 flex flex-col items-center justify-center text-center bg-white/[0.01]">
-      <div class="w-20 h-20 bg-white/5 rounded-3xl flex items-center justify-center mb-6 border border-white/5">
-        <i class="fas fa-folder-plus text-gray-700 text-3xl"></i>
-      </div>
-      <h4 class="text-white font-black uppercase italic tracking-tighter text-2xl">
-        No Projects done
-      </h4>
-      <p class="text-[10px] text-gray-500 font-bold uppercase tracking-[0.3em] mt-3 mb-10">
-        System standby. Awaiting first deployment.
-      </p>
-      <button onclick="openProjectNamingModal()"
-        class="px-8 py-4 bg-blue-600 text-[#020617] text-[10px] font-black uppercase tracking-widest rounded-2xl hover:bg-blue-400 transition-all shadow-xl shadow-blue-500/10">
-        Create First Project
-      </button>
+    <div class="space-y-2">
+        <div class="flex items-center gap-4">
+            <div class="w-2 h-2 bg-blue-500 rounded-full animate-pulse shadow-[0_0_10px_#3b82f6]"></div>
+            <span class="text-[10px] text-blue-400 font-black uppercase tracking-[0.5em]">What projects are you doing today?</span>
+        </div>
+        <h3 class="text-4xl md:text-5xl font-black italic uppercase tracking-tighter text-white"> <span class="text-blue-500">Porjects</span></h3>
     </div>
 
-    <!-- Project Grid -->
-    <div id="projectGrid" class="hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-      <!-- Cards inserted here dynamically -->
+    <div class="relative w-full group">
+        <div class="flex items-center bg-[#050b1d] border border-white/10 rounded-2xl h-16 px-6 transition-all focus-within:border-blue-500/50">
+            <i class="fas fa-search text-gray-600 mr-4"></i>
+            <input type="text" id="projectSearch" placeholder="SEARCH PROJECTS ..." 
+                class="flex-1 bg-transparent border-none text-[11px] font-black uppercase tracking-[0.2em] text-white focus:outline-none">
+            
+            <button onclick="openProjectNamingModal()" 
+                class="group flex items-center bg-blue-600 hover:bg-blue-500 text-[#020617] rounded-xl h-10 px-4 transition-all duration-500 ease-in-out max-w-[40px] hover:max-w-[220px] overflow-hidden whitespace-nowrap shadow-lg">
+                <i class="fas fa-plus transition-transform group-hover:rotate-90"></i>
+                <span class="ml-3 text-[10px] font-black uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity duration-300">Initialize New Project</span>
+            </button>
+        </div>
     </div>
-  </div>
+
+    <div id="projectContainer">
+        <div id="emptyProjectState" class="border-2 border-dashed border-white/5 rounded-[3.5rem] py-24 flex flex-col items-center justify-center text-center bg-white/[0.01]">
+             <div class="w-20 h-20 bg-white/5 rounded-3xl flex items-center justify-center mb-6 border border-white/5">
+                <i class="fas fa-folder-plus text-gray-700 text-3xl"></i>
+            </div>
+            <h4 class="text-white font-black uppercase italic tracking-tighter text-2xl">No Projects done</h4>
+            <p class="text-[10px] text-gray-500 font-bold uppercase tracking-[0.3em] mt-3 mb-10">System standby. Awaiting first deployment.</p>
+            <button onclick="openProjectNamingModal()" class="px-8 py-4 bg-blue-600 text-[#020617] text-[10px] font-black uppercase tracking-widest rounded-2xl hover:bg-blue-400 transition-all shadow-xl shadow-blue-500/10">
+                Create First Project
+            </button>
+        </div>
+
+        <div id="projectGrid" class="hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            </div>
+    </div>
 </div>
 `,
 
 
-    
+
+
 'Leaderboard': `
     <div class="space-y-10 animate-in">
         <div class="space-y-4">
@@ -363,7 +366,7 @@ const views = {
         </div>
     </div>
 `,
-    
+
 
 
  'Collaboration': `
@@ -395,8 +398,8 @@ const views = {
     </button>
 </div>`,
 
-    
-    
+
+
 
     'Team': `
     <div class="space-y-8 animate-in">
@@ -490,7 +493,7 @@ const views = {
 </div>`,
 
 
-    
+
 
 'Nxxt AI': `
 <div id="nxxt-container" class="relative min-h-screen flex flex-col bg-[#020617] text-white animate-in fade-in duration-700 font-sans selection:bg-blue-500/30">
@@ -574,8 +577,8 @@ const views = {
 `,
 
 
-    
-    
+
+
  'Nxxt Lab': `
 <div id="lab-root" class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 relative max-w-5xl mx-auto px-4 pb-32">
     
@@ -655,9 +658,9 @@ const views = {
 </div>
 `,
 
-    
 
-    
+
+
 
 
  'Side Hustle Hub': `
@@ -736,7 +739,7 @@ const views = {
     
     <div id="panel-backdrop" onclick="closeGigPanel()" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[9999] opacity-0 pointer-events-none transition-opacity duration-500"></div>
 `,
-    
+
 
 'Notifications': `
     <div id="notifications-container" class="max-w-md mx-auto content-card text-center animate-in">
@@ -774,7 +777,7 @@ const views = {
         </div>
     </div>
 `,
-    
+
 
 
 
@@ -1173,96 +1176,83 @@ function updateSettingsTab(tabId) {
                 <button class="w-full md:w-auto px-12 py-4 bg-white/5 border border-white/10 rounded-2xl text-[10px] font-black uppercase tracking-widest">Update Security</button>
             </div>`,
 
-        
+
     'Projects': `
-  <!-- Project Management View -->
-<div class="space-y-8 animate-in px-4 md:px-8">
-  <!-- Header + Search + Bulk Controls -->
-  <div class="space-y-6">
-    <div>
-      <h3 class="text-xl md:text-2xl font-black text-white italic uppercase tracking-tighter">
-        Project Management
-      </h3>
-      <p class="text-[9px] md:text-[10px] text-gray-500 font-bold uppercase tracking-widest mt-1">
-        Manage, search and bulk delete your projects
-      </p>
-    </div>
+    <div class="space-y-8 animate-in">
+        <div class="space-y-6">
+            <div>
+                <h3 class="text-xl font-black text-white italic uppercase tracking-tighter">Project Management</h3>
+                <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest mt-1">Manage and bulk delete your projects</p>
+            </div>
+            <div class="relative group">
+                <i class="fas fa-search absolute left-5 top-1/2 -translate-y-1/2 text-gray-600 group-focus-within:text-blue-500 transition-colors"></i>
+                <input type="text" id="projectSearchInput"
+                       placeholder="SEARCH REPOSITORY BY NAME, TAG, OR TECH STACK..."
+                       class="w-full bg-white/5 border border-white/10 rounded-2xl py-5 pl-14 pr-6 text-[10px] font-black text-white placeholder-gray-700 uppercase tracking-widest outline-none focus:border-blue-500/50 focus:bg-blue-500/5 transition-all">
+            </div>
+          
+            <div class="flex items-center gap-3">
+                <button id="selectAllBtn" class="px-5 py-2 bg-white/5 rounded-lg border border-white/5 text-[8px] font-black text-gray-500 uppercase hover:text-white transition-colors">
+                    Select All
+                </button>
+                <button id="bulkDeleteBtn" class="px-5 py-2 bg-red-500/5 rounded-lg border border-red-500/10 text-[8px] font-black text-red-500/40 uppercase cursor-not-allowed opacity-50" disabled>
+                    Bulk Delete (0)
+                </button>
+            </div>
+        </div>
 
-    <!-- Search Bar -->
-    <div class="relative group">
-      <i class="fas fa-search absolute left-5 top-1/2 -translate-y-1/2 text-gray-600 group-focus-within:text-blue-500 transition-colors"></i>
-      <input type="text" id="projectSearchInput"
-             placeholder="SEARCH BY NAME, CATEGORY, SUPERVISOR..."
-             class="w-full bg-white/5 border border-white/10 rounded-2xl py-5 pl-14 pr-6 text-[10px] md:text-[11px] font-black text-white placeholder-gray-700 uppercase tracking-widest outline-none focus:border-blue-500/50 focus:bg-blue-500/5 transition-all">
-    </div>
+        <!-- Dynamic Project Container -->
+        <div id="projectContainer" class="space-y-4">
+            <!-- Empty State (shown when no projects) -->
+            <div id="emptyProjectState" class="border-2 border-dashed border-white/5 rounded-[3.5rem] py-24 flex flex-col items-center justify-center text-center bg-white/[0.01]">
+                <div class="w-20 h-20 bg-white/5 rounded-3xl flex items-center justify-center mb-6 border border-white/5">
+                    <i class="fas fa-folder-plus text-gray-700 text-3xl"></i>
+                </div>
+                <h4 class="text-white font-black uppercase italic tracking-tighter text-2xl">No Projects done</h4>
+                <p class="text-[10px] text-gray-500 font-bold uppercase tracking-[0.3em] mt-3 mb-10">System standby. Awaiting first deployment.</p>
+               
+            </div>
 
-    <!-- Bulk Controls -->
-    <div class="flex items-center gap-3 flex-wrap">
-      <button id="selectAllBtn" 
-              class="px-5 py-2.5 bg-white/5 rounded-lg border border-white/10 text-[9px] md:text-[10px] font-black text-gray-400 uppercase hover:text-white hover:border-white/20 transition-colors">
-        Select All
-      </button>
-      <button id="bulkDeleteBtn" 
-              class="px-5 py-2.5 bg-red-500/5 rounded-lg border border-red-500/10 text-[9px] md:text-[10px] font-black text-red-400/70 uppercase cursor-not-allowed opacity-50 transition-all"
-              disabled>
-        Bulk Delete (0)
-      </button>
-    </div>
-  </div>
+            <!-- Future projects will be inserted here dynamically -->
+            <!-- Example project card (for reference, will be added via JS later):
+            <div class="project-item p-6 bg-white/5 border border-white/10 rounded-3xl flex items-center justify-between hover:border-blue-500/30 transition-all">
+                <div class="flex items-center gap-4">
+                    <input type="checkbox" class="project-checkbox w-4 h-4 accent-blue-500">
+                    <div>
+                        <h5 class="text-white font-black text-sm uppercase">My Awesome App</h5>
+                        <p class="text-[9px] text-gray-500 uppercase tracking-wider">React • Node • Tailwind</p>
+                    </div>
+                </div>
+                <button class="text-red-500 hover:text-red-400 text-xs uppercase font-black">Delete</button>
+            </div>
+            -->
+        </div>
 
-  <!-- Dynamic Project List -->
-  <div id="projectContainer" class="space-y-4">
-    <!-- Empty State (shared with dashboard) -->
-    <div id="emptyProjectState" class="border-2 border-dashed border-white/10 rounded-[3.5rem] py-20 md:py-24 flex flex-col items-center justify-center text-center bg-white/[0.01]">
-      <div class="w-20 h-20 md:w-24 md:h-24 bg-white/5 rounded-3xl flex items-center justify-center mb-6 border border-white/10">
-        <i class="fas fa-folder-plus text-gray-600 text-3xl md:text-4xl"></i>
-      </div>
-      <h4 class="text-white font-black uppercase italic tracking-tighter text-2xl md:text-3xl">
-        No Projects Yet
-      </h4>
-      <p class="text-[10px] md:text-[11px] text-gray-500 font-bold uppercase tracking-[0.3em] mt-3 mb-8 md:mb-10">
-        System standby. Awaiting first deployment.
-      </p>
-      <button onclick="openProjectNamingModal()"
-              class="px-8 py-4 bg-blue-600 text-white text-[10px] md:text-[11px] font-black uppercase tracking-widest rounded-2xl hover:bg-blue-500 transition-all shadow-lg shadow-blue-600/20">
-        Create First Project
-      </button>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="p-6 bg-[#030816] border border-white/5 rounded-[1.5rem] flex items-center gap-5">
+                <div class="w-10 h-10 bg-blue-500/10 rounded-xl flex items-center justify-center text-blue-500">
+                    <i class="fas fa-microchip text-xs"></i>
+                </div>
+                <div>
+                    <p class="text-[9px] font-black text-white uppercase">Cloud Hosting</p>
+                    <p class="text-[8px] text-gray-600 font-bold uppercase mt-1">Projects auto-deploy to edge nodes.</p>
+                </div>
+            </div>
+            <div class="p-6 bg-[#030816] border border-white/5 rounded-[1.5rem] flex items-center gap-5">
+                <div class="w-10 h-10 bg-purple-500/10 rounded-xl flex items-center justify-center text-purple-500">
+                    <i class="fas fa-terminal text-xs"></i>
+                </div>
+                <div>
+                    <p class="text-[9px] font-black text-white uppercase">Build History</p>
+                    <p class="text-[8px] text-gray-600 font-bold uppercase mt-1">Failed builds auto-purge after 30 days.</p>
+                </div>
+            </div>
+        </div>
     </div>
-
-    <!-- Project items will be inserted here dynamically via addProjectToUI() -->
-  </div>
-
-  <!-- Info Cards (kept as you had them) -->
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mt-8">
-    <div class="p-6 bg-[#030816] border border-white/5 rounded-[1.5rem] flex items-center gap-5 hover:border-blue-500/20 transition-colors">
-      <div class="w-10 h-10 md:w-12 md:h-12 bg-blue-500/10 rounded-xl flex items-center justify-center text-blue-400">
-        <i class="fas fa-cloud-upload-alt text-lg"></i>
-      </div>
-      <div>
-        <p class="text-[9px] md:text-[10px] font-black text-white uppercase tracking-wider">Cloud Hosting</p>
-        <p class="text-[8px] md:text-[9px] text-gray-500 font-medium mt-1">
-          Projects auto-deploy to edge nodes.
-        </p>
-      </div>
-    </div>
-
-    <div class="p-6 bg-[#030816] border border-white/5 rounded-[1.5rem] flex items-center gap-5 hover:border-purple-500/20 transition-colors">
-      <div class="w-10 h-10 md:w-12 md:h-12 bg-purple-500/10 rounded-xl flex items-center justify-center text-purple-400">
-        <i class="fas fa-history text-lg"></i>
-      </div>
-      <div>
-        <p class="text-[9px] md:text-[10px] font-black text-white uppercase tracking-wider">Build History</p>
-        <p class="text-[8px] md:text-[9px] text-gray-500 font-medium mt-1">
-          Failed builds auto-purge after 30 days.
-        </p>
-      </div>
-    </div>
-  </div>
-</div>
 `,
 
-        
-        
+
+
         'Billing': `
     <div class="space-y-8 animate-in">
         <div class="content-card bg-blue-600/5 border-blue-500/10 text-center py-10">
@@ -2475,7 +2465,7 @@ function copyText(btn) {
     const container = btn.closest('.group'); // More reliable parent search
     const textElement = container.querySelector('.prose');
     if (!textElement) return;
-    
+
     const text = textElement.innerText || textElement.textContent;
     navigator.clipboard.writeText(text).then(() => {
         showNxxtAlert("CONTENT COPIED TO CLIPBOARD");
@@ -2733,10 +2723,10 @@ const labModules = {
 function switchLabTab(tabName) {
     const container = document.getElementById('lab-content-area');
     const data = labModules[tabName];
-    
+
     // Add a fade-out effect before switching
     container.classList.add('opacity-0', 'scale-95');
-    
+
     setTimeout(() => {
         container.innerHTML = `
             <div class="animate-in fade-in zoom-in-95 duration-500">
@@ -3041,7 +3031,7 @@ function updateSystem() {
     // 1. EARN POINTS (Points go UP)
     systemData.totalSecondsToday += 10; 
     systemData.rankPoints += 5; 
-    
+
     let intensity = Math.min(Math.floor(systemData.totalSecondsToday / 3600), 4);
     if (intensity > 0) systemData.activityHistory[todayStr] = intensity;
 
@@ -3059,7 +3049,7 @@ function updateSystem() {
         if (daysSince === 1) systemData.streak += 1; 
         else if (daysSince > 1) systemData.streak = 0;
     }
-    
+
     systemData.lastActive = now.toISOString();
     saveAndRefresh();
 }
@@ -3093,7 +3083,7 @@ function renderUI() {
     for (let i = 1; i <= 5; i++) {
         const spotlight = document.getElementById(`spotlight-rank-${i}`);
         const ptsDisplay = document.getElementById(`top-pts-${i}`);
-        
+
         if (globalRank === i) {
             spotlight?.classList.remove('opacity-40');
             spotlight?.classList.add('border-yellow-500', 'bg-yellow-500/5', 'scale-[1.02]');
@@ -3139,512 +3129,444 @@ renderUI();
 
 ///// for the projects 
 
-// Initialize Supabase client (replace with your actual values)
-const supabase = Supabase.createClient(
-  'https://uorairfekjxbhypfvttk.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVvcmFpcmZla2p4Ymh5cGZ2dHRrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc5OTkyNzUsImV4cCI6MjA4MzU3NTI3NX0.lAsCmv2ZLE0p4uBK5TdjoOvy0qIvAJSnu3MSeKo4uuk'
-);
 
-// Helper: Get current authenticated user
-async function getCurrentUser() {
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) {
-    showNxxtAlert("Please log in to manage projects");
-    return null;
-  }
-  return user;
-}
-
-// Show alert modal
 function showNxxtAlert(message) {
-  const alertHtml = `
-    <div id="nxxtAlertModal" class="fixed inset-0 z-[300] bg-black/90 backdrop-blur-md flex items-center justify-center p-6 animate-in fade-in duration-300">
-      <div class="bg-[#050b1d] border border-rose-500/20 w-full max-w-xs rounded-[2rem] p-8 text-center space-y-6 shadow-[0_0_50px_rgba(244,63,94,0.1)]">
-        <div class="w-12 h-12 bg-rose-500/10 rounded-2xl flex items-center justify-center mx-auto border border-rose-500/20">
-          <i class="fas fa-exclamation-triangle text-rose-500"></i>
-        </div>
-        <div>
-          <h5 class="text-white font-black uppercase italic tracking-widest text-[10px]">System Notification</h5>
-          <p class="text-gray-500 text-[11px] font-bold uppercase tracking-widest mt-2 leading-relaxed">${message}</p>
-        </div>
-        <button onclick="document.getElementById('nxxtAlertModal').remove()"
-          class="w-full py-3 bg-white/5 text-white text-[9px] font-black uppercase tracking-[0.3em] rounded-xl hover:bg-white/10 transition-all">
-          Acknowledge
-        </button>
-      </div>
-    </div>`;
-  document.body.insertAdjacentHTML('beforeend', alertHtml);
+    const alertHtml = `
+        <div id="nxxtAlertModal" class="fixed inset-0 z-[300] bg-black/90 backdrop-blur-md flex items-center justify-center p-6 animate-in fade-in duration-300">
+            <div class="bg-[#050b1d] border border-rose-500/20 w-full max-w-xs rounded-[2rem] p-8 text-center space-y-6 shadow-[0_0_50px_rgba(244,63,94,0.1)]">
+                <div class="w-12 h-12 bg-rose-500/10 rounded-2xl flex items-center justify-center mx-auto border border-rose-500/20">
+                    <i class="fas fa-exclamation-triangle text-rose-500"></i>
+                </div>
+                <div>
+                    <h5 class="text-white font-black uppercase italic tracking-widest text-[10px]">System Notification</h5>
+                    <p class="text-gray-500 text-[11px] font-bold uppercase tracking-widest mt-2 leading-relaxed">${message}</p>
+                </div>
+                <button onclick="document.getElementById('nxxtAlertModal').remove()"
+                    class="w-full py-3 bg-white/5 text-white text-[9px] font-black uppercase tracking-[0.3em] rounded-xl hover:bg-white/10 transition-all">
+                    Acknowledge
+                </button>
+            </div>
+        </div>`;
+    document.body.insertAdjacentHTML('beforeend', alertHtml);
 }
 
-// Open project naming modal
 function openProjectNamingModal() {
-  const modalHtml = `
-    <div id="centerModalOverlay" class="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6 touch-none">
-      <div class="bg-[#050b1d] border border-white/10 w-full max-w-md rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-8 space-y-6 animate-in zoom-in-95 duration-200">
-        <div class="flex items-center gap-4 mb-2">
-          <div class="w-10 h-10 bg-blue-500/10 rounded-xl flex items-center justify-center border border-blue-500/20 shrink-0">
-            <i class="fas fa-project-diagram text-blue-500 text-sm"></i>
-          </div>
-          <div>
-            <h5 class="text-white font-black uppercase italic tracking-widest text-sm leading-none">Initialize Core Module</h5>
-            <p class="text-[8px] text-gray-600 font-bold uppercase tracking-widest mt-1">Project Deployment Alpha</p>
-          </div>
-        </div>
-        <div class="space-y-4">
-          <div class="relative">
-            <input type="text" id="pName" placeholder="PROJECT NAME"
-              class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-4 text-white font-black uppercase tracking-widest focus:border-blue-500 focus:outline-none focus:bg-white/[0.07] transition-all text-[16px] sm:text-[10px]">
-          </div>
-          <div class="relative">
-            <textarea id="pDesc" placeholder="DESCRIPTION (OPTIONAL)"
-              class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-4 text-white font-black uppercase tracking-widest h-28 focus:border-blue-500 focus:outline-none focus:bg-white/[0.07] transition-all resize-none text-[16px] sm:text-[10px]"></textarea>
-          </div>
-        </div>
-        <div class="flex flex-col sm:flex-row gap-3 sm:gap-4">
-          <button onclick="closeCenterModal()"
-            class="order-2 sm:order-1 flex-1 py-4 sm:py-3 bg-white/5 text-gray-500 text-[10px] font-black uppercase tracking-widest rounded-xl hover:text-white transition-all">
-            Cancel
-          </button>
-          <button onclick="triggerRightSlideOut()"
-            class="order-1 sm:order-2 flex-1 py-4 sm:py-3 bg-blue-600 text-[#020617] text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-blue-500 transition-all shadow-lg shadow-blue-600/10">
-            Next Step
-          </button>
-        </div>
-      </div>
-    </div>`;
-  document.body.insertAdjacentHTML('beforeend', modalHtml);
-}
+    const modalHtml = `
+        <div id="centerModalOverlay" class="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6 touch-none">
+            <div class="bg-[#050b1d] border border-white/10 w-full max-w-md rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-8 space-y-6 animate-in zoom-in-95 duration-200">
+                
+                <div class="flex items-center gap-4 mb-2">
+                    <div class="w-10 h-10 bg-blue-500/10 rounded-xl flex items-center justify-center border border-blue-500/20 shrink-0">
+                        <i class="fas fa-project-diagram text-blue-500 text-sm"></i>
+                    </div>
+                    <div>
+                        <h5 class="text-white font-black uppercase italic tracking-widest text-sm leading-none">Initialize Core Module</h5>
+                        <p class="text-[8px] text-gray-600 font-bold uppercase tracking-widest mt-1">Project Deployment Alpha</p>
+                    </div>
+                </div>
 
-// Trigger advanced config slide-out
+                <div class="space-y-4">
+                    <div class="relative">
+                        <input type="text" id="pName" placeholder="PROJECT NAME" 
+                            class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-4 text-white font-black uppercase tracking-widest focus:border-blue-500 focus:outline-none focus:bg-white/[0.07] transition-all
+                            text-[16px] sm:text-[10px]"> 
+                        </div>
+                    
+                    <div class="relative">
+                        <textarea id="pDesc" placeholder="DESCRIPTION (OPTIONAL)" 
+                            class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-4 text-white font-black uppercase tracking-widest h-28 focus:border-blue-500 focus:outline-none focus:bg-white/[0.07] transition-all resize-none
+                            text-[16px] sm:text-[10px]"></textarea>
+                    </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-3 sm:gap-4">
+                    <button onclick="closeCenterModal()" 
+                        class="order-2 sm:order-1 flex-1 py-4 sm:py-3 bg-white/5 text-gray-500 text-[10px] font-black uppercase tracking-widest rounded-xl hover:text-white transition-all">
+                        Cancel
+                    </button>
+                    <button onclick="triggerRightSlideOut()" 
+                        class="order-1 sm:order-2 flex-1 py-4 sm:py-3 bg-blue-600 text-[#020617] text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-blue-500 transition-all shadow-lg shadow-blue-600/10">
+                        Next Step
+                    </button>
+                </div>
+            </div>
+        </div>`;
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+}
 function triggerRightSlideOut() {
-  const name = document.getElementById('pName').value.trim();
-  const desc = document.getElementById('pDesc').value.trim() || "No detailed description provided.";
-  if (!name) {
-    showNxxtAlert("PROJECT NAME REQUIRED FOR INITIALIZATION");
-    return;
-  }
-  closeCenterModal();
-
-  const slideOutHtml = `
-    <div id="rightSlideOverlay" class="fixed inset-0 z-[110] bg-black/40 backdrop-blur-sm">
-      <div class="absolute right-0 top-0 h-full w-full max-w-md bg-[#02010a] border-l border-white/10 p-8 animate-in slide-in-from-right duration-500 overflow-y-auto">
-        <div class="flex flex-col gap-8">
-          <div>
-            <span class="text-[9px] text-blue-500 font-black uppercase tracking-widest">Advanced Config</span>
-            <h6 class="text-white font-black text-2xl uppercase italic tracking-tighter mt-2">${name}</h6>
-          </div>
-          <div class="space-y-3">
-            <p class="text-[9px] text-white font-black uppercase tracking-widest">Project Visual Overlay</p>
-            <div onclick="document.getElementById('projectImgInput').click()" class="group relative w-full h-32 bg-white/5 border border-dashed border-white/10 rounded-2xl flex flex-col items-center justify-center cursor-pointer hover:border-blue-500/50 transition-all overflow-hidden">
-              <input type="file" id="projectImgInput" class="hidden" accept="image/*" onchange="previewProjectImage(this)">
-              <div id="imgPreviewPlaceholder" class="flex flex-col items-center gap-2">
-                <i class="fas fa-camera text-gray-700 group-hover:text-blue-500 transition-colors"></i>
-                <span class="text-[8px] text-gray-600 font-black uppercase">Upload Wallpaper / PFP</span>
-              </div>
-              <img id="imgPreview" class="hidden absolute inset-0 w-full h-full object-cover">
+    const name = document.getElementById('pName').value.trim();
+    const desc = document.getElementById('pDesc').value.trim() || "No detailed description provided.";
+    if (!name) { showNxxtAlert("PROJECT NAME REQUIRED FOR INITIALIZATION"); return; }
+    closeCenterModal();
+    const slideOutHtml = `
+        <div id="rightSlideOverlay" class="fixed inset-0 z-[110] bg-black/40 backdrop-blur-sm">
+            <div class="absolute right-0 top-0 h-full w-full max-w-md bg-[#02010a] border-l border-white/10 p-8 animate-in slide-in-from-right duration-500 overflow-y-auto">
+                <div class="flex flex-col gap-8">
+                    <div>
+                        <span class="text-[9px] text-blue-500 font-black uppercase tracking-widest">Advanced Config</span>
+                        <h6 class="text-white font-black text-2xl uppercase italic tracking-tighter mt-2">${name}</h6>
+                    </div>
+                    <div class="space-y-3">
+                        <p class="text-[9px] text-white font-black uppercase tracking-widest">Project Visual Overlay</p>
+                        <div onclick="document.getElementById('projectImgInput').click()" class="group relative w-full h-32 bg-white/5 border border-dashed border-white/10 rounded-2xl flex flex-col items-center justify-center cursor-pointer hover:border-blue-500/50 transition-all overflow-hidden">
+                            <input type="file" id="projectImgInput" class="hidden" accept="image/*" onchange="previewProjectImage(this)">
+                            <div id="imgPreviewPlaceholder" class="flex flex-col items-center gap-2">
+                                <i class="fas fa-camera text-gray-700 group-hover:text-blue-500 transition-colors"></i>
+                                <span class="text-[8px] text-gray-600 font-black uppercase">Upload Wallpaper / PFP</span>
+                            </div>
+                            <img id="imgPreview" class="hidden absolute inset-0 w-full h-full object-cover">
+                        </div>
+                    </div>
+                    <div class="h-[1px] w-full bg-white/5"></div>
+                    <div class="space-y-3">
+                        <p class="text-[9px] text-white font-black uppercase tracking-widest">Core Classification</p>
+                        <div class="flex flex-wrap gap-2">
+                            ${['Personal', 'School', 'Job', 'Commercial'].map(type => `
+                                <div onclick="selectProjectType(this)" class="project-type-chip px-4 py-2 bg-white/5 border border-white/5 rounded-xl text-[9px] text-gray-500 font-black uppercase cursor-pointer hover:bg-white/10 transition-all">${type}</div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center">
+                            <p class="text-[9px] text-white font-black uppercase tracking-widest">Neural Uplinks (Users)</p>
+                            <span id="userCount" class="text-blue-500 text-[10px] font-black">1</span>
+                        </div>
+                        <input type="range" min="1" max="10" value="1" class="w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-blue-600" oninput="checkUserLimit(this)">
+                    </div>
+                    <div class="h-[1px] w-full bg-white/5"></div>
+                    <div class="space-y-4">
+                        <input type="text" id="supName" placeholder="SUPERVISOR NAME (OPTIONAL)" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-[9px] font-black uppercase tracking-widest focus:border-blue-500 focus:outline-none">
+                        <textarea id="shortDesc" placeholder="SHORT SUMMARY (OPTIONAL)" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-[9px] font-black uppercase tracking-widest h-20 focus:border-blue-500 focus:outline-none resize-none"></textarea>
+                    </div>
+                    <div class="flex gap-4 pb-10">
+                        <button onclick="closeRightSlide()" class="flex-1 py-4 bg-white/5 text-gray-500 text-[10px] font-black uppercase tracking-widest rounded-2xl">Cancel</button>
+                        <button onclick="finalizeProject('${name.replace(/'/g, "\\'")}', '${desc.replace(/'/g, "\\'")}')" class="flex-1 py-4 bg-blue-600 text-[#020617] text-[10px] font-black uppercase tracking-widest rounded-2xl shadow-lg">Finalize & Deploy</button>
+                    </div>
+                </div>
             </div>
-          </div>
-          <div class="h-[1px] w-full bg-white/5"></div>
-          <div class="space-y-3">
-            <p class="text-[9px] text-white font-black uppercase tracking-widest">Core Classification</p>
-            <div class="flex flex-wrap gap-2">
-              ${['Personal', 'School', 'Job', 'Commercial'].map(type => `
-                <div onclick="selectProjectType(this)" class="project-type-chip px-4 py-2 bg-white/5 border border-white/5 rounded-xl text-[9px] text-gray-500 font-black uppercase cursor-pointer hover:bg-white/10 transition-all">${type}</div>
-              `).join('')}
-            </div>
-          </div>
-          <div class="space-y-3">
-            <div class="flex justify-between items-center">
-              <p class="text-[9px] text-white font-black uppercase tracking-widest">Neural Uplinks (Users)</p>
-              <span id="userCount" class="text-blue-500 text-[10px] font-black">1</span>
-            </div>
-            <input type="range" min="1" max="10" value="1" class="w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-blue-600" oninput="checkUserLimit(this)">
-          </div>
-          <div class="h-[1px] w-full bg-white/5"></div>
-          <div class="space-y-4">
-            <input type="text" id="supName" placeholder="SUPERVISOR NAME (OPTIONAL)" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-[9px] font-black uppercase tracking-widest focus:border-blue-500 focus:outline-none">
-            <textarea id="shortDesc" placeholder="SHORT SUMMARY (OPTIONAL)" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-[9px] font-black uppercase tracking-widest h-20 focus:border-blue-500 focus:outline-none resize-none"></textarea>
-          </div>
-          <div class="flex gap-4 pb-10">
-            <button onclick="closeRightSlide()" class="flex-1 py-4 bg-white/5 text-gray-500 text-[10px] font-black uppercase tracking-widest rounded-2xl">Cancel</button>
-            <button onclick="finalizeProject('${name.replace(/'/g, "\\'")}', '${desc.replace(/'/g, "\\'")}')" class="flex-1 py-4 bg-blue-600 text-[#020617] text-[10px] font-black uppercase tracking-widest rounded-2xl shadow-lg">Finalize & Deploy</button>
-          </div>
-        </div>
-      </div>
-    </div>`;
-  document.body.insertAdjacentHTML('beforeend', slideOutHtml);
+        </div>`;
+    document.body.insertAdjacentHTML('beforeend', slideOutHtml);
 }
 
-// Preview uploaded image
 function previewProjectImage(input) {
-  if (input.files && input.files[0]) {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const preview = document.getElementById('imgPreview');
-      preview.src = e.target.result;
-      preview.classList.remove('hidden');
-      document.getElementById('imgPreviewPlaceholder').classList.add('hidden');
-    };
-    reader.readAsDataURL(input.files[0]);
-  }
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const preview = document.getElementById('imgPreview');
+            preview.src = e.target.result;
+            preview.classList.remove('hidden');
+            document.getElementById('imgPreviewPlaceholder').classList.add('hidden');
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
 }
 
-// Select project type chip
 function selectProjectType(element) {
-  document.querySelectorAll('.project-type-chip').forEach(chip => chip.classList.remove('border-blue-500', 'text-blue-500', 'bg-blue-500/10'));
-  element.classList.add('border-blue-500', 'text-blue-500', 'bg-blue-500/10');
+    document.querySelectorAll('.project-type-chip').forEach(chip => chip.classList.remove('border-blue-500', 'text-blue-500', 'bg-blue-500/10'));
+    element.classList.add('border-blue-500', 'text-blue-500', 'bg-blue-500/10');
 }
 
-// Limit user count (with toast on exceed)
 function checkUserLimit(input) {
-  const val = parseInt(input.value);
-  document.getElementById('userCount').innerText = val;
-  if (val > 4) {
-    showTopRightToast("FREE MODE LIMIT EXCEEDED: Upgrade to Pro for 5+ users.");
-    input.value = 4;
-    document.getElementById('userCount').innerText = 4;
-  }
+    const val = parseInt(input.value);
+    document.getElementById('userCount').innerText = val;
+    if (val > 4) {
+        showTopRightToast("FREE MODE LIMIT EXCEEDED: Upgrade to Pro for 5+ users.");
+        input.value = 4;
+        document.getElementById('userCount').innerText = 4;
+    }
 }
 
-// Show top-right toast
 function showTopRightToast(message) {
-  const toastId = 'toast-' + Date.now();
-  const toastHtml = `<div id="${toastId}" class="fixed top-8 right-8 z-[200] bg-[#050b1d] border border-blue-500/30 p-5 rounded-2xl flex items-center gap-4 animate-in slide-in-from-right duration-500 shadow-2xl">
-    <div class="w-8 h-8 bg-blue-500/10 rounded-lg flex items-center justify-center"><i class="fas fa-crown text-blue-500 text-xs"></i></div>
-    <div><p class="text-white font-black text-[9px] uppercase tracking-widest">System Restriction</p><p class="text-gray-500 text-[8px] font-bold uppercase mt-1">${message}</p></div>
-  </div>`;
-  document.body.insertAdjacentHTML('beforeend', toastHtml);
-  setTimeout(() => {
-    const t = document.getElementById(toastId);
-    if (t) { t.classList.add('animate-out', 'slide-out-to-right'); setTimeout(() => t.remove(), 500); }
-  }, 4000);
-}
-
-// Add project to both grid and list views (Supabase version)
-function addProjectToUI(project) {
-  const timestamp = new Date(project.created_at).toLocaleDateString('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/-/g, '.');
-  const hasImage = !!project.image_url;
-
-  // GRID CARD
-  const grid = document.getElementById('projectGrid');
-  if (grid) {
-    grid.classList.remove('hidden');
-    const cardHtml = `
-      <div class="project-card bg-[#050b1d] border border-white/5 rounded-[2rem] p-6 group hover:border-blue-500/30 transition-all animate-in zoom-in-95 relative overflow-hidden" data-project-id="${project.id}">
-        <div class="absolute top-0 right-0 px-3 py-1 bg-green-500/10 border-b border-l border-green-500/20 rounded-bl-xl">
-          <span class="text-[7px] text-green-500 font-black uppercase tracking-widest">Build Successful</span>
-        </div>
-        <div class="flex justify-between items-start mb-6">
-          <div class="w-12 h-12 rounded-2xl border border-white/10 overflow-hidden bg-blue-500/5 flex items-center justify-center">
-            ${hasImage ? `<img src="${project.image_url}" class="w-full h-full object-cover">` : `<i class="fas fa-microchip text-blue-500"></i>`}
-          </div>
-          <span class="text-[8px] text-gray-600 font-black uppercase mt-2">${project.category}</span>
-        </div>
-        <h6 class="text-white font-black uppercase italic text-xs mb-1 truncate">${project.name}</h6>
-        <p class="text-[8px] text-blue-400 font-bold mb-3 uppercase tracking-tighter">SV: ${project.supervisor}</p>
-        <p class="text-[9px] text-gray-500 font-medium line-clamp-2 leading-relaxed mb-6">${project.description}</p>
-        <div class="pt-4 border-t border-white/5 flex justify-between items-center">
-          <div class="flex flex-col">
-            <span class="text-[7px] text-gray-700 font-black uppercase tracking-widest">Deployed</span>
-            <span class="text-[8px] text-white font-bold">${timestamp}</span>
-          </div>
-          <i class="fas fa-chevron-right text-[10px] text-gray-800 group-hover:text-blue-500 transition-colors"></i>
-        </div>
-      </div>`;
-    grid.insertAdjacentHTML('afterbegin', cardHtml);
-  }
-
-  // MANAGEMENT LIST ITEM
-  const container = document.getElementById('projectContainer');
-  if (container) {
-    const listHtml = `
-      <div class="project-item p-6 bg-white/5 border border-white/10 rounded-3xl flex items-center justify-between hover:border-blue-500/30 transition-all mb-4" data-project-id="${project.id}">
-        <div class="flex items-center gap-4">
-          <input type="checkbox" class="project-checkbox w-4 h-4 accent-blue-500 rounded">
-          <div>
-            <h5 class="text-white font-black text-sm uppercase">${project.name}</h5>
-            <p class="text-[9px] text-gray-500 uppercase tracking-wider">${project.category}</p>
-          </div>
-        </div>
-        <button onclick="deleteProject('${project.id}', '${project.name.replace(/'/g, "\\'")}')"
-          class="text-red-500 hover:text-red-400 text-xs uppercase font-black">
-          Delete
-        </button>
-      </div>`;
-    container.insertAdjacentHTML('afterbegin', listHtml);
-  }
-
-  // Hide empty states
-  document.querySelectorAll('#emptyProjectState').forEach(el => el.classList.add('hidden'));
-}
-
-// Finalize project creation (Supabase insert + image upload)
-async function finalizeProject(name, desc) {
-  const user = await getCurrentUser();
-  if (!user) return;
-
-  const pfpFile = document.querySelector('#projectImgInput')?.files[0];
-  const supervisor = document.getElementById('supName')?.value.trim() || "N/A";
-  const categoryEl = document.querySelector('.project-type-chip.border-blue-500');
-  const category = categoryEl ? categoryEl.innerText : "General";
-  const shortDesc = document.getElementById('shortDesc')?.value.trim() || "";
-  const userLimit = parseInt(document.querySelector('input[type="range"]')?.value) || 1;
-
-  let imageUrl = null;
-
-  // Upload image if present
-  if (pfpFile) {
-    const fileExt = pfpFile.name.split('.').pop();
-    const filePath = `${user.id}/${Date.now()}.${fileExt}`;
-    const { error: uploadError } = await supabase.storage
-      .from('project-images')
-      .upload(filePath, pfpFile);
-
-    if (uploadError) {
-      showNxxtAlert("Image upload failed");
-      console.error(uploadError);
-      return;
-    }
-
-    imageUrl = supabase.storage.from('project-images').getPublicUrl(filePath).data.publicUrl;
-  }
-
-  // Show loader
-  const loaderHtml = `<div id="loaderOverlay" class="fixed inset-0 z-[200] bg-[#020617] flex flex-col items-center justify-center">
-    <div class="w-16 h-16 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin mb-6"></div>
-    <p class="text-[10px] text-white font-black uppercase tracking-[0.5em] animate-pulse">Deploying Module...</p>
-  </div>`;
-  document.body.insertAdjacentHTML('beforeend', loaderHtml);
-
-  // Insert project to Supabase
-  const { data: project, error } = await supabase
-    .from('projects')
-    .insert({
-      user_id: user.id,
-      name,
-      description: desc || "No detailed description provided.",
-      category,
-      supervisor,
-      image_url: imageUrl,
-      short_summary: shortDesc,
-      user_limit: userLimit
-    })
-    .select()
-    .single();
-
-  document.getElementById('loaderOverlay')?.remove();
-
-  if (error) {
-    showNxxtAlert("Deployment failed – try again");
-    console.error(error);
-    return;
-  }
-
-  // Success: Add to UI, notify, update count
-  addProjectToUI(project);
-  addSystemNotification(project.name, new Date(), new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }).toUpperCase());
-  updateProjectCount();
-  closeRightSlide();
-}
-
-// Delete single project
-async function deleteProject(projectId, projectName) {
-  if (!confirm(`Delete "${projectName}" permanently?`)) return;
-
-  const { error } = await supabase.from('projects').delete().eq('id', projectId);
-
-  if (error) {
-    showNxxtAlert("Delete failed");
-    console.error(error);
-    return;
-  }
-
-  // Remove from UI
-  document.querySelectorAll(`[data-project-id="${projectId}"]`).forEach(el => el.remove());
-
-  // Check empty state
-  const remaining = document.querySelectorAll('#projectContainer .project-item').length;
-  if (remaining === 0) {
-    document.querySelectorAll('#emptyProjectState').forEach(el => el.classList.remove('hidden'));
-    document.getElementById('projectGrid')?.classList.add('hidden');
-  }
-
-  updateProjectCount();
-}
-
-// Load and render all projects from Supabase
-async function loadAndRenderProjects() {
-  const user = await getCurrentUser();
-  if (!user) return;
-
-  const { data: projects, error } = await supabase
-    .from('projects')
-    .select('*')
-    .eq('user_id', user.id)
-    .order('created_at', { ascending: false });
-
-  if (error) {
-    console.error('Load failed:', error);
-    showNxxtAlert("Failed to load projects");
-    return;
-  }
-
-  // Clear existing
-  const grid = document.getElementById('projectGrid');
-  const container = document.getElementById('projectContainer');
-  if (grid) grid.innerHTML = '';
-  if (container) container.innerHTML = '';
-
-  if (projects.length === 0) {
-    document.querySelectorAll('#emptyProjectState').forEach(el => el.classList.remove('hidden'));
-    if (grid) grid.classList.add('hidden');
-  } else {
-    if (grid) grid.classList.remove('hidden');
-    projects.forEach(p => addProjectToUI(p));
-  }
-
-  updateProjectCount(projects.length);
-}
-
-// Update project count (from DOM or DB)
-async function updateProjectCount(countOverride = null) {
-  const countEl = document.getElementById('projectCount');
-  if (!countEl) return;
-
-  let count = countOverride;
-
-  if (count === null) {
-    const user = await getCurrentUser();
-    if (!user) {
-      countEl.textContent = '0';
-      return;
-    }
-
-    const { count: dbCount, error } = await supabase
-      .from('projects')
-      .select('*', { count: 'exact', head: true })
-      .eq('user_id', user.id);
-
-    if (error) {
-      console.error('Count failed:', error);
-      count = 0;
-    } else {
-      count = dbCount ?? 0;
-    }
-  }
-
-  countEl.textContent = count;
-
-  const last = parseInt(countEl.dataset.last || '0', 10);
-  if (count > last) {
-    countEl.classList.add('animate-pulse');
-    setTimeout(() => countEl.classList.remove('animate-pulse'), 1000);
-  }
-  countEl.dataset.last = count.toString();
-}
-
-// Add system notification (DOM only for now)
-function addSystemNotification(projName, date, time) {
-  const formattedDate = date ? new Date(date).toLocaleDateString('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/-/g, '.') : new Date().toLocaleDateString('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/-/g, '.');
-  const formattedTime = time || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }).toUpperCase();
-
-  const logHtml = `
-    <div class="notif-item p-5 bg-green-500/5 border border-green-500/20 rounded-3xl text-left relative overflow-hidden group hover:border-green-500/40 transition-all animate-in slide-in-from-top mb-3">
-      <div class="flex justify-between items-start mb-2">
-        <p class="text-[8px] font-black text-green-500 uppercase tracking-widest">Build Successful</p>
-        <span class="text-[7px] text-gray-600 font-bold uppercase">${formattedDate} | ${formattedTime}</span>
-      </div>
-      <p class="text-white text-[11px] font-bold leading-relaxed">New Core Module <span class="text-green-500 italic">"${projName}"</span> successfully compiled.</p>
+    const toastId = 'toast-' + Date.now();
+    const toastHtml = `<div id="${toastId}" class="fixed top-8 right-8 z-[200] bg-[#050b1d] border border-blue-500/30 p-5 rounded-2xl flex items-center gap-4 animate-in slide-in-from-right duration-500 shadow-2xl">
+        <div class="w-8 h-8 bg-blue-500/10 rounded-lg flex items-center justify-center"><i class="fas fa-crown text-blue-500 text-xs"></i></div>
+        <div><p class="text-white font-black text-[9px] uppercase tracking-widest">System Restriction</p><p class="text-gray-500 text-[8px] font-bold uppercase mt-1">${message}</p></div>
     </div>`;
-
-  const scrollArea = document.getElementById('notif-scroll-area');
-  if (scrollArea) {
-    scrollArea.insertAdjacentHTML('afterbegin', logHtml);
-    updateNotificationUI();
-  }
+    document.body.insertAdjacentHTML('beforeend', toastHtml);
+    setTimeout(() => {
+        const t = document.getElementById(toastId);
+        if (t) { t.classList.add('animate-out', 'slide-out-to-right'); setTimeout(() => t.remove(), 500); }
+    }, 4000);
 }
 
-// Update notification UI
+/* ========== PROJECT COUNT UPDATE ========== */
+function updateProjectCounter() {
+    const countElement = document.getElementById('projectCount');
+    if (!countElement) return;
+    const gridCount = document.querySelectorAll('#projectGrid .project-card').length;
+    const listCount = document.querySelectorAll('#projectContainer .project-item').length;
+    const total = Math.max(gridCount, listCount);
+    countElement.textContent = total;
+    if (total > (parseInt(countElement.dataset.last) || 0)) {
+        countElement.classList.add('animate-pulse');
+        setTimeout(() => countElement.classList.remove('animate-pulse'), 1000);
+    }
+    countElement.dataset.last = total;
+}
+
+/* ========== MAIN DEPLOYMENT FUNCTION ========== */
+function finalizeProject(name, desc) {
+    const pfpSrc = document.getElementById('imgPreview')?.src || '';
+    const hasPfp = pfpSrc && !document.getElementById('imgPreview')?.classList.contains('hidden');
+    const supervisor = document.getElementById('supName')?.value.trim() || "N/A";
+    const category = document.querySelector('.project-type-chip.text-blue-500')?.innerText || "General";
+    closeRightSlide();
+    const loaderHtml = `<div id="loaderOverlay" class="fixed inset-0 z-[200] bg-[#020617] flex flex-col items-center justify-center">
+        <div class="w-16 h-16 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin mb-6"></div>
+        <p class="text-[10px] text-white font-black uppercase tracking-[0.5em] animate-pulse">Deploying Module...</p>
+    </div>`;
+    document.body.insertAdjacentHTML('beforeend', loaderHtml);
+    setTimeout(() => {
+        document.getElementById('loaderOverlay')?.remove();
+        const now = new Date();
+        const timestamp = `${now.getFullYear()}.${String(now.getMonth() + 1).padStart(2, '0')}.${String(now.getDate()).padStart(2, '0')}`;
+        const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }).toUpperCase();
+        /* DASHBOARD GRID CARD */
+        const grid = document.getElementById('projectGrid');
+        if (grid) {
+            grid.classList.remove('hidden');
+            const cardHtml = `
+                <div class="project-card bg-[#050b1d] border border-white/5 rounded-[2rem] p-6 group hover:border-blue-500/30 transition-all animate-in zoom-in-95 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 px-3 py-1 bg-green-500/10 border-b border-l border-green-500/20 rounded-bl-xl">
+                        <span class="text-[7px] text-green-500 font-black uppercase tracking-widest">Build Successful</span>
+                    </div>
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="w-12 h-12 rounded-2xl border border-white/10 overflow-hidden bg-blue-500/5 flex items-center justify-center">
+                            ${hasPfp ? `<img src="${pfpSrc}" class="w-full h-full object-cover">` : `<i class="fas fa-microchip text-blue-500"></i>`}
+                        </div>
+                        <span class="text-[8px] text-gray-600 font-black uppercase mt-2">${category}</span>
+                    </div>
+                    <h6 class="text-white font-black uppercase italic text-xs mb-1 truncate">${name}</h6>
+                    <p class="text-[8px] text-blue-400 font-bold mb-3 uppercase tracking-tighter">SV: ${supervisor}</p>
+                    <p class="text-[9px] text-gray-500 font-medium line-clamp-2 leading-relaxed mb-6">${desc}</p>
+                    <div class="pt-4 border-t border-white/5 flex justify-between items-center">
+                        <div class="flex flex-col">
+                            <span class="text-[7px] text-gray-700 font-black uppercase tracking-widest">Deployed</span>
+                            <span class="text-[8px] text-white font-bold">${timestamp}</span>
+                        </div>
+                        <i class="fas fa-chevron-right text-[10px] text-gray-800 group-hover:text-blue-500 transition-colors"></i>
+                    </div>
+                </div>`;
+            grid.insertAdjacentHTML('afterbegin', cardHtml);
+        }
+        /* MANAGEMENT LIST ITEM */
+        addProjectToManagementList(name, category);
+        /* NOTIFICATION */
+        addSystemNotification(name, timestamp, timeStr);
+        /* HIDE EMPTY STATES */
+        document.querySelectorAll('#emptyProjectState').forEach(el => el.classList.add('hidden'));
+        saveAllData();
+        updateProjectCounter();
+    }, 3000);
+}
+/* ADD TO MANAGEMENT LIST */
+function addProjectToManagementList(name, tech = 'General') {
+    const container = document.getElementById('projectContainer');
+    if (!container) return;
+    const empty = document.getElementById('emptyProjectState');
+    if (empty) empty.classList.add('hidden');
+    const html = `
+        <div class="project-item p-6 bg-white/5 border border-white/10 rounded-3xl flex items-center justify-between hover:border-blue-500/30 transition-all mb-4">
+            <div class="flex items-center gap-4">
+                <input type="checkbox" class="project-checkbox w-4 h-4 accent-blue-500 rounded">
+                <div>
+                    <h5 class="text-white font-black text-sm uppercase">${name}</h5>
+                    <p class="text-[9px] text-gray-500 uppercase tracking-wider">${tech}</p>
+                </div>
+            </div>
+            <button onclick="deleteProjectEverywhere(this, '${name.replace(/'/g, "\\'")}')"
+                    class="text-red-500 hover:text-red-400 text-xs uppercase font-black">
+                Delete
+            </button>
+        </div>`;
+    container.insertAdjacentHTML('afterbegin', html);
+}
+/* DELETE FROM BOTH VIEWS */
+function deleteProjectEverywhere(button, projectName) {
+    const item = button.closest('.project-item');
+    if (item) item.remove();
+    document.querySelectorAll('#projectGrid .project-card').forEach(card => {
+        const title = card.querySelector('h6')?.innerText.trim();
+        if (title === projectName) {
+            card.classList.add('animate-out', 'zoom-out');
+            setTimeout(() => card.remove(), 400);
+        }
+    });
+    if (document.querySelectorAll('#projectContainer .project-item').length === 0) {
+        document.querySelectorAll('#emptyProjectState').forEach(el => el.classList.remove('hidden'));
+    }
+    if (document.querySelectorAll('#projectGrid .project-card').length === 0) {
+        document.getElementById('projectGrid')?.classList.add('hidden');
+    }
+    saveAllData();
+    updateProjectCounter();
+}
+/* NOTIFICATIONS */
+function addSystemNotification(projName, date, time) {
+    const formattedDate = date || new Date().toLocaleDateString('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/-/g, '.');
+    const formattedTime = time || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }).toUpperCase();
+    const logHtml = `
+        <div class="notif-item p-5 bg-green-500/5 border border-green-500/20 rounded-3xl text-left relative overflow-hidden group hover:border-green-500/40 transition-all animate-in slide-in-from-top mb-3">
+            <div class="flex justify-between items-start mb-2">
+                <p class="text-[8px] font-black text-green-500 uppercase tracking-widest">Build Successful</p>
+                <span class="text-[7px] text-gray-600 font-bold uppercase">${formattedDate} | ${formattedTime}</span>
+            </div>
+            <p class="text-white text-[11px] font-bold leading-relaxed">New Core Module <span class="text-green-500 italic">"${projName}"</span> successfully compiled.</p>
+        </div>`;
+    const scrollArea = document.getElementById('notif-scroll-area');
+    if (scrollArea) {
+        scrollArea.insertAdjacentHTML('afterbegin', logHtml);
+        updateNotificationUI();
+    }
+    if (typeof views !== 'undefined' && views['Notifications']) {
+        const temp = document.createElement('div');
+        temp.innerHTML = views['Notifications'];
+        const bgScroll = temp.querySelector('#notif-scroll-area');
+        if (bgScroll) {
+            bgScroll.insertAdjacentHTML('afterbegin', logHtml);
+            views['Notifications'] = temp.innerHTML;
+        }
+        const bgCount = temp.querySelector('#notif-count');
+        if (bgCount) {
+            let current = parseInt(bgCount.innerText) || 0;
+            bgCount.innerText = `${current + 1} new updates`;
+            views['Notifications'] = temp.innerHTML;
+        }
+    }
+    saveAllData();
+}
 function updateNotificationUI() {
-  const badge = document.getElementById('notif-badge');
-  const countText = document.getElementById('notif-count');
-  if (badge) badge.classList.remove('hidden');
-  if (countText) {
-    let current = parseInt(countText.innerText) || 0;
-    countText.innerText = `${current + 1} new updates`;
-  }
+    const badge = document.getElementById('notif-badge');
+    const countText = document.getElementById('notif-count');
+    if (badge) badge.classList.remove('hidden');
+    if (countText) {
+        let current = parseInt(countText.innerText) || 0;
+        countText.innerText = `${current + 1} new updates`;
+    }
 }
-
-// Init bulk management
+/* BULK DELETE & SELECT ALL */
 function initProjectManagement() {
-  const bulkBtn = document.getElementById('bulkDeleteBtn');
-  const selectAllBtn = document.getElementById('selectAllBtn');
-  if (!bulkBtn || !selectAllBtn) return;
-
-  const updateUI = () => {
-    const checked = document.querySelectorAll('.project-checkbox:checked');
-    const total = document.querySelectorAll('.project-checkbox').length;
-    bulkBtn.textContent = `Bulk Delete (${checked.length})`;
-    bulkBtn.disabled = checked.length === 0;
-    bulkBtn.classList.toggle('opacity-50', checked.length === 0);
-    bulkBtn.classList.toggle('cursor-not-allowed', checked.length === 0);
-    selectAllBtn.textContent = checked.length === total && total > 0 ? 'Deselect All' : 'Select All';
-  };
-
-  selectAllBtn.onclick = () => {
-    const all = document.querySelectorAll('.project-checkbox');
-    const allChecked = Array.from(all).every(c => c.checked);
-    all.forEach(c => c.checked = !allChecked);
+    const bulkBtn = document.getElementById('bulkDeleteBtn');
+    const selectAllBtn = document.getElementById('selectAllBtn');
+    if (!bulkBtn || !selectAllBtn) return;
+    const updateUI = () => {
+        const checked = document.querySelectorAll('.project-checkbox:checked');
+        const total = document.querySelectorAll('.project-checkbox').length;
+        bulkBtn.textContent = `Bulk Delete (${checked.length})`;
+        bulkBtn.disabled = checked.length === 0;
+        bulkBtn.classList.toggle('opacity-50', checked.length === 0);
+        bulkBtn.classList.toggle('cursor-not-allowed', checked.length === 0);
+        selectAllBtn.textContent = checked.length === total && total > 0 ? 'Deselect All' : 'Select All';
+    };
+    selectAllBtn.onclick = () => {
+        const all = document.querySelectorAll('.project-checkbox');
+        const allChecked = Array.from(all).every(c => c.checked);
+        all.forEach(c => c.checked = !allChecked);
+        updateUI();
+    };
+    document.getElementById('projectContainer')?.addEventListener('change', e => {
+        if (e.target.classList.contains('project-checkbox')) updateUI();
+    });
+    bulkBtn.onclick = () => {
+        if (!confirm('Permanently delete selected projects?')) return;
+        const checked = document.querySelectorAll('.project-checkbox:checked');
+        const names = [];
+        checked.forEach(cb => {
+            const name = cb.closest('.project-item')?.querySelector('h5')?.innerText.trim();
+            if (name) names.push(name);
+            cb.closest('.project-item').remove();
+        });
+        names.forEach(name => {
+            document.querySelectorAll('#projectGrid .project-card').forEach(card => {
+                if (card.querySelector('h6')?.innerText.trim() === name) card.remove();
+            });
+        });
+        if (document.querySelectorAll('#projectContainer .project-item').length === 0) {
+            document.querySelectorAll('#emptyProjectState').forEach(el => el.classList.remove('hidden'));
+        }
+        if (document.querySelectorAll('#projectGrid .project-card').length === 0) {
+            document.getElementById('projectGrid')?.classList.add('hidden');
+        }
+        updateUI();
+        saveAllData();
+        updateProjectCounter();
+    };
     updateUI();
-  };
-
-  document.getElementById('projectContainer')?.addEventListener('change', e => {
-    if (e.target.classList.contains('project-checkbox')) updateUI();
-  });
-
-  bulkBtn.onclick = async () => {
-    if (!confirm('Permanently delete selected projects?')) return;
-
-    const checked = document.querySelectorAll('.project-checkbox:checked');
-    const ids = Array.from(checked).map(cb => cb.closest('[data-project-id]')?.dataset.projectId).filter(Boolean);
-
-    for (const id of ids) {
-      const { error } = await supabase.from('projects').delete().eq('id', id);
-      if (error) console.error('Bulk delete error:', error);
-      document.querySelectorAll(`[data-project-id="${id}"]`).forEach(el => el.remove());
-    }
-
-    const remaining = document.querySelectorAll('#projectContainer .project-item').length;
-    if (remaining === 0) {
-      document.querySelectorAll('#emptyProjectState').forEach(el => el.classList.remove('hidden'));
-      document.getElementById('projectGrid')?.classList.add('hidden');
-    }
-
-    updateProjectCount();
-    updateUI();
-  };
-
-  updateUI();
 }
+/* STORAGE */
+function saveAllData() {
+    const data = {
+        grid: document.getElementById('projectGrid')?.innerHTML || "",
+        list: document.getElementById('projectContainer')?.innerHTML || "",
+        notifs: document.getElementById('notif-scroll-area')?.innerHTML || "",
+        notifCount: document.getElementById('notif-count')?.innerText || "0 new updates",
+        rawNotifs: typeof views !== 'undefined' ? views['Notifications'] : null
+    };
+    localStorage.setItem('nxxt_system_data_v5', JSON.stringify(data)); // New key to clear old data
+}
+function loadAllData() {
+    const saved = localStorage.getItem('nxxt_system_data_v5'); // ← FIXED: getItem, not getElementById
+    if (!saved) return;
 
-// Close modals
+    try {
+        const data = JSON.parse(saved);
+
+        const grid = document.getElementById('projectGrid');
+        if (data.grid && grid) {
+            grid.innerHTML = data.grid;
+            if (data.grid.trim()) {
+                grid.classList.remove('hidden');
+                document.querySelectorAll('#emptyProjectState').forEach(el => el.classList.add('hidden'));
+            }
+        }
+
+        const container = document.getElementById('projectContainer');
+        if (data.list && container) {
+            container.innerHTML = data.list;
+        }
+
+        const scrollArea = document.getElementById('notif-scroll-area');
+        if (data.notifs && scrollArea) {
+            scrollArea.innerHTML = data.notifs;
+        }
+
+        const countText = document.getElementById('notif-count');
+        if (data.notifCount && countText) {
+            countText.innerText = data.notifCount;
+            if (parseInt(data.notifCount) > 0) document.getElementById('notif-badge')?.classList.remove('hidden');
+        }
+
+        if (data.rawNotifs && typeof views !== 'undefined') {
+            views['Notifications'] = data.rawNotifs;
+        }
+
+        updateProjectCounter();
+        initProjectManagement();
+    } catch (e) {
+        console.error('Load failed:', e);
+    }
+}
 function closeCenterModal() { document.getElementById('centerModalOverlay')?.remove(); }
 function closeRightSlide() { document.getElementById('rightSlideOverlay')?.remove(); }
-
-// View switching hook
+/* VIEW SWITCHING – FULL PERSISTENCE */
 const originalUpdateView = window.updateView;
 window.updateView = function(viewName) {
-  if (originalUpdateView) originalUpdateView(viewName);
-  // If switching to Projects view, reload data
-  if (viewName === 'Projects') {
-    setTimeout(loadAndRenderProjects, 100);
-  }
+    if (originalUpdateView) originalUpdateView(viewName);
+    else {
+        const main = document.getElementById('main-content') || document.querySelector('main') || document.body;
+        if (views && views[viewName]) main.innerHTML = views[viewName];
+    }
+    // Always restore + update after switch
+    setTimeout(() => {
+        loadAllData();
+        updateProjectCounter();
+    }, 50);
 };
-
-// Initial load
+/* INITIAL LOAD */
 window.addEventListener('load', () => {
-  loadAndRenderProjects();
-  initProjectManagement();
+    loadAllData();
+    updateProjectCounter();
+    initProjectManagement();
 });
 
 
@@ -3714,7 +3636,7 @@ function openCollabConfigModal() {
     const name = document.getElementById('cName').value;
     const code = document.getElementById('collabCode').value;
     if(!name || code.length < 5) { showNxxtAlert("NAME AND VALID CODE REQUIRED"); return; }
-    
+
     document.getElementById('collabCenterModal').remove();
 
     const stacks = ['HTML', 'CSS', 'JS', 'React', 'Tailwind', 'Node.js', 'Python', 'MongoDB', 'Swift', 'C++', 'Java', 'Three.js'];
@@ -3785,7 +3707,7 @@ function finalizeCollab(name, code) {
     const publisher = document.getElementById('pubName').value || "ANONYMOUS";
     const role = document.getElementById('pubRole').value || "DEVELOPER";
     const desc = document.getElementById('cLongDesc').value || "No mission description provided.";
-    
+
     const cardHtml = `
     <div class="bg-[#050b1d] border border-white/5 rounded-[2rem] p-6 hover:border-cyan-500/30 transition-all group animate-in zoom-in-95">
         <div class="flex justify-between items-start mb-4">
@@ -3808,7 +3730,7 @@ function finalizeCollab(name, code) {
 
     document.getElementById('collab-join-content').insertAdjacentHTML('afterbegin', cardHtml);
     document.getElementById('collabSlideModal').remove();
-    
+
     // Centered Modal Alert as per Saved Instructions
     showNxxtAlert("STREAM DEPLOYED TO NETWORK");
     switchCollabTab('join');
@@ -3865,7 +3787,7 @@ function startMatrixEffect(canvasId) {
     const canvas = document.getElementById(canvasId);
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
-    
+
     // Set internal resolution
     canvas.width = canvas.parentElement.offsetWidth;
     canvas.height = 400; 
@@ -3898,15 +3820,15 @@ function switchInboxTab(tab) {
     document.querySelectorAll('.inbox-tab').forEach(t => {
         t.className = "inbox-tab flex-shrink-0 snap-start px-6 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all border border-white/10 text-gray-500 bg-white/5 hover:text-white whitespace-nowrap";
     });
-    
+
     const activeTab = document.getElementById(`itab-${tab}`);
     if(activeTab) {
         activeTab.className = "inbox-tab flex-shrink-0 snap-start px-6 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all border-blue-500/50 text-white bg-blue-600 shadow-[0_0_20px_rgba(37,99,235,0.2)] whitespace-nowrap";
     }
-    
+
     const content = document.getElementById('inbox-content');
     const fab = document.getElementById('postFAB');
-    
+
     // Only show FAB on Post tab, but it will trigger a "Building" modal
     tab === 'post' ? fab.classList.remove('hidden') : fab.classList.add('hidden');
 
@@ -3920,7 +3842,7 @@ function switchInboxTab(tab) {
 function renderBuildingState(tab) {
     const content = document.getElementById('inbox-content');
     const canvasId = `matrix-${tab}`;
-    
+
     content.innerHTML = `
     <div class="relative overflow-hidden rounded-[3rem] border border-white/5 bg-[#02010a] h-[450px] flex flex-col items-center justify-center text-center p-10 group">
         <canvas id="${canvasId}" class="absolute inset-0 opacity-10 group-hover:opacity-30 transition-opacity"></canvas>
@@ -3945,7 +3867,7 @@ function renderBuildingState(tab) {
             </div>
         </div>
     </div>`;
-    
+
     startMatrixEffect(canvasId);
 }
 
@@ -3972,476 +3894,158 @@ function openCreatePostModal() {
 
 /////// for the `activity progress
 
-// --- DATA & STATE ---
-const stats = {
-    projects: 12,
-    level: 5,
-    rank: 81, // Updated to match your screenshot
-    semester: 0,
-    streak: 0,
-    xp: 0
-};
 
-// --- INITIALIZATION ---
-document.addEventListener('DOMContentLoaded', () => {
-    // Default view
-    switchView('Overview');
+/* ================= CONFIG ================= */
+
+const YEAR = 2026;
+const GRID = document.getElementById("activity-grid");
+const STORAGE_KEY = "activity-2026";
+
+
+/* ================= COLORS ================= */
+
+
+function getColor(seconds) {
+  if (seconds < 60) return "bg-white/[0.03]";
+  if (seconds < 300) return "bg-green-900";
+  if (seconds < 600) return "bg-green-700";
+  if (seconds < 1800) return "bg-green-500";
+  return "bg-green-400";
+}
+
+/* ================= DATA ================= */
+
+
+let activity = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+let todayKey = new Date().toISOString().slice(0, 10);
+let totalSecondsToday = activity[todayKey] || 0;
+let lastTick = Date.now();
+let interval = null;
+
+
+
+
+
+
+
+
+
+
+
+
+/* ================= GRID ================= */
+
+
+function generateGrid() {
+  GRID.innerHTML = "";
+  const start = new Date(YEAR, 0, 1);
+
+  for (let i = 0; i < 365; i++) {
+    const d = new Date(start);
+    d.setDate(d.getDate() + i);
+    const key = d.toISOString().slice(0, 10);
+    const seconds = activity[key] || 0;
+
+
+
+
+
+
+
+
+
+
+    const box = document.createElement("div");
+    box.dataset.date = key;
+    box.title = `${key} — ${Math.floor(seconds / 60)} min`;
+    box.className = `
+      w-3 h-3 rounded-sm
+      ${getColor(seconds)}
+      transition-colors duration-300
+    `;
+
+
+
+    GRID.appendChild(box);
+  }
+}
+
+function updateBox(key) {
+  const box = GRID.querySelector(`[data-date="${key}"]`);
+
+
+
+  if (!box) return;
+  const seconds = activity[key] || 0;
+
+  box.className = `
+    w-3 h-3 rounded-sm
+    ${getColor(seconds)}
+    transition-colors duration-300
+  `;
+  box.title = `${key} — ${Math.floor(seconds / 60)} min`;
+}
+
+/* ================= TRACKING ================= */
+function startTracking() {
+  if (interval) clearInterval(interval);
+  lastTick = Date.now();
+
+
+
+
+  interval = setInterval(() => {
+    if (document.visibilityState !== "visible") return;
+
+    const now = Date.now();
+    const delta = (now - lastTick) / 1000;
+    lastTick = now;
+
+    totalSecondsToday += delta;
+    activity[todayKey] = Math.floor(totalSecondsToday);
+
+
+
+
+
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(activity));
+    updateBox(todayKey);
+  }, 5000);
+}
+
+function stopTracking() {
+  if (interval) clearInterval(interval);
+  activity[todayKey] = Math.floor(totalSecondsToday);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(activity));
+  updateBox(todayKey);
+}
+
+/* ================= DAY CHANGE ================= */
+
+
+setInterval(() => {
+  const nowKey = new Date().toISOString().slice(0, 10);
+  if (nowKey !== todayKey) {
+    stopTracking();
+    todayKey = nowKey;
+    totalSecondsToday = activity[todayKey] || 0;
+    startTracking();
+  }
+}, 60000);
+
+/* ================= EVENTS ================= */
+
+
+document.addEventListener("visibilitychange", () => {
+  document.visibilityState === "visible"
+    ? startTracking()
+    : stopTracking();
 });
 
-// --- STATS UPDATE LOGIC ---
-function updateDashboardStats() {
-    const setVal = (id, val) => {
-        const el = document.getElementById(id);
-        if (el) el.innerText = val;
-    };
+window.addEventListener("beforeunload", stopTracking);
 
-    setVal('projectCount', stats.projects);
-    setVal('dash-level-val', stats.level.toString().padStart(3, '0'));
-    setVal('ui-rank', `#${stats.rank}`);
-    setVal('dash-semester-val', stats.semester);
-    setVal('ui-streak', stats.streak);
-    setVal('dash-xp-val', stats.xp.toLocaleString());
-}
+/* ================= INIT ================= */
 
-// --- NEBULA CANVAS ANIMATION ---
-function initNebulaAnimation() {
-    const canvas = document.getElementById('nebula');
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    
-    // Fix: Ensure canvas has dimensions before starting
-    const resize = () => {
-        canvas.width = canvas.offsetWidth;
-        canvas.height = canvas.offsetHeight;
-    };
-    window.addEventListener('resize', resize);
-    resize();
 
-    const particles = [];
-    const particleCount = 80; // Increased for better density
-
-    class Particle {
-        constructor() {
-            this.reset();
-        }
-
-        reset() {
-            this.x = Math.random() * canvas.width;
-            this.y = Math.random() * canvas.height;
-            this.size = Math.random() * 2 + 1.5; // Slightly larger nodes
-            this.speedX = Math.random() * 0.4 - 0.2;
-            this.speedY = Math.random() * 0.4 - 0.2;
-            this.opacity = Math.random() * 0.6 + 0.3; // Higher base opacity
-        }
-
-        update() {
-            this.x += this.speedX;
-            this.y += this.speedY;
-
-            if (this.x > canvas.width) this.x = 0;
-            if (this.x < 0) this.x = canvas.width;
-            if (this.y > canvas.height) this.y = 0;
-            if (this.y < 0) this.y = canvas.height;
-        }
-
-        draw() {
-            ctx.fillStyle = `rgba(59, 130, 246, ${this.opacity})`; 
-            ctx.shadowBlur = 12; // Brighter glow
-            ctx.shadowColor = '#3b82f6';
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-            ctx.fill();
-        }
-    }
-
-    for (let i = 0; i < particleCount; i++) {
-        particles.push(new Particle());
-    }
-
-    function animate() {
-        if (!document.getElementById('nebula')) return; // Stop if view changed
-        
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        
-        ctx.strokeStyle = 'rgba(59, 130, 246, 0.08)'; // Slightly more visible lines
-        ctx.lineWidth = 1;
-        
-        for (let i = 0; i < particles.length; i++) {
-            for (let j = i; j < particles.length; j++) {
-                const dx = particles[i].x - particles[j].x;
-                const dy = particles[i].y - particles[j].y;
-                const distance = Math.sqrt(dx * dx + dy * dy);
-
-                if (distance < 110) {
-                    ctx.beginPath();
-                    ctx.moveTo(particles[i].x, particles[i].y);
-                    ctx.lineTo(particles[j].x, particles[j].y);
-                    ctx.stroke();
-                }
-            }
-            particles[i].update();
-            particles[i].draw();
-        }
-        requestAnimationFrame(animate);
-    }
-    animate();
-}
-
-// --- VIEW SWITCHING LOGIC ---
-window.switchView = function(viewName) {
-    const container = document.getElementById('main-content');
-    if (views[viewName]) {
-        container.innerHTML = views[viewName];
-        
-        // Critical Fix: Wait for DOM to paint before initializing canvas/stats
-        setTimeout(() => {
-            if (viewName === 'Overview') {
-                updateDashboardStats();
-                initNebulaAnimation();
-            }
-        }, 30); 
-    } else {
-        showSystemAlert(`The view "${viewName}" is currently locked or under construction.`, "Access Restricted");
-    }
-};
-
-// --- CENTERED MODAL ALERTS ---
-function showSystemAlert(message, title = "System Notification") {
-    const existing = document.getElementById('modal-overlay');
-    if (existing) existing.remove();
-
-    const modalHTML = `
-    <div id="modal-overlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[9999] flex items-center justify-center p-4 animate-in fade-in duration-300">
-        <div class="bg-[#0b1224] border border-white/10 p-8 rounded-[2.5rem] max-w-sm w-full shadow-2xl transform animate-in zoom-in-95 duration-300">
-            <div class="text-center">
-                <div class="w-16 h-16 bg-blue-500/10 rounded-full flex items-center justify-center mx-auto mb-6 border border-blue-500/20">
-                    <i class="fas fa-terminal text-blue-500 text-xl"></i>
-                </div>
-                <h3 class="text-xl font-black text-white uppercase italic tracking-tighter mb-2">${title}</h3>
-                <p class="text-gray-400 text-[10px] font-bold uppercase tracking-widest leading-relaxed mb-8">${message}</p>
-                <button onclick="closeModal()" class="w-full py-4 bg-white text-black rounded-2xl text-[11px] font-black uppercase tracking-[0.2em] hover:bg-blue-600 hover:text-white transition-all">
-                    Acknowledge
-                </button>
-            </div>
-        </div>
-    </div>`;
-    document.body.insertAdjacentHTML('beforeend', modalHTML);
-}
-
-function closeModal() {
-    const modal = document.getElementById('modal-overlay');
-    if (modal) {
-        modal.classList.add('opacity-0');
-        setTimeout(() => modal.remove(), 300);
-    }
-}
-//// extra for projects 
-// ─────────────────────────────────────────────────────────────
-//  PROJECT FEED / HISTORY
-// ─────────────────────────────────────────────────────────────
-function addToProjectFeed(project) {
-  const feed = document.getElementById('project-feed');
-  if (!feed) return;
-
-  // Hide empty placeholder if present
-  const emptyPlaceholder = feed.querySelector('.flex.flex-col.items-center.justify-center');
-  if (emptyPlaceholder) emptyPlaceholder.classList.add('hidden');
-
-  const timestamp = new Date(project.created_at).toLocaleString('en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit'
-  });
-
-  const itemHtml = `
-    <div class="bg-[#0a1120] border border-white/10 rounded-2xl p-5 hover:border-blue-500/30 transition-all animate-in fade-in" data-project-id="${project.id}">
-      <div class="flex items-start gap-4">
-        <div class="w-12 h-12 rounded-xl overflow-hidden bg-blue-500/10 border border-blue-500/20 flex-shrink-0">
-          ${project.image_url 
-            ? `<img src="${project.image_url}" class="w-full h-full object-cover" alt="${project.name}">` 
-            : `<div class="w-full h-full flex items-center justify-center"><i class="fas fa-microchip text-blue-400"></i></div>`}
-        </div>
-        <div class="flex-1 min-w-0">
-          <div class="flex justify-between items-start gap-3">
-            <div class="min-w-0">
-              <h5 class="text-white font-black text-base uppercase tracking-tight truncate">${project.name}</h5>
-              <p class="text-[9px] text-gray-400 uppercase mt-0.5">
-                ${project.category}${project.supervisor !== 'N/A' ? ` • SV: ${project.supervisor}` : ''}
-              </p>
-            </div>
-            <span class="text-[9px] text-gray-500 font-medium whitespace-nowrap">${timestamp}</span>
-          </div>
-          <p class="text-gray-300 text-[13px] mt-2 line-clamp-2">
-            ${project.description || project.short_summary || 'No description provided.'}
-          </p>
-        </div>
-      </div>
-    </div>`;
-
-  feed.insertAdjacentHTML('afterbegin', itemHtml);
-}
-
-// ─────────────────────────────────────────────────────────────
-//  UNIFIED addProjectToUI – adds to GRID + LIST + FEED
-// ─────────────────────────────────────────────────────────────
-function addProjectToUI(project) {
-  const gridTimestamp = new Date(project.created_at).toLocaleDateString('en-CA', {
-    year: 'numeric', month: '2-digit', day: '2-digit'
-  }).replace(/-/g, '.');
-
-  const hasImage = !!project.image_url;
-
-  // GRID CARD (Dashboard)
-  const grid = document.getElementById('projectGrid');
-  if (grid) {
-    grid.classList.remove('hidden');
-    const cardHtml = `
-      <div class="project-card bg-[#050b1d] border border-white/5 rounded-[2rem] p-6 group hover:border-blue-500/30 transition-all animate-in zoom-in-95 relative overflow-hidden" data-project-id="${project.id}">
-        <div class="absolute top-0 right-0 px-3 py-1 bg-green-500/10 border-b border-l border-green-500/20 rounded-bl-xl">
-          <span class="text-[7px] text-green-500 font-black uppercase tracking-widest">Build Successful</span>
-        </div>
-        <div class="flex justify-between items-start mb-6">
-          <div class="w-12 h-12 rounded-2xl border border-white/10 overflow-hidden bg-blue-500/5 flex items-center justify-center">
-            ${hasImage ? `<img src="${project.image_url}" class="w-full h-full object-cover">` : `<i class="fas fa-microchip text-blue-500"></i>`}
-          </div>
-          <span class="text-[8px] text-gray-600 font-black uppercase mt-2">${project.category}</span>
-        </div>
-        <h6 class="text-white font-black uppercase italic text-xs mb-1 truncate">${project.name}</h6>
-        <p class="text-[8px] text-blue-400 font-bold mb-3 uppercase tracking-tighter">SV: ${project.supervisor}</p>
-        <p class="text-[9px] text-gray-500 font-medium line-clamp-2 leading-relaxed mb-6">${project.description || 'No description'}</p>
-        <div class="pt-4 border-t border-white/5 flex justify-between items-center">
-          <div class="flex flex-col">
-            <span class="text-[7px] text-gray-700 font-black uppercase tracking-widest">Deployed</span>
-            <span class="text-[8px] text-white font-bold">${gridTimestamp}</span>
-          </div>
-          <i class="fas fa-chevron-right text-[10px] text-gray-800 group-hover:text-blue-500 transition-colors"></i>
-        </div>
-      </div>`;
-    grid.insertAdjacentHTML('afterbegin', cardHtml);
-  }
-
-  // MANAGEMENT LIST ITEM
-  const container = document.getElementById('projectContainer');
-  if (container) {
-    const listHtml = `
-      <div class="project-item p-6 bg-white/5 border border-white/10 rounded-3xl flex items-center justify-between hover:border-blue-500/30 transition-all mb-4" data-project-id="${project.id}">
-        <div class="flex items-center gap-4">
-          <input type="checkbox" class="project-checkbox w-4 h-4 accent-blue-500 rounded">
-          <div>
-            <h5 class="text-white font-black text-sm uppercase">${project.name}</h5>
-            <p class="text-[9px] text-gray-500 uppercase tracking-wider">${project.category}</p>
-          </div>
-        </div>
-        <button onclick="deleteProject('${project.id}', '${project.name.replace(/'/g, "\\'")}')"
-                class="text-red-500 hover:text-red-400 text-xs uppercase font-black">
-          Delete
-        </button>
-      </div>`;
-    container.insertAdjacentHTML('afterbegin', listHtml);
-  }
-
-  // PROJECT HISTORY / FEED
-  addToProjectFeed(project);
-
-  // Hide shared empty state
-  document.querySelectorAll('#emptyProjectState').forEach(el => el.classList.add('hidden'));
-}
-
-// ─────────────────────────────────────────────────────────────
-//  LOAD ALL PROJECTS (Dashboard + Management + Feed)
-// ─────────────────────────────────────────────────────────────
-async function loadAndRenderProjects() {
-  const user = await getCurrentUser();
-  if (!user) return;
-
-  const { data: projects, error } = await supabase
-    .from('projects')
-    .select('*')
-    .eq('user_id', user.id)
-    .order('created_at', { ascending: false });
-
-  if (error) {
-    console.error('Failed to load projects:', error);
-    showNxxtAlert("Could not load your projects");
-    return;
-  }
-
-  // Clear containers
-  const grid = document.getElementById('projectGrid');
-  const container = document.getElementById('projectContainer');
-  const feed = document.getElementById('project-feed');
-
-  if (grid) grid.innerHTML = '';
-  if (container) container.innerHTML = '';
-  if (feed) feed.innerHTML = '';
-
-  // Re-add empty state to feed if needed
-  if (projects.length === 0 && feed) {
-    feed.innerHTML = `
-      <div class="flex flex-col items-center justify-center py-12 text-center">
-        <div class="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mb-4 border border-white/10">
-          <i class="fas fa-folder-open text-gray-600 text-xl"></i>
-        </div>
-        <h4 class="text-white font-black uppercase italic tracking-tighter">No projects yet</h4>
-        <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest mt-1">Start a new workspace to see your activity here</p>
-        <button onclick="openProjectNamingModal()" class="mt-6 px-6 py-3 bg-white text-black rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-blue-500 hover:text-white transition-all">
-          Initialize Workspace
-        </button>
-      </div>`;
-  }
-
-  if (projects.length === 0) {
-    document.querySelectorAll('#emptyProjectState').forEach(el => el.classList.remove('hidden'));
-    if (grid) grid.classList.add('hidden');
-  } else {
-    if (grid) grid.classList.remove('hidden');
-    projects.forEach(project => addProjectToUI(project));
-  }
-
-  updateProjectCount(projects.length);
-}
-
-// ─────────────────────────────────────────────────────────────
-//  DELETE PROJECT – clean all views
-// ─────────────────────────────────────────────────────────────
-async function deleteProject(projectId, projectName) {
-  if (!confirm(`Delete "${projectName}" permanently?`)) return;
-
-  const { error } = await supabase.from('projects').delete().eq('id', projectId);
-  if (error) {
-    showNxxtAlert("Delete failed");
-    console.error(error);
-    return;
-  }
-
-  // Remove from ALL views that use data-project-id
-  document.querySelectorAll(`[data-project-id="${projectId}"]`).forEach(el => el.remove());
-
-  // Check feed empty state
-  const feed = document.getElementById('project-feed');
-  if (feed && feed.children.length === 0) {
-    feed.innerHTML = `
-      <div class="flex flex-col items-center justify-center py-12 text-center">
-        <div class="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mb-4 border border-white/10">
-          <i class="fas fa-folder-open text-gray-600 text-xl"></i>
-        </div>
-        <h4 class="text-white font-black uppercase italic tracking-tighter">No projects yet</h4>
-        <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest mt-1">Start a new workspace to see your activity here</p>
-        <button onclick="openProjectNamingModal()" class="mt-6 px-6 py-3 bg-white text-black rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-blue-500 hover:text-white transition-all">
-          Initialize Workspace
-        </button>
-      </div>`;
-  }
-
-  // Check main empty state
-  const remaining = document.querySelectorAll('#projectContainer .project-item').length;
-  if (remaining === 0) {
-    document.querySelectorAll('#emptyProjectState').forEach(el => el.classList.remove('hidden'));
-    document.getElementById('projectGrid')?.classList.add('hidden');
-  }
-
-  updateProjectCount();
-}// Helper: Show/hide feed empty state
-function toggleFeedEmptyState(show) {
-  const emptyState = document.getElementById('feed-empty-state');
-  if (emptyState) {
-    if (show) {
-      emptyState.classList.remove('hidden');
-    } else {
-      emptyState.classList.add('hidden');
-    }
-  }
-}
-
-// Updated addToProjectFeed (hide empty state when adding first item)
-function addToProjectFeed(project) {
-  const feed = document.getElementById('project-feed');
-  if (!feed) return;
-
-  // Hide empty state when we add something
-  toggleFeedEmptyState(false);
-
-  const timestamp = new Date(project.created_at).toLocaleString('en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit'
-  });
-
-  const itemHtml = `
-    <div class="bg-[#0a1120] border border-white/10 rounded-2xl p-5 hover:border-blue-500/30 transition-all animate-in fade-in" data-project-id="${project.id}">
-      <div class="flex items-start gap-4">
-        <div class="w-12 h-12 rounded-xl overflow-hidden bg-blue-500/10 border border-blue-500/20 flex-shrink-0">
-          ${project.image_url 
-            ? `<img src="${project.image_url}" class="w-full h-full object-cover" alt="${project.name}">` 
-            : `<div class="w-full h-full flex items-center justify-center"><i class="fas fa-microchip text-blue-400"></i></div>`}
-        </div>
-        <div class="flex-1 min-w-0">
-          <div class="flex justify-between items-start gap-3">
-            <div class="min-w-0">
-              <h5 class="text-white font-black text-base uppercase tracking-tight truncate">${project.name}</h5>
-              <p class="text-[9px] text-gray-400 uppercase mt-0.5">
-                ${project.category}${project.supervisor !== 'N/A' ? ` • SV: ${project.supervisor}` : ''}
-              </p>
-            </div>
-            <span class="text-[9px] text-gray-500 font-medium whitespace-nowrap">${timestamp}</span>
-          </div>
-          <p class="text-gray-300 text-[13px] mt-2 line-clamp-2">
-            ${project.description || project.short_summary || 'No description provided.'}
-          </p>
-        </div>
-      </div>
-    </div>`;
-
-  feed.insertAdjacentHTML('afterbegin', itemHtml);
-}
-
-// In loadAndRenderProjects – make sure empty state is shown correctly
-async function loadAndRenderProjects() {
-  // ... your existing code ...
-
-  const feed = document.getElementById('project-feed');
-  if (feed) {
-    feed.innerHTML = ''; // clear previous
-
-    if (projects.length === 0) {
-      toggleFeedEmptyState(true);
-    } else {
-      toggleFeedEmptyState(false);
-      projects.forEach(project => {
-        addProjectToUI(project);   // this already calls addToProjectFeed
-      });
-    }
-  }
-
-  // ... rest of your load function ...
-}
-
-// In deleteProject – restore empty state if feed becomes empty
-async function deleteProject(projectId, projectName) {
-  // ... your existing delete logic ...
-
-  // After removing elements
-  const feed = document.getElementById('project-feed');
-  if (feed && feed.querySelectorAll('[data-project-id]').length === 0) {
-    toggleFeedEmptyState(true);
-  }
-
-  // ... rest of delete logic ...
-}// Add this after your other code
-document.getElementById('projectSearchInput')?.addEventListener('input', function(e) {
-  const term = e.target.value.toLowerCase().trim();
-  const items = document.querySelectorAll('#projectContainer .project-item');
-
-  items.forEach(item => {
-    const name = item.querySelector('h5')?.textContent.toLowerCase() || '';
-    const category = item.querySelector('p')?.textContent.toLowerCase() || '';
-    const visible = name.includes(term) || category.includes(term);
-    item.style.display = visible ? '' : 'none';
-  });
-
-  // Optional: show "no results" message if needed
-});
+generateGrid();
+startTracking();
