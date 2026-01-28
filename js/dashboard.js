@@ -314,7 +314,7 @@ const views = {
   </div>
 
   <div id="projectContainer" class="relative">
-    <!-- Loading Overlay (centered, shown during 5s create) -->
+    <!-- Centered Loading Overlay -->
     <div id="loadingOverlay" class="hidden fixed inset-0 bg-black/70 flex items-center justify-center z-50">
       <div class="flex flex-col items-center">
         <div class="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
@@ -328,7 +328,9 @@ const views = {
         <i class="fas fa-folder-open text-blue-500 text-4xl"></i>
       </div>
       <h4 class="text-white font-black uppercase italic tracking-tighter text-3xl">No Projects Yet</h4>
-      <p class="text-[10px] text-gray-500 font-bold uppercase tracking-[0.3em] mt-4 max-w-sm mx-auto">Create your first project to get started.</p>
+      <p class="text-[10px] text-gray-500 font-bold uppercase tracking-[0.3em] mt-4 max-w-sm mx-auto">
+        Create your first project to get started.
+      </p>
     </div>
 
     <!-- Project Grid -->
@@ -336,12 +338,12 @@ const views = {
   </div>
 </div>
 
-<!-- Right-Slide Modal -->
-<div id="projectModal" class="fixed top-0 right-0 h-full w-full md:w-96 bg-[#050b1d] border-l border-white/10 transform translate-x-full transition-transform duration-300 ease-in-out z-50 overflow-y-auto">
-  <div class="p-8">
+<!-- Right Slide-in Modal – starts hidden & off-screen -->
+<div id="projectModal" class="fixed inset-y-0 right-0 h-full w-full md:w-96 bg-[#050b1d] border-l border-white/10 transform translate-x-full hidden transition-transform duration-300 ease-in-out z-50 overflow-y-auto">
+  <div class="p-6 md:p-8">
     <div class="flex justify-between items-center mb-8">
       <h3 class="text-2xl font-black text-white">New Project</h3>
-      <button id="closeModalBtn" class="text-gray-400 hover:text-white">
+      <button id="closeModalBtn" class="text-gray-400 hover:text-white transition-colors">
         <i class="fas fa-times text-2xl"></i>
       </button>
     </div>
@@ -364,7 +366,7 @@ const views = {
 
       <div>
         <label class="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2">Project Type *</label>
-        <select id="projType" required class="w-full bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-white focus:border-blue-500 outline-none">
+        <select id="projType" required class="w-full bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-white focus:border-blue-500 outline-none appearance-none">
           <option value="school">School</option>
           <option value="private" selected>Private</option>
           <option value="job" disabled>Job (Coming Next Update)</option>
@@ -381,15 +383,19 @@ const views = {
         <label class="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2">Collaborators (max 5 on free)</label>
         <div class="flex gap-2">
           <input type="text" id="addUserInput" placeholder="@username" class="flex-1 bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-white placeholder-gray-600 focus:border-blue-500 outline-none">
-          <button type="button" id="addUserBtn" class="px-4 bg-blue-600 hover:bg-blue-500 rounded-xl font-black uppercase text-xs">Add</button>
+          <button type="button" id="addUserBtn" class="px-4 bg-blue-600 hover:bg-blue-500 rounded-xl font-black uppercase text-xs transition-colors">Add</button>
         </div>
         <div id="collaboratorsList" class="mt-3 flex flex-wrap gap-2"></div>
         <p id="collabCount" class="text-[9px] text-gray-500 mt-1">0 / 5</p>
       </div>
 
       <div class="flex gap-4 pt-6">
-        <button type="button" id="discardBtn" class="flex-1 py-4 bg-white/5 border border-white/10 rounded-xl font-black uppercase text-[9px] tracking-widest text-gray-400 hover:bg-white/10">Discard</button>
-        <button type="submit" class="flex-1 py-4 bg-blue-600 hover:bg-blue-500 rounded-xl font-black uppercase text-[9px] tracking-widest">Done</button>
+        <button type="button" id="discardBtn" class="flex-1 py-4 bg-white/5 border border-white/10 rounded-xl font-black uppercase text-[9px] tracking-widest text-gray-400 hover:bg-white/10 transition-colors">
+          Discard
+        </button>
+        <button type="submit" class="flex-1 py-4 bg-blue-600 hover:bg-blue-500 rounded-xl font-black uppercase text-[9px] tracking-widest transition-colors">
+          Done
+        </button>
       </div>
     </form>
   </div>
@@ -3575,212 +3581,244 @@ function openCreatePostModal() {
 
 /// for the projects 
 
-// Mock data & limits
-let projects = [];
-const MAX_PROJECTS = 10;
-const MAX_COLLABS = 5;
 
-// DOM
-const createBtn = document.getElementById('createProjectBtn');
-const modal = document.getElementById('projectModal');
-const closeBtn = document.getElementById('closeModalBtn');
-const form = document.getElementById('projectForm');
-const nameInput = document.getElementById('projName');
-const descInput = document.getElementById('projDesc');
-const imgInput = document.getElementById('projImg');
-const typeSelect = document.getElementById('projType');
-const supervisorInput = document.getElementById('projSupervisor');
-const userInput = document.getElementById('addUserInput');
-const addUserBtn = document.getElementById('addUserBtn');
-const collabList = document.getElementById('collaboratorsList');
-const collabCount = document.getElementById('collabCount');
-const grid = document.getElementById('projectGrid');
-const emptyState = document.getElementById('emptyProjectState');
-const loading = document.getElementById('loadingOverlay');
-const projectCountEl = document.getElementById('projectCount') || { textContent: '0' };
+// ──────────────────────────────────────────────
+// Wait for DOM to be ready before attaching listeners
+// ──────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  // Mock data & limits (can be replaced with real storage later)
+  let projects = [];
+  const MAX_PROJECTS = 10;
+  const MAX_COLLABS = 5;
 
-// Helpers
-function generateProjectID(name) {
-  const slug = name.toLowerCase().replace(/\s+/g, '').slice(0,8);
-  const rand = Math.random().toString(36).slice(2,14);
-  return (slug + rand).slice(0,20).padEnd(20,'0');
-}
+  // DOM elements
+  const createBtn       = document.getElementById('createProjectBtn');
+  const modal           = document.getElementById('projectModal');
+  const closeBtn        = document.getElementById('closeModalBtn');
+  const discardBtn      = document.getElementById('discardBtn');
+  const form            = document.getElementById('projectForm');
+  const nameInput       = document.getElementById('projName');
+  const descInput       = document.getElementById('projDesc');
+  const imgInput        = document.getElementById('projImg');
+  const typeSelect      = document.getElementById('projType');
+  const supervisorInput = document.getElementById('projSupervisor');
+  const userInput       = document.getElementById('addUserInput');
+  const addUserBtn      = document.getElementById('addUserBtn');
+  const collabList      = document.getElementById('collaboratorsList');
+  const collabCount     = document.getElementById('collabCount');
+  const grid            = document.getElementById('projectGrid');
+  const emptyState      = document.getElementById('emptyProjectState');
+  const loading         = document.getElementById('loadingOverlay');
+  const projectCountEl  = document.getElementById('projectCount') || { textContent: '0' };
 
-function randomStatus() {
-  const r = Math.random();
-  if (r < 0.4) return { label: 'Complete', color: 'green' };
-  if (r < 0.7) return { label: 'Pending', color: 'yellow' };
-  return { label: 'Rejected', color: 'red' };
-}
-
-function updateCount() {
-  projectCountEl.textContent = projects.length;
-  if (projects.length === 0) {
-    emptyState.classList.remove('hidden');
-    grid.classList.add('hidden');
-  } else {
-    emptyState.classList.add('hidden');
-    grid.classList.remove('hidden');
+  // ─── Helpers ────────────────────────────────────────
+  function generateProjectID(name) {
+    const slug = name.toLowerCase().replace(/\s+/g, '').slice(0,8);
+    const rand = Math.random().toString(36).slice(2,14);
+    return (slug + rand).slice(0,20).padEnd(20, '0');
   }
-}
 
-function renderProjects() {
-  grid.innerHTML = '';
-  projects.forEach((proj, idx) => {
-    const status = proj.status || randomStatus();
-    const card = document.createElement('div');
-    card.className = 'bg-[#0a1125] border border-white/5 rounded-2xl overflow-hidden group hover:border-blue-500/30 transition-all relative';
-    card.innerHTML = `
-      <div class="relative h-40 bg-gradient-to-br from-blue-900/20 to-black flex items-center justify-center">
-        ${proj.img ? `<img src="${proj.img}" alt="${proj.name}" class="object-cover w-full h-full">` : '<i class="fas fa-code text-6xl text-blue-500/30"></i>'}
-      </div>
-      <div class="p-5">
-        <div class="flex justify-between items-start">
-          <div>
-            <h4 class="font-black text-lg text-white">${proj.name}</h4>
-            <p class="text-[11px] text-gray-400 mt-1 line-clamp-2">${proj.desc || 'No description'}</p>
+  function randomStatus() {
+    const r = Math.random();
+    if (r < 0.4) return { label: 'Complete', color: 'green' };
+    if (r < 0.7) return { label: 'Pending',   color: 'yellow' };
+    return                  { label: 'Rejected', color: 'red' };
+  }
+
+  function updateCount() {
+    projectCountEl.textContent = projects.length;
+    if (projects.length === 0) {
+      emptyState.classList.remove('hidden');
+      grid.classList.add('hidden');
+    } else {
+      emptyState.classList.add('hidden');
+      grid.classList.remove('hidden');
+    }
+  }
+
+  function renderProjects() {
+    grid.innerHTML = '';
+    projects.forEach((proj, idx) => {
+      const status = proj.status || randomStatus();
+      const card = document.createElement('div');
+      card.className = 'bg-[#0a1125] border border-white/5 rounded-2xl overflow-hidden group hover:border-blue-500/30 transition-all relative';
+      card.innerHTML = `
+        <div class="relative h-40 bg-gradient-to-br from-blue-900/20 to-black flex items-center justify-center">
+          ${proj.img ? `<img src="${proj.img}" alt="${proj.name}" class="object-cover w-full h-full">` : '<i class="fas fa-code text-6xl text-blue-500/30"></i>'}
+        </div>
+        <div class="p-5">
+          <div class="flex justify-between items-start">
+            <div>
+              <h4 class="font-black text-lg text-white">${proj.name}</h4>
+              <p class="text-[11px] text-gray-400 mt-1 line-clamp-2">${proj.desc || 'No description'}</p>
+            </div>
+            <div class="relative">
+              <button class="text-gray-400 hover:text-white" onclick="showMenu(${idx})">
+                <i class="fas fa-ellipsis-v"></i>
+              </button>
+              <div id="menu-${idx}" class="hidden absolute right-0 mt-2 w-40 bg-[#0f1a3a] border border-white/10 rounded-xl shadow-2xl z-10 py-2">
+                <button onclick="editProject(${idx})" class="w-full text-left px-4 py-2 text-[11px] hover:bg-white/5">Edit</button>
+                <button disabled class="w-full text-left px-4 py-2 text-[11px] text-gray-600 cursor-not-allowed">Re-node (Locked)</button>
+                <button onclick="deleteProject(${idx})" class="w-full text-left px-4 py-2 text-[11px] hover:bg-red-500/10 text-red-400">Delete</button>
+              </div>
+            </div>
           </div>
-          <div class="relative">
-            <button class="text-gray-400 hover:text-white" onclick="showMenu(${idx})">
-              <i class="fas fa-ellipsis-v"></i>
-            </button>
-            <div id="menu-${idx}" class="hidden absolute right-0 mt-2 w-40 bg-[#0f1a3a] border border-white/10 rounded-xl shadow-2xl z-10 py-2">
-              <button onclick="editProject(${idx})" class="w-full text-left px-4 py-2 text-[11px] hover:bg-white/5">Edit</button>
-              <button disabled class="w-full text-left px-4 py-2 text-[11px] text-gray-600 cursor-not-allowed">Re-node (Locked)</button>
-              <button onclick="deleteProject(${idx})" class="w-full text-left px-4 py-2 text-[11px] hover:bg-red-500/10 text-red-400">Delete</button>
+          <div class="mt-6 flex justify-between items-end text-[10px] font-black uppercase tracking-widest">
+            <div>
+              <p class="text-gray-500">Users</p>
+              <p class="text-white">${proj.collabs.length}</p>
+              <p class="text-gray-600 mt-1 break-all">ID: ${proj.id}</p>
+            </div>
+            <div class="text-right">
+              <span class="px-3 py-1 rounded-full bg-${status.color}-500/20 text-${status.color}-400 border border-${status.color}-500/30">
+                ${status.label}
+              </span>
             </div>
           </div>
         </div>
-        <div class="mt-6 flex justify-between items-end text-[10px] font-black uppercase tracking-widest">
-          <div>
-            <p class="text-gray-500">Users</p>
-            <p class="text-white">${proj.collabs.length}</p>
-            <p class="text-gray-600 mt-1 break-all">ID: ${proj.id}</p>
-          </div>
-          <div class="text-right">
-            <span class="px-3 py-1 rounded-full bg-${status.color}-500/20 text-${status.color}-400 border border-${status.color}-500/30">
-              ${status.label}
-            </span>
-          </div>
-        </div>
-      </div>
-    `;
-    grid.appendChild(card);
+      `;
+      grid.appendChild(card);
 
-    // Mock XP gain on complete
-    if (status.label === 'Complete') {
-      const xpEl = document.getElementById('dash-xp-val');
-      if (xpEl) xpEl.textContent = parseInt(xpEl.textContent || 0) + 10;
+      // Mock XP gain
+      if (status.label === 'Complete') {
+        const xpEl = document.getElementById('dash-xp-val');
+        if (xpEl) xpEl.textContent = (parseInt(xpEl.textContent || '0') + 10).toString();
+      }
+    });
+    updateCount();
+    if (typeof updateActivitySection === 'function') updateActivitySection();
+    if (typeof renderSettingsProjects === 'function') renderSettingsProjects();
+  }
+
+  // ─── Modal Controls ─────────────────────────────────
+  function openModal() {
+    if (projects.length >= MAX_PROJECTS) {
+      alert('Free limit reached: 10 projects max. Upgrade for more.');
+      return;
     }
-  });
-  updateCount();
-}
-
-// Modal controls
-createBtn.onclick = () => {
-  if (projects.length >= MAX_PROJECTS) {
-    alert('Free limit reached: 10 projects max. Upgrade for more.');
-    return;
+    modal.classList.remove('hidden');
+    modal.classList.remove('translate-x-full');
+    modal.classList.add('translate-x-0');
   }
-  modal.classList.remove('translate-x-full');
-  modal.classList.add('translate-x-0');
-};
 
-closeBtn.onclick = () => modal.classList.add('translate-x-full');
-
-addUserBtn.onclick = () => {
-  const val = userInput.value.trim();
-  if (!val || !val.startsWith('@')) return;
-  const current = parseInt(collabCount.textContent.split('/')[0]);
-  if (current >= MAX_COLLABS) {
-    alert('Free limit: 5 collaborators max per project.');
-    return;
-  }
-  const tag = document.createElement('div');
-  tag.className = 'px-3 py-1 bg-blue-500/10 border border-blue-500/20 rounded-full text-[10px] text-blue-300 flex items-center gap-2';
-  tag.innerHTML = `${val} <button type="button" class="text-red-400 hover:text-red-300">×</button>`;
-  tag.querySelector('button').onclick = () => { tag.remove(); updateCollabCount(); };
-  collabList.appendChild(tag);
-  userInput.value = '';
-  updateCollabCount();
-};
-
-function updateCollabCount() {
-  const count = collabList.children.length;
-  collabCount.textContent = `${count} / ${MAX_COLLABS}`;
-}
-
-form.onsubmit = e => {
-  e.preventDefault();
-  const name = nameInput.value.trim();
-  if (!name) return alert('Project name required');
-
-  const collabs = Array.from(collabList.children).map(el => el.textContent.replace(' ×','').trim());
-
-  loading.classList.remove('hidden');
-  setTimeout(() => {
-    const newProj = {
-      id: generateProjectID(name),
-      name,
-      desc: descInput.value.trim(),
-      img: imgInput.value.trim(),
-      type: typeSelect.value,
-      supervisor: supervisorInput.value.trim(),
-      collabs,
-      status: randomStatus()
-    };
-    projects.push(newProj);
-    renderProjects();
-
-    // Notification mock
-    addNotification(`Project "${name}" created. ID: ${newProj.id}`);
-
-    // Reset form & close
-    form.reset();
-    collabList.innerHTML = '';
-    updateCollabCount();
-    loading.classList.add('hidden');
+  function closeModal() {
+    modal.classList.remove('translate-x-0');
     modal.classList.add('translate-x-full');
-  }, 5000);
-};
+    // Wait for animation to finish before hiding
+    setTimeout(() => {
+      modal.classList.add('hidden');
+    }, 300);
+  }
 
-// Menu toggle (simple)
-window.showMenu = idx => {
-  document.querySelectorAll('[id^="menu-"]').forEach(m => m.classList.add('hidden'));
-  document.getElementById(`menu-${idx}`).classList.toggle('hidden');
-};
+  createBtn.addEventListener('click', openModal);
+  closeBtn.addEventListener('click', closeModal);
+  discardBtn.addEventListener('click', () => {
+    if (confirm('Discard changes?')) closeModal();
+  });
 
-window.editProject = idx => {
-  // Re-open modal pre-filled (simplified mock)
-  const p = projects[idx];
-  nameInput.value = p.name;
-  descInput.value = p.desc;
-  imgInput.value = p.img || '';
-  typeSelect.value = p.type;
-  supervisorInput.value = p.supervisor || '';
-  collabList.innerHTML = '';
-  p.collabs.forEach(u => {
+  // Collaborators add/remove
+  addUserBtn.addEventListener('click', () => {
+    const val = userInput.value.trim();
+    if (!val || !val.startsWith('@')) return;
+    const current = collabList.children.length;
+    if (current >= MAX_COLLABS) {
+      alert('Free limit: 5 collaborators max per project.');
+      return;
+    }
     const tag = document.createElement('div');
     tag.className = 'px-3 py-1 bg-blue-500/10 border border-blue-500/20 rounded-full text-[10px] text-blue-300 flex items-center gap-2';
-    tag.innerHTML = `${u} <button type="button" class="text-red-400 hover:text-red-300">×</button>`;
+    tag.innerHTML = `${val} <button type="button" class="text-red-400 hover:text-red-300">×</button>`;
     tag.querySelector('button').onclick = () => { tag.remove(); updateCollabCount(); };
     collabList.appendChild(tag);
+    userInput.value = '';
+    updateCollabCount();
   });
-  updateCollabCount();
-  modal.classList.remove('translate-x-full');
-  modal.classList.add('translate-x-0');
-  // On submit would overwrite, but for simplicity we re-create
-};
 
-window.deleteProject = idx => {
-  if (!confirm('Delete project?')) return;
-  projects.splice(idx, 1);
+  function updateCollabCount() {
+    const count = collabList.children.length;
+    collabCount.textContent = `${count} / ${MAX_COLLABS}`;
+  }
+
+  // Form submit → create project
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    const name = nameInput.value.trim();
+    if (!name) return alert('Project name is required');
+
+    const collabs = Array.from(collabList.children).map(el => el.textContent.replace(/ ×$/, '').trim());
+
+    loading.classList.remove('hidden');
+
+    setTimeout(() => {
+      const newProj = {
+        id: generateProjectID(name),
+        name,
+        desc: descInput.value.trim(),
+        img: imgInput.value.trim() || '',
+        type: typeSelect.value,
+        supervisor: supervisorInput.value.trim() || '',
+        collabs,
+        status: randomStatus()
+      };
+
+      projects.push(newProj);
+      renderProjects();
+
+      // Mock notification
+      if (typeof addNotification === 'function') {
+        addNotification(`Project "${name}" created. ID: ${newProj.id}`);
+      }
+
+      // Reset & close
+      form.reset();
+      collabList.innerHTML = '';
+      updateCollabCount();
+      loading.classList.add('hidden');
+      closeModal();
+    }, 5000);
+  });
+
+  // Menu toggle
+  window.showMenu = function(idx) {
+    document.querySelectorAll('[id^="menu-"]').forEach(m => m.classList.add('hidden'));
+    const menu = document.getElementById(`menu-${idx}`);
+    if (menu) menu.classList.toggle('hidden');
+  };
+
+  window.editProject = function(idx) {
+    const p = projects[idx];
+    nameInput.value       = p.name;
+    descInput.value       = p.desc;
+    imgInput.value        = p.img || '';
+    typeSelect.value      = p.type;
+    supervisorInput.value = p.supervisor || '';
+
+    collabList.innerHTML = '';
+    p.collabs.forEach(u => {
+      const tag = document.createElement('div');
+      tag.className = 'px-3 py-1 bg-blue-500/10 border border-blue-500/20 rounded-full text-[10px] text-blue-300 flex items-center gap-2';
+      tag.innerHTML = `${u} <button type="button" class="text-red-400 hover:text-red-300">×</button>`;
+      tag.querySelector('button').onclick = () => { tag.remove(); updateCollabCount(); };
+      collabList.appendChild(tag);
+    });
+    updateCollabCount();
+
+    openModal();
+    // Note: current submit logic always creates new → for real edit you'd need update logic
+  };
+
+  window.deleteProject = function(idx) {
+    if (!confirm('Delete this project?')) return;
+    projects.splice(idx, 1);
+    renderProjects();
+    if (typeof addNotification === 'function') {
+      addNotification('Project deleted.');
+    }
+  };
+
+  // Initial render
   renderProjects();
-  addNotification(`Project deleted.`);
-};
-
-// Init
-renderProjects();
+});
 
 
 // Add this logic – call it whenever projects array changes (e.g. after create/delete)
