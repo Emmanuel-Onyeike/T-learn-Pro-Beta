@@ -306,7 +306,7 @@ const views = {
   <div class="relative w-full group opacity-50">
     <div class="flex items-center bg-[#050b1d] border border-white/10 rounded-2xl h-16 px-6">
       <i class="fas fa-search text-gray-600 mr-4"></i>
-      <input type="text" placeholder="SEARCH DISABLED ..." disabled class="flex-1 bg-transparent border-none text-[11px] font-black uppercase tracking-[0.2em] text-gray-700 focus:outline-none cursor-not-allowed">
+      <input type="text" placeholder="SEARCH DISABLED ..." disabled id="searchInput" name="search" class="flex-1 bg-transparent border-none text-[11px] font-black uppercase tracking-[0.2em] text-gray-700 focus:outline-none cursor-not-allowed">
       <div class="bg-gray-800 text-gray-600 rounded-xl h-10 px-4 flex items-center">
         <i class="fas fa-lock"></i>
       </div>
@@ -314,7 +314,7 @@ const views = {
   </div>
 
   <div id="projectContainer" class="relative">
-    <!-- Centered Loading Overlay -->
+    <!-- Loading Overlay -->
     <div id="loadingOverlay" class="hidden fixed inset-0 bg-black/70 flex items-center justify-center z-50">
       <div class="flex flex-col items-center">
         <div class="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
@@ -338,7 +338,7 @@ const views = {
   </div>
 </div>
 
-<!-- Right Slide-in Modal – starts hidden & off-screen -->
+<!-- Right Slide-in Modal -->
 <div id="projectModal" class="fixed inset-y-0 right-0 h-full w-full md:w-96 bg-[#050b1d] border-l border-white/10 transform translate-x-full hidden transition-transform duration-300 ease-in-out z-50 overflow-y-auto">
   <div class="p-6 md:p-8">
     <div class="flex justify-between items-center mb-8">
@@ -350,23 +350,23 @@ const views = {
 
     <form id="projectForm" class="space-y-6">
       <div>
-        <label class="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2">Project Name *</label>
-        <input type="text" id="projName" required class="w-full bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-white placeholder-gray-600 focus:border-blue-500 outline-none">
+        <label for="projName" class="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2">Project Name *</label>
+        <input type="text" id="projName" name="projName" required class="w-full bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-white placeholder-gray-600 focus:border-blue-500 outline-none">
       </div>
 
       <div>
-        <label class="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2">Description</label>
-        <textarea id="projDesc" rows="4" class="w-full bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-white placeholder-gray-600 focus:border-blue-500 outline-none"></textarea>
+        <label for="projDesc" class="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2">Description</label>
+        <textarea id="projDesc" name="projDesc" rows="4" class="w-full bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-white placeholder-gray-600 focus:border-blue-500 outline-none"></textarea>
       </div>
 
       <div>
-        <label class="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2">Image URL (optional)</label>
-        <input type="url" id="projImg" placeholder="https://example.com/image.jpg" class="w-full bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-white placeholder-gray-600 focus:border-blue-500 outline-none">
+        <label for="projImg" class="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2">Image URL (optional)</label>
+        <input type="url" id="projImg" name="projImg" placeholder="https://example.com/image.jpg" class="w-full bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-white placeholder-gray-600 focus:border-blue-500 outline-none">
       </div>
 
       <div>
-        <label class="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2">Project Type *</label>
-        <select id="projType" required class="w-full bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-white focus:border-blue-500 outline-none appearance-none">
+        <label for="projType" class="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2">Project Type *</label>
+        <select id="projType" name="projType" required class="w-full bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-white focus:border-blue-500 outline-none appearance-none">
           <option value="school">School</option>
           <option value="private" selected>Private</option>
           <option value="job" disabled>Job (Coming Next Update)</option>
@@ -375,14 +375,14 @@ const views = {
       </div>
 
       <div>
-        <label class="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2">Supervisor Name (optional)</label>
-        <input type="text" id="projSupervisor" class="w-full bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-white placeholder-gray-600 focus:border-blue-500 outline-none">
+        <label for="projSupervisor" class="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2">Supervisor Name (optional)</label>
+        <input type="text" id="projSupervisor" name="projSupervisor" class="w-full bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-white placeholder-gray-600 focus:border-blue-500 outline-none">
       </div>
 
       <div>
-        <label class="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2">Collaborators (max 5 on free)</label>
+        <label for="addUserInput" class="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2">Collaborators (max 5 on free)</label>
         <div class="flex gap-2">
-          <input type="text" id="addUserInput" placeholder="@username" class="flex-1 bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-white placeholder-gray-600 focus:border-blue-500 outline-none">
+          <input type="text" id="addUserInput" name="addUserInput" placeholder="@username" class="flex-1 bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-white placeholder-gray-600 focus:border-blue-500 outline-none">
           <button type="button" id="addUserBtn" class="px-4 bg-blue-600 hover:bg-blue-500 rounded-xl font-black uppercase text-xs transition-colors">Add</button>
         </div>
         <div id="collaboratorsList" class="mt-3 flex flex-wrap gap-2"></div>
@@ -401,7 +401,6 @@ const views = {
   </div>
 </div>
 `,
-
 
     
 
@@ -1265,7 +1264,7 @@ function updateSettingsTab(tabId) {
                 </div>
                 <button class="w-full md:w-auto px-12 py-4 bg-white/5 border border-white/10 rounded-2xl text-[10px] font-black uppercase tracking-widest">Update Security</button>
             </div>`,
-
+        
 'Projects': `
 <div class="space-y-8 animate-in pb-20 px-4 md:px-6">
   <!-- Header -->
@@ -1284,22 +1283,17 @@ function updateSettingsTab(tabId) {
           <div class="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></div>
           Settings View • Limited
         </div>
-        <button 
-          onclick="switchToMainProjectsView()" 
-          class="px-5 py-2.5 bg-blue-600 hover:bg-blue-500 rounded-xl font-black uppercase text-xs tracking-widest transition-all">
+        <button onclick="switchToMainProjectsView()" class="px-5 py-2.5 bg-blue-600 hover:bg-blue-500 rounded-xl font-black uppercase text-xs tracking-widest transition-all">
           Go to Full Projects
         </button>
       </div>
     </div>
 
-    <!-- Disabled Search + Bulk (future-proof) -->
+    <!-- Disabled Search + Bulk -->
     <div class="flex flex-col sm:flex-row gap-4 opacity-50 pointer-events-none">
       <div class="relative flex-1">
         <i class="fas fa-search absolute left-5 top-1/2 -translate-y-1/2 text-gray-500"></i>
-        <input 
-          type="text" disabled 
-          placeholder="SEARCH PROJECTS (OFFLINE)" 
-          class="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-14 pr-6 text-[10px] font-black uppercase tracking-widest text-gray-600 placeholder-gray-600 outline-none cursor-not-allowed">
+        <input type="text" disabled id="settingsSearch" name="settingsSearch" placeholder="SEARCH PROJECTS (OFFLINE)" class="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-14 pr-6 text-[10px] font-black uppercase tracking-widest text-gray-600 placeholder-gray-600 outline-none cursor-not-allowed">
       </div>
       <div class="flex gap-3 shrink-0">
         <button disabled class="px-6 py-3 bg-white/5 border border-white/10 rounded-xl text-[9px] font-black uppercase text-gray-500 cursor-not-allowed">
@@ -1325,16 +1319,14 @@ function updateSettingsTab(tabId) {
       <p class="text-[10px] text-gray-500 font-bold uppercase tracking-[0.25em] max-w-md mx-auto leading-relaxed mb-8">
         Projects you create in the main Projects section will appear here for quick management.
       </p>
-      <button 
-        onclick="switchToMainProjectsView()" 
-        class="px-8 py-4 bg-blue-600/10 hover:bg-blue-600/20 border border-blue-500/20 text-blue-400 font-black uppercase text-xs tracking-widest rounded-2xl transition-all">
+      <button onclick="switchToMainProjectsView()" class="px-8 py-4 bg-blue-600/10 hover:bg-blue-600/20 border border-blue-500/20 text-blue-400 font-black uppercase text-xs tracking-widest rounded-2xl transition-all">
         Create Your First Project →
       </button>
     </div>
 
-    <!-- Actual Project List (hidden until projects exist) -->
+    <!-- Actual Project List -->
     <div id="settingsProjectList" class="hidden space-y-4">
-      <!-- Projects will be injected here as cards -->
+      <!-- Projects injected here -->
     </div>
   </div>
 
@@ -1351,7 +1343,6 @@ function updateSettingsTab(tabId) {
         </p>
       </div>
     </div>
-
     <div class="p-6 bg-[#0a1125] border border-white/5 rounded-2xl flex items-center gap-5 group hover:border-purple-500/20 transition-all">
       <div class="w-12 h-12 bg-purple-500/10 rounded-2xl flex items-center justify-center border border-purple-500/20 shrink-0">
         <i class="fas fa-history text-purple-400 text-xl"></i>
@@ -1363,7 +1354,6 @@ function updateSettingsTab(tabId) {
         </p>
       </div>
     </div>
-
     <div class="p-6 bg-[#0a1125] border border-white/5 rounded-2xl flex items-center gap-5 group hover:border-yellow-500/20 transition-all">
       <div class="w-12 h-12 bg-yellow-500/10 rounded-2xl flex items-center justify-center border border-yellow-500/20 shrink-0">
         <i class="fas fa-star text-yellow-400 text-xl"></i>
@@ -1378,7 +1368,6 @@ function updateSettingsTab(tabId) {
   </div>
 </div>
 `,
-        
 
         'Billing': `
     <div class="space-y-8 animate-in">
@@ -3582,16 +3571,23 @@ function openCreatePostModal() {
 /// for the projects 
 
 
-document.addEventListener('DOMContentLoaded', () => {
-  console.log('Projects script initialized');
+// ────────────────────────────────────────────────────────────────
+// Projects Module – Full consolidated script (Main + Modal + Settings)
+// Last updated: fixes button responsiveness, accessibility sync
+// Place AFTER all related HTML elements
+// ────────────────────────────────────────────────────────────────
 
-  // ─── State & Limits ─────────────────────────────────────────────
-  let projects = []; // ← this will hold all projects (mock / in-memory for now)
+document.addEventListener('DOMContentLoaded', () => {
+  console.log('Projects script → DOMContentLoaded fired');
+
+  // ─── State ──────────────────────────────────────────────────────
+  let projects = []; // in-memory for now – replace with localStorage/API later
   const MAX_PROJECTS = 10;
   const MAX_COLLABS  = 5;
 
-  // ─── DOM Elements (with null-safety) ────────────────────────────
+  // ─── DOM Cache (with null-safety) ───────────────────────────────
   const els = {
+    // Main view
     createBtn:       document.getElementById('createProjectBtn'),
     modal:           document.getElementById('projectModal'),
     closeBtn:        document.getElementById('closeModalBtn'),
@@ -3610,48 +3606,42 @@ document.addEventListener('DOMContentLoaded', () => {
     emptyState:      document.getElementById('emptyProjectState'),
     loading:         document.getElementById('loadingOverlay'),
     projectCountEl:  document.getElementById('projectCount') || { textContent: '0' },
-    // Settings tab elements (may be null if not on that tab)
+
+    // Settings tab
     settingsList:    document.getElementById('settingsProjectList'),
     settingsEmpty:   document.getElementById('settingsEmptyState'),
     settingsTotalXP: document.getElementById('settingsTotalXP'),
-    // Activity section (may be null if not present)
+
+    // Activity section
     activityEmpty:   document.getElementById('activity-empty'),
     activityTimeline:document.getElementById('activity-timeline'),
   };
 
-  // Quick check – critical elements must exist
+  // Early exit if main view is missing
   if (!els.createBtn || !els.modal) {
-    console.error('Critical elements missing (createBtn or modal). Check HTML structure and IDs.');
-    return;
+    console.warn('Main Projects view elements missing – script partially disabled');
   }
 
-  // ─── Helper Functions ───────────────────────────────────────────
+  // ─── Helpers ────────────────────────────────────────────────────
   function generateProjectID(name) {
-    const slug = name.toLowerCase().replace(/\s+/g, '').slice(0, 8);
-    const rand = Math.random().toString(36).slice(2, 14);
-    return (slug + rand).slice(0, 20).padEnd(20, '0');
+    const slug = name.toLowerCase().replace(/\s+/g, '').slice(0,8);
+    const rand = Math.random().toString(36).slice(2,14);
+    return (slug + rand).slice(0,20).padEnd(20,'0');
   }
 
   function randomStatus() {
     const r = Math.random();
     if (r < 0.4) return { label: 'Complete', color: 'green'  };
     if (r < 0.7) return { label: 'Pending',  color: 'yellow' };
-    return                { label: 'Rejected', color: 'red'   };
+                         return { label: 'Rejected', color: 'red'   };
   }
 
   function updateProjectCount() {
     els.projectCountEl.textContent = projects.length;
-    if (projects.length === 0) {
-      els.emptyState?.classList.remove('hidden');
-      els.grid?.classList.add('hidden');
-    } else {
-      els.emptyState?.classList.add('hidden');
-      els.grid?.classList.remove('hidden');
-    }
   }
 
-  // ─── Core Render Function (Main Projects Grid) ──────────────────
-  function renderProjects() {
+  // ─── Main Grid Render ───────────────────────────────────────────
+  function renderMainProjects() {
     if (!els.grid) return;
 
     els.grid.innerHTML = '';
@@ -3697,7 +3687,7 @@ document.addEventListener('DOMContentLoaded', () => {
       `;
       els.grid.appendChild(card);
 
-      // Mock XP award
+      // XP mock
       if (status.label === 'Complete') {
         const xpEl = document.getElementById('dash-xp-val');
         if (xpEl) xpEl.textContent = (parseInt(xpEl.textContent || '0') + 10).toString();
@@ -3706,46 +3696,53 @@ document.addEventListener('DOMContentLoaded', () => {
 
     updateProjectCount();
 
-    // Sync other views if they exist on the page
+    if (projects.length === 0) {
+      els.emptyState?.classList.remove('hidden');
+      els.grid?.classList.add('hidden');
+    } else {
+      els.emptyState?.classList.add('hidden');
+      els.grid?.classList.remove('hidden');
+    }
+
+    // Sync other sections
     updateActivitySection();
     renderSettingsProjects();
   }
 
-  // ─── Modal Open / Close ─────────────────────────────────────────
+  // ─── Modal Controls ─────────────────────────────────────────────
   function openModal() {
     if (projects.length >= MAX_PROJECTS) {
       alert('Free limit reached: 10 projects max. Upgrade for more.');
       return;
     }
+    if (!els.modal) return;
     els.modal.classList.remove('hidden');
-    // Small reflow trick sometimes needed
-    void els.modal.offsetWidth;
+    void els.modal.offsetWidth; // reflow
     els.modal.classList.remove('translate-x-full');
     els.modal.classList.add('translate-x-0');
   }
 
   function closeModal() {
+    if (!els.modal) return;
     els.modal.classList.remove('translate-x-0');
     els.modal.classList.add('translate-x-full');
-    setTimeout(() => {
-      els.modal.classList.add('hidden');
-    }, 350);
+    setTimeout(() => els.modal.classList.add('hidden'), 350);
   }
 
   // ─── Event Listeners ────────────────────────────────────────────
-  els.createBtn.addEventListener('click', openModal);
+  els.createBtn?.addEventListener('click', openModal);
   els.closeBtn?.addEventListener('click', closeModal);
   els.discardBtn?.addEventListener('click', () => {
     if (confirm('Discard changes?')) closeModal();
   });
 
-  // Add collaborator
+  // Collaborators
   els.addUserBtn?.addEventListener('click', () => {
-    const val = els.userInput?.value.trim();
+    if (!els.userInput || !els.collabList) return;
+    const val = els.userInput.value.trim();
     if (!val || !val.startsWith('@')) return;
 
-    const currentCount = els.collabList.children.length;
-    if (currentCount >= MAX_COLLABS) {
+    if (els.collabList.children.length >= MAX_COLLABS) {
       alert('Free limit: 5 collaborators max per project.');
       return;
     }
@@ -3753,10 +3750,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const tag = document.createElement('div');
     tag.className = 'px-3 py-1 bg-blue-500/10 border border-blue-500/20 rounded-full text-[10px] text-blue-300 flex items-center gap-2';
     tag.innerHTML = `${val} <button type="button" class="text-red-400 hover:text-red-300">×</button>`;
-    tag.querySelector('button').onclick = () => {
-      tag.remove();
-      updateCollabCount();
-    };
+    tag.querySelector('button').onclick = () => { tag.remove(); updateCollabCount(); };
     els.collabList.appendChild(tag);
     els.userInput.value = '';
     updateCollabCount();
@@ -3764,23 +3758,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function updateCollabCount() {
     if (!els.collabCount) return;
-    const count = els.collabList.children.length;
-    els.collabCount.textContent = `${count} / ${MAX_COLLABS}`;
+    els.collabCount.textContent = `${els.collabList.children.length} / ${MAX_COLLABS}`;
   }
 
-  // Form submit → create new project
+  // Form submit – create project
   els.form?.addEventListener('submit', e => {
     e.preventDefault();
-    const name = els.nameInput?.value.trim();
+    if (!els.nameInput) return;
+
+    const name = els.nameInput.value.trim();
     if (!name) return alert('Project name is required');
 
-    const collabs = Array.from(els.collabList.children).map(el =>
+    const collabs = Array.from(els.collabList?.children || []).map(el =>
       el.textContent.replace(/ ×$/, '').trim()
     );
 
     els.loading?.classList.remove('hidden');
 
-    // Simulate build time
     setTimeout(() => {
       const newProj = {
         id: generateProjectID(name),
@@ -3794,32 +3788,29 @@ document.addEventListener('DOMContentLoaded', () => {
       };
 
       projects.push(newProj);
-      renderProjects();
+      renderMainProjects();
 
-      // Mock notification
       if (typeof addNotification === 'function') {
         addNotification(`Project "${name}" created. ID: ${newProj.id}`);
       }
 
-      // Reset form
-      els.form.reset();
-      els.collabList.innerHTML = '';
+      els.form?.reset();
+      if (els.collabList) els.collabList.innerHTML = '';
       updateCollabCount();
       els.loading?.classList.add('hidden');
       closeModal();
     }, 5000);
   });
 
-  // ─── Global helper functions (used in onclick attributes) ───────
-  window.showMenu = function(idx) {
+  // ─── Global onclick helpers ─────────────────────────────────────
+  window.showMenu = (idx) => {
     document.querySelectorAll('[id^="menu-"]').forEach(m => m.classList.add('hidden'));
-    const menu = document.getElementById(`menu-${idx}`);
-    if (menu) menu.classList.toggle('hidden');
+    document.getElementById(`menu-${idx}`)?.classList.toggle('hidden');
   };
 
-  window.editProject = function(idx) {
+  window.editProject = (idx) => {
     const p = projects[idx];
-    if (!p) return;
+    if (!p || !els.nameInput) return;
 
     els.nameInput.value       = p.name;
     els.descInput.value       = p.desc || '';
@@ -3827,37 +3818,38 @@ document.addEventListener('DOMContentLoaded', () => {
     els.typeSelect.value      = p.type;
     els.supervisorInput.value = p.supervisor || '';
 
-    els.collabList.innerHTML = '';
-    p.collabs.forEach(u => {
-      const tag = document.createElement('div');
-      tag.className = 'px-3 py-1 bg-blue-500/10 border border-blue-500/20 rounded-full text-[10px] text-blue-300 flex items-center gap-2';
-      tag.innerHTML = `${u} <button type="button" class="text-red-400 hover:text-red-300">×</button>`;
-      tag.querySelector('button').onclick = () => { tag.remove(); updateCollabCount(); };
-      els.collabList.appendChild(tag);
-    });
-    updateCollabCount();
+    if (els.collabList) {
+      els.collabList.innerHTML = '';
+      p.collabs.forEach(u => {
+        const tag = document.createElement('div');
+        tag.className = 'px-3 py-1 bg-blue-500/10 border border-blue-500/20 rounded-full text-[10px] text-blue-300 flex items-center gap-2';
+        tag.innerHTML = `${u} <button type="button" class="text-red-400 hover:text-red-300">×</button>`;
+        tag.querySelector('button').onclick = () => { tag.remove(); updateCollabCount(); };
+        els.collabList.appendChild(tag);
+      });
+      updateCollabCount();
+    }
 
     openModal();
-    // Note: submit currently always creates new. For real edit → add update logic later
   };
 
-  window.deleteProject = function(idx) {
+  window.deleteProject = (idx) => {
     if (!confirm('Delete this project?')) return;
     projects.splice(idx, 1);
-    renderProjects();
+    renderMainProjects();
     if (typeof addNotification === 'function') {
       addNotification('Project deleted.');
     }
   };
 
-  // ─── Settings Tab Render (if elements exist) ────────────────────
+  // ─── Settings Tab Render ────────────────────────────────────────
   function renderSettingsProjects() {
     if (!els.settingsList || !els.settingsEmpty) return;
 
     if (projects.length === 0) {
       els.settingsEmpty.style.display = 'flex';
       els.settingsList.classList.add('hidden');
-      if (els.settingsTotalXP) els.settingsTotalXP.textContent = '0';
+      els.settingsTotalXP && (els.settingsTotalXP.textContent = '0');
       return;
     }
 
@@ -3868,7 +3860,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let totalXP = 0;
 
     projects.forEach((proj, index) => {
-      const status = proj.status || { label: 'Unknown', color: 'gray' };
+      const status   = proj.status || { label: 'Unknown', color: 'gray' };
       const xpEarned = status.label === 'Complete' ? 10 : 0;
       totalXP += xpEarned;
 
@@ -3907,26 +3899,26 @@ document.addEventListener('DOMContentLoaded', () => {
     if (els.settingsTotalXP) els.settingsTotalXP.textContent = totalXP;
   }
 
-  window.editProjectFromSettings = function(index) {
-    // For now: just open main modal pre-filled (same as editProject)
-    editProject(index);
-    console.log('Edit from settings → index:', index);
+  window.editProjectFromSettings = (index) => {
+    editProject(index); // reuse main edit logic
+    console.log(`Edit from settings → project index: ${index}`);
   };
 
-  window.deleteProjectFromSettings = function(index) {
+  window.deleteProjectFromSettings = (index) => {
     if (confirm('Delete this project?')) {
       projects.splice(index, 1);
-      renderProjects();           // main view
-      renderSettingsProjects();   // settings view
+      renderMainProjects();
+      renderSettingsProjects();
     }
   };
 
-  window.switchToMainProjectsView = function() {
+  window.switchToMainProjectsView = () => {
     console.log('Switching to main Projects view...');
-    // → call your real tab switching function here, e.g. updateView('Projects')
+    // Replace with your actual tab/view switch logic
+    // e.g. document.querySelector('[data-view="Projects"]').click();
   };
 
-  // ─── Activity Timeline Sync (if present) ────────────────────────
+  // ─── Activity Section Sync ──────────────────────────────────────
   function updateActivitySection() {
     if (!els.activityEmpty || !els.activityTimeline) return;
 
@@ -3936,14 +3928,14 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
       els.activityEmpty.style.display = 'none';
       els.activityTimeline.classList.remove('hidden');
-      // Future: dynamically populate timeline items here
+      // Add timeline population logic here later if desired
     }
   }
 
   // ─── Initial Render ─────────────────────────────────────────────
-  renderProjects();
+  renderMainProjects();
 
-  console.log('Projects module fully loaded • ready for interaction');
+  console.log('Projects module fully loaded – ready for use');
 });
 
 
