@@ -261,44 +261,64 @@ const views = {
 `,
 
 
+    
+
 'Projects': `
 <div class="space-y-12 animate-in pb-32 px-4 md:px-8">
     <div class="space-y-2">
         <div class="flex items-center gap-4">
-            <div class="w-2 h-2 bg-blue-500 rounded-full animate-pulse shadow-[0_0_10px_#3b82f6]"></div>
-            <span class="text-[10px] text-blue-400 font-black uppercase tracking-[0.5em]">What projects are you doing today?</span>
+            <div class="w-2 h-2 bg-yellow-500 rounded-full animate-pulse shadow-[0_0_10px_#eab308]"></div>
+            <span class="text-[10px] text-yellow-500 font-black uppercase tracking-[0.5em]">Module Status: Maintenance Mode</span>
         </div>
-        <h3 class="text-4xl md:text-5xl font-black italic uppercase tracking-tighter text-white"> <span class="text-blue-500">Porjects</span></h3>
+        <h3 class="text-4xl md:text-5xl font-black italic uppercase tracking-tighter text-white"> 
+            <span class="text-blue-500">Projects</span>
+        </h3>
     </div>
 
-    <div class="relative w-full group">
-        <div class="flex items-center bg-[#050b1d] border border-white/10 rounded-2xl h-16 px-6 transition-all focus-within:border-blue-500/50">
+    <div class="relative w-full group opacity-50">
+        <div class="flex items-center bg-[#050b1d] border border-white/10 rounded-2xl h-16 px-6">
             <i class="fas fa-search text-gray-600 mr-4"></i>
-            <input type="text" id="projectSearch" placeholder="SEARCH PROJECTS ..." 
-                class="flex-1 bg-transparent border-none text-[11px] font-black uppercase tracking-[0.2em] text-white focus:outline-none">
+            <input type="text" placeholder="SEARCH DISABLED ..." disabled
+                class="flex-1 bg-transparent border-none text-[11px] font-black uppercase tracking-[0.2em] text-gray-700 focus:outline-none cursor-not-allowed">
             
-            <button onclick="openProjectNamingModal()" 
-                class="group flex items-center bg-blue-600 hover:bg-blue-500 text-[#020617] rounded-xl h-10 px-4 transition-all duration-500 ease-in-out max-w-[40px] hover:max-w-[220px] overflow-hidden whitespace-nowrap shadow-lg">
-                <i class="fas fa-plus transition-transform group-hover:rotate-90"></i>
-                <span class="ml-3 text-[10px] font-black uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity duration-300">Initialize New Project</span>
-            </button>
+            <div class="bg-gray-800 text-gray-600 rounded-xl h-10 px-4 flex items-center">
+                <i class="fas fa-lock"></i>
+            </div>
         </div>
     </div>
 
     <div id="projectContainer">
-        <div id="emptyProjectState" class="border-2 border-dashed border-white/5 rounded-[3.5rem] py-24 flex flex-col items-center justify-center text-center bg-white/[0.01]">
-             <div class="w-20 h-20 bg-white/5 rounded-3xl flex items-center justify-center mb-6 border border-white/5">
-                <i class="fas fa-folder-plus text-gray-700 text-3xl"></i>
+        <div id="underConstructionState" class="relative border-2 border-dashed border-white/5 rounded-[3.5rem] py-24 flex flex-col items-center justify-center text-center bg-white/[0.01] overflow-hidden">
+            
+            <div class="absolute inset-0 opacity-[0.03] pointer-events-none" 
+                 style="background-image: repeating-linear-gradient(-45deg, #fff, #fff 40px, transparent 40px, transparent 80px);">
             </div>
-            <h4 class="text-white font-black uppercase italic tracking-tighter text-2xl">No Projects done</h4>
-            <p class="text-[10px] text-gray-500 font-bold uppercase tracking-[0.3em] mt-3 mb-10">System standby. Awaiting first deployment.</p>
-            <button onclick="openProjectNamingModal()" class="px-8 py-4 bg-blue-600 text-[#020617] text-[10px] font-black uppercase tracking-widest rounded-2xl hover:bg-blue-400 transition-all shadow-xl shadow-blue-500/10">
-                Create First Project
-            </button>
+
+            <div class="relative z-10">
+                <div class="w-24 h-24 bg-yellow-500/10 rounded-3xl flex items-center justify-center mb-6 border border-yellow-500/20 mx-auto">
+                    <i class="fas fa-tools text-yellow-500 text-4xl"></i>
+                </div>
+                
+                <h4 class="text-white font-black uppercase italic tracking-tighter text-3xl">Under Construction</h4>
+                <p class="text-[10px] text-gray-500 font-bold uppercase tracking-[0.3em] mt-4 mb-10 max-w-sm mx-auto leading-relaxed">
+                    The project database is currently undergoing a scheduled architecture upgrade. Access is temporarily restricted.
+                </p>
+
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <div class="flex items-center gap-3 px-6 py-3 bg-white/5 rounded-2xl border border-white/10">
+                        <div class="flex gap-1">
+                            <div class="w-1.5 h-1.5 bg-blue-500 rounded-full animate-bounce"></div>
+                            <div class="w-1.5 h-1.5 bg-blue-500 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+                            <div class="w-1.5 h-1.5 bg-blue-500 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+                        </div>
+                        <span class="text-[9px] font-black text-blue-400 uppercase tracking-widest">Rebuilding Core UI</span>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div id="projectGrid" class="hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            </div>
+        </div>
     </div>
 </div>
 `,
