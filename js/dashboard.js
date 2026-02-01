@@ -201,155 +201,176 @@ const views = {
     
     
 'Lessons': `
-<div class="p-4 md:p-12 bg-transparent min-h-screen text-gray-200 font-sans selection:bg-blue-500/30 relative overflow-x-hidden">
-    
-    <div id="hint-popup" class="fixed left-8 top-1/2 -translate-y-1/2 z-[60] bg-blue-600 text-white px-5 py-3 rounded-2xl shadow-2xl animate-bounce hidden md:block">
-        <p class="text-[10px] font-black uppercase tracking-widest">Click icon to explore lessons →</p>
-        <div class="absolute -right-2 top-1/2 -translate-y-1/2 w-4 h-4 bg-blue-600 rotate-45"></div>
-    </div>
-
-    <button onclick="toggleNav()" id="menu-trigger" class="fixed right-8 top-8 z-[110] w-16 h-16 bg-white text-black rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all duration-700 ease-in-out">
-        <i id="menu-icon" class="fa-solid fa-terminal text-2xl"></i>
-    </button>
-
-    <nav id="side-nav" class="fixed inset-y-0 right-0 w-full md:w-[400px] bg-[#0a0a0a]/95 backdrop-blur-2xl z-[100] border-l border-white/10 translate-x-full transition-transform duration-500 ease-in-out p-12 flex flex-col justify-center gap-6">
-        <div class="mb-8">
-            <h2 class="text-3xl font-black text-white uppercase italic tracking-tighter">System<br><span class="text-blue-500">Navigation</span></h2>
-            <div class="h-1 w-12 bg-blue-500 mt-2"></div>
+<div class="p-4 md:p-12 bg-[#050505] min-h-screen text-gray-200 font-sans selection:bg-blue-500/30">
+    <nav class="sticky top-0 z-50 max-w-6xl mx-auto mb-8 bg-[#0f0f0f]/80 backdrop-blur-xl border border-white/10 rounded-3xl p-2">
+        <div class="flex items-center justify-start md:justify-center gap-4 overflow-x-auto no-scrollbar whitespace-nowrap px-2 py-1">
+            <button class="px-6 py-2 rounded-2xl bg-white text-black font-black text-[10px] uppercase tracking-widest hover:bg-blue-500 hover:text-white transition-all shrink-0">
+                <i class="fa-solid fa-Layer-group mr-2"></i>Categories
+            </button>
+            <button class="px-6 py-2 rounded-2xl bg-white/5 border border-white/10 text-white font-black text-[10px] uppercase tracking-widest hover:border-blue-500 transition-all shrink-0">
+                <i class="fa-solid fa-file-lines mr-2"></i>Results
+            </button>
+            <button class="px-6 py-2 rounded-2xl bg-white/5 border border-white/10 text-white font-black text-[10px] uppercase tracking-widest hover:border-purple-500 transition-all shrink-0">
+                <i class="fa-solid fa-pen-to-square mr-2"></i>Exams
+            </button>
+            <button class="px-6 py-2 rounded-2xl bg-white/5 border border-white/10 text-white font-black text-[10px] uppercase tracking-widest hover:border-green-500 transition-all shrink-0">
+                <i class="fa-solid fa-chart-pie mr-2"></i>Analytics
+            </button>
         </div>
-        
-        <button onclick="switchTab('lessons')" class="nav-item group">
-            <div class="flex items-center gap-6">
-                <i class="fa-solid fa- layer-group text-blue-500"></i>
-                <span class="text-xl font-bold uppercase tracking-tighter group-hover:translate-x-2 transition-transform">Lessons</span>
-            </div>
-            <i class="fa-solid fa-chevron-right text-xs opacity-30"></i>
-        </button>
-
-        <button onclick="switchTab('categories')" class="nav-item group">
-            <div class="flex items-center gap-6">
-                <i class="fa-solid fa-table-cells-large text-purple-500"></i>
-                <span class="text-xl font-bold uppercase tracking-tighter group-hover:translate-x-2 transition-transform">Categories</span>
-            </div>
-            <i class="fa-solid fa-chevron-right text-xs opacity-30"></i>
-        </button>
-
-        <button onclick="switchTab('exams')" class="nav-item group">
-            <div class="flex items-center gap-6">
-                <i class="fa-solid fa-file-code text-orange-500"></i>
-                <span class="text-xl font-bold uppercase tracking-tighter group-hover:translate-x-2 transition-transform">Exams</span>
-            </div>
-            <i class="fa-solid fa-chevron-right text-xs opacity-30"></i>
-        </button>
-
-        <button onclick="switchTab('analytics')" class="nav-item group">
-            <div class="flex items-center gap-6">
-                <i class="fa-solid fa-chart-simple text-green-500"></i>
-                <span class="text-xl font-bold uppercase tracking-tighter group-hover:translate-x-2 transition-transform">Analytics</span>
-            </div>
-            <i class="fa-solid fa-chevron-right text-xs opacity-30"></i>
-        </button>
-
-        <button onclick="switchTab('results')" class="nav-item group">
-            <div class="flex items-center gap-6">
-                <i class="fa-solid fa-trophy text-yellow-500"></i>
-                <span class="text-xl font-bold uppercase tracking-tighter group-hover:translate-x-2 transition-transform">Results</span>
-            </div>
-            <i class="fa-solid fa-chevron-right text-xs opacity-30"></i>
-        </button>
     </nav>
 
-    <div id="main-content-area" class="transition-all duration-700">
-        
-        <header class="max-w-6xl mx-auto mb-16 flex flex-col md:flex-row justify-between items-center gap-8 pt-10">
-            <div>
-                <h1 id="view-title" class="text-4xl font-black text-white tracking-tight mb-2 uppercase italic">Learning Path</h1>
-                <p id="view-desc" class="text-gray-500 font-medium">0 Classes started. Initialize your first module.</p>
+    <header class="max-w-6xl mx-auto mb-16 flex flex-col md:flex-row justify-between items-center gap-8">
+        <div>
+            <h1 class="text-4xl font-black text-white tracking-tight mb-2">Learning Path</h1>
+            <p class="text-gray-400 font-medium">Welcome, Recruit. Your journey begins here.</p>
+        </div>
+        <div class="flex gap-12 items-center bg-white/5 px-8 py-4 rounded-3xl border border-white/10">
+            <div class="text-center">
+                <p class="text-[10px] uppercase tracking-widest text-blue-400 font-bold mb-1">Total Progress</p>
+                <p class="text-2xl font-mono font-bold text-white">0.0%</p>
             </div>
-            <div class="flex gap-12 items-center bg-white/5 px-8 py-4 rounded-3xl border border-white/10 backdrop-blur-md">
-                <div class="text-center">
-                    <p class="text-[10px] uppercase tracking-widest text-blue-500 font-bold mb-1">Overall Progress</p>
-                    <p class="text-2xl font-mono font-bold text-white">0%</p>
-                </div>
-                <div class="w-[1px] h-10 bg-white/10"></div>
-                <div class="text-center">
-                    <p class="text-[10px] uppercase tracking-widest text-purple-500 font-bold mb-1">Rank</p>
-                    <p class="text-2xl font-mono font-bold text-white">Unranked</p>
-                </div>
+            <div class="w-[1px] h-10 bg-white/10"></div>
+            <div class="text-center">
+                <p class="text-[10px] uppercase tracking-widest text-purple-400 font-bold mb-1">Global Rank</p>
+                <p class="text-2xl font-mono font-bold text-white">#--</p>
             </div>
-        </header>
+        </div>
+    </header>
 
-        <main class="max-w-6xl mx-auto pb-20">
-            <div id="view-lessons" class="tab-view space-y-20">
-                <section>
-                    <div class="flex items-center gap-6 mb-10">
-                        <span class="px-4 py-1 bg-blue-500/10 text-blue-500 text-xs font-black rounded-full border border-blue-500/20">CS YEAR 1</span>
-                        <h2 class="text-2xl font-bold text-white">Core Fundamentals</h2>
-                        <div class="h-px flex-1 bg-gradient-to-r from-white/10 to-transparent"></div>
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <div class="group bg-white/5 border border-white/5 p-8 rounded-[2rem] hover:bg-white/10 transition-all cursor-pointer">
-                            <div class="flex justify-between items-start mb-6">
-                                <i class="fa-solid fa-microchip text-3xl text-blue-400"></i>
-                                <span class="text-[10px] font-bold text-green-500 bg-green-500/10 px-2 py-1 rounded">START HERE</span>
-                            </div>
-                            <h3 class="text-lg font-bold text-white mb-2">CSC 101: Discrete Structures</h3>
-                            <p class="text-gray-500 text-xs mb-6">Logic, set theory, and graph theory for computing.</p>
-                            <div class="w-full bg-white/5 h-1.5 rounded-full overflow-hidden">
-                                <div class="bg-blue-400 h-full w-0"></div>
-                            </div>
+    <main class="max-w-6xl mx-auto space-y-20">
+        <section>
+            <div class="flex items-center gap-6 mb-10">
+                <span class="px-4 py-1 bg-green-500/10 text-green-500 text-xs font-black rounded-full border border-green-500/20">PHASE 01</span>
+                <h2 class="text-2xl font-bold text-white">The Frontend Foundation</h2>
+                <div class="h-px flex-1 bg-gradient-to-r from-white/10 to-transparent"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="group bg-[#0f0f0f] border border-white/5 p-8 rounded-[2.5rem] hover:border-orange-500/50 transition-all duration-500 cursor-pointer">
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="w-14 h-14 bg-orange-500/10 rounded-2xl flex items-center justify-center text-orange-500 group-hover:rotate-12 transition-transform">
+                            <i class="fa-brands fa-html5 text-3xl"></i>
                         </div>
-                        <div class="group bg-white/5 border border-white/5 p-8 rounded-[2rem] hover:bg-white/10 transition-all cursor-pointer">
-                            <div class="flex justify-between items-start mb-6">
-                                <i class="fa-solid fa-code text-3xl text-yellow-500"></i>
-                                <span class="text-[10px] font-bold text-gray-500 border border-white/10 px-2 py-1 rounded">8 MODULES</span>
-                            </div>
-                            <h3 class="text-lg font-bold text-white mb-2">CSC 102: Algorithms (Python)</h3>
-                            <p class="text-gray-500 text-xs mb-6">Mastering loops, recursion, and data sorting.</p>
-                            <div class="w-full bg-white/5 h-1.5 rounded-full overflow-hidden">
-                                <div class="bg-yellow-500 h-full w-0"></div>
-                            </div>
+                        <span class="text-[10px] font-black bg-white/5 text-gray-500 px-3 py-1 rounded-full">NOT STARTED</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-2">HTML5 Mastery</h3>
+                    <p class="text-gray-500 text-xs leading-relaxed mb-6">Semantic architecture and web standards.</p>
+                    <div class="w-full bg-white/5 h-1 rounded-full overflow-hidden">
+                        <div class="bg-orange-500 h-full w-0"></div>
+                    </div>
+                </div>
+
+                <div class="group bg-[#0f0f0f] border border-white/5 p-8 rounded-[2.5rem] hover:border-blue-400/50 transition-all duration-500 cursor-pointer">
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="w-14 h-14 bg-blue-400/10 rounded-2xl flex items-center justify-center text-blue-400">
+                            <i class="fa-brands fa-css3-alt text-3xl"></i>
+                        </div>
+                        <span class="text-[10px] font-black bg-white/5 text-gray-500 px-3 py-1 rounded-full">NOT STARTED</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-2">Modern CSS</h3>
+                    <p class="text-gray-500 text-xs leading-relaxed mb-6">Flexbox, Grid, and Tailwind CSS systems.</p>
+                    <div class="w-full bg-white/5 h-1 rounded-full overflow-hidden">
+                        <div class="bg-blue-400 h-full w-0"></div>
+                    </div>
+                </div>
+
+                <div class="group bg-[#0f0f0f] border border-white/5 p-8 rounded-[2.5rem] hover:border-red-500/50 transition-all duration-500 cursor-pointer">
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="w-14 h-14 bg-red-500/10 rounded-2xl flex items-center justify-center text-red-500">
+                            <i class="fa-brands fa-git-alt text-3xl"></i>
+                        </div>
+                        <span class="text-[10px] font-black bg-white/5 text-gray-500 px-3 py-1 rounded-full">NOT STARTED</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-2">Version Control</h3>
+                    <p class="text-gray-500 text-xs leading-relaxed mb-6">Branching strategies and Git workflow.</p>
+                    <div class="w-full bg-white/5 h-1 rounded-full overflow-hidden">
+                        <div class="bg-red-500 h-full w-0"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center gap-6 mb-10">
+                <span class="px-4 py-1 bg-blue-600/10 text-blue-600 text-xs font-black rounded-full border border-blue-600/20">PHASE 02</span>
+                <h2 class="text-2xl font-bold text-white">Dynamic Programming</h2>
+                <div class="h-px flex-1 bg-gradient-to-r from-white/10 to-transparent"></div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="relative overflow-hidden group bg-[#0f0f0f] border border-white/5 p-10 rounded-[3rem] hover:border-yellow-500/50 transition-all">
+                    <div class="relative z-10 flex gap-8">
+                        <div class="w-20 h-20 bg-yellow-500/10 rounded-3xl flex items-center justify-center text-yellow-500 shrink-0">
+                            <i class="fa-brands fa-js text-4xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-black text-white uppercase italic tracking-tighter mb-2">JavaScript ES6+</h3>
+                            <p class="text-gray-400 text-sm mb-6 max-w-sm">Mastering the engine: Asynchronous logic, APIs, and the DOM.</p>
+                            <button class="px-6 py-2 bg-yellow-500 text-black rounded-xl font-black text-[10px] uppercase tracking-widest">Begin Unit 01</button>
                         </div>
                     </div>
-                </section>
-            </div>
-
-            <div id="view-categories" class="tab-view hidden grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="p-10 bg-white/5 rounded-[2.5rem] border border-white/10 hover:border-blue-500/50 transition-all">
-                    <i class="fa-solid fa-shield-halved text-4xl text-blue-500 mb-6"></i>
-                    <h3 class="text-2xl font-black text-white uppercase italic">Cybersecurity</h3>
-                    <p class="text-gray-500 text-sm mt-2">Network defense, penetration testing, and cryptography.</p>
                 </div>
-                <div class="p-10 bg-white/5 rounded-[2.5rem] border border-white/10 hover:border-purple-500/50 transition-all">
-                    <i class="fa-solid fa-brain text-4xl text-purple-500 mb-6"></i>
-                    <h3 class="text-2xl font-black text-white uppercase italic">Artificial Intelligence</h3>
-                    <p class="text-gray-500 text-sm mt-2">Neural networks, Deep Learning, and LLM architecture.</p>
+
+                <div class="relative overflow-hidden group bg-[#0f0f0f] border border-white/5 p-10 rounded-[3rem] opacity-50 grayscale">
+                    <div class="relative z-10 flex gap-8">
+                        <div class="w-20 h-20 bg-cyan-500/10 rounded-3xl flex items-center justify-center text-cyan-500 shrink-0">
+                            <i class="fa-brands fa-react text-4xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-black text-white uppercase italic tracking-tighter mb-2">React Framework</h3>
+                            <p class="text-gray-500 text-sm mb-2">State management and component architecture.</p>
+                            <span class="text-[10px] font-bold text-cyan-500/50 uppercase"><i class="fa-solid fa-lock mr-2"></i>Unlocks at Phase 01 Completion</span>
+                        </div>
+                    </div>
                 </div>
             </div>
+        </section>
 
-            <div id="view-exams" class="tab-view hidden text-center py-20">
-                <h2 class="text-4xl font-black opacity-20 uppercase italic">No Exams Active</h2>
+        <section class="pb-20">
+            <div class="flex items-center gap-6 mb-10">
+                <span class="px-4 py-1 bg-purple-500/10 text-purple-500 text-xs font-black rounded-full border border-purple-500/20">PHASE 03</span>
+                <h2 class="text-2xl font-bold text-white">Backend & DevOps</h2>
+                <div class="h-px flex-1 bg-gradient-to-r from-white/10 to-transparent"></div>
             </div>
-            <div id="view-analytics" class="tab-view hidden text-center py-20">
-                <h2 class="text-4xl font-black opacity-20 uppercase italic">Data Processing...</h2>
-            </div>
-            <div id="view-results" class="tab-view hidden text-center py-20">
-                <h2 class="text-4xl font-black opacity-20 uppercase italic">Transcripts Empty</h2>
-            </div>
-        </main>
-    </div>
 
-    <div id="alertModal" class="fixed inset-0 z-[200] flex items-center justify-center p-6 bg-black/80 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300">
-        <div class="bg-[#111] border border-white/10 p-10 rounded-[2.5rem] max-w-sm w-full text-center shadow-2xl scale-90 transition-transform duration-300" id="modalContent">
-            <div class="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center text-red-500 mx-auto mb-6 border border-red-500/20">
-                <i class="fa-solid fa-lock text-2xl"></i>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="group bg-[#0f0f0f] border border-white/5 p-8 rounded-[2.5rem] opacity-40 cursor-not-allowed" 
+                     onclick="showModal('Access Denied', 'Complete the Logic Engine phase to unlock Python Backend modules.')">
+                    <i class="fa-brands fa-python text-3xl text-yellow-500 mb-6 block"></i>
+                    <h3 class="text-lg font-bold text-white mb-2">Python Systems</h3>
+                    <p class="text-gray-500 text-xs">FastAPI & Scalable logic.</p>
+                </div>
+
+                <div class="group bg-[#0f0f0f] border border-white/5 p-8 rounded-[2.5rem] opacity-40 cursor-not-allowed"
+                     onclick="showModal('Restricted', 'Database schemas require Level 10 JavaScript Proficiency.')">
+                    <i class="fa-solid fa-database text-3xl text-purple-500 mb-6 block"></i>
+                    <h3 class="text-lg font-bold text-white mb-2">Cloud Databases</h3>
+                    <p class="text-gray-500 text-xs">SQL, NoSQL, and Vector stores.</p>
+                </div>
+
+                <div class="group bg-[#0f0f0f] border border-white/5 p-8 rounded-[2.5rem] opacity-40 cursor-not-allowed"
+                     onclick="showModal('Locked', 'Final Phase: Requires completion of all previous modules.')">
+                    <i class="fa-solid fa-server text-3xl text-blue-500 mb-6 block"></i>
+                    <h3 class="text-lg font-bold text-white mb-2">Deployment</h3>
+                    <p class="text-gray-500 text-xs">Docker, AWS, and CI/CD pipelines.</p>
+                </div>
             </div>
-            <h4 id="modalTitle" class="text-xl font-black text-white uppercase italic mb-2">Access Denied</h4>
-            <p id="modalBody" class="text-gray-500 text-sm leading-relaxed mb-8">This sector requires Clearance Level 2.</p>
-            <button onclick="closeModal()" class="w-full py-4 bg-white text-black font-black uppercase tracking-widest rounded-2xl hover:bg-blue-500 hover:text-white transition-all">Back to Terminal</button>
+        </section>
+    </main>
+
+    <div id="alertModal" class="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/90 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="bg-[#111] border border-white/10 p-10 rounded-[3rem] max-w-sm w-full text-center shadow-[0_0_50px_rgba(0,0,0,0.5)] scale-90 transition-transform duration-300" id="modalContent">
+            <div class="w-20 h-20 bg-red-500/10 rounded-full flex items-center justify-center text-red-500 mx-auto mb-6 border border-red-500/20">
+                <i class="fa-solid fa-lock text-3xl"></i>
+            </div>
+            <h4 id="modalTitle" class="text-2xl font-black text-white uppercase italic mb-3 tracking-widest">Locked</h4>
+            <p id="modalBody" class="text-gray-400 text-sm leading-relaxed mb-8">You need more XP to access this sector.</p>
+            <button onclick="closeModal()" class="w-full py-4 bg-white text-black font-black uppercase tracking-widest rounded-2xl hover:bg-blue-500 hover:text-white transition-all">Back to Mission</button>
         </div>
     </div>
 </div>
+
+
 `,
 
     
@@ -1158,65 +1179,24 @@ function closePaymentModal() {
 
 ////// for the lesson only 
 
-    function toggleNav() {
-        const nav = document.getElementById('side-nav');
-        const trigger = document.getElementById('menu-trigger');
-        const icon = document.getElementById('menu-icon');
-        const hint = document.getElementById('hint-popup');
+ 
 
-        if (nav.classList.contains('translate-x-full')) {
-            // OPENING MENU
-            nav.classList.remove('translate-x-full');
-            // Move trigger to bottom right
-            trigger.classList.replace('top-8', 'bottom-8');
-            icon.classList.replace('fa-terminal', 'fa-xmark');
-            hint.classList.add('opacity-0');
-        } else {
-            // CLOSING MENU
-            nav.classList.add('translate-x-full');
-            // Return trigger to top right
-            trigger.classList.replace('bottom-8', 'top-8');
-            icon.classList.replace('fa-xmark', 'fa-terminal');
-            hint.classList.remove('opacity-0');
-        }
-    }
-
-    function switchTab(viewId) {
-        // Update Title & Desc based on tab
-        const titles = {
-            'lessons': ['Learning Path', '0 Classes started. Initialize your module.'],
-            'categories': ['Categories', 'Explore various fields of Computer Science.'],
-            'exams': ['Exam Center', 'Assessments and Certification tracks.'],
-            'analytics': ['Analytics', 'Performance data and learning metrics.'],
-            'results': ['Results', 'Official transcripts and grade reports.']
-        };
-
-        document.getElementById('view-title').innerText = titles[viewId][0];
-        document.getElementById('view-desc').innerText = titles[viewId][1];
-
-        // Hide all views
-        document.querySelectorAll('.tab-view').forEach(view => {
-            view.classList.add('hidden');
-        });
-
-        // Show selected view
-        document.getElementById('view-' + viewId).classList.remove('hidden');
+    function showModal(title, body) {
+        const modal = document.getElementById('alertModal');
+        const content = document.getElementById('modalContent');
+        document.getElementById('modalTitle').innerText = title;
+        document.getElementById('modalBody').innerText = body;
         
-        // Close the menu
-        toggleNav();
+        modal.classList.remove('opacity-0', 'pointer-events-none');
+        content.classList.remove('scale-90');
+        content.classList.add('scale-100');
     }
 
     function closeModal() {
         const modal = document.getElementById('alertModal');
+        const content = document.getElementById('modalContent');
+        
         modal.classList.add('opacity-0', 'pointer-events-none');
+        content.classList.remove('scale-100');
+        content.classList.add('scale-90');
     }
-    
-    function showModal(title, message) {
-        document.getElementById('modalTitle').innerText = title;
-        document.getElementById('modalBody').innerText = message;
-        document.getElementById('alertModal').classList.remove('opacity-0', 'pointer-events-none');
-    }
-
-
-
-
