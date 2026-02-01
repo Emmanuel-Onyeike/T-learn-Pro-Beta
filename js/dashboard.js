@@ -201,7 +201,7 @@ const views = {
     
     
 'Lessons': `
-<div class="p-4 md:p-12 bg-[#050505] min-h-screen text-gray-200 font-sans selection:bg-blue-500/30">
+<div class="p-4 md:p-12 bg-transparent min-h-screen text-gray-200 font-sans selection:bg-blue-500/30">
     <header class="max-w-6xl mx-auto mb-16 flex flex-col md:flex-row justify-between items-center gap-8">
         <div>
             <h1 class="text-4xl font-black text-white tracking-tight mb-2">Learning Path</h1>
