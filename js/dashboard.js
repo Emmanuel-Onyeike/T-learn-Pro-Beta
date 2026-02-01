@@ -92,7 +92,7 @@ const views = {
                                     <span class="absolute top-0 right-0 w-3 h-3 bg-red-500 rounded-full animate-ping"></span>
                                 </div>
                                 <div>
-                                    <p class="text-[10px] font-black text-red-500/60 uppercase tracking-[0.2em]">Pulse Streak</p>
+                                    <p class="text-[10px] font-black text-red-500/60 uppercase tracking-[0.2em]">Streak</p>
                                     <h3 class="text-5xl font-black text-white mt-1 tracking-tighter italic">00</h3>
                                 </div>
                             </div>
@@ -114,7 +114,7 @@ const views = {
                                     <i class="fas fa-dna text-emerald-400 text-2xl"></i>
                                 </div>
                                 <div>
-                                    <p class="text-[10px] font-black text-emerald-500/60 uppercase tracking-[0.2em]">Evolution Level</p>
+                                    <p class="text-[10px] font-black text-emerald-500/60 uppercase tracking-[0.2em]">Level</p>
                                     <h3 class="text-5xl font-black text-white mt-1 tracking-tighter italic">100</h3>
                                 </div>
                             </div>
@@ -125,7 +125,7 @@ const views = {
                                     <i class="fas fa-microchip text-cyan-400 text-2xl"></i>
                                 </div>
                                 <div>
-                                    <p class="text-[10px] font-black text-cyan-500/60 uppercase tracking-[0.2em]">Cycle/Semester</p>
+                                    <p class="text-[10px] font-black text-cyan-500/60 uppercase tracking-[0.2em]">Semester</p>
                                     <h3 class="text-5xl font-black text-white mt-1 tracking-tighter italic">01</h3>
                                 </div>
                             </div>
