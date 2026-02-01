@@ -22,172 +22,95 @@ const ActivityEngine = {
 ActivityEngine.track();
 const views = {
 'Overview': `
-  <div class="flex flex-col gap-10 p-2 animate-in fade-in duration-700 bg-[#020617]">
-    
-    <div class="flex justify-between items-end px-4 mb-2 relative">
-        <div class="absolute -top-4 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-blue-500/20 to-transparent"></div>
-        <div>
-            <h2 class="text-xs font-black text-blue-500 uppercase tracking-[0.4em] mb-1">Neural Interface v4.0</h2>
-            <div class="h-[2px] w-24 bg-gradient-to-r from-blue-600 via-blue-400 to-transparent"></div>
-        </div>
-        <div class="text-right">
-            <p class="text-[9px] font-bold text-gray-500 uppercase tracking-[0.2em]">Data Stream</p>
-            <p class="text-[10px] font-black text-white italic tracking-widest">00000000 // NULL_STATE</p>
-        </div>
-    </div>
+<div class="space-y-8 animate-in">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        
-        <div class="group relative">
-            <div class="absolute -inset-0.5 bg-gradient-to-b from-blue-500/20 to-purple-600/20 rounded-[3rem] blur opacity-10 transition duration-1000"></div>
-            <div class="relative bg-[#050b1d]/80 backdrop-blur-xl border border-white/10 rounded-[3rem] p-10 overflow-hidden">
-                <i class="fas fa-atom absolute -right-4 -bottom-4 text-9xl text-blue-500/5 rotate-12 transition-transform group-hover:scale-110"></i>
-                <div class="relative z-10 space-y-10">
-                    <div class="flex items-start gap-6">
-                        <div class="w-16 h-16 rounded-2xl bg-white/[0.02] border border-white/10 flex items-center justify-center shadow-2xl">
-                            <i class="fas fa-microchip text-blue-500/40 text-2xl"></i>
-                        </div>
-                        <div>
-                            <p class="text-[10px] font-black text-blue-500/60 uppercase tracking-[0.2em]">Active Projects</p>
-                            <h3 class="text-4xl font-black text-white mt-1 tracking-tighter italic">00000000</h3>
-                        </div>
-                    </div>
-                    <div class="flex items-start gap-6">
-                        <div class="w-16 h-16 rounded-2xl bg-white/[0.02] border border-white/10 flex items-center justify-center">
-                            <i class="fas fa-network-wired text-purple-500/40 text-2xl"></i>
-                        </div>
-                        <div>
-                            <p class="text-[10px] font-black text-purple-500/60 uppercase tracking-[0.2em]">Neural Collabs</p>
-                            <h3 class="text-4xl font-black text-white mt-1 tracking-tighter italic">00000000</h3>
-                        </div>
-                    </div>
+        <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-blue-500/30 transition-all">
+            <div class="flex items-center gap-4 relative z-10">
+                <div class="w-12 h-12 bg-blue-600/10 rounded-2xl flex items-center justify-center border border-blue-500/20">
+                    <i class="fas fa-code-branch text-blue-500"></i>
                 </div>
-            </div>
-        </div>
-
-        <div class="group relative">
-            <div class="absolute -inset-0.5 bg-gradient-to-b from-orange-500/20 to-red-600/20 rounded-[3rem] blur opacity-10 transition duration-1000"></div>
-            <div class="relative bg-[#050b1d]/80 backdrop-blur-xl border border-white/10 rounded-[3rem] p-10 overflow-hidden">
-                <i class="fas fa-satellite-dish absolute -right-4 -bottom-4 text-9xl text-orange-500/5 -rotate-12 transition-transform group-hover:scale-110"></i>
-                <div class="relative z-10 space-y-10">
-                    <div class="flex items-start gap-6">
-                        <div class="w-16 h-16 rounded-2xl bg-white/[0.02] border border-white/10 flex items-center justify-center">
-                            <i class="fas fa-shuttle-space text-orange-500/40 text-2xl -rotate-45"></i>
-                        </div>
-                        <div>
-                            <p class="text-[10px] font-black text-orange-500/60 uppercase tracking-[0.2em]">Global Rank</p>
-                            <h3 class="text-4xl font-black text-white mt-1 tracking-tighter italic">00000000</h3>
-                        </div>
-                    </div>
-                    <div class="flex items-start gap-6">
-                        <div class="w-16 h-16 rounded-2xl bg-white/[0.02] border border-white/10 flex items-center justify-center relative">
-                            <i class="fas fa-bolt text-red-500/40 text-2xl"></i>
-                        </div>
-                        <div>
-                            <p class="text-[10px] font-black text-red-500/60 uppercase tracking-[0.2em]">Pulse Streak</p>
-                            <h3 class="text-4xl font-black text-white mt-1 tracking-tighter italic">00000000</h3>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="group relative">
-            <div class="absolute -inset-0.5 bg-gradient-to-b from-emerald-500/20 to-cyan-600/20 rounded-[3rem] blur opacity-10 transition duration-1000"></div>
-            <div class="relative bg-[#050b1d]/80 backdrop-blur-xl border border-white/10 rounded-[3rem] p-10 overflow-hidden">
-                <i class="fas fa-dna absolute -right-4 -bottom-4 text-9xl text-emerald-500/5 rotate-45 transition-transform group-hover:scale-110"></i>
-                <div class="relative z-10 space-y-10">
-                    <div class="flex items-start gap-6">
-                        <div class="w-16 h-16 rounded-2xl bg-white/[0.02] border border-white/10 flex items-center justify-center">
-                            <i class="fas fa-seedling text-emerald-500/40 text-2xl"></i>
-                        </div>
-                        <div>
-                            <p class="text-[10px] font-black text-emerald-500/60 uppercase tracking-[0.2em]">Evolution Level</p>
-                            <h3 class="text-4xl font-black text-white mt-1 tracking-tighter italic">00000000</h3>
-                        </div>
-                    </div>
-                    <div class="flex items-start gap-6">
-                        <div class="w-16 h-16 rounded-2xl bg-white/[0.02] border border-white/10 flex items-center justify-center">
-                            <i class="fas fa-binary text-cyan-500/40 text-2xl"></i>
-                        </div>
-                        <div>
-                            <p class="text-[10px] font-black text-cyan-500/60 uppercase tracking-[0.2em]">Cycle/Semester</p>
-                            <h3 class="text-4xl font-black text-white mt-1 tracking-tighter italic">00000000</h3>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="relative group">
-        <div class="relative bg-[#050b1d] border border-white/5 p-10 rounded-[3rem] overflow-hidden">
-            <div class="absolute inset-0 opacity-[0.03] pointer-events-none" style="background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 20px 20px;"></div>
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4 relative z-10">
                 <div>
-                    <h3 class="text-2xl font-black text-white italic tracking-tighter uppercase">Activity Nebula</h3>
-                    <p class="text-[10px] text-gray-600 font-bold uppercase tracking-[0.3em] mt-1">Biometric Temporal Tracking: OFFLINE</p>
-                </div>
-                <div class="flex items-center gap-3 bg-white/[0.02] px-4 py-2 rounded-full border border-white/5">
-                    <div class="w-2 h-2 rounded-full bg-red-500/50"></div>
-                    <span class="text-[9px] text-gray-400 font-black uppercase tracking-widest">No Signal Detected</span>
+                    <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Projects</p>
+                    <h3 id="projectCount" class="text-3xl font-black text-white mt-1">0</h3>
                 </div>
             </div>
+            <i class="fas fa-project-diagram absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-blue-500/[0.05] transition-all"></i>
+        </div>
 
-            <div class="overflow-x-auto pb-6 no-scrollbar relative z-10">
-                <div class="flex flex-wrap gap-2 max-w-full">
-                    <div class="w-4 h-4 rounded-[4px] bg-white/5 border border-white/5"></div>
-                    <div class="w-4 h-4 rounded-[4px] bg-blue-500/20 border border-blue-500/20"></div>
-                    <div class="w-4 h-4 rounded-[4px] bg-white/5 border border-white/5"></div>
-                    </div>
-            </div>
 
-            <div class="flex justify-between items-center mt-6 pt-6 border-t border-white/5 opacity-50 relative z-10">
-                <p class="text-[9px] text-gray-600 font-bold uppercase tracking-[0.2em]">00000000 synapses dormant</p>
-                <div class="flex items-center gap-4">
-                    <span class="text-[9px] text-gray-600 font-bold uppercase tracking-widest italic">INIT_ZERO</span>
-                    <div class="flex gap-1.5">
-                        <div class="w-3 h-3 rounded-sm bg-white/[0.03]"></div>
-                        <div class="w-3 h-3 rounded-sm bg-white/[0.03]"></div>
-                    </div>
+        <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-green-500/30 transition-all">
+            <div class="flex items-center gap-4 relative z-10">
+                <div class="w-12 h-12 bg-green-600/10 rounded-2xl flex items-center justify-center border border-green-500/20">
+                    <i class="fas fa-layer-group text-green-500"></i>
+                </div>
+                <div>
+                    <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Level</p>
+                    <h3 id="dash-level-val" class="text-3xl font-black text-white mt-1">000</h3>
                 </div>
             </div>
+            <i class="fas fa-chart-line absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-green-500/[0.05] transition-all"></i>
+        </div>
+
+        <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-yellow-500/30 transition-all">
+
+
+
+            <div class="flex items-center gap-4 relative z-10">
+                <div class="w-12 h-12 bg-yellow-600/10 rounded-2xl flex items-center justify-center border border-yellow-500/20">
+                    <i class="fas fa-star text-yellow-500"></i>
+                </div>
+                <div>
+                    <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">XT Points</p>
+                    <h3 class="text-3xl font-black text-white mt-1">
+                        <span id="dash-xp-val">0</span> 
+                        <span class="text-xs text-yellow-500/50 uppercase">XP</span>
+                    </h3>
+                </div>
+            </div>
+            <i class="fas fa-trophy absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-yellow-500/[0.05] transition-all"></i>
         </div>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 pb-10">
-        <div class="bg-gradient-to-br from-white/[0.03] to-transparent border border-white/5 p-8 rounded-[2.5rem] flex items-center gap-6">
-            <div class="w-16 h-16 bg-white/[0.02] rounded-full flex items-center justify-center border border-white/5 shadow-inner">
-                <i class="fas fa-briefcase text-gray-700 text-xl"></i>
-            </div>
-            <div>
-                <p class="text-[10px] font-black text-gray-600 uppercase tracking-widest">Active Jobs</p>
-                <h3 class="text-3xl font-black text-white mt-0.5 italic">00000000</h3>
-            </div>
+    <div class="bg-[#050b1d] border border-white/5 p-8 rounded-[2.5rem] relative overflow-hidden">
+        <h3 class="text-lg font-black text-white italic uppercase tracking-tighter mb-4">Activity Nebula</h3>
+        <div class="relative w-full h-[250px] bg-black/20 rounded-2xl border border-white/5">
+            <canvas id="nebula" class="w-full h-full"></canvas>
+        </div>
+        <p class="text-[8px] text-gray-600 font-bold uppercase tracking-widest italic mt-4">
+            Visualizing your deployment frequency and session uptime
+        </p>
+    </div>
+
+    <div class="bg-[#050b1d] border border-white/5 p-8 rounded-[2.5rem] relative overflow-hidden">
+        <div class="flex justify-between items-center mb-6">
+            <h3 class="text-lg font-black text-white italic uppercase tracking-tighter">Project History</h3>
+            <span class="px-3 py-1 bg-white/5 rounded-full text-[10px] text-gray-400 font-bold uppercase tracking-widest">Tracking Live Session</span>
+
+
         </div>
 
-        <div class="bg-gradient-to-br from-white/[0.03] to-transparent border border-white/5 p-8 rounded-[2.5rem] flex items-center gap-6">
-            <div class="w-16 h-16 bg-white/[0.02] rounded-full flex items-center justify-center border border-white/5">
-                <i class="fas fa-star text-gray-700 text-xl"></i>
-            </div>
-            <div>
-                <p class="text-[10px] font-black text-gray-600 uppercase tracking-widest">XT Points</p>
-                <h3 class="text-3xl font-black text-white mt-0.5 italic">00000000</h3>
-            </div>
-        </div>
+        <div id="project-feed" class="space-y-4">
+            <div class="flex flex-col items-center justify-center py-12 text-center">
+                <div class="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mb-4 border border-white/10">
+                    <i class="fas fa-folder-open text-gray-600 text-xl"></i>
 
-        <div class="bg-gradient-to-br from-white/[0.03] to-transparent border border-white/5 p-8 rounded-[2.5rem] flex items-center gap-6">
-            <div class="w-16 h-16 bg-white/[0.02] rounded-full flex items-center justify-center border border-white/5">
-                <i class="fas fa-cloud-bolt text-gray-700 text-xl"></i>
+
+
+
+                </div>
+                <h4 class="text-white font-black uppercase italic tracking-tighter">No projects yet</h4>
+                <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest mt-1">Start a new workspace to see your activity here</p>
+                <button class="mt-6 px-6 py-3 bg-white text-black rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-blue-500 hover:text-white transition-all">
+                    Initialize Workspace
+                </button>
             </div>
-            <div>
-                <p class="text-[10px] font-black text-gray-600 uppercase tracking-widest">Weather/Pulse</p>
-                <h3 class="text-3xl font-black text-white mt-0.5 italic">00000000</h3>
-            </div>
+
         </div>
     </div>
 </div>
 `,
+
     
     
     'Lessons': `
