@@ -22,94 +22,171 @@ const ActivityEngine = {
 ActivityEngine.track();
 const views = {
 'Overview': `
-        <div class="flex flex-col gap-5 p-6 bg-[#05070A] text-white font-sans min-h-screen">
-            
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-                <div class="bg-[#0D1117] border border-[#1F2937] hover:border-[#A3319F] transition-colors rounded-xl p-5">
-                    <div class="text-[#8B949E] text-[10px] uppercase tracking-widest flex items-center gap-2 mb-2">
-                        <i class="fas fa-project-diagram"></i> Projects
+        <div class="space-y-8 p-1 animate-in">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+                <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-blue-500/30 transition-all">
+                    <div class="flex items-center gap-4 relative z-10">
+                        <div class="w-12 h-12 bg-blue-600/10 rounded-2xl flex items-center justify-center border border-blue-500/20">
+                            <i class="fas fa-code-branch text-blue-500"></i>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Projects</p>
+                            <h3 class="text-3xl font-black text-white mt-1">0</h3>
+                        </div>
                     </div>
-                    <div class="text-2xl font-bold">0</div>
+                    <i class="fas fa-project-diagram absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-blue-500/[0.05] transition-all"></i>
                 </div>
-                <div class="bg-[#0D1117] border border-[#1F2937] hover:border-[#A3319F] transition-colors rounded-xl p-5">
-                    <div class="text-[#8B949E] text-[10px] uppercase tracking-widest flex items-center gap-2 mb-2">
-                        <i class="fas fa-handshake"></i> Collab
+
+                <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-purple-500/30 transition-all">
+                    <div class="flex items-center gap-4 relative z-10">
+                        <div class="w-12 h-12 bg-purple-600/10 rounded-2xl flex items-center justify-center border border-purple-500/20">
+                            <i class="fas fa-hands-helping text-purple-500"></i>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Collabs</p>
+                            <h3 class="text-3xl font-black text-white mt-1">0</h3>
+                        </div>
                     </div>
-                    <div class="text-2xl font-bold">0</div>
+                    <i class="fas fa-users-cog absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-purple-500/[0.05] transition-all"></i>
                 </div>
-                <div class="bg-[#0D1117] border border-[#1F2937] hover:border-[#A3319F] transition-colors rounded-xl p-5 col-span-2 md:col-span-1">
-                    <div class="text-[#8B949E] text-[10px] uppercase tracking-widest flex items-center gap-2 mb-2">
-                        <i class="fas fa-bolt"></i> Streaks
+
+                <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-green-500/30 transition-all">
+                    <div class="flex items-center gap-4 relative z-10">
+                        <div class="w-12 h-12 bg-green-600/10 rounded-2xl flex items-center justify-center border border-green-500/20">
+                            <i class="fas fa-layer-group text-green-500"></i>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Level</p>
+                            <h3 class="text-3xl font-black text-white mt-1">100</h3>
+                        </div>
                     </div>
-                    <div class="text-2xl font-bold">0</div>
+                    <i class="fas fa-chart-line absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-green-500/[0.05] transition-all"></i>
+                </div>
+
+                <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-orange-500/30 transition-all">
+                    <div class="flex items-center gap-4 relative z-10">
+                        <div class="w-12 h-12 bg-orange-600/10 rounded-2xl flex items-center justify-center border border-orange-500/20 group-hover:border-orange-500/50 transition-all">
+                            <i class="fas fa-medal text-orange-500"></i>
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Current Rank</p>
+                                <span class="w-1 h-1 rounded-full bg-orange-500 animate-pulse"></span>
+                            </div>
+                            <h3 class="text-3xl font-black text-white mt-1 italic tracking-tighter">#100</h3>
+                        </div>
+                    </div>
+                    <i class="fas fa-crown absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:rotate-0 group-hover:text-orange-500/[0.08] transition-all duration-500"></i>
+                </div>
+
+                <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-blue-400/30 transition-all">
+                    <div class="flex items-center gap-4 relative z-10">
+                        <div class="w-12 h-12 bg-blue-400/10 rounded-2xl flex items-center justify-center border border-blue-400/20">
+                            <i class="fas fa-graduation-cap text-blue-400"></i>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Semester</p>
+                            <h3 class="text-3xl font-black text-white mt-1">1</h3>
+                        </div>
+                    </div>
+                    <i class="fas fa-graduation-cap absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-blue-400/[0.05] transition-all"></i>
+                </div>
+
+                <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-red-500/30 transition-all">
+                    <div class="flex items-center gap-4 relative z-10">
+                        <div class="w-12 h-12 bg-red-600/10 rounded-2xl flex items-center justify-center border border-red-500/20">
+                            <i class="fas fa-fire text-red-500"></i>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Streaks</p>
+                            <h3 class="text-3xl font-black text-white mt-1">0</h3>
+                        </div>
+                    </div>
+                    <i class="fas fa-fire-alt absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-red-500/[0.05] transition-all"></i>
                 </div>
             </div>
 
-            <div class="w-full min-h-[180px] bg-[#0D1117] border border-[#1F2937] rounded-2xl p-8 flex flex-col items-center justify-center text-center">
-                <i class="fas fa-folder-plus text-4xl text-[#1F2937] mb-4"></i>
-                <p class="text-[#8B949E] text-sm">No active projects detected in your repository.</p>
-                <button class="mt-4 bg-[#A3319F] hover:bg-[#862683] text-white px-6 py-2.5 rounded-lg font-semibold flex items-center gap-2 transition-all active:scale-95">
-                    <i class="fas fa-plus text-xs"></i> Create New Project
-                </button>
-            </div>
+            <div class="bg-[#050b1d] border border-white/5 p-8 rounded-[2.5rem] relative overflow-hidden">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+                    <div>
+                        <h3 class="text-lg font-black text-white italic uppercase tracking-tighter">Activity</h3>
+                        <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest mt-1">Tracking session</p>
+                    </div>
+                    <div class="flex gap-2 flex-wrap">
+                        <button class="px-4 py-2 bg-gray-800 rounded-lg text-[9px] font-black uppercase tracking-widest text-white shadow-lg">2025</button>
+                        <button class="px-4 py-2 bg-blue-600 rounded-lg text-[9px] font-black uppercase tracking-widest text-white shadow-lg">2026</button>
+                    </div>
+                </div>
+                
+                <div class="overflow-x-auto pb-4 no-scrollbar">
+                    <div class="inline-grid grid-rows-7 grid-flow-col gap-1.5 min-w-max">
+                        ${Array.from({ length: 365 }).map((_, i) => {
+                            const activeClass = i < 5 ? 'bg-green-600' : 'bg-white/[0.03]';
+                            return `<div class="w-3 h-3 rounded-sm ${activeClass} transition-all duration-500 cursor-pointer"></div>`;
+                        }).join('')}
+                    </div>
+                </div>
 
-            <div class="grid grid-cols-3 gap-4">
-                <div class="bg-[#0D1117] border border-[#1F2937] rounded-xl p-4 text-center">
-                    <i class="fas fa-award text-[#8B949E] block mb-1"></i>
-                    <div class="text-[#8B949E] text-[10px] uppercase tracking-tighter">Rank</div>
-                    <div class="text-sm font-bold text-[#A3319F] mt-1">Unranked</div>
-                </div>
-                <div class="bg-[#0D1117] border border-[#1F2937] rounded-xl p-4 text-center">
-                    <i class="fas fa-calendar-day text-[#8B949E] block mb-1"></i>
-                    <div class="text-[#8B949E] text-[10px] uppercase tracking-tighter">Semester</div>
-                    <div class="text-sm font-bold mt-1">1st</div>
-                </div>
-                <div class="bg-[#0D1117] border border-[#1F2937] rounded-xl p-4 text-center">
-                    <i class="fas fa-layer-group text-[#8B949E] block mb-1"></i>
-                    <div class="text-[#8B949E] text-[10px] uppercase tracking-tighter">Level</div>
-                    <div class="text-sm font-bold mt-1">100</div>
-                </div>
-            </div>
-
-            <div class="w-full bg-[#0D1117] border border-[#1F2937] rounded-2xl p-6">
-                <div class="text-[#8B949E] text-[10px] uppercase tracking-widest flex items-center gap-2 mb-6">
-                    <i class="fas fa-chart-area"></i> Learning Activity
-                </div>
-                <div class="flex items-end justify-center gap-2 h-20 w-full overflow-hidden">
-                    <div class="w-3 bg-[#1F2937] rounded-t h-[30%]"></div>
-                    <div class="w-3 bg-[#1F2937] rounded-t h-[50%]"></div>
-                    <div class="w-3 bg-gradient-to-t from-[#A3319F] to-[#D946EF] rounded-t h-[85%]"></div>
-                    <div class="w-3 bg-[#1F2937] rounded-t h-[40%]"></div>
-                    <div class="w-3 bg-gradient-to-t from-[#A3319F] to-[#D946EF] rounded-t h-[65%]"></div>
-                    <div class="w-3 bg-[#1F2937] rounded-t h-[20%]"></div>
-                    <div class="w-3 bg-[#1F2937] rounded-t h-[45%]"></div>
+                <div class="flex justify-between items-center mt-4">
+                    <p class="text-[8px] text-gray-600 font-bold uppercase tracking-widest italic">Density increases with page engagement time</p>
+                    <div class="flex items-center gap-2">
+                        <span class="text-[8px] text-gray-600 font-bold uppercase tracking-widest">Low</span>
+                        <div class="flex gap-1">
+                            <div class="w-2.5 h-2.5 rounded-sm bg-white/[0.03]"></div>
+                            <div class="w-2.5 h-2.5 rounded-sm bg-green-900"></div>
+                            <div class="w-2.5 h-2.5 rounded-sm bg-green-700"></div>
+                            <div class="w-2.5 h-2.5 rounded-sm bg-green-500"></div>
+                            <div class="w-2.5 h-2.5 rounded-sm bg-green-400"></div>
+                        </div>
+                        <span class="text-[8px] text-gray-600 font-bold uppercase tracking-widest">NXXT</span>
+                    </div>
                 </div>
             </div>
 
-            <div class="grid grid-cols-3 gap-4">
-                <div class="bg-[#0D1117] border border-[#1F2937] rounded-xl p-5">
-                    <div class="text-[#8B949E] text-[10px] uppercase flex items-center gap-2 mb-2">
-                        <i class="fas fa-fire text-orange-500"></i> Streaks
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+                <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-emerald-500/30 transition-all">
+                    <div class="flex items-center gap-4 relative z-10">
+                        <div class="w-12 h-12 bg-emerald-600/10 rounded-2xl flex items-center justify-center border border-emerald-500/20">
+                            <i class="fas fa-briefcase text-emerald-500"></i>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Active Jobs</p>
+                            <h3 class="text-3xl font-black text-white mt-1">0</h3>
+                        </div>
                     </div>
-                    <div class="text-xl font-bold">0</div>
+                    <i class="fas fa-search-dollar absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-emerald-500/[0.05] transition-all"></i>
                 </div>
-                <div class="bg-[#0D1117] border border-[#1F2937] rounded-xl p-5">
-                    <div class="text-[#8B949E] text-[10px] uppercase flex items-center gap-2 mb-2">
-                        <i class="fas fa-server text-blue-400"></i> Deployed
+
+                <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-yellow-500/30 transition-all">
+                    <div class="flex items-center gap-4 relative z-10">
+                        <div class="w-12 h-12 bg-yellow-600/10 rounded-2xl flex items-center justify-center border border-yellow-500/20">
+                            <i class="fas fa-star text-yellow-500"></i>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">XT Points</p>
+                            <h3 class="text-3xl font-black text-white mt-1">
+                                0 <span class="text-xs text-yellow-500/50 uppercase">XP</span>
+                            </h3>
+                        </div>
                     </div>
-                    <div class="text-xl font-bold">0</div>
+                    <i class="fas fa-trophy absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-yellow-500/[0.05] transition-all"></i>
                 </div>
-                <div class="bg-[#0D1117] border border-[#1F2937] rounded-xl p-5">
-                    <div class="text-[#8B949E] text-[10px] uppercase flex items-center gap-2 mb-2">
-                        <i class="fas fa-gem text-[#A3319F]"></i> Xt Point
+
+                <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-indigo-500/30 transition-all">
+                    <div class="flex items-center gap-4 relative z-10">
+                        <div class="w-12 h-12 bg-indigo-600/10 rounded-2xl flex items-center justify-center border border-indigo-500/20">
+                            <i class="fas fa-cloud-upload-alt text-indigo-500"></i>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Cloud Deploys</p>
+                            <h3 class="text-3xl font-black text-white mt-1">0</h3>
+                        </div>
                     </div>
-                    <div class="text-xl font-bold">0</div>
+                    <i class="fas fa-server absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-indigo-500/[0.05] transition-all"></i>
                 </div>
             </div>
         </div>
     `,
-
-
 
 
 
