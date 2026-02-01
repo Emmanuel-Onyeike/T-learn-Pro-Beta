@@ -22,167 +22,125 @@ const ActivityEngine = {
 ActivityEngine.track();
 const views = {
 'Overview': `
-        <div class="space-y-8 p-1 animate-in">
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-                <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-blue-500/30 transition-all">
-                    <div class="flex items-center gap-4 relative z-10">
-                        <div class="w-12 h-12 bg-blue-600/10 rounded-2xl flex items-center justify-center border border-blue-500/20">
-                            <i class="fas fa-code-branch text-blue-500"></i>
-                        </div>
+        <div class="flex flex-col gap-6 p-2 lg:p-4 bg-transparent animate-in">
+            
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                
+                <div class="lg:col-span-2 bg-[#050b1d] border border-white/5 rounded-[2.5rem] p-8 relative overflow-hidden group hover:border-blue-500/20 transition-all duration-500">
+                    <div class="relative z-10 flex flex-col h-full justify-between">
                         <div>
-                            <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Projects</p>
-                            <h3 class="text-3xl font-black text-white mt-1">0</h3>
-                        </div>
-                    </div>
-                    <i class="fas fa-project-diagram absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-blue-500/[0.05] transition-all"></i>
-                </div>
-
-                <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-purple-500/30 transition-all">
-                    <div class="flex items-center gap-4 relative z-10">
-                        <div class="w-12 h-12 bg-purple-600/10 rounded-2xl flex items-center justify-center border border-purple-500/20">
-                            <i class="fas fa-hands-helping text-purple-500"></i>
-                        </div>
-                        <div>
-                            <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Collabs</p>
-                            <h3 class="text-3xl font-black text-white mt-1">0</h3>
-                        </div>
-                    </div>
-                    <i class="fas fa-users-cog absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-purple-500/[0.05] transition-all"></i>
-                </div>
-
-                <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-green-500/30 transition-all">
-                    <div class="flex items-center gap-4 relative z-10">
-                        <div class="w-12 h-12 bg-green-600/10 rounded-2xl flex items-center justify-center border border-green-500/20">
-                            <i class="fas fa-layer-group text-green-500"></i>
-                        </div>
-                        <div>
-                            <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Level</p>
-                            <h3 class="text-3xl font-black text-white mt-1">100</h3>
-                        </div>
-                    </div>
-                    <i class="fas fa-chart-line absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-green-500/[0.05] transition-all"></i>
-                </div>
-
-                <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-orange-500/30 transition-all">
-                    <div class="flex items-center gap-4 relative z-10">
-                        <div class="w-12 h-12 bg-orange-600/10 rounded-2xl flex items-center justify-center border border-orange-500/20 group-hover:border-orange-500/50 transition-all">
-                            <i class="fas fa-medal text-orange-500"></i>
-                        </div>
-                        <div>
-                            <div class="flex items-center gap-2">
-                                <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Current Rank</p>
-                                <span class="w-1 h-1 rounded-full bg-orange-500 animate-pulse"></span>
+                            <div class="flex items-center gap-3 mb-4">
+                                <div class="w-10 h-10 bg-blue-500/10 rounded-xl flex items-center justify-center border border-blue-500/20">
+                                    <i class="fas fa-rocket text-blue-500"></i>
+                                </div>
+                                <h3 class="text-xl font-black text-white italic uppercase tracking-tighter">Active Project</h3>
                             </div>
-                            <h3 class="text-3xl font-black text-white mt-1 italic tracking-tighter">#100</h3>
+                            <p class="text-gray-400 text-sm max-w-md leading-relaxed">
+                                No active learning modules detected. Start a new path to begin tracking your progress and earning XT Points.
+                            </p>
+                        </div>
+                        <div class="mt-8 flex flex-wrap gap-4">
+                            <button class="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white text-[10px] font-black uppercase tracking-widest rounded-xl transition-all active:scale-95 shadow-lg shadow-blue-600/20">
+                                Browse Courses
+                            </button>
+                            <button class="px-6 py-3 bg-white/5 hover:bg-white/10 text-white text-[10px] font-black uppercase tracking-widest rounded-xl transition-all border border-white/10">
+                                View Roadmap
+                            </button>
                         </div>
                     </div>
-                    <i class="fas fa-crown absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:rotate-0 group-hover:text-orange-500/[0.08] transition-all duration-500"></i>
+                    <i class="fas fa-project-diagram absolute -bottom-10 -right-10 text-white/[0.02] text-[15rem] rotate-12 group-hover:text-blue-500/[0.04] transition-all duration-700"></i>
                 </div>
 
-                <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-blue-400/30 transition-all">
-                    <div class="flex items-center gap-4 relative z-10">
-                        <div class="w-12 h-12 bg-blue-400/10 rounded-2xl flex items-center justify-center border border-blue-400/20">
-                            <i class="fas fa-graduation-cap text-blue-400"></i>
+                <div class="bg-[#050b1d] border border-white/5 rounded-[2.5rem] p-8 relative overflow-hidden group hover:border-orange-500/20 transition-all duration-500">
+                    <div class="relative z-10">
+                        <div class="flex items-center justify-between mb-6">
+                            <div class="w-12 h-12 bg-orange-500/10 rounded-2xl flex items-center justify-center border border-orange-500/20">
+                                <i class="fas fa-crown text-orange-500"></i>
+                            </div>
+                            <span class="px-3 py-1 bg-orange-500/10 border border-orange-500/20 rounded-full text-[8px] font-black text-orange-500 uppercase tracking-widest animate-pulse">Live Rank</span>
                         </div>
-                        <div>
-                            <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Semester</p>
-                            <h3 class="text-3xl font-black text-white mt-1">1</h3>
-                        </div>
-                    </div>
-                    <i class="fas fa-graduation-cap absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-blue-400/[0.05] transition-all"></i>
-                </div>
-
-                <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-red-500/30 transition-all">
-                    <div class="flex items-center gap-4 relative z-10">
-                        <div class="w-12 h-12 bg-red-600/10 rounded-2xl flex items-center justify-center border border-red-500/20">
-                            <i class="fas fa-fire text-red-500"></i>
-                        </div>
-                        <div>
-                            <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Streaks</p>
-                            <h3 class="text-3xl font-black text-white mt-1">0</h3>
+                        <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Global Standing</p>
+                        <h3 class="text-5xl font-black text-white mt-2 italic tracking-tighter">#100</h3>
+                        <div class="mt-4 flex items-center gap-2">
+                            <div class="flex -space-x-2">
+                                <div class="w-6 h-6 rounded-full border-2 border-[#050b1d] bg-gray-800"></div>
+                                <div class="w-6 h-6 rounded-full border-2 border-[#050b1d] bg-gray-700"></div>
+                                <div class="w-6 h-6 rounded-full border-2 border-[#050b1d] bg-gray-600"></div>
+                            </div>
+                            <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest">Top 5% this week</p>
                         </div>
                     </div>
-                    <i class="fas fa-fire-alt absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-red-500/[0.05] transition-all"></i>
+                    <i class="fas fa-trophy absolute -bottom-8 -right-8 text-white/[0.02] text-9xl -rotate-12 group-hover:text-orange-500/[0.05] transition-all duration-700"></i>
                 </div>
             </div>
 
-            <div class="bg-[#050b1d] border border-white/5 p-8 rounded-[2.5rem] relative overflow-hidden">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+            <div class="bg-[#050b1d] border border-white/5 p-8 rounded-[2.5rem] relative overflow-hidden group hover:border-green-500/10 transition-all duration-500">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4 relative z-10">
                     <div>
-                        <h3 class="text-lg font-black text-white italic uppercase tracking-tighter">Activity</h3>
-                        <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest mt-1">Tracking session</p>
+                        <h3 class="text-lg font-black text-white italic uppercase tracking-tighter flex items-center gap-2">
+                            <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                            Learning Activity
+                        </h3>
+                        <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest mt-1">Consistency is key to mastery</p>
                     </div>
-                    <div class="flex gap-2 flex-wrap">
-                        <button class="px-4 py-2 bg-gray-800 rounded-lg text-[9px] font-black uppercase tracking-widest text-white shadow-lg">2025</button>
+                    <div class="flex gap-2 p-1 bg-white/5 rounded-xl border border-white/5">
+                        <button class="px-4 py-2 hover:bg-white/5 rounded-lg text-[9px] font-black uppercase tracking-widest text-gray-400">2025</button>
                         <button class="px-4 py-2 bg-blue-600 rounded-lg text-[9px] font-black uppercase tracking-widest text-white shadow-lg">2026</button>
                     </div>
                 </div>
-                
+
                 <div class="overflow-x-auto pb-4 no-scrollbar">
                     <div class="inline-grid grid-rows-7 grid-flow-col gap-1.5 min-w-max">
                         ${Array.from({ length: 365 }).map((_, i) => {
-                            const activeClass = i < 5 ? 'bg-green-600' : 'bg-white/[0.03]';
-                            return `<div class="w-3 h-3 rounded-sm ${activeClass} transition-all duration-500 cursor-pointer"></div>`;
+                            // Example logic: first few days active, others empty
+                            const opacity = i < 7 ? 'bg-green-500' : (i % 15 === 0 ? 'bg-green-900/40' : 'bg-white/[0.03]');
+                            return `<div class="w-3.5 h-3.5 rounded-sm ${opacity} transition-all duration-500 hover:scale-125 cursor-help"></div>`;
                         }).join('')}
                     </div>
                 </div>
 
-                <div class="flex justify-between items-center mt-4">
-                    <p class="text-[8px] text-gray-600 font-bold uppercase tracking-widest italic">Density increases with page engagement time</p>
-                    <div class="flex items-center gap-2">
+                <div class="flex flex-col sm:flex-row justify-between items-center mt-6 gap-4 border-t border-white/5 pt-6">
+                    <p class="text-[8px] text-gray-600 font-bold uppercase tracking-widest italic">Intensity reflects time spent in IDE & terminal sessions</p>
+                    <div class="flex items-center gap-3">
                         <span class="text-[8px] text-gray-600 font-bold uppercase tracking-widest">Low</span>
-                        <div class="flex gap-1">
-                            <div class="w-2.5 h-2.5 rounded-sm bg-white/[0.03]"></div>
-                            <div class="w-2.5 h-2.5 rounded-sm bg-green-900"></div>
-                            <div class="w-2.5 h-2.5 rounded-sm bg-green-700"></div>
-                            <div class="w-2.5 h-2.5 rounded-sm bg-green-500"></div>
-                            <div class="w-2.5 h-2.5 rounded-sm bg-green-400"></div>
+                        <div class="flex gap-1.5">
+                            <div class="w-3 h-3 rounded-sm bg-white/[0.03]"></div>
+                            <div class="w-3 h-3 rounded-sm bg-green-900/60"></div>
+                            <div class="w-3 h-3 rounded-sm bg-green-700/60"></div>
+                            <div class="w-3 h-3 rounded-sm bg-green-500/60"></div>
+                            <div class="w-3 h-3 rounded-sm bg-green-400"></div>
                         </div>
-                        <span class="text-[8px] text-gray-600 font-bold uppercase tracking-widest">NXXT</span>
+                        <span class="text-[8px] text-gray-600 font-bold uppercase tracking-widest">High</span>
                     </div>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
-                <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-emerald-500/30 transition-all">
-                    <div class="flex items-center gap-4 relative z-10">
-                        <div class="w-12 h-12 bg-emerald-600/10 rounded-2xl flex items-center justify-center border border-emerald-500/20">
-                            <i class="fas fa-briefcase text-emerald-500"></i>
-                        </div>
-                        <div>
-                            <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Active Jobs</p>
-                            <h3 class="text-3xl font-black text-white mt-1">0</h3>
-                        </div>
-                    </div>
-                    <i class="fas fa-search-dollar absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-emerald-500/[0.05] transition-all"></i>
-                </div>
-
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
                 <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-yellow-500/30 transition-all">
-                    <div class="flex items-center gap-4 relative z-10">
-                        <div class="w-12 h-12 bg-yellow-600/10 rounded-2xl flex items-center justify-center border border-yellow-500/20">
-                            <i class="fas fa-star text-yellow-500"></i>
-                        </div>
-                        <div>
-                            <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">XT Points</p>
-                            <h3 class="text-3xl font-black text-white mt-1">
-                                0 <span class="text-xs text-yellow-500/50 uppercase">XP</span>
-                            </h3>
-                        </div>
+                    <p class="text-[9px] font-black text-gray-500 uppercase tracking-widest">XT Points</p>
+                    <div class="flex items-end gap-1 mt-2">
+                        <h3 class="text-2xl font-black text-white italic">0</h3>
+                        <span class="text-[10px] text-yellow-500 font-black mb-1">XP</span>
                     </div>
-                    <i class="fas fa-trophy absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-yellow-500/[0.05] transition-all"></i>
+                    <i class="fas fa-star absolute -bottom-2 -right-2 text-white/[0.02] text-5xl group-hover:text-yellow-500/[0.05] transition-all"></i>
                 </div>
 
-                <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-indigo-500/30 transition-all">
-                    <div class="flex items-center gap-4 relative z-10">
-                        <div class="w-12 h-12 bg-indigo-600/10 rounded-2xl flex items-center justify-center border border-indigo-500/20">
-                            <i class="fas fa-cloud-upload-alt text-indigo-500"></i>
-                        </div>
-                        <div>
-                            <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Cloud Deploys</p>
-                            <h3 class="text-3xl font-black text-white mt-1">0</h3>
-                        </div>
-                    </div>
-                    <i class="fas fa-server absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-indigo-500/[0.05] transition-all"></i>
+                <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-red-500/30 transition-all">
+                    <p class="text-[9px] font-black text-gray-500 uppercase tracking-widest">Streaks</p>
+                    <h3 class="text-2xl font-black text-white mt-2 italic">0 <span class="text-[10px] text-red-500 uppercase ml-1">Days</span></h3>
+                    <i class="fas fa-fire absolute -bottom-2 -right-2 text-white/[0.02] text-5xl group-hover:text-red-500/[0.05] transition-all"></i>
+                </div>
+
+                <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-purple-500/30 transition-all">
+                    <p class="text-[9px] font-black text-gray-500 uppercase tracking-widest">Semester</p>
+                    <h3 class="text-2xl font-black text-white mt-2 italic">1st</h3>
+                    <i class="fas fa-graduation-cap absolute -bottom-2 -right-2 text-white/[0.02] text-5xl group-hover:text-purple-500/[0.05] transition-all"></i>
+                </div>
+
+                <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-blue-400/30 transition-all">
+                    <p class="text-[9px] font-black text-gray-500 uppercase tracking-widest">Level</p>
+                    <h3 class="text-2xl font-black text-white mt-2 italic">100</h3>
+                    <i class="fas fa-layer-group absolute -bottom-2 -right-4 text-white/[0.02] text-6xl group-hover:text-blue-400/[0.05] transition-all"></i>
                 </div>
             </div>
         </div>
