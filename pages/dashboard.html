@@ -252,32 +252,64 @@
     </div>
 </main>
 
-<!-- Mobile Bottom Navigation -->
-<nav class="lg:hidden fixed bottom-0 left-0 w-full bg-[#030816]/95 backdrop-blur-xl border-t border-white/5 px-6 py-4 flex justify-between items-center z-[100]">
-    <button onclick="updateView('Overview')" class="flex flex-col items-center gap-1 text-blue-500">
-        <i class="fas fa-home text-xl"></i>
-        <span class="text-[8px] font-black uppercase">Home</span>
-    </button>
-    <button onclick="updateView('Lessons')" class="flex flex-col items-center gap-1 text-gray-500">
-        <i class="fas fa-book-open text-xl"></i>
-        <span class="text-[8px] font-black uppercase">Learn</span>
-    </button>
-    <button onclick="updateView('Nxxt AI')" class="flex flex-col items-center gap-1 text-gray-500">
-        <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center -mt-8 shadow-lg shadow-blue-600/40">
-            <i class="fas fa-robot text-white text-lg"></i>
-        </div>
-        <span class="text-[8px] font-black uppercase mt-1">AI</span>
-    </button>
-    <button onclick="updateView('Xt Pay')" class="flex flex-col items-center gap-1 text-gray-500">
-        <i class="fas fa-wallet text-xl"></i>
-        <span class="text-[8px] font-black uppercase">Pay</span>
-    </button>
-    <button onclick="openFullMenu()" class="flex flex-col items-center gap-1 text-gray-500">
-        <i class="fas fa-bars-staggered text-xl"></i>
-        <span class="text-[8px] font-black uppercase">Menu</span>
-    </button>
-</nav>
-     <style>
+<div class="lg:hidden fixed bottom-6 left-0 w-full px-4 z-[100]">
+    <nav class="mx-auto max-w-md bg-[#050b1d]/80 backdrop-blur-2xl border border-white/10 rounded-[2.5rem] px-6 py-3 shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex justify-between items-center relative overflow-hidden">
+        
+        <div class="absolute inset-0 bg-gradient-to-t from-blue-500/5 to-transparent pointer-events-none"></div>
+
+        <button onclick="updateView('Overview')" class="relative flex flex-col items-center gap-1 group transition-all duration-300">
+            <div class="absolute -top-3 w-4 h-1 bg-blue-500 rounded-full shadow-[0_0_10px_#3b82f6] opacity-100"></div>
+            <i class="fas fa-home text-lg text-blue-500 transition-transform group-active:scale-90"></i>
+            <span class="text-[7px] font-black uppercase tracking-widest text-blue-500">Node</span>
+        </button>
+
+        <button onclick="updateView('Lessons')" class="relative flex flex-col items-center gap-1 group transition-all duration-300">
+            <i class="fas fa-book-open text-lg text-gray-500 group-hover:text-white transition-colors"></i>
+            <span class="text-[7px] font-black uppercase tracking-widest text-gray-500 group-hover:text-white">Learn</span>
+        </button>
+
+        <button onclick="updateView('Nxxt AI')" class="relative flex flex-col items-center transition-all duration-500 hover:-translate-y-1">
+            <div class="relative">
+                <div class="absolute inset-0 rounded-full bg-blue-600 animate-ping opacity-20"></div>
+                <div class="absolute inset-0 rounded-full bg-blue-400 animate-pulse opacity-20"></div>
+                
+                <div class="relative w-14 h-14 bg-gradient-to-tr from-blue-700 via-blue-500 to-cyan-400 rounded-2xl flex items-center justify-center shadow-[0_0_25px_rgba(59,130,246,0.5)] border border-white/20 rotate-45 group">
+                    <i class="fas fa-robot text-white text-xl -rotate-45 group-hover:scale-110 transition-transform"></i>
+                </div>
+            </div>
+            <span class="text-[7px] font-black uppercase mt-2 tracking-[0.2em] text-cyan-400 animate-pulse">Nxxt AI</span>
+        </button>
+
+        <button onclick="updateView('Xt Pay')" class="relative flex flex-col items-center gap-1 group transition-all duration-300">
+            <i class="fas fa-wallet text-lg text-gray-500 group-hover:text-emerald-400 transition-colors"></i>
+            <span class="text-[7px] font-black uppercase tracking-widest text-gray-500 group-hover:text-emerald-400">Vault</span>
+        </button>
+
+        <button onclick="openFullMenu()" class="relative flex flex-col items-center gap-1 group transition-all duration-300">
+            <i class="fas fa-bars-staggered text-lg text-gray-500 group-hover:text-white transition-colors"></i>
+            <span class="text-[7px] font-black uppercase tracking-widest text-gray-500 group-hover:text-white">Menu</span>
+        </button>
+
+    </nav>
+</div>
+
+<style>
+    /* Smooth bounce for the AI button */
+    @keyframes pulse-ring {
+        0% { transform: scale(0.95); opacity: 0.5; }
+        50% { transform: scale(1.05); opacity: 0.8; }
+        100% { transform: scale(0.95); opacity: 0.5; }
+    }
+    
+    /* Adding a custom active state class if you want to swap colors via JS */
+    .nav-active i {
+        color: #3b82f6 !important;
+        text-shadow: 0 0 15px rgba(59,130,246,0.6);
+    }
+    .nav-active span {
+        color: #3b82f6 !important;
+    }
+
         @keyframes fall {
             from { transform: translateY(-10vh) translateX(0) rotate(0deg); opacity: 0; }
             20% { opacity: 1; }
