@@ -351,15 +351,6 @@ const views = {
     </div>
 </div>
 `,
-<style>
-    .nav-item {
-        @apply flex items-center justify-between p-6 rounded-3xl border border-white/5 hover:bg-white hover:text-black transition-all duration-500;
-    }
-    
-    /* Custom Scrollbar for the slide-out menu */
-    #side-nav::-webkit-scrollbar { width: 4px; }
-    #side-nav::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
-</style>
 
     
 
