@@ -22,156 +22,194 @@ const ActivityEngine = {
 ActivityEngine.track();
 const views = {
 'Overview': `
-    <div class="flex flex-col gap-6 p-2 animate-in fade-in duration-700">
+    <div class="flex flex-col gap-10 p-2 animate-in fade-in duration-700">
         
         <div class="flex justify-between items-end px-4 mb-2">
             <div>
-                <h2 class="text-[10px] font-black text-blue-500 uppercase tracking-[0.3em] mb-1">DashBoard // Null_State</h2>
-                <div class="h-[1px] w-8 bg-blue-600"></div>
+                <h2 class="text-xs font-black text-blue-500 uppercase tracking-[0.3em] mb-1">Neural Interface v4.0</h2>
+                <div class="h-[2px] w-12 bg-gradient-to-r from-blue-600 to-transparent"></div>
             </div>
             <div class="text-right">
-                <p class="text-[8px] font-bold text-gray-500 uppercase tracking-widest">Temporal Sync: Offline</p>
-                <p class="text-[9px] font-black text-white italic">NXXT // 2026</p>
+                <p class="text-[9px] font-bold text-gray-500 uppercase tracking-widest">System Sync</p>
+                <p class="text-[10px] font-black text-white italic">OPERATIONAL // 2030</p>
             </div>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
-            <div class="relative bg-[#050b1d]/80 backdrop-blur-xl border border-white/5 rounded-[2rem] p-6 overflow-hidden">
-                <div class="relative z-10 space-y-6">
-                    <div class="flex items-center gap-4">
-                        <div class="w-10 h-10 rounded-xl bg-blue-600/10 border border-blue-500/20 flex items-center justify-center">
-                            <i class="fas fa-atom text-blue-400 text-sm"></i>
-                        </div>
-                        <div>
-                            <p class="text-[8px] font-black text-blue-500/60 uppercase tracking-widest">Active Projects</p>
-                            <h3 class="text-2xl font-black text-white italic">00</h3>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-4">
-                        <div class="w-10 h-10 rounded-xl bg-purple-600/10 border border-purple-500/20 flex items-center justify-center">
-                            <i class="fas fa-unite text-purple-400 text-sm"></i>
-                        </div>
-                        <div>
-                            <p class="text-[8px] font-black text-purple-500/60 uppercase tracking-widest">Neural Collabs</p>
-                            <h3 class="text-2xl font-black text-white italic">00</h3>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="relative bg-[#050b1d]/80 backdrop-blur-xl border border-white/5 rounded-[2rem] p-6 overflow-hidden">
-                <div class="relative z-10 space-y-6">
-                    <div class="flex items-center gap-4">
-                        <div class="w-10 h-10 rounded-xl bg-orange-600/10 border border-orange-500/20 flex items-center justify-center">
-                            <i class="fas fa-shuttle-space text-orange-400 text-sm -rotate-45"></i>
-                        </div>
-                        <div>
-                            <p class="text-[8px] font-black text-orange-500/60 uppercase tracking-widest">Global Rank</p>
-                            <h3 class="text-2xl font-black text-white italic">#---</h3>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-4">
-                        <div class="w-10 h-10 rounded-xl bg-red-600/10 border border-red-500/20 flex items-center justify-center">
-                            <i class="fas fa-bolt text-red-400 text-sm"></i>
-                        </div>
-                        <div>
-                            <p class="text-[8px] font-black text-red-500/60 uppercase tracking-widest">Streak</p>
-                            <h3 class="text-2xl font-black text-white italic">00</h3>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="relative bg-[#050b1d]/80 backdrop-blur-xl border border-white/5 rounded-[2rem] p-6 overflow-hidden">
-                <div class="relative z-10 space-y-6">
-                    <div class="flex items-center gap-4">
-                        <div class="w-10 h-10 rounded-xl bg-emerald-600/10 border border-emerald-500/20 flex items-center justify-center">
-                            <i class="fas fa-dna text-emerald-400 text-sm"></i>
-                        </div>
-                        <div>
-                            <p class="text-[8px] font-black text-emerald-500/60 uppercase tracking-widest">Level</p>
-                            <h3 class="text-2xl font-black text-white italic">000</h3>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-4">
-                        <div class="w-10 h-10 rounded-xl bg-cyan-600/10 border border-cyan-500/20 flex items-center justify-center">
-                            <i class="fas fa-microchip text-cyan-400 text-sm"></i>
-                        </div>
-                        <div>
-                            <p class="text-[8px] font-black text-cyan-500/60 uppercase tracking-widest">Semester</p>
-                            <h3 class="text-2xl font-black text-white italic">00</h3>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="bg-[#050b1d] border border-white/5 rounded-[2.5rem] p-8">
-            <div class="flex justify-between items-center mb-8">
-                <div>
-                    <h3 class="text-lg font-black text-white italic tracking-tighter uppercase">Activity Nebula</h3>
-                    <p class="text-[8px] text-blue-500 font-bold uppercase tracking-[0.3em]">Dual-Layer Biometric Tracking</p>
-                </div>
-                <div class="h-8 px-4 flex items-center bg-white/5 rounded-full border border-white/10">
-                    <span class="text-[8px] font-black text-gray-500 uppercase tracking-widest">System Null</span>
-                </div>
-            </div>
-
-            <div class="mb-8">
-                <div class="overflow-x-auto pb-4 no-scrollbar">
-                    <div class="inline-grid grid-rows-7 grid-flow-col gap-1.5">
-                        \${Array.from({ length: 365 }).map(() => 
-                            \`<div class="w-3 h-3 rounded-[2px] bg-white/[0.02] border border-white/[0.02]"></div>\`
-                        ).join('')}
-                    </div>
-                </div>
-            </div>
-
-            <div class="relative h-24 w-full bg-gradient-to-t from-blue-500/5 to-transparent rounded-xl border-b border-white/5 flex items-end justify-between px-2 overflow-hidden">
-                \${Array.from({ length: 40 }).map(() => 
-                    \`<div class="w-[2px] bg-white/[0.05] rounded-t-full transition-all" style="height: 10%"></div>\`
-                ).join('')}
-                <div class="absolute inset-0 flex items-center justify-center">
-                    <p class="text-[8px] font-black text-gray-600 uppercase tracking-[0.5em]">No Data Stream Detected</p>
-                </div>
-            </div>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             
-            <div class="flex justify-between items-center mt-4">
-                <p class="text-[7px] text-gray-600 font-bold uppercase tracking-widest">Synapse Load: 0%</p>
-                <div class="flex items-center gap-2">
-                    <div class="w-2 h-2 rounded-full bg-red-500/20 animate-pulse"></div>
-                    <span class="text-[7px] text-red-500/50 font-bold uppercase tracking-widest">Sensors Offline</span>
+            <div class="group relative">
+                <div class="absolute -inset-0.5 bg-gradient-to-b from-blue-500/20 to-purple-600/20 rounded-[3rem] blur opacity-30 group-hover:opacity-100 transition duration-1000"></div>
+                <div class="relative bg-[#050b1d]/80 backdrop-blur-xl border border-white/10 rounded-[3rem] p-10 overflow-hidden">
+                    <div class="relative z-10 space-y-10">
+                        <div class="flex items-start justify-between">
+                            <div class="flex gap-6">
+                                <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-600/20 to-blue-900/40 border border-blue-500/30 flex items-center justify-center shadow-[0_0_20px_rgba(59,130,246,0.15)]">
+                                    <i class="fas fa-atom text-blue-400 text-2xl animate-spin-slow"></i>
+                                </div>
+                                <div>
+                                    <p class="text-[10px] font-black text-blue-500/60 uppercase tracking-[0.2em]">Active Projects</p>
+                                    <h3 class="text-5xl font-black text-white mt-1 tracking-tighter italic">00</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-start justify-between">
+                            <div class="flex gap-6">
+                                <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-600/20 to-purple-900/40 border border-purple-500/30 flex items-center justify-center shadow-[0_0_20px_rgba(168,85,247,0.15)]">
+                                    <i class="fas fa-unite text-purple-400 text-2xl"></i>
+                                </div>
+                                <div>
+                                    <p class="text-[10px] font-black text-purple-500/60 uppercase tracking-[0.2em]">Neural Collabs</p>
+                                    <h3 class="text-5xl font-black text-white mt-1 tracking-tighter italic">00</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="absolute -right-4 -bottom-4 opacity-[0.03] group-hover:opacity-[0.07] transition-opacity duration-700">
+                        <i class="fas fa-terminal text-[15rem] -rotate-12"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="group relative">
+                <div class="absolute -inset-0.5 bg-gradient-to-b from-orange-500/20 to-red-600/20 rounded-[3rem] blur opacity-30 group-hover:opacity-100 transition duration-1000"></div>
+                <div class="relative bg-[#050b1d]/80 backdrop-blur-xl border border-white/10 rounded-[3rem] p-10 overflow-hidden">
+                    <div class="relative z-10 space-y-10">
+                        <div class="flex items-start justify-between">
+                            <div class="flex gap-6">
+                                <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-orange-600/20 to-orange-900/40 border border-orange-500/30 flex items-center justify-center">
+                                    <i class="fas fa-shuttle-space text-orange-400 text-2xl -rotate-45"></i>
+                                </div>
+                                <div>
+                                    <p class="text-[10px] font-black text-orange-500/60 uppercase tracking-[0.2em]">Global Rank</p>
+                                    <h3 class="text-5xl font-black text-white mt-1 tracking-tighter italic">#100</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-start justify-between">
+                            <div class="flex gap-6">
+                                <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-red-600/20 to-red-900/40 border border-red-500/30 flex items-center justify-center relative">
+                                    <i class="fas fa-bolt text-red-400 text-2xl"></i>
+                                    <span class="absolute top-0 right-0 w-3 h-3 bg-red-500 rounded-full animate-ping"></span>
+                                </div>
+                                <div>
+                                    <p class="text-[10px] font-black text-red-500/60 uppercase tracking-[0.2em]">Pulse Streak</p>
+                                    <h3 class="text-5xl font-black text-white mt-1 tracking-tighter italic">00</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="absolute -right-4 -bottom-4 opacity-[0.03] group-hover:opacity-[0.07] transition-opacity duration-700">
+                        <i class="fas fa-fire-alt text-[15rem] rotate-12"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="group relative">
+                <div class="absolute -inset-0.5 bg-gradient-to-b from-emerald-500/20 to-cyan-600/20 rounded-[3rem] blur opacity-30 group-hover:opacity-100 transition duration-1000"></div>
+                <div class="relative bg-[#050b1d]/80 backdrop-blur-xl border border-white/10 rounded-[3rem] p-10 overflow-hidden">
+                    <div class="relative z-10 space-y-10">
+                        <div class="flex items-start justify-between">
+                            <div class="flex gap-6">
+                                <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-600/20 to-emerald-900/40 border border-emerald-500/30 flex items-center justify-center">
+                                    <i class="fas fa-dna text-emerald-400 text-2xl"></i>
+                                </div>
+                                <div>
+                                    <p class="text-[10px] font-black text-emerald-500/60 uppercase tracking-[0.2em]">Evolution Level</p>
+                                    <h3 class="text-5xl font-black text-white mt-1 tracking-tighter italic">100</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-start justify-between">
+                            <div class="flex gap-6">
+                                <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-600/20 to-cyan-900/40 border border-cyan-500/30 flex items-center justify-center">
+                                    <i class="fas fa-microchip text-cyan-400 text-2xl"></i>
+                                </div>
+                                <div>
+                                    <p class="text-[10px] font-black text-cyan-500/60 uppercase tracking-[0.2em]">Cycle/Semester</p>
+                                    <h3 class="text-5xl font-black text-white mt-1 tracking-tighter italic">01</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="absolute -right-4 -bottom-4 opacity-[0.03] group-hover:opacity-[0.07] transition-opacity duration-700">
+                        <i class="fas fa-brain text-[15rem]"></i>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="grid grid-cols-3 gap-4">
-            <div class="bg-white/[0.02] border border-white/5 p-4 rounded-2xl flex items-center gap-4">
-                <i class="fas fa-briefcase text-gray-700 text-xs"></i>
-                <div>
-                    <p class="text-[7px] font-black text-gray-600 uppercase tracking-widest">Jobs</p>
-                    <p class="text-sm font-black text-white">0</p>
+        <div class="relative group">
+            <div class="absolute -inset-1 bg-blue-500/5 rounded-[3rem] blur-xl"></div>
+            <div class="relative bg-[#050b1d] border border-white/5 p-10 rounded-[3rem] overflow-hidden">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4 relative z-10">
+                    <div>
+                        <h3 class="text-2xl font-black text-white italic tracking-tighter uppercase">Activity Nebula</h3>
+                        <p class="text-[10px] text-blue-500 font-bold uppercase tracking-[0.3em] mt-1">Biometric Temporal Tracking</p>
+                    </div>
+                    <div class="flex p-1 bg-white/5 rounded-xl backdrop-blur-md border border-white/10">
+                        <button class="px-6 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest text-gray-500 hover:text-white transition-all">2029</button>
+                        <button class="px-6 py-2 bg-blue-600 rounded-lg text-[10px] font-black uppercase tracking-widest text-white shadow-[0_0_20px_rgba(37,99,235,0.4)]">2030</button>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto pb-6 no-scrollbar cursor-crosshair">
+                    <div class="inline-grid grid-rows-7 grid-flow-col gap-2 min-w-max">
+                        ${Array.from({ length: 365 }).map((_, i) => {
+                            const density = i < 8 ? 'bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.5)]' : 'bg-white/[0.03]';
+                            return `<div class="w-4 h-4 rounded-[4px] ${density} hover:scale-150 hover:bg-white transition-all duration-300"></div>`;
+                        }).join('')}
+                    </div>
+                </div>
+
+                <div class="flex justify-between items-center mt-6 pt-6 border-t border-white/5">
+                    <p class="text-[9px] text-gray-600 font-bold uppercase tracking-[0.2em]">Synapse density reflects daily execution load</p>
+                    <div class="flex items-center gap-4">
+                        <span class="text-[9px] text-gray-600 font-bold uppercase tracking-widest">Dormant</span>
+                        <div class="flex gap-1.5">
+                            <div class="w-3 h-3 rounded-sm bg-white/[0.03]"></div>
+                            <div class="w-3 h-3 rounded-sm bg-blue-900/40"></div>
+                            <div class="w-3 h-3 rounded-sm bg-blue-700/60"></div>
+                            <div class="w-3 h-3 rounded-sm bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.4)]"></div>
+                        </div>
+                        <span class="text-[9px] text-blue-500 font-bold uppercase tracking-widest">Peak</span>
+                    </div>
                 </div>
             </div>
-            <div class="bg-white/[0.02] border border-white/5 p-4 rounded-2xl flex items-center gap-4">
-                <i class="fas fa-star text-gray-700 text-xs"></i>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="bg-gradient-to-b from-[#0a0f1e] to-[#050b1d] border border-white/5 p-8 rounded-[2.5rem] flex items-center gap-6 group hover:border-emerald-500/40 transition-all duration-500">
+                <div class="w-16 h-16 bg-emerald-500/10 rounded-full flex items-center justify-center border border-emerald-500/20 group-hover:scale-110 transition-transform">
+                    <i class="fas fa-briefcase text-emerald-500 text-xl"></i>
+                </div>
                 <div>
-                    <p class="text-[7px] font-black text-gray-600 uppercase tracking-widest">Points</p>
-                    <p class="text-sm font-black text-white">0</p>
+                    <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Active Jobs</p>
+                    <h3 class="text-3xl font-black text-white mt-0.5 italic">0</h3>
                 </div>
             </div>
-            <div class="bg-white/[0.02] border border-white/5 p-4 rounded-2xl flex items-center gap-4">
-                <i class="fas fa-cloud-bolt text-gray-700 text-xs"></i>
+
+            <div class="bg-gradient-to-b from-[#0a0f1e] to-[#050b1d] border border-white/5 p-8 rounded-[2.5rem] flex items-center gap-6 group hover:border-yellow-500/40 transition-all duration-500">
+                <div class="w-16 h-16 bg-yellow-500/10 rounded-full flex items-center justify-center border border-yellow-500/20 group-hover:scale-110 transition-transform">
+                    <i class="fas fa-star text-yellow-500 text-xl"></i>
+                </div>
                 <div>
-                    <p class="text-[7px] font-black text-gray-600 uppercase tracking-widest">Deploys</p>
-                    <p class="text-sm font-black text-white">0</p>
+                    <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">XT Points</p>
+                    <h3 class="text-3xl font-black text-white mt-0.5 italic">0 <span class="text-xs text-yellow-500 opacity-50 font-normal ml-1">XP</span></h3>
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-b from-[#0a0f1e] to-[#050b1d] border border-white/5 p-8 rounded-[2.5rem] flex items-center gap-6 group hover:border-indigo-500/40 transition-all duration-500">
+                <div class="w-16 h-16 bg-indigo-500/10 rounded-full flex items-center justify-center border border-indigo-500/20 group-hover:scale-110 transition-transform">
+                    <i class="fas fa-cloud-bolt text-indigo-500 text-xl"></i>
+                </div>
+                <div>
+                    <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Quantum Deploys</p>
+                    <h3 class="text-3xl font-black text-white mt-0.5 italic">0</h3>
                 </div>
             </div>
         </div>
     </div>
 `,
-
-
     
     'Lessons': `
    
