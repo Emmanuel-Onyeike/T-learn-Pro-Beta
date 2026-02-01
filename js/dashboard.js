@@ -22,167 +22,98 @@ const ActivityEngine = {
 ActivityEngine.track();
 const views = {
 'Overview': `
-        <style>
-            .overview-wrapper {
-                display: flex;
-                flex-direction: column;
-                gap: 1.25rem;
-                padding: 1.5rem;
-                background-color: #05070A; /* Deepest black from your UI */
-                color: #FFFFFF;
-                font-family: 'Inter', sans-serif;
-            }
-            .stats-row {
-                display: flex;
-                gap: 1rem;
-                flex-wrap: wrap;
-            }
-            .card {
-                flex: 1;
-                min-width: 140px;
-                background: #0D1117;
-                border: 1px solid #1F2937;
-                border-radius: 12px;
-                padding: 1.25rem;
-                transition: transform 0.2s ease, border-color 0.2s ease;
-            }
-            .card:hover {
-                border-color: #A3319F;
-            }
-            .card-label {
-                color: #8B949E;
-                font-size: 0.7rem;
-                text-transform: uppercase;
-                letter-spacing: 1px;
-                display: flex;
-                align-items: center;
-                gap: 8px;
-                margin-bottom: 0.5rem;
-            }
-            .card-value {
-                font-size: 1.5rem;
-                font-weight: 700;
-                margin: 0;
-            }
-            .big-card {
-                width: 100%;
-                background: #0D1117;
-                border: 1px solid #1F2937;
-                border-radius: 16px;
-                padding: 2rem;
-                text-align: center;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-            }
-            .btn-purple {
-                background: #A3319F;
-                color: white;
-                border: none;
-                padding: 12px 24px;
-                border-radius: 8px;
-                font-weight: 600;
-                cursor: pointer;
-                display: flex;
-                align-items: center;
-                gap: 8px;
-                margin-top: 1rem;
-            }
-            .activity-chart {
-                width: 100%;
-                height: 100px;
-                display: flex;
-                align-items: flex-end;
-                justify-content: center;
-                gap: 6px;
-                margin-top: 1rem;
-            }
-            .bar {
-                width: 12px;
-                background: #1F2937;
-                border-radius: 4px;
-            }
-            .bar.active {
-                background: linear-gradient(to top, #A3319F, #D946EF);
-            }
-            @media (max-width: 600px) {
-                .stats-row {
-                    display: grid;
-                    grid-template-columns: 1fr 1fr;
-                }
-                .stats-row > div:last-child {
-                    grid-column: span 2;
-                }
-            }
-        </style>
-
-        <div class="overview-wrapper">
-            <div class="stats-row">
-                <div class="card">
-                    <div class="card-label"><i class="fas fa-project-diagram"></i> Projects</div>
-                    <div class="card-value">0</div>
+        <div class="flex flex-col gap-5 p-6 bg-[#05070A] text-white font-sans min-h-screen">
+            
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                <div class="bg-[#0D1117] border border-[#1F2937] hover:border-[#A3319F] transition-colors rounded-xl p-5">
+                    <div class="text-[#8B949E] text-[10px] uppercase tracking-widest flex items-center gap-2 mb-2">
+                        <i class="fas fa-project-diagram"></i> Projects
+                    </div>
+                    <div class="text-2xl font-bold">0</div>
                 </div>
-                <div class="card">
-                    <div class="card-label"><i class="fas fa-handshake"></i> Collab</div>
-                    <div class="card-value">0</div>
+                <div class="bg-[#0D1117] border border-[#1F2937] hover:border-[#A3319F] transition-colors rounded-xl p-5">
+                    <div class="text-[#8B949E] text-[10px] uppercase tracking-widest flex items-center gap-2 mb-2">
+                        <i class="fas fa-handshake"></i> Collab
+                    </div>
+                    <div class="text-2xl font-bold">0</div>
                 </div>
-                <div class="card">
-                    <div class="card-label"><i class="fas fa-bolt"></i> Streaks</div>
-                    <div class="card-value">0</div>
+                <div class="bg-[#0D1117] border border-[#1F2937] hover:border-[#A3319F] transition-colors rounded-xl p-5 col-span-2 md:col-span-1">
+                    <div class="text-[#8B949E] text-[10px] uppercase tracking-widest flex items-center gap-2 mb-2">
+                        <i class="fas fa-bolt"></i> Streaks
+                    </div>
+                    <div class="text-2xl font-bold">0</div>
                 </div>
             </div>
 
-            <div class="big-card">
-                <i class="fas fa-folder-plus" style="font-size: 2.5rem; color: #1F2937; margin-bottom: 1rem;"></i>
-                <p style="color: #8B949E; margin: 0;">No active projects detected in your repository.</p>
-                <button class="btn-purple"><i class="fas fa-plus"></i> Create New Project</button>
+            <div class="w-full min-h-[180px] bg-[#0D1117] border border-[#1F2937] rounded-2xl p-8 flex flex-col items-center justify-center text-center">
+                <i class="fas fa-folder-plus text-4xl text-[#1F2937] mb-4"></i>
+                <p class="text-[#8B949E] text-sm">No active projects detected in your repository.</p>
+                <button class="mt-4 bg-[#A3319F] hover:bg-[#862683] text-white px-6 py-2.5 rounded-lg font-semibold flex items-center gap-2 transition-all active:scale-95">
+                    <i class="fas fa-plus text-xs"></i> Create New Project
+                </button>
             </div>
 
-            <div class="stats-row">
-                <div class="card" style="text-align: center;">
-                    <div class="card-label" style="justify-content: center;"><i class="fas fa-award"></i> Rank</div>
-                    <div class="card-value" style="font-size: 1.1rem; color: #A3319F;">Unranked</div>
+            <div class="grid grid-cols-3 gap-4">
+                <div class="bg-[#0D1117] border border-[#1F2937] rounded-xl p-4 text-center">
+                    <i class="fas fa-award text-[#8B949E] block mb-1"></i>
+                    <div class="text-[#8B949E] text-[10px] uppercase tracking-tighter">Rank</div>
+                    <div class="text-sm font-bold text-[#A3319F] mt-1">Unranked</div>
                 </div>
-                <div class="card" style="text-align: center;">
-                    <div class="card-label" style="justify-content: center;"><i class="fas fa-calendar-day"></i> Semester</div>
-                    <div class="card-value" style="font-size: 1.1rem;">1st</div>
+                <div class="bg-[#0D1117] border border-[#1F2937] rounded-xl p-4 text-center">
+                    <i class="fas fa-calendar-day text-[#8B949E] block mb-1"></i>
+                    <div class="text-[#8B949E] text-[10px] uppercase tracking-tighter">Semester</div>
+                    <div class="text-sm font-bold mt-1">1st</div>
                 </div>
-                <div class="card" style="text-align: center;">
-                    <div class="card-label" style="justify-content: center;"><i class="fas fa-layer-group"></i> Level</div>
-                    <div class="card-value" style="font-size: 1.1rem;">100</div>
-                </div>
-            </div>
-
-            <div class="big-card" style="align-items: flex-start; text-align: left; padding: 1.5rem;">
-                <div class="card-label"><i class="fas fa-chart-area"></i> Learning Activity</div>
-                <div class="activity-chart">
-                    <div class="bar" style="height: 30%;"></div>
-                    <div class="bar" style="height: 50%;"></div>
-                    <div class="bar active" style="height: 85%;"></div>
-                    <div class="bar" style="height: 40%;"></div>
-                    <div class="bar active" style="height: 65%;"></div>
-                    <div class="bar" style="height: 20%;"></div>
+                <div class="bg-[#0D1117] border border-[#1F2937] rounded-xl p-4 text-center">
+                    <i class="fas fa-layer-group text-[#8B949E] block mb-1"></i>
+                    <div class="text-[#8B949E] text-[10px] uppercase tracking-tighter">Level</div>
+                    <div class="text-sm font-bold mt-1">100</div>
                 </div>
             </div>
 
-            <div class="stats-row">
-                <div class="card">
-                    <div class="card-label"><i class="fas fa-fire"></i> Streaks</div>
-                    <div class="card-value">0</div>
+            <div class="w-full bg-[#0D1117] border border-[#1F2937] rounded-2xl p-6">
+                <div class="text-[#8B949E] text-[10px] uppercase tracking-widest flex items-center gap-2 mb-6">
+                    <i class="fas fa-chart-area"></i> Learning Activity
                 </div>
-                <div class="card">
-                    <div class="card-label"><i class="fas fa-server"></i> Deployed</div>
-                    <div class="card-value">0</div>
+                <div class="flex items-end justify-center gap-2 h-20 w-full overflow-hidden">
+                    <div class="w-3 bg-[#1F2937] rounded-t h-[30%]"></div>
+                    <div class="w-3 bg-[#1F2937] rounded-t h-[50%]"></div>
+                    <div class="w-3 bg-gradient-to-t from-[#A3319F] to-[#D946EF] rounded-t h-[85%]"></div>
+                    <div class="w-3 bg-[#1F2937] rounded-t h-[40%]"></div>
+                    <div class="w-3 bg-gradient-to-t from-[#A3319F] to-[#D946EF] rounded-t h-[65%]"></div>
+                    <div class="w-3 bg-[#1F2937] rounded-t h-[20%]"></div>
+                    <div class="w-3 bg-[#1F2937] rounded-t h-[45%]"></div>
                 </div>
-                <div class="card">
-                    <div class="card-label"><i class="fas fa-gem" style="color: #A3319F;"></i> Xt Point</div>
-                    <div class="card-value">0</div>
+            </div>
+
+            <div class="grid grid-cols-3 gap-4">
+                <div class="bg-[#0D1117] border border-[#1F2937] rounded-xl p-5">
+                    <div class="text-[#8B949E] text-[10px] uppercase flex items-center gap-2 mb-2">
+                        <i class="fas fa-fire text-orange-500"></i> Streaks
+                    </div>
+                    <div class="text-xl font-bold">0</div>
+                </div>
+                <div class="bg-[#0D1117] border border-[#1F2937] rounded-xl p-5">
+                    <div class="text-[#8B949E] text-[10px] uppercase flex items-center gap-2 mb-2">
+                        <i class="fas fa-server text-blue-400"></i> Deployed
+                    </div>
+                    <div class="text-xl font-bold">0</div>
+                </div>
+                <div class="bg-[#0D1117] border border-[#1F2937] rounded-xl p-5">
+                    <div class="text-[#8B949E] text-[10px] uppercase flex items-center gap-2 mb-2">
+                        <i class="fas fa-gem text-[#A3319F]"></i> Xt Point
+                    </div>
+                    <div class="text-xl font-bold">0</div>
                 </div>
             </div>
         </div>
     `,
 
+
+
+
+
+    
     'Lessons': `
    
 `,
