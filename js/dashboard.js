@@ -201,190 +201,141 @@ const views = {
     
     
 'Lessons': `
-<div class="p-8 animate-in fade-in zoom-in-95 duration-700 max-w-[1800px] mx-auto">
-    
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-12">
-        <div class="col-span-1 lg:col-span-2 bg-[#0a0a0a] border border-white/10 rounded-[2rem] p-8 relative overflow-hidden group">
-            <div class="absolute top-0 right-0 w-64 h-64 bg-blue-600/10 blur-[100px] rounded-full -mr-20 -mt-20"></div>
-            <div class="relative z-10">
-                <div class="flex items-center gap-4 mb-6">
-                    <div class="w-14 h-14 bg-blue-600 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/20">
-                        <i class="fa-solid fa-graduation-cap text-2xl text-white"></i>
-                    </div>
-                    <div>
-                        <h2 class="text-2xl font-black text-white tracking-tighter uppercase italic">Grand Master Path</h2>
-                        <p class="text-gray-500 text-xs font-bold uppercase tracking-widest">Level 42 Architect</p>
-                    </div>
-                </div>
-                <div class="space-y-4">
-                    <div class="flex justify-between items-end">
-                        <span class="text-[10px] font-black text-gray-400 uppercase">Total Curriculum Completion</span>
-                        <span class="text-xl font-mono font-bold text-blue-400">68.4%</span>
-                    </div>
-                    <div class="w-full bg-white/5 h-3 rounded-full overflow-hidden border border-white/5 p-[2px]">
-                        <div class="bg-gradient-to-r from-blue-600 to-indigo-400 h-full rounded-full shadow-[0_0_15px_rgba(59,130,246,0.5)] transition-all duration-1000" style="width: 68.4%"></div>
-                    </div>
-                </div>
+<div class="p-4 md:p-12 bg-[#050505] min-h-screen text-gray-200 font-sans selection:bg-blue-500/30">
+    <header class="max-w-6xl mx-auto mb-16 flex flex-col md:flex-row justify-between items-center gap-8">
+        <div>
+            <h1 class="text-4xl font-black text-white tracking-tight mb-2">Learning Path</h1>
+            <p class="text-gray-400 font-medium">From Foundation to Architecture</p>
+        </div>
+        <div class="flex gap-12 items-center bg-white/5 px-8 py-4 rounded-3xl border border-white/10">
+            <div class="text-center">
+                <p class="text-[10px] uppercase tracking-widest text-blue-400 font-bold mb-1">Progress</p>
+                <p class="text-2xl font-mono font-bold text-white">68.4%</p>
+            </div>
+            <div class="w-[1px] h-10 bg-white/10"></div>
+            <div class="text-center">
+                <p class="text-[10px] uppercase tracking-widest text-purple-400 font-bold mb-1">Rank</p>
+                <p class="text-2xl font-mono font-bold text-white">#1,204</p>
             </div>
         </div>
+    </header>
 
-        <div class="bg-[#111] border border-white/5 rounded-[2rem] p-6 flex flex-col justify-between hover:border-blue-500/30 transition-all">
-            <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Global Rank</p>
-            <h3 class="text-4xl font-black text-white italic">#1,204</h3>
-            <p class="text-[10px] text-green-500 font-bold"><i class="fa-solid fa-caret-up"></i> Top 0.2% This Week</p>
-        </div>
+    <main class="max-w-6xl mx-auto space-y-20">
+        
+        <section>
+            <div class="flex items-center gap-6 mb-10">
+                <span class="px-4 py-1 bg-green-500/10 text-green-500 text-xs font-black rounded-full border border-green-500/20">PHASE 01</span>
+                <h2 class="text-2xl font-bold text-white">The Frontend Foundation</h2>
+                <div class="h-px flex-1 bg-gradient-to-r from-white/10 to-transparent"></div>
+            </div>
 
-        <div class="bg-[#111] border border-white/5 rounded-[2rem] p-6 flex flex-col justify-between hover:border-orange-500/30 transition-all">
-            <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Active Certificates</p>
-            <h3 class="text-4xl font-black text-white italic">09</h3>
-            <p class="text-[10px] text-gray-400 font-bold">3 Pending Verification</p>
-        </div>
-
-        <div class="bg-[#111] border border-white/5 rounded-[2rem] p-6 flex flex-col justify-between hover:border-purple-500/30 transition-all">
-            <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Lab Credits</p>
-            <h3 class="text-4xl font-black text-white italic">∞</h3>
-            <p class="text-[10px] text-purple-400 font-bold italic">PRO PLAN ACTIVE</p>
-        </div>
-    </div>
-
-    <div class="flex flex-col xl:flex-row gap-10">
-        <div class="flex-1 space-y-12">
-            
-            <section>
-                <div class="flex items-center gap-4 mb-8">
-                    <h2 class="text-sm font-black text-white uppercase tracking-[0.4em] bg-white/5 px-4 py-2 rounded-lg border border-white/10 italic">Phase 01: The Web Foundry</h2>
-                    <div class="h-[1px] flex-1 bg-gradient-to-r from-white/10 to-transparent"></div>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="bg-[#0f0f0f] border border-white/5 rounded-3xl p-6 flex items-start gap-6 group hover:bg-[#151515] transition-all cursor-pointer">
-                        <div class="w-20 h-20 bg-green-500/10 rounded-2xl flex items-center justify-center text-green-500 shrink-0 border border-green-500/20 group-hover:scale-105 transition-transform">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="group bg-[#0f0f0f] border border-white/5 p-8 rounded-[2.5rem] hover:border-orange-500/50 transition-all duration-500">
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="w-16 h-16 bg-orange-500/10 rounded-2xl flex items-center justify-center text-orange-500 group-hover:scale-110 transition-transform">
                             <i class="fa-brands fa-html5 text-3xl"></i>
                         </div>
-                        <div class="flex-1">
-                            <div class="flex justify-between items-start mb-2">
-                                <h4 class="text-lg font-black text-white tracking-tight uppercase">Semantic Architecture</h4>
-                                <span class="text-[10px] font-black bg-green-500 text-black px-2 py-0.5 rounded">PASSED</span>
-                            </div>
-                            <p class="text-xs text-gray-500 leading-relaxed mb-4">Mastering HTML5.2, Accessibility (A11Y), and SEO microdata.</p>
-                            <div class="flex gap-4">
-                                <span class="text-[10px] font-bold text-gray-600"><i class="fa-solid fa-layer-group mr-1"></i> 12 Lessons</span>
-                                <span class="text-[10px] font-bold text-gray-600"><i class="fa-solid fa-trophy mr-1"></i> 1,200 XP</span>
-                            </div>
+                        <span class="text-[10px] font-black bg-green-500 text-black px-3 py-1 rounded-full">COMPLETED</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">HTML5 Mastery</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-6">Structuring the web with semantic tags, SEO best practices, and accessibility standards.</p>
+                    <div class="flex gap-4 text-[10px] font-bold text-gray-500 uppercase tracking-tighter">
+                        <span><i class="fa-solid fa-book mr-1 text-orange-500"></i> 15 Lessons</span>
+                        <span><i class="fa-solid fa-clock mr-1 text-orange-500"></i> 4 Hours</span>
+                    </div>
+                </div>
+
+                <div class="group bg-[#0f0f0f] border border-white/5 p-8 rounded-[2.5rem] hover:border-blue-400/50 transition-all duration-500">
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="w-16 h-16 bg-blue-400/10 rounded-2xl flex items-center justify-center text-blue-400 group-hover:scale-110 transition-transform">
+                            <i class="fa-brands fa-css3-alt text-3xl"></i>
                         </div>
+                        <span class="text-[10px] font-black bg-white/10 text-gray-400 px-3 py-1 rounded-full">90% DONE</span>
                     </div>
-
-                    <div class="bg-blue-600/5 border-2 border-blue-500/50 rounded-3xl p-6 flex items-start gap-6 relative group cursor-pointer shadow-[0_0_30px_rgba(59,130,246,0.1)]" onclick="updateView('Lab')">
-                        <div class="absolute -top-3 -right-3 bg-blue-500 text-white text-[10px] font-black px-3 py-1 rounded-full animate-bounce shadow-lg shadow-blue-500/40">RESUME HERE</div>
-                        <div class="w-20 h-20 bg-blue-500 rounded-2xl flex items-center justify-center text-white shrink-0 shadow-xl shadow-blue-500/20 group-hover:rotate-3 transition-all">
-                            <i class="fa-brands fa-js text-3xl"></i>
-                        </div>
-                        <div class="flex-1">
-                            <h4 class="text-lg font-black text-white tracking-tight uppercase mb-2">Advanced ES6+ & V8 Logic</h4>
-                            <div class="w-full bg-white/10 h-1.5 rounded-full mb-3">
-                                <div class="bg-blue-500 h-full w-[45%] shadow-[0_0_10px_#3b82f6]"></div>
-                            </div>
-                            <div class="flex justify-between items-center">
-                                <span class="text-[10px] font-black text-blue-400 italic">UNIT 02 / 08</span>
-                                <span class="text-xs font-black text-white tracking-tighter uppercase">Continue <i class="fa-solid fa-arrow-right ml-1 text-blue-400"></i></span>
-                            </div>
-                        </div>
+                    <h3 class="text-xl font-bold text-white mb-2">Modern CSS & Tailwind</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-6">Mastering Flexbox, Grid, and utility-first styling to create stunning responsive layouts.</p>
+                    <div class="w-full bg-white/5 h-1.5 rounded-full">
+                        <div class="bg-blue-400 h-full w-[90%] rounded-full shadow-[0_0_10px_rgba(96,165,250,0.5)]"></div>
                     </div>
-                </div>
-            </section>
-
-            <section>
-                <div class="flex items-center gap-4 mb-8">
-                    <h2 class="text-sm font-black text-white uppercase tracking-[0.4em] bg-white/5 px-4 py-2 rounded-lg border border-white/10 italic">Phase 02: Neural Backend</h2>
-                    <div class="h-[1px] flex-1 bg-gradient-to-r from-white/10 to-transparent"></div>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div class="bg-white/[0.02] border border-white/5 rounded-3xl p-6 text-center group cursor-not-allowed opacity-40 grayscale" onclick="showAlert('Module Locked', 'Requires Level 15 in Javascript Foundry to access Python Neural Services.')">
-                        <i class="fa-solid fa-lock text-gray-700 text-2xl mb-4 group-hover:text-blue-500 transition-colors"></i>
-                        <h5 class="text-sm font-black text-white uppercase mb-2 tracking-tighter">Python Fast API</h5>
-                        <p class="text-[10px] text-gray-500">Asynchronous backend architecture.</p>
-                    </div>
-
-                    <div class="bg-white/[0.02] border border-white/5 rounded-3xl p-6 text-center group cursor-not-allowed opacity-40 grayscale" onclick="showAlert('Module Locked', 'Complete Phase 1 to unlock Vector Database Architecture.')">
-                        <i class="fa-solid fa-database text-gray-700 text-2xl mb-4 group-hover:text-blue-500 transition-colors"></i>
-                        <h5 class="text-sm font-black text-white uppercase mb-2 tracking-tighter">Vector DBs (Pinecone)</h5>
-                        <p class="text-[10px] text-gray-500">Managing embeddings and AI memory.</p>
-                    </div>
-
-                    <div class="bg-white/[0.02] border border-white/5 rounded-3xl p-6 text-center group cursor-not-allowed opacity-40 grayscale" onclick="showAlert('Access Denied', 'Grand Master status required for System Design modules.')">
-                        <i class="fa-solid fa-diagram-project text-gray-700 text-2xl mb-4 group-hover:text-blue-500 transition-colors"></i>
-                        <h5 class="text-sm font-black text-white uppercase mb-2 tracking-tighter">System Design</h5>
-                        <p class="text-[10px] text-gray-500">Scaling for 1M+ active users.</p>
-                    </div>
-                </div>
-            </section>
-        </div>
-
-        <div class="w-full xl:w-[450px] space-y-6">
-            
-            <div class="bg-gradient-to-br from-indigo-600 to-blue-700 rounded-[2.5rem] p-8 shadow-2xl relative overflow-hidden group transition-all">
-                <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20"></div>
-                <div class="relative z-10">
-                    <h3 class="text-2xl font-black text-white italic uppercase tracking-tighter mb-2">The Neural Lab</h3>
-                    <p class="text-indigo-100 text-xs mb-8 leading-relaxed opacity-80">Your dedicated GPU-accelerated cloud environment is standing by. All modules are pre-installed.</p>
-                    <button class="w-full py-5 bg-white text-blue-700 rounded-2xl font-black uppercase tracking-[0.2em] shadow-xl hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3">
-                        <i class="fa-solid fa-rocket"></i> Launch Instance
-                    </button>
-                </div>
-                <div class="mt-6 flex justify-around opacity-60">
-                    <i class="fa-brands fa-docker text-white text-xl"></i>
-                    <i class="fa-brands fa-aws text-white text-xl"></i>
-                    <i class="fa-brands fa-github text-white text-xl"></i>
-                    <i class="fa-brands fa-python text-white text-xl"></i>
                 </div>
             </div>
+        </section>
 
-            <div class="bg-[#0a0a0a] border border-white/10 rounded-[2.5rem] overflow-hidden">
-                <div class="p-6 border-b border-white/5 bg-white/[0.02]">
-                    <h4 class="text-xs font-black text-gray-400 uppercase tracking-widest italic">Adaptive Documentation</h4>
-                </div>
-                <div class="p-2">
-                    <button class="w-full flex items-center justify-between p-4 hover:bg-white/5 rounded-2xl transition-all group">
-                        <div class="flex items-center gap-4">
-                            <div class="w-10 h-10 bg-orange-500/10 rounded-xl flex items-center justify-center text-orange-500 group-hover:bg-orange-500 group-hover:text-white transition-all">
-                                <i class="fa-solid fa-book-open text-sm"></i>
-                            </div>
-                            <span class="text-sm font-bold text-gray-300">Master Cheat Sheets</span>
+        <section>
+            <div class="flex items-center gap-6 mb-10">
+                <span class="px-4 py-1 bg-blue-600/10 text-blue-600 text-xs font-black rounded-full border border-blue-600/20">PHASE 02</span>
+                <h2 class="text-2xl font-bold text-white">Dynamic Programming</h2>
+                <div class="h-px flex-1 bg-gradient-to-r from-white/10 to-transparent"></div>
+            </div>
+
+            <div class="grid grid-cols-1 gap-8">
+                <div class="relative overflow-hidden group bg-gradient-to-br from-blue-600 to-indigo-700 p-10 rounded-[3rem] shadow-2xl transition-transform hover:-translate-y-1 cursor-pointer" onclick="updateView('Lab')">
+                    <div class="absolute top-0 right-0 w-80 h-80 bg-white/10 blur-[80px] rounded-full -mr-20 -mt-20"></div>
+                    <div class="relative z-10 flex flex-col md:flex-row md:items-center gap-10">
+                        <div class="w-24 h-24 bg-white/20 backdrop-blur-md rounded-3xl flex items-center justify-center text-white shrink-0">
+                            <i class="fa-brands fa-js text-5xl"></i>
                         </div>
-                        <i class="fa-solid fa-chevron-right text-[10px] text-gray-700"></i>
-                    </button>
-                    <button class="w-full flex items-center justify-between p-4 hover:bg-white/5 rounded-2xl transition-all group">
-                        <div class="flex items-center gap-4">
-                            <div class="w-10 h-10 bg-green-500/10 rounded-xl flex items-center justify-center text-green-500 group-hover:bg-green-500 group-hover:text-white transition-all">
-                                <i class="fa-solid fa-code-merge text-sm"></i>
+                        <div class="flex-1">
+                            <h3 class="text-3xl font-black text-white uppercase italic tracking-tighter mb-3">JavaScript ES6+</h3>
+                            <p class="text-blue-100 text-sm leading-relaxed max-w-xl mb-6">Engine logic, asynchronous programming, and DOM manipulation. This is where your code comes to life.</p>
+                            <div class="flex items-center gap-6">
+                                <button class="px-8 py-3 bg-white text-blue-700 rounded-xl font-black text-xs uppercase tracking-widest hover:shadow-lg transition-all">Resume Lesson</button>
+                                <span class="text-xs font-bold text-blue-200">Current: Unit 04 - API Integration</span>
                             </div>
-                            <span class="text-sm font-bold text-gray-300">Code Playground</span>
                         </div>
-                        <i class="fa-solid fa-chevron-right text-[10px] text-gray-700"></i>
-                    </button>
-                    <button class="w-full flex items-center justify-between p-4 hover:bg-white/5 rounded-2xl transition-all group">
-                        <div class="flex items-center gap-4">
-                            <div class="w-10 h-10 bg-purple-500/10 rounded-xl flex items-center justify-center text-purple-500 group-hover:bg-purple-500 group-hover:text-white transition-all">
-                                <i class="fa-solid fa-video text-sm"></i>
-                            </div>
-                            <span class="text-sm font-bold text-gray-300">Expert Lectures</span>
-                        </div>
-                        <i class="fa-solid fa-chevron-right text-[10px] text-gray-700"></i>
-                    </button>
-                </div>
-                <div class="p-6 bg-white/[0.01] mt-2 border-t border-white/5">
-                    <div class="flex items-center gap-3 text-blue-400 mb-4">
-                        <i class="fa-solid fa-circle-nodes animate-pulse"></i>
-                        <span class="text-[10px] font-black uppercase tracking-[0.2em]">Live Support Active</span>
                     </div>
-                    <p class="text-[11px] text-gray-500 leading-relaxed mb-4 italic">"Ask Gemini about any concept in this module for an instant breakdown."</p>
-                    <button class="w-full py-3 bg-white/5 border border-white/10 text-white rounded-xl text-xs font-black uppercase tracking-tighter hover:bg-white/10 transition-all">Chat with AI Tutor</button>
                 </div>
             </div>
+        </section>
+
+        <section class="pb-20">
+            <div class="flex items-center gap-6 mb-10">
+                <span class="px-4 py-1 bg-yellow-500/10 text-yellow-500 text-xs font-black rounded-full border border-yellow-500/20">PHASE 03</span>
+                <h2 class="text-2xl font-bold text-white">Backend Systems</h2>
+                <div class="h-px flex-1 bg-gradient-to-r from-white/10 to-transparent"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="group bg-[#0f0f0f] border border-white/5 p-8 rounded-[2.5rem] opacity-60 grayscale hover:grayscale-0 transition-all cursor-not-allowed" 
+                     onclick="showModal('Module Locked', 'You need to reach Level 15 in JavaScript to unlock the Python Neural track.')">
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="w-16 h-16 bg-yellow-500/10 rounded-2xl flex items-center justify-center text-yellow-500">
+                            <i class="fa-brands fa-python text-3xl"></i>
+                        </div>
+                        <i class="fa-solid fa-lock text-gray-600"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">Python for Backend</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed">Server-side logic, data structures, and working with Python's Fast API framework.</p>
+                </div>
+
+                <div class="group bg-[#0f0f0f] border border-white/5 p-8 rounded-[2.5rem] opacity-60 grayscale hover:grayscale-0 transition-all cursor-not-allowed"
+                     onclick="showModal('Restricted Area', 'Complete the Backend Foundation to unlock Vector Databases.')">
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="w-16 h-16 bg-purple-500/10 rounded-2xl flex items-center justify-center text-purple-500">
+                            <i class="fa-solid fa-database text-3xl"></i>
+                        </div>
+                        <i class="fa-solid fa-lock text-gray-600"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">Databases (SQL & NoSQL)</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed">Designing schemas, managing state, and scaling data across distributed systems.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="alertModal" class="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/80 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="bg-[#111] border border-white/10 p-8 rounded-[2.5rem] max-w-sm w-full text-center shadow-2xl scale-90 transition-transform duration-300" id="modalContent">
+            <div class="w-20 h-20 bg-blue-500/10 rounded-full flex items-center justify-center text-blue-500 mx-auto mb-6">
+                <i class="fa-solid fa-shield-halved text-3xl"></i>
+            </div>
+            <h4 id="modalTitle" class="text-2xl font-black text-white uppercase italic mb-2">Title</h4>
+            <p id="modalBody" class="text-gray-400 text-sm leading-relaxed mb-8">Message body goes here.</p>
+            <button onclick="closeModal()" class="w-full py-4 bg-white text-black font-black uppercase tracking-widest rounded-2xl hover:bg-gray-200 transition-colors">Understood</button>
         </div>
     </div>
 </div>
+
+
 `,
     
 
