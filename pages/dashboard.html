@@ -116,114 +116,39 @@
     * { -webkit-tap-highlight-color: transparent; }
 </style>
     
-  <nav class="flex-1 space-y-6 overflow-y-auto no-scrollbar pb-20">
-    <div class="space-y-1">
-        <p class="text-[9px] font-black text-blue-500/50 uppercase tracking-[0.3em] mb-4 ml-4 flex items-center gap-2">
-            <span class="w-1 h-1 bg-blue-500/50 rounded-full"></span> Academy
-        </p>
-        <a onclick="updateView('Overview')" class="nav-item group active">
-            <div class="nav-indicator"></div>
-            <i class="fas fa-home"></i> <span>Overview</span>
-        </a>
-        <a onclick="updateView('Lessons')" class="nav-item group">
-            <div class="nav-indicator"></div>
-            <i class="fas fa-book-open"></i> <span>Lessons</span>
-        </a>
-        <a onclick="updateView('Projects')" class="nav-item group">
-            <div class="nav-indicator"></div>
-            <i class="fas fa-code-branch"></i> <span>Projects</span>
-            <span class="ml-auto text-[7px] border border-white/10 px-1 rounded uppercase opacity-50">Beta</span>
-        </a>
-        <a onclick="updateView('Leaderboard')" class="nav-item group">
-            <div class="nav-indicator"></div>
-            <i class="fas fa-trophy"></i> <span>Leaderboard</span>
-        </a>
-    </div>
+    <nav class="flex-1 space-y-1 overflow-y-auto no-scrollbar pb-20">
+        <div class="pb-4 mb-4 border-b border-white/5">
+            <p class="text-[8px] font-black text-gray-600 uppercase tracking-[0.2em] mb-4 ml-4">Academy</p>
+            <a onclick="updateView('Overview')" class="nav-item active"><i class="fas fa-home"></i> Overview</a>
+            <a onclick="updateView('Lessons')" class="nav-item"><i class="fas fa-book-open"></i> Lessons</a>
+            <a onclick="updateView('Projects')" class="nav-item"><i class="fas fa-code-branch"></i> Projects</a>
+            <a onclick="updateView('Leaderboard')" class="nav-item"><i class="fas fa-trophy"></i> Leaderboard</a>
+        </div>
 
-    <div class="space-y-1">
-        <p class="text-[9px] font-black text-cyan-500/50 uppercase tracking-[0.3em] mb-4 ml-4 flex items-center gap-2">
-            <span class="w-1 h-1 bg-cyan-500/50 rounded-full"></span> Innovation
-        </p>
-        <a onclick="updateView('Nxxt AI')" class="nav-item group text-cyan-400 font-bold bg-cyan-500/5 border-cyan-500/10">
-            <div class="nav-indicator !bg-cyan-500 shadow-[0_0_10px_#22d3ee]"></div>
-            <i class="fas fa-robot animate-pulse"></i> <span>Nxxt AI</span>
-        </a>
-        <a onclick="updateView('Nxxt Lab')" class="nav-item group">
-            <div class="nav-indicator"></div>
-            <i class="fas fa-flask"></i> <span>Nxxt Lab</span>
-        </a>
-        <a onclick="updateView('Side Hustle Hub')" class="nav-item group text-orange-400/80">
-            <div class="nav-indicator !bg-orange-500"></div>
-            <i class="fas fa-rocket"></i> <span>Side Hustle Hub</span>
-        </a>
-        <a onclick="updateView('Deploy')" class="nav-item group text-emerald-400">
-            <div class="nav-indicator !bg-emerald-500"></div>
-            <i class="fas fa-cloud-upload-alt"></i> <span>Deploy</span>
-        </a>
-    </div>
+        <div class="pb-4 mb-4 border-b border-white/5">
+            <p class="text-[8px] font-black text-gray-600 uppercase tracking-[0.2em] mb-4 ml-4">Community</p>
+            <a onclick="updateView('Collaboration')" class="nav-item"><i class="fas fa-handshake"></i> Collaboration</a>
+            <a onclick="updateView('Team')" class="nav-item"><i class="fas fa-users"></i> Team</a>
+            <a onclick="updateView('Inbox')" class="nav-item"><i class="fas fa-envelope"></i> Inbox</a>
+        </div>
 
-    <div class="space-y-1">
-        <p class="text-[9px] font-black text-gray-600 uppercase tracking-[0.3em] mb-4 ml-4">Network</p>
-        <a onclick="updateView('Collaboration')" class="nav-item group">
-            <div class="nav-indicator"></div>
-            <i class="fas fa-handshake"></i> <span>Collaboration</span>
-        </a>
-        <a onclick="updateView('Inbox')" class="nav-item group">
-            <div class="nav-indicator"></div>
-            <i class="fas fa-envelope"></i> <span>Inbox</span>
-            <span class="ml-auto w-2 h-2 bg-blue-500 rounded-full shadow-[0_0_8px_#3b82f6]"></span>
-        </a>
-    </div>
+        <div class="pb-4 mb-4 border-b border-white/5">
+            <p class="text-[8px] font-black text-gray-600 uppercase tracking-[0.2em] mb-4 ml-4">Innovation</p>
+            <a onclick="updateView('Nxxt AI')" class="nav-item text-blue-400 font-black"><i class="fas fa-robot"></i> Nxxt AI</a>
+            <a onclick="updateView('Nxxt Lab')" class="nav-item"><i class="fas fa-flask"></i> Nxxt Lab</a>
+            <a onclick="updateView('Side Hustle Hub')" class="nav-item text-orange-400"><i class="fas fa-rocket"></i> Side Hustle Hub</a>
+            <a onclick="updateView('Deploy')" class="nav-item text-green-500 hover:text-green-400 cursor-pointer">
+                <i class="fas fa-cloud-upload-alt"></i> Deploy
+            </a>
+        </div>
 
-    <div class="space-y-1">
-        <p class="text-[9px] font-black text-gray-600 uppercase tracking-[0.3em] mb-4 ml-4">System</p>
-        <a onclick="updateView('Xt Pay')" class="nav-item group text-emerald-500">
-            <div class="nav-indicator !bg-emerald-500"></div>
-            <i class="fas fa-wallet"></i> <span>Xt Pay</span>
-        </a>
-        <a onclick="updateView('Settings')" class="nav-item group">
-            <div class="nav-indicator"></div>
-            <i class="fas fa-sliders"></i> <span>Settings</span>
-        </a>
-    </div>
-</nav>
-
-<style>
-    .nav-item {
-        @apply relative flex items-center gap-4 px-6 py-3 text-sm font-medium text-gray-400 transition-all duration-300 cursor-pointer overflow-hidden border-y border-transparent;
-    }
-
-    .nav-item i {
-        @apply text-base w-5 transition-transform duration-300 group-hover:scale-110;
-    }
-
-    .nav-item:hover {
-        @apply bg-white/5 text-white;
-    }
-
-    /* The Active/Hover Sidebar Indicator */
-    .nav-indicator {
-        @apply absolute left-0 w-1 h-0 bg-blue-600 transition-all duration-300 rounded-r-full;
-    }
-
-    .nav-item:hover .nav-indicator, 
-    .nav-item.active .nav-indicator {
-        @apply h-6;
-    }
-
-    .nav-item.active {
-        @apply bg-blue-500/10 text-blue-400 border-y-white/5;
-    }
-
-    .nav-item.active .nav-indicator {
-        @apply h-6 shadow-[0_0_15px_#3b82f6];
-    }
-
-    /* Custom Scrollbar for the Sidebar */
-    .no-scrollbar::-webkit-scrollbar {
-        display: none;
-    }
-</style>
+        <div class="pb-4 mb-4 border-b border-white/5">
+            <p class="text-[8px] font-black text-gray-600 uppercase tracking-[0.2em] mb-4 ml-4">Account</p>
+            <a onclick="updateView('Xt Pay')" class="nav-item text-green-500"><i class="fas fa-wallet"></i> Xt Pay</a>
+            <a onclick="updateView('Pricing')" class="nav-item"><i class="fas fa-tags"></i> Pricing</a>
+            <a onclick="updateView('Settings')" class="nav-item"><i class="fas fa-sliders"></i> Settings</a>
+        </div>
+    </nav> 
 
     <!-- User Profile Section -->
     <div class="mt-auto pt-6 border-t border-white/5">
