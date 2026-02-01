@@ -200,10 +200,193 @@ const views = {
     
     
     
-    'Lessons': `
-   
-`,
+'Lessons': `
+<div class="p-8 animate-in fade-in zoom-in-95 duration-700 max-w-[1800px] mx-auto">
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-12">
+        <div class="col-span-1 lg:col-span-2 bg-[#0a0a0a] border border-white/10 rounded-[2rem] p-8 relative overflow-hidden group">
+            <div class="absolute top-0 right-0 w-64 h-64 bg-blue-600/10 blur-[100px] rounded-full -mr-20 -mt-20"></div>
+            <div class="relative z-10">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-14 h-14 bg-blue-600 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/20">
+                        <i class="fa-solid fa-graduation-cap text-2xl text-white"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-black text-white tracking-tighter uppercase italic">Grand Master Path</h2>
+                        <p class="text-gray-500 text-xs font-bold uppercase tracking-widest">Level 42 Architect</p>
+                    </div>
+                </div>
+                <div class="space-y-4">
+                    <div class="flex justify-between items-end">
+                        <span class="text-[10px] font-black text-gray-400 uppercase">Total Curriculum Completion</span>
+                        <span class="text-xl font-mono font-bold text-blue-400">68.4%</span>
+                    </div>
+                    <div class="w-full bg-white/5 h-3 rounded-full overflow-hidden border border-white/5 p-[2px]">
+                        <div class="bg-gradient-to-r from-blue-600 to-indigo-400 h-full rounded-full shadow-[0_0_15px_rgba(59,130,246,0.5)] transition-all duration-1000" style="width: 68.4%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
+        <div class="bg-[#111] border border-white/5 rounded-[2rem] p-6 flex flex-col justify-between hover:border-blue-500/30 transition-all">
+            <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Global Rank</p>
+            <h3 class="text-4xl font-black text-white italic">#1,204</h3>
+            <p class="text-[10px] text-green-500 font-bold"><i class="fa-solid fa-caret-up"></i> Top 0.2% This Week</p>
+        </div>
+
+        <div class="bg-[#111] border border-white/5 rounded-[2rem] p-6 flex flex-col justify-between hover:border-orange-500/30 transition-all">
+            <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Active Certificates</p>
+            <h3 class="text-4xl font-black text-white italic">09</h3>
+            <p class="text-[10px] text-gray-400 font-bold">3 Pending Verification</p>
+        </div>
+
+        <div class="bg-[#111] border border-white/5 rounded-[2rem] p-6 flex flex-col justify-between hover:border-purple-500/30 transition-all">
+            <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Lab Credits</p>
+            <h3 class="text-4xl font-black text-white italic">∞</h3>
+            <p class="text-[10px] text-purple-400 font-bold italic">PRO PLAN ACTIVE</p>
+        </div>
+    </div>
+
+    <div class="flex flex-col xl:flex-row gap-10">
+        <div class="flex-1 space-y-12">
+            
+            <section>
+                <div class="flex items-center gap-4 mb-8">
+                    <h2 class="text-sm font-black text-white uppercase tracking-[0.4em] bg-white/5 px-4 py-2 rounded-lg border border-white/10 italic">Phase 01: The Web Foundry</h2>
+                    <div class="h-[1px] flex-1 bg-gradient-to-r from-white/10 to-transparent"></div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-[#0f0f0f] border border-white/5 rounded-3xl p-6 flex items-start gap-6 group hover:bg-[#151515] transition-all cursor-pointer">
+                        <div class="w-20 h-20 bg-green-500/10 rounded-2xl flex items-center justify-center text-green-500 shrink-0 border border-green-500/20 group-hover:scale-105 transition-transform">
+                            <i class="fa-brands fa-html5 text-3xl"></i>
+                        </div>
+                        <div class="flex-1">
+                            <div class="flex justify-between items-start mb-2">
+                                <h4 class="text-lg font-black text-white tracking-tight uppercase">Semantic Architecture</h4>
+                                <span class="text-[10px] font-black bg-green-500 text-black px-2 py-0.5 rounded">PASSED</span>
+                            </div>
+                            <p class="text-xs text-gray-500 leading-relaxed mb-4">Mastering HTML5.2, Accessibility (A11Y), and SEO microdata.</p>
+                            <div class="flex gap-4">
+                                <span class="text-[10px] font-bold text-gray-600"><i class="fa-solid fa-layer-group mr-1"></i> 12 Lessons</span>
+                                <span class="text-[10px] font-bold text-gray-600"><i class="fa-solid fa-trophy mr-1"></i> 1,200 XP</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-blue-600/5 border-2 border-blue-500/50 rounded-3xl p-6 flex items-start gap-6 relative group cursor-pointer shadow-[0_0_30px_rgba(59,130,246,0.1)]" onclick="updateView('Lab')">
+                        <div class="absolute -top-3 -right-3 bg-blue-500 text-white text-[10px] font-black px-3 py-1 rounded-full animate-bounce shadow-lg shadow-blue-500/40">RESUME HERE</div>
+                        <div class="w-20 h-20 bg-blue-500 rounded-2xl flex items-center justify-center text-white shrink-0 shadow-xl shadow-blue-500/20 group-hover:rotate-3 transition-all">
+                            <i class="fa-brands fa-js text-3xl"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="text-lg font-black text-white tracking-tight uppercase mb-2">Advanced ES6+ & V8 Logic</h4>
+                            <div class="w-full bg-white/10 h-1.5 rounded-full mb-3">
+                                <div class="bg-blue-500 h-full w-[45%] shadow-[0_0_10px_#3b82f6]"></div>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-[10px] font-black text-blue-400 italic">UNIT 02 / 08</span>
+                                <span class="text-xs font-black text-white tracking-tighter uppercase">Continue <i class="fa-solid fa-arrow-right ml-1 text-blue-400"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <div class="flex items-center gap-4 mb-8">
+                    <h2 class="text-sm font-black text-white uppercase tracking-[0.4em] bg-white/5 px-4 py-2 rounded-lg border border-white/10 italic">Phase 02: Neural Backend</h2>
+                    <div class="h-[1px] flex-1 bg-gradient-to-r from-white/10 to-transparent"></div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-white/[0.02] border border-white/5 rounded-3xl p-6 text-center group cursor-not-allowed opacity-40 grayscale" onclick="showAlert('Module Locked', 'Requires Level 15 in Javascript Foundry to access Python Neural Services.')">
+                        <i class="fa-solid fa-lock text-gray-700 text-2xl mb-4 group-hover:text-blue-500 transition-colors"></i>
+                        <h5 class="text-sm font-black text-white uppercase mb-2 tracking-tighter">Python Fast API</h5>
+                        <p class="text-[10px] text-gray-500">Asynchronous backend architecture.</p>
+                    </div>
+
+                    <div class="bg-white/[0.02] border border-white/5 rounded-3xl p-6 text-center group cursor-not-allowed opacity-40 grayscale" onclick="showAlert('Module Locked', 'Complete Phase 1 to unlock Vector Database Architecture.')">
+                        <i class="fa-solid fa-database text-gray-700 text-2xl mb-4 group-hover:text-blue-500 transition-colors"></i>
+                        <h5 class="text-sm font-black text-white uppercase mb-2 tracking-tighter">Vector DBs (Pinecone)</h5>
+                        <p class="text-[10px] text-gray-500">Managing embeddings and AI memory.</p>
+                    </div>
+
+                    <div class="bg-white/[0.02] border border-white/5 rounded-3xl p-6 text-center group cursor-not-allowed opacity-40 grayscale" onclick="showAlert('Access Denied', 'Grand Master status required for System Design modules.')">
+                        <i class="fa-solid fa-diagram-project text-gray-700 text-2xl mb-4 group-hover:text-blue-500 transition-colors"></i>
+                        <h5 class="text-sm font-black text-white uppercase mb-2 tracking-tighter">System Design</h5>
+                        <p class="text-[10px] text-gray-500">Scaling for 1M+ active users.</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div class="w-full xl:w-[450px] space-y-6">
+            
+            <div class="bg-gradient-to-br from-indigo-600 to-blue-700 rounded-[2.5rem] p-8 shadow-2xl relative overflow-hidden group transition-all">
+                <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20"></div>
+                <div class="relative z-10">
+                    <h3 class="text-2xl font-black text-white italic uppercase tracking-tighter mb-2">The Neural Lab</h3>
+                    <p class="text-indigo-100 text-xs mb-8 leading-relaxed opacity-80">Your dedicated GPU-accelerated cloud environment is standing by. All modules are pre-installed.</p>
+                    <button class="w-full py-5 bg-white text-blue-700 rounded-2xl font-black uppercase tracking-[0.2em] shadow-xl hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3">
+                        <i class="fa-solid fa-rocket"></i> Launch Instance
+                    </button>
+                </div>
+                <div class="mt-6 flex justify-around opacity-60">
+                    <i class="fa-brands fa-docker text-white text-xl"></i>
+                    <i class="fa-brands fa-aws text-white text-xl"></i>
+                    <i class="fa-brands fa-github text-white text-xl"></i>
+                    <i class="fa-brands fa-python text-white text-xl"></i>
+                </div>
+            </div>
+
+            <div class="bg-[#0a0a0a] border border-white/10 rounded-[2.5rem] overflow-hidden">
+                <div class="p-6 border-b border-white/5 bg-white/[0.02]">
+                    <h4 class="text-xs font-black text-gray-400 uppercase tracking-widest italic">Adaptive Documentation</h4>
+                </div>
+                <div class="p-2">
+                    <button class="w-full flex items-center justify-between p-4 hover:bg-white/5 rounded-2xl transition-all group">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 bg-orange-500/10 rounded-xl flex items-center justify-center text-orange-500 group-hover:bg-orange-500 group-hover:text-white transition-all">
+                                <i class="fa-solid fa-book-open text-sm"></i>
+                            </div>
+                            <span class="text-sm font-bold text-gray-300">Master Cheat Sheets</span>
+                        </div>
+                        <i class="fa-solid fa-chevron-right text-[10px] text-gray-700"></i>
+                    </button>
+                    <button class="w-full flex items-center justify-between p-4 hover:bg-white/5 rounded-2xl transition-all group">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 bg-green-500/10 rounded-xl flex items-center justify-center text-green-500 group-hover:bg-green-500 group-hover:text-white transition-all">
+                                <i class="fa-solid fa-code-merge text-sm"></i>
+                            </div>
+                            <span class="text-sm font-bold text-gray-300">Code Playground</span>
+                        </div>
+                        <i class="fa-solid fa-chevron-right text-[10px] text-gray-700"></i>
+                    </button>
+                    <button class="w-full flex items-center justify-between p-4 hover:bg-white/5 rounded-2xl transition-all group">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 bg-purple-500/10 rounded-xl flex items-center justify-center text-purple-500 group-hover:bg-purple-500 group-hover:text-white transition-all">
+                                <i class="fa-solid fa-video text-sm"></i>
+                            </div>
+                            <span class="text-sm font-bold text-gray-300">Expert Lectures</span>
+                        </div>
+                        <i class="fa-solid fa-chevron-right text-[10px] text-gray-700"></i>
+                    </button>
+                </div>
+                <div class="p-6 bg-white/[0.01] mt-2 border-t border-white/5">
+                    <div class="flex items-center gap-3 text-blue-400 mb-4">
+                        <i class="fa-solid fa-circle-nodes animate-pulse"></i>
+                        <span class="text-[10px] font-black uppercase tracking-[0.2em]">Live Support Active</span>
+                    </div>
+                    <p class="text-[11px] text-gray-500 leading-relaxed mb-4 italic">"Ask Gemini about any concept in this module for an instant breakdown."</p>
+                    <button class="w-full py-3 bg-white/5 border border-white/10 text-white rounded-xl text-xs font-black uppercase tracking-tighter hover:bg-white/10 transition-all">Chat with AI Tutor</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+`,
+    
 
     
 
