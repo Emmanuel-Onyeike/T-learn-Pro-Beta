@@ -21,10 +21,91 @@ const ActivityEngine = {
 };
 ActivityEngine.track();
 const views = {
-    'Overview': `
- 
-`,
+'Overview': `
+        <div style="display: flex; flex-direction: column; gap: 20px; padding: 25px; background-color: #0B0E14; color: #FFFFFF; font-family: 'Inter', sans-serif;">
+            
+            <div style="display: flex; gap: 15px; justify-content: space-between;">
+                <div style="flex: 1; background: #161B22; padding: 15px; border-radius: 12px; border: 1px solid #30363D;">
+                    <div style="color: #8B949E; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">
+                        <i class="fas fa-folder-open" style="margin-right: 5px;"></i> Projects
+                    </div>
+                    <h3 style="margin: 0; font-size: 1.5rem;">0</h3>
+                </div>
+                <div style="flex: 1; background: #161B22; padding: 15px; border-radius: 12px; border: 1px solid #30363D;">
+                    <div style="color: #8B949E; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">
+                        <i class="fas fa-users" style="margin-right: 5px;"></i> Collab
+                    </div>
+                    <h3 style="margin: 0; font-size: 1.5rem;">0</h3>
+                </div>
+                <div style="flex: 1; background: #161B22; padding: 15px; border-radius: 12px; border: 1px solid #30363D;">
+                    <div style="color: #8B949E; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">
+                        <i class="fas fa-fire-alt" style="margin-right: 5px;"></i> Streaks
+                    </div>
+                    <h3 style="margin: 0; font-size: 1.5rem;">0</h3>
+                </div>
+            </div>
 
+            <div style="width: 100%; min-height: 180px; background: #161B22; border-radius: 12px; border: 1px solid #30363D; display: flex; align-items: center; justify-content: center; flex-direction: column; text-align: center;">
+                <i class="fas fa-project-diagram" style="font-size: 2rem; color: #30363D; margin-bottom: 15px;"></i>
+                <p style="color: #8B949E; margin: 0;">No active projects detected.</p>
+                <button style="background: #A3319F; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; margin-top: 15px; font-weight: 600;">
+                    <i class="fas fa-plus" style="margin-right: 8px;"></i> Create New Project
+                </button>
+            </div>
+
+            <div style="display: flex; gap: 15px; justify-content: space-between;">
+                <div style="flex: 1; background: #161B22; padding: 15px; border-radius: 12px; border: 1px solid #30363D; text-align: center;">
+                    <i class="fas fa-medal" style="color: #8B949E; display: block; margin-bottom: 5px;"></i>
+                    <span style="color: #8B949E; font-size: 0.7rem;">Rank</span>
+                    <h4 style="margin: 5px 0 0 0;">Unranked</h4>
+                </div>
+                <div style="flex: 1; background: #161B22; padding: 15px; border-radius: 12px; border: 1px solid #30363D; text-align: center;">
+                    <i class="fas fa-calendar-alt" style="color: #8B949E; display: block; margin-bottom: 5px;"></i>
+                    <span style="color: #8B949E; font-size: 0.7rem;">Semester</span>
+                    <h4 style="margin: 5px 0 0 0;">1st</h4>
+                </div>
+                <div style="flex: 1; background: #161B22; padding: 15px; border-radius: 12px; border: 1px solid #30363D; text-align: center;">
+                    <i class="fas fa-layer-group" style="color: #8B949E; display: block; margin-bottom: 5px;"></i>
+                    <span style="color: #8B949E; font-size: 0.7rem;">Level</span>
+                    <h4 style="margin: 5px 0 0 0;">100</h4>
+                </div>
+            </div>
+
+            <div style="width: 100%; min-height: 140px; background: #161B22; border-radius: 12px; border: 1px solid #30363D; padding: 20px;">
+                <div style="color: #8B949E; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 15px;">
+                    <i class="fas fa-chart-line" style="margin-right: 8px;"></i> Learning Activity
+                </div>
+                <div style="height: 60px; border-bottom: 1px dashed #30363D; display: flex; align-items: flex-end; gap: 4px; justify-content: center;">
+                    <div style="width: 15px; height: 30%; background: #30363D; border-radius: 2px;"></div>
+                    <div style="width: 15px; height: 50%; background: #30363D; border-radius: 2px;"></div>
+                    <div style="width: 15px; height: 80%; background: #A3319F; border-radius: 2px;"></div>
+                    <div style="width: 15px; height: 40%; background: #30363D; border-radius: 2px;"></div>
+                    <div style="width: 15px; height: 60%; background: #30363D; border-radius: 2px;"></div>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 15px; justify-content: space-between;">
+                <div style="flex: 1; background: #161B22; padding: 15px; border-radius: 12px; border: 1px solid #30363D;">
+                    <div style="color: #8B949E; font-size: 0.75rem; margin-bottom: 8px;">
+                        <i class="fas fa-bolt" style="color: #F1C40F;"></i> Streaks
+                    </div>
+                    <h3 style="margin: 0;">0</h3>
+                </div>
+                <div style="flex: 1; background: #161B22; padding: 15px; border-radius: 12px; border: 1px solid #30363D;">
+                    <div style="color: #8B949E; font-size: 0.75rem; margin-bottom: 8px;">
+                        <i class="fas fa-cloud-upload-alt" style="color: #3498DB;"></i> Deployed
+                    </div>
+                    <h3 style="margin: 0;">0</h3>
+                </div>
+                <div style="flex: 1; background: #161B22; padding: 15px; border-radius: 12px; border: 1px solid #30363D;">
+                    <div style="color: #8B949E; font-size: 0.75rem; margin-bottom: 8px;">
+                        <i class="fas fa-coins" style="color: #E67E22;"></i> Xt Points
+                    </div>
+                    <h3 style="margin: 0;">0</h3>
+                </div>
+            </div>
+        </div>
+    `,
 
 
     'Lessons': `
