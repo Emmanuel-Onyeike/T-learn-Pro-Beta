@@ -11,29 +11,54 @@
     <link rel="stylesheet" href="../css/dashboard.css">
     <link rel="icon" type="image/png" href="../assets/Logo.webp" />
 
-    <!-- ⚡ CRITICAL: Load scripts in this EXACT order ⚡ -->
-    <!-- Step 1: Configuration -->
     <script src="../js/config.js"></script>
-
-    <!-- Step 2: Supabase Loader -->
     <script src="../js/supabase-loader.js"></script>
-
-    <!-- Step 3: Messages Catalog -->
     <script src="../js/messages.js"></script>
-
-    <!-- Step 4: Utilities -->
     <script src="../js/utilities.js"></script>
+
+    <style>
+        /* Unified Animations */
+        @keyframes scan-line {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100%); }
+        }
+        @keyframes shimmer-move {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        @keyframes fall {
+            from { transform: translateY(-10vh) translateX(0) rotate(0deg); opacity: 0; }
+            20% { opacity: 1; }
+            to { transform: translateY(110vh) translateX(40px) rotate(360deg); opacity: 0; }
+        }
+        
+        .animate-scan { animation: scan-line 3s linear infinite; }
+        .animate-shimmer-fast { animation: shimmer-move 1.5s infinite; }
+        .animate-shimmer-slow { animation: shimmer-move 2s infinite; }
+        .star { position: absolute; background: white; border-radius: 50%; pointer-events: none; animation: fall linear infinite; }
+        
+        /* Navigation Enhancement Classes */
+        .nav-item {
+            @apply relative flex items-center gap-4 px-6 py-3 text-sm font-medium text-gray-400 transition-all duration-300 cursor-pointer overflow-hidden border-y border-transparent;
+        }
+        .nav-item i { @apply text-base w-5 transition-transform duration-300; }
+        .nav-item:hover { @apply bg-white/5 text-white; }
+        .nav-indicator { @apply absolute left-0 w-1 h-0 bg-blue-600 transition-all duration-300 rounded-r-full; }
+        .nav-item:hover .nav-indicator, .nav-item.active .nav-indicator { @apply h-6; }
+        .nav-item.active { @apply bg-blue-500/10 text-blue-400 border-y-white/5; }
+        .nav-item.active .nav-indicator { @apply h-6 shadow-[0_0_15px_#3b82f6]; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        * { -webkit-tap-highlight-color: transparent; }
+    </style>
 </head>
 <body class="bg-[#020617] text-gray-200 font-sans">
 
-<!-- Mobile Header -->
 <header class="lg:hidden sticky top-0 z-[100] w-full bg-[#020617]/80 backdrop-blur-xl border-b border-white/10 px-6 py-4 flex items-center justify-between">
     <div class="flex items-center gap-4">
         <div class="relative">
             <div class="absolute -inset-1 bg-blue-500/20 blur-md rounded-full"></div>
             <img alt="logo" src="../assets/Logo.webp" class="relative w-9 h-9 rounded-xl border border-white/10 shadow-lg">
         </div>
-        
         <div class="flex flex-col">
             <h1 class="text-base font-[1000] tracking-tighter text-white leading-none uppercase italic">
                 T-LEARN <span class="text-blue-500">PRO</span>
@@ -46,13 +71,11 @@
             </div>
         </div>
     </div>
-
     <div class="flex items-center gap-2">
         <div class="hidden xs:flex items-center gap-1.5 px-2 py-1 rounded-md bg-white/5 border border-white/5 mr-2">
             <div class="w-1 h-1 bg-emerald-500 rounded-full animate-pulse"></div>
             <span class="text-[7px] font-bold text-gray-500 uppercase tracking-widest">Live</span>
         </div>
-
         <button onclick="updateView('Notifications')" class="relative w-10 h-10 flex items-center justify-center rounded-xl bg-white/5 border border-white/10 active:scale-90 transition-transform">
             <i class="fa-regular fa-bell text-lg text-gray-300"></i>
             <span class="absolute top-2.5 right-2.5 flex h-2 w-2">
@@ -72,133 +95,84 @@
                 <div class="absolute inset-0 bg-gradient-to-b from-transparent via-blue-500/10 to-transparent h-full w-full animate-scan"></div>
             </div>
         </div>
-
         <div class="flex flex-col">
             <h2 class="text-2xl font-[1000] tracking-[-0.05em] text-white leading-none uppercase italic">
                 T-LEARN <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 font-black">PRO</span>
             </h2>
             <div class="flex items-center gap-3 mt-2">
-                <span class="text-[10px] font-black text-gray-500 uppercase tracking-[0.5em]">
-                    V. <span class="text-blue-500/80">2026</span>
-                </span>
+                <span class="text-[10px] font-black text-gray-500 uppercase tracking-[0.5em]">V. <span class="text-blue-500/80">2026</span></span>
                 <div class="relative h-[2px] w-20 bg-white/5 overflow-hidden rounded-full">
                     <div class="absolute inset-0 bg-gradient-to-r from-transparent via-blue-500 to-transparent animate-shimmer-slow"></div>
                 </div>
             </div>
-       
+        </div>
+    </div>
 
+    <nav class="flex-1 space-y-6 overflow-y-auto no-scrollbar pb-20">
+        <div class="space-y-1">
+            <p class="text-[9px] font-black text-gray-600 uppercase tracking-[0.3em] mb-4 ml-4">Academy</p>
+            <a onclick="updateView('Overview')" class="nav-item active"><div class="nav-indicator"></div><i class="fas fa-home"></i> Overview</a>
+            <a onclick="updateView('Lessons')" class="nav-item"><div class="nav-indicator"></div><i class="fas fa-book-open"></i> Lessons</a>
+            <a onclick="updateView('Projects')" class="nav-item"><div class="nav-indicator"></div><i class="fas fa-code-branch"></i> Projects</a>
+            <a onclick="updateView('Leaderboard')" class="nav-item"><div class="nav-indicator"></div><i class="fas fa-trophy"></i> Leaderboard</a>
+        </div>
 
-<style>
-    /* Unified Animations to prevent conflicts */
-    @keyframes scan-line {
-        0% { transform: translateY(-100%); }
-        100% { transform: translateY(100%); }
-    }
-    
-    @keyframes shimmer-move {
-        0% { transform: translateX(-100%); }
-        100% { transform: translateX(100%); }
-    }
+        <div class="space-y-1">
+            <p class="text-[9px] font-black text-gray-600 uppercase tracking-[0.3em] mb-4 ml-4">Community</p>
+            <a onclick="updateView('Collaboration')" class="nav-item"><div class="nav-indicator"></div><i class="fas fa-handshake"></i> Collaboration</a>
+            <a onclick="updateView('Team')" class="nav-item"><div class="nav-indicator"></div><i class="fas fa-users"></i> Team</a>
+            <a onclick="updateView('Inbox')" class="nav-item"><div class="nav-indicator"></div><i class="fas fa-envelope"></i> Inbox</a>
+        </div>
 
-    .animate-scan {
-        animation: scan-line 3s linear infinite;
-    }
+        <div class="space-y-1">
+            <p class="text-[9px] font-black text-gray-600 uppercase tracking-[0.3em] mb-4 ml-4">Innovation</p>
+            <a onclick="updateView('Nxxt AI')" class="nav-item text-blue-400 font-black"><div class="nav-indicator !bg-blue-400"></div><i class="fas fa-robot"></i> Nxxt AI</a>
+            <a onclick="updateView('Nxxt Lab')" class="nav-item"><div class="nav-indicator"></div><i class="fas fa-flask"></i> Nxxt Lab</a>
+            <a onclick="updateView('Side Hustle Hub')" class="nav-item text-orange-400"><div class="nav-indicator !bg-orange-400"></div><i class="fas fa-rocket"></i> Side Hustle Hub</a>
+            <a onclick="updateView('Deploy')" class="nav-item text-green-500 hover:text-green-400 cursor-pointer"><div class="nav-indicator !bg-green-500"></div><i class="fas fa-cloud-upload-alt"></i> Deploy</a>
+        </div>
 
-    .animate-shimmer-fast {
-        animation: shimmer-move 1.5s infinite;
-    }
+        <div class="space-y-1">
+            <p class="text-[9px] font-black text-gray-600 uppercase tracking-[0.3em] mb-4 ml-4">Account</p>
+            <a onclick="updateView('Xt Pay')" class="nav-item text-green-500"><div class="nav-indicator !bg-green-500"></div><i class="fas fa-wallet"></i> Xt Pay</a>
+            <a onclick="updateView('Pricing')" class="nav-item"><div class="nav-indicator"></div><i class="fas fa-tags"></i> Pricing</a>
+            <a onclick="updateView('Settings')" class="nav-item"><div class="nav-indicator"></div><i class="fas fa-sliders"></i> Settings</a>
+        </div>
+    </nav>
 
-    .animate-shimmer-slow {
-        animation: shimmer-move 2s infinite;
-    }
-
-    /* Clean Mobile Tap Highlights */
-    * { -webkit-tap-highlight-color: transparent; }
-</style>
-    
-    <nav class="flex-1 space-y-1 overflow-y-auto no-scrollbar pb-20">
-        <div class="pb-4 mb-4 border-b border-white/5">
-            <p class="text-[8px] font-black text-gray-600 uppercase tracking-[0.2em] mb-4 ml-4">Academy</p>
-            <a onclick="updateView('Overview')" class="nav-item active"><i class="fas fa-home"></i> Overview</a>
-            <a onclick="updateView('Lessons')" class="nav-item"><i class="fas fa-book-open"></i> Lessons</a>
-            <a onclick="updateView('Projects')" class="nav-item"><i class="fas fa-code-branch"></i> Projects</a>
-            <a onclick="updateView('Leaderboard')" class="nav-item"><i class="fas fa-trophy"></i> Leaderboard</a>
-        </div>
-
-        <div class="pb-4 mb-4 border-b border-white/5">
-            <p class="text-[8px] font-black text-gray-600 uppercase tracking-[0.2em] mb-4 ml-4">Community</p>
-            <a onclick="updateView('Collaboration')" class="nav-item"><i class="fas fa-handshake"></i> Collaboration</a>
-            <a onclick="updateView('Team')" class="nav-item"><i class="fas fa-users"></i> Team</a>
-            <a onclick="updateView('Inbox')" class="nav-item"><i class="fas fa-envelope"></i> Inbox</a>
-        </div>
-
-        <div class="pb-4 mb-4 border-b border-white/5">
-            <p class="text-[8px] font-black text-gray-600 uppercase tracking-[0.2em] mb-4 ml-4">Innovation</p>
-            <a onclick="updateView('Nxxt AI')" class="nav-item text-blue-400 font-black"><i class="fas fa-robot"></i> Nxxt AI</a>
-            <a onclick="updateView('Nxxt Lab')" class="nav-item"><i class="fas fa-flask"></i> Nxxt Lab</a>
-            <a onclick="updateView('Side Hustle Hub')" class="nav-item text-orange-400"><i class="fas fa-rocket"></i> Side Hustle Hub</a>
-            <a onclick="updateView('Deploy')" class="nav-item text-green-500 hover:text-green-400 cursor-pointer">
-                <i class="fas fa-cloud-upload-alt"></i> Deploy
-            </a>
-        </div>
-
-        <div class="pb-4 mb-4 border-b border-white/5">
-            <p class="text-[8px] font-black text-gray-600 uppercase tracking-[0.2em] mb-4 ml-4">Account</p>
-            <a onclick="updateView('Xt Pay')" class="nav-item text-green-500"><i class="fas fa-wallet"></i> Xt Pay</a>
-            <a onclick="updateView('Pricing')" class="nav-item"><i class="fas fa-tags"></i> Pricing</a>
-            <a onclick="updateView('Settings')" class="nav-item"><i class="fas fa-sliders"></i> Settings</a>
-        </div>
-    </nav> 
-
-    <!-- User Profile Section -->
     <div class="mt-auto pt-6 border-t border-white/5">
         <div class="flex items-center gap-4 px-2 py-2">
             <div class="relative">
-                <img src="../assets/Logo.webp"
-                     data-user-img
-                     data-user-name-alt
-                     alt="User"
-                     class="w-11 h-11 rounded-xl object-cover border border-white/10 shadow-lg">
+                <img src="../assets/Logo.webp" data-user-img data-user-name-alt alt="User" class="w-11 h-11 rounded-xl object-cover border border-white/10 shadow-lg">
                 <span class="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 border-2 border-[#020617] rounded-full"></span>
             </div>
-
             <div class="flex flex-col min-w-0">
-                <!-- ✅ This element will be updated with user's first name by auth.js -->
                 <p data-user-name class="text-white font-bold text-sm italic uppercase">Loading...</p>
                 <span class="text-[8px] font-bold text-blue-500 uppercase tracking-[0.2em] flex items-center gap-1">
                     <i class="fas fa-leaf text-[7px]"></i> Beginner
                 </span>
             </div>
-
-          <button onclick="handleLogout()"
-        class="ml-auto text-gray-600 hover:text-red-500 transition-colors"
-        title="Logout">
-  <i class="fas fa-sign-out-alt text-[10px]"></i>
-</button>
+            <button onclick="handleLogout()" class="ml-auto text-gray-600 hover:text-red-500 transition-colors" title="Logout">
+                <i class="fas fa-sign-out-alt text-[10px]"></i>
+            </button>
         </div>
     </div>
 </aside>
 
-<!-- Main Content Area -->
 <main class="lg:ml-72 p-6 md:p-12 pb-32 lg:pb-12 min-h-screen">
     <header class="mb-12 flex justify-between items-end">
         <div>
-            <!-- ✅ This greeting will be updated by auth.js with time-based greeting -->
             <span id="greetingText" class="text-[10px] font-black text-blue-500 uppercase tracking-[0.3em] mb-2 block">Initializing...</span>
             <h1 id="viewTitle" class="text-5xl font-black text-white italic tracking-tighter uppercase">Overview</h1>
         </div>
-
         <div class="hidden lg:flex items-center gap-6">
             <button onclick="updateView('Notifications')" class="relative p-3 bg-white/5 rounded-xl border border-white/10 text-gray-400 hover:text-white transition-all">
                 <i class="fa-regular fa-bell text-xl"></i>
                 <span class="absolute top-2 right-2 w-2 h-2 bg-blue-600 rounded-full animate-pulse"></span>
             </button>
-
             <div class="flex items-center gap-4">
                 <div class="text-right">
-                    <!-- ✅ User name will be updated here -->
                     <p data-user-name class="text-white font-bold text-sm italic uppercase">Loading...</p>
-                    <!-- ✅ Current date will be updated here -->
                     <p id="currentDate" class="text-[9px] text-gray-500 font-bold uppercase tracking-widest">Loading...</p>
                 </div>
                 <div class="w-12 h-12 bg-white/5 rounded-2xl border border-white/10 flex items-center justify-center overflow-hidden">
@@ -208,10 +182,8 @@
         </div>
     </header>
 
-    <!-- Mobile Menu -->
     <div id="mobileMenu" class="fixed inset-0 z-[200] invisible">
         <div id="menuOverlay" class="absolute inset-0 bg-[#020617]/90 backdrop-blur-md opacity-0 transition-opacity duration-300"></div>
-
         <div id="menuDrawer" class="absolute inset-y-0 left-0 w-[80%] max-w-sm bg-[#030816] border-r border-white/5 p-8 transform -translate-x-full transition-transform duration-300 ease-out flex flex-col">
             <div class="flex items-center justify-between mb-12">
                 <div class="flex items-center gap-3">
@@ -222,41 +194,27 @@
                     <i class="fas fa-times text-xl"></i>
                 </button>
             </div>
-
-            <nav id="mobileNavLinks" class="flex-1 space-y-4 overflow-y-auto no-scrollbar pb-10">
-                <!-- Mobile nav links will be populated by dashboard.js -->
-            </nav>
-
+            <nav id="mobileNavLinks" class="flex-1 space-y-4 overflow-y-auto no-scrollbar pb-10"></nav>
             <div class="mt-auto pt-6 border-t border-white/5 text-center">
                 <p class="text-[8px] font-black text-gray-700 uppercase tracking-widest">T Learn Pro v1.0</p>
             </div>
         </div>
     </div>
 
-    <!-- ✅ CRITICAL: Alert Modal - Required for auth.js messages to display -->
     <div id="alertModal" class="fixed inset-0 z-[999] flex items-center justify-center invisible p-6">
         <div id="alertOverlay" class="absolute inset-0 bg-black/60 backdrop-blur-sm opacity-0 transition-opacity duration-300"></div>
-
         <div id="alertBox" class="relative bg-[#030816] border border-white/10 p-8 rounded-[2.5rem] max-w-sm w-full text-center transform scale-90 opacity-0 transition-all duration-300 shadow-2xl">
-            <!-- Icon changes based on message type -->
             <div id="alertIcon" class="w-16 h-16 bg-blue-600/20 rounded-2xl flex items-center justify-center mx-auto mb-6 text-blue-500">
                 <i class="fas fa-check text-2xl"></i>
             </div>
-
-            <!-- Message title -->
             <h3 id="alertTitle" class="text-xl font-black text-white italic uppercase tracking-tighter">System Alert</h3>
-
-            <!-- Message content -->
             <p id="alertMsg" class="text-[10px] text-gray-500 font-bold uppercase tracking-widest mt-2 leading-relaxed"></p>
-
-            <!-- Dismiss button -->
             <button onclick="closeAlert()" class="mt-8 w-full py-4 bg-white/5 border border-white/10 rounded-2xl text-[10px] font-black uppercase tracking-widest text-white hover:bg-white hover:text-black transition-all">
                 Dismiss
             </button>
         </div>
     </div>
 
-    <!-- Payment Modal (Keep your existing payment modal) -->
     <div id="payment-modal" class="fixed top-0 right-0 h-full w-full md:w-[400px] bg-[#050b1d] border-l border-white/10 z-[2000000] translate-x-full transition-transform duration-500 ease-in-out shadow-[-20px_0_50px_rgba(0,0,0,0.5)] flex flex-col">
         <div class="p-8 border-b border-white/5 flex items-center justify-between">
             <h3 class="text-white font-black uppercase italic tracking-tighter text-xl">Payment Gateway</h3>
@@ -264,22 +222,18 @@
                 <i class="fas fa-times"></i>
             </button>
         </div>
-
         <div class="flex-grow flex flex-col items-center justify-center p-10 text-center">
             <div class="w-24 h-24 bg-blue-600/10 rounded-[2.5rem] flex items-center justify-center mb-8 border border-blue-500/20 animate-pulse">
                 <i class="fas fa-microchip text-blue-500 text-4xl"></i>
             </div>
-
             <h4 id="active-plan-title" class="text-blue-400 font-black uppercase italic text-sm tracking-widest mb-2">Initialize Protocol</h4>
             <h2 class="text-white font-black uppercase text-2xl tracking-tighter mb-6">Working on payment gateway</h2>
-
             <p class="text-gray-500 text-[10px] font-bold uppercase tracking-[0.3em] leading-relaxed">
                 Our secure transaction layer is currently being synchronized with global banking nodes.
                 <br><br>
                 <span class="text-blue-500/50">Check back later for full deployment.</span>
             </p>
         </div>
-
         <div class="p-8 bg-black/20">
             <div class="flex items-center gap-4 p-4 bg-white/5 rounded-2xl border border-dashed border-white/10 mb-6">
                 <i class="fas fa-shield-check text-green-500"></i>
@@ -291,96 +245,43 @@
         </div>
     </div>
 
-    <!-- Dynamic Content Area (Your dashboard content goes here) -->
-    <div id="dynamicContent" class="space-y-8 animate-in">
-        <!-- Your dashboard content will be injected here by dashboard.js -->
-    </div>
+    <div id="dynamicContent" class="space-y-8 animate-in"></div>
 </main>
 
 <div class="lg:hidden fixed bottom-6 left-0 w-full px-4 z-[100]">
     <nav class="mx-auto max-w-md bg-[#050b1d]/80 backdrop-blur-2xl border border-white/10 rounded-[2.5rem] px-6 py-3 shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex justify-between items-center relative overflow-hidden">
-        
         <div class="absolute inset-0 bg-gradient-to-t from-blue-500/5 to-transparent pointer-events-none"></div>
-
         <button onclick="updateView('Overview')" class="relative flex flex-col items-center gap-1 group transition-all duration-300">
             <div class="absolute -top-3 w-4 h-1 bg-blue-500 rounded-full shadow-[0_0_10px_#3b82f6] opacity-100"></div>
-            <i class="fas fa-home text-lg text-blue-500 transition-transform group-active:scale-90"></i>
+            <i class="fas fa-home text-lg text-blue-500"></i>
             <span class="text-[7px] font-black uppercase tracking-widest text-blue-500">Node</span>
         </button>
-
         <button onclick="updateView('Lessons')" class="relative flex flex-col items-center gap-1 group transition-all duration-300">
-            <i class="fas fa-book-open text-lg text-gray-500 group-hover:text-white transition-colors"></i>
+            <i class="fas fa-book-open text-lg text-gray-500 group-hover:text-white"></i>
             <span class="text-[7px] font-black uppercase tracking-widest text-gray-500 group-hover:text-white">Learn</span>
         </button>
-
         <button onclick="updateView('Nxxt AI')" class="relative flex flex-col items-center transition-all duration-500 hover:-translate-y-1">
             <div class="relative">
                 <div class="absolute inset-0 rounded-full bg-blue-600 animate-ping opacity-20"></div>
-                <div class="absolute inset-0 rounded-full bg-blue-400 animate-pulse opacity-20"></div>
-                
                 <div class="relative w-14 h-14 bg-gradient-to-tr from-blue-700 via-blue-500 to-cyan-400 rounded-2xl flex items-center justify-center shadow-[0_0_25px_rgba(59,130,246,0.5)] border border-white/20 rotate-45 group">
                     <i class="fas fa-robot text-white text-xl -rotate-45 group-hover:scale-110 transition-transform"></i>
                 </div>
             </div>
             <span class="text-[7px] font-black uppercase mt-2 tracking-[0.2em] text-cyan-400 animate-pulse">Nxxt AI</span>
         </button>
-
         <button onclick="updateView('Xt Pay')" class="relative flex flex-col items-center gap-1 group transition-all duration-300">
-            <i class="fas fa-wallet text-lg text-gray-500 group-hover:text-emerald-400 transition-colors"></i>
+            <i class="fas fa-wallet text-lg text-gray-500 group-hover:text-emerald-400"></i>
             <span class="text-[7px] font-black uppercase tracking-widest text-gray-500 group-hover:text-emerald-400">Vault</span>
         </button>
-
         <button onclick="openFullMenu()" class="relative flex flex-col items-center gap-1 group transition-all duration-300">
-            <i class="fas fa-bars-staggered text-lg text-gray-500 group-hover:text-white transition-colors"></i>
+            <i class="fas fa-bars-staggered text-lg text-gray-500 group-hover:text-white"></i>
             <span class="text-[7px] font-black uppercase tracking-widest text-gray-500 group-hover:text-white">Menu</span>
         </button>
-
     </nav>
 </div>
 
-<style>
-    /* Smooth bounce for the AI button */
-    @keyframes pulse-ring {
-        0% { transform: scale(0.95); opacity: 0.5; }
-        50% { transform: scale(1.05); opacity: 0.8; }
-        100% { transform: scale(0.95); opacity: 0.5; }
-    }
-    
-    /* Adding a custom active state class if you want to swap colors via JS */
-    .nav-active i {
-        color: #3b82f6 !important;
-        text-shadow: 0 0 15px rgba(59,130,246,0.6);
-    }
-    .nav-active span {
-        color: #3b82f6 !important;
-    }
-
-        @keyframes fall {
-            from { transform: translateY(-10vh) translateX(0) rotate(0deg); opacity: 0; }
-            20% { opacity: 1; }
-            to { transform: translateY(110vh) translateX(40px) rotate(360deg); opacity: 0; }
-        }
-        .star {
-            position: absolute;
-            background: white;
-            border-radius: 50%;
-            pointer-events: none;
-            animation: fall linear infinite;
-        }
-        .nxxt-glass {
-            background: rgba(21, 21, 21, 0.8);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-        }
-    </style>
-
-<!-- ⚡ CRITICAL: Load scripts at the END in this order ⚡ -->
-<!-- Step 5: Dashboard functionality -->
 <script src="../js/dashboard.js"></script>
-    <script src="../js/Overview.js"></script>
-    
-
-<!-- Step 6: Authentication (MUST be last) -->
+<script src="../js/Overview.js"></script>
 <script src="../js/auth.js"></script>
 
 </body>
