@@ -205,17 +205,17 @@ const views = {
     <header class="max-w-6xl mx-auto mb-16 flex flex-col md:flex-row justify-between items-center gap-8">
         <div>
             <h1 class="text-4xl font-black text-white tracking-tight mb-2">Learning Path</h1>
-            <p class="text-gray-400 font-medium">From Foundation to Architecture</p>
+            <p class="text-gray-400 font-medium">Welcome, Recruit. Your journey begins here.</p>
         </div>
         <div class="flex gap-12 items-center bg-white/5 px-8 py-4 rounded-3xl border border-white/10">
             <div class="text-center">
-                <p class="text-[10px] uppercase tracking-widest text-blue-400 font-bold mb-1">Progress</p>
-                <p class="text-2xl font-mono font-bold text-white">68.4%</p>
+                <p class="text-[10px] uppercase tracking-widest text-blue-400 font-bold mb-1">Total Progress</p>
+                <p class="text-2xl font-mono font-bold text-white">0.0%</p>
             </div>
             <div class="w-[1px] h-10 bg-white/10"></div>
             <div class="text-center">
-                <p class="text-[10px] uppercase tracking-widest text-purple-400 font-bold mb-1">Rank</p>
-                <p class="text-2xl font-mono font-bold text-white">#1,204</p>
+                <p class="text-[10px] uppercase tracking-widest text-purple-400 font-bold mb-1">Global Rank</p>
+                <p class="text-2xl font-mono font-bold text-white">#--</p>
             </div>
         </div>
     </header>
@@ -229,33 +229,46 @@ const views = {
                 <div class="h-px flex-1 bg-gradient-to-r from-white/10 to-transparent"></div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div class="group bg-[#0f0f0f] border border-white/5 p-8 rounded-[2.5rem] hover:border-orange-500/50 transition-all duration-500">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="group bg-[#0f0f0f] border border-white/5 p-8 rounded-[2.5rem] hover:border-orange-500/50 transition-all duration-500 cursor-pointer">
                     <div class="flex justify-between items-start mb-6">
-                        <div class="w-16 h-16 bg-orange-500/10 rounded-2xl flex items-center justify-center text-orange-500 group-hover:scale-110 transition-transform">
+                        <div class="w-14 h-14 bg-orange-500/10 rounded-2xl flex items-center justify-center text-orange-500 group-hover:rotate-12 transition-transform">
                             <i class="fa-brands fa-html5 text-3xl"></i>
                         </div>
-                        <span class="text-[10px] font-black bg-green-500 text-black px-3 py-1 rounded-full">COMPLETED</span>
+                        <span class="text-[10px] font-black bg-white/5 text-gray-500 px-3 py-1 rounded-full">NOT STARTED</span>
                     </div>
-                    <h3 class="text-xl font-bold text-white mb-2">HTML5 Mastery</h3>
-                    <p class="text-gray-400 text-sm leading-relaxed mb-6">Structuring the web with semantic tags, SEO best practices, and accessibility standards.</p>
-                    <div class="flex gap-4 text-[10px] font-bold text-gray-500 uppercase tracking-tighter">
-                        <span><i class="fa-solid fa-book mr-1 text-orange-500"></i> 15 Lessons</span>
-                        <span><i class="fa-solid fa-clock mr-1 text-orange-500"></i> 4 Hours</span>
+                    <h3 class="text-lg font-bold text-white mb-2">HTML5 Mastery</h3>
+                    <p class="text-gray-500 text-xs leading-relaxed mb-6">Semantic architecture and web standards.</p>
+                    <div class="w-full bg-white/5 h-1 rounded-full overflow-hidden">
+                        <div class="bg-orange-500 h-full w-0"></div>
                     </div>
                 </div>
 
-                <div class="group bg-[#0f0f0f] border border-white/5 p-8 rounded-[2.5rem] hover:border-blue-400/50 transition-all duration-500">
+                <div class="group bg-[#0f0f0f] border border-white/5 p-8 rounded-[2.5rem] hover:border-blue-400/50 transition-all duration-500 cursor-pointer">
                     <div class="flex justify-between items-start mb-6">
-                        <div class="w-16 h-16 bg-blue-400/10 rounded-2xl flex items-center justify-center text-blue-400 group-hover:scale-110 transition-transform">
+                        <div class="w-14 h-14 bg-blue-400/10 rounded-2xl flex items-center justify-center text-blue-400">
                             <i class="fa-brands fa-css3-alt text-3xl"></i>
                         </div>
-                        <span class="text-[10px] font-black bg-white/10 text-gray-400 px-3 py-1 rounded-full">90% DONE</span>
+                        <span class="text-[10px] font-black bg-white/5 text-gray-500 px-3 py-1 rounded-full">NOT STARTED</span>
                     </div>
-                    <h3 class="text-xl font-bold text-white mb-2">Modern CSS & Tailwind</h3>
-                    <p class="text-gray-400 text-sm leading-relaxed mb-6">Mastering Flexbox, Grid, and utility-first styling to create stunning responsive layouts.</p>
-                    <div class="w-full bg-white/5 h-1.5 rounded-full">
-                        <div class="bg-blue-400 h-full w-[90%] rounded-full shadow-[0_0_10px_rgba(96,165,250,0.5)]"></div>
+                    <h3 class="text-lg font-bold text-white mb-2">Modern CSS</h3>
+                    <p class="text-gray-500 text-xs leading-relaxed mb-6">Flexbox, Grid, and Tailwind CSS systems.</p>
+                    <div class="w-full bg-white/5 h-1 rounded-full overflow-hidden">
+                        <div class="bg-blue-400 h-full w-0"></div>
+                    </div>
+                </div>
+
+                <div class="group bg-[#0f0f0f] border border-white/5 p-8 rounded-[2.5rem] hover:border-red-500/50 transition-all duration-500 cursor-pointer">
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="w-14 h-14 bg-red-500/10 rounded-2xl flex items-center justify-center text-red-500">
+                            <i class="fa-brands fa-git-alt text-3xl"></i>
+                        </div>
+                        <span class="text-[10px] font-black bg-white/5 text-gray-500 px-3 py-1 rounded-full">NOT STARTED</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-2">Version Control</h3>
+                    <p class="text-gray-500 text-xs leading-relaxed mb-6">Branching strategies and Git workflow.</p>
+                    <div class="w-full bg-white/5 h-1 rounded-full overflow-hidden">
+                        <div class="bg-red-500 h-full w-0"></div>
                     </div>
                 </div>
             </div>
@@ -268,20 +281,29 @@ const views = {
                 <div class="h-px flex-1 bg-gradient-to-r from-white/10 to-transparent"></div>
             </div>
 
-            <div class="grid grid-cols-1 gap-8">
-                <div class="relative overflow-hidden group bg-gradient-to-br from-blue-600 to-indigo-700 p-10 rounded-[3rem] shadow-2xl transition-transform hover:-translate-y-1 cursor-pointer" onclick="updateView('Lab')">
-                    <div class="absolute top-0 right-0 w-80 h-80 bg-white/10 blur-[80px] rounded-full -mr-20 -mt-20"></div>
-                    <div class="relative z-10 flex flex-col md:flex-row md:items-center gap-10">
-                        <div class="w-24 h-24 bg-white/20 backdrop-blur-md rounded-3xl flex items-center justify-center text-white shrink-0">
-                            <i class="fa-brands fa-js text-5xl"></i>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="relative overflow-hidden group bg-[#0f0f0f] border border-white/5 p-10 rounded-[3rem] hover:border-yellow-500/50 transition-all">
+                    <div class="relative z-10 flex gap-8">
+                        <div class="w-20 h-20 bg-yellow-500/10 rounded-3xl flex items-center justify-center text-yellow-500 shrink-0">
+                            <i class="fa-brands fa-js text-4xl"></i>
                         </div>
-                        <div class="flex-1">
-                            <h3 class="text-3xl font-black text-white uppercase italic tracking-tighter mb-3">JavaScript ES6+</h3>
-                            <p class="text-blue-100 text-sm leading-relaxed max-w-xl mb-6">Engine logic, asynchronous programming, and DOM manipulation. This is where your code comes to life.</p>
-                            <div class="flex items-center gap-6">
-                                <button class="px-8 py-3 bg-white text-blue-700 rounded-xl font-black text-xs uppercase tracking-widest hover:shadow-lg transition-all">Resume Lesson</button>
-                                <span class="text-xs font-bold text-blue-200">Current: Unit 04 - API Integration</span>
-                            </div>
+                        <div>
+                            <h3 class="text-2xl font-black text-white uppercase italic tracking-tighter mb-2">JavaScript ES6+</h3>
+                            <p class="text-gray-400 text-sm mb-6 max-w-sm">Mastering the engine: Asynchronous logic, APIs, and the DOM.</p>
+                            <button class="px-6 py-2 bg-yellow-500 text-black rounded-xl font-black text-[10px] uppercase tracking-widest">Begin Unit 01</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="relative overflow-hidden group bg-[#0f0f0f] border border-white/5 p-10 rounded-[3rem] opacity-50 grayscale">
+                    <div class="relative z-10 flex gap-8">
+                        <div class="w-20 h-20 bg-cyan-500/10 rounded-3xl flex items-center justify-center text-cyan-500 shrink-0">
+                            <i class="fa-brands fa-react text-4xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-black text-white uppercase italic tracking-tighter mb-2">React Framework</h3>
+                            <p class="text-gray-500 text-sm mb-2">State management and component architecture.</p>
+                            <span class="text-[10px] font-bold text-cyan-500/50 uppercase"><i class="fa-solid fa-lock mr-2"></i>Unlocks at Phase 01 Completion</span>
                         </div>
                     </div>
                 </div>
@@ -290,52 +312,47 @@ const views = {
 
         <section class="pb-20">
             <div class="flex items-center gap-6 mb-10">
-                <span class="px-4 py-1 bg-yellow-500/10 text-yellow-500 text-xs font-black rounded-full border border-yellow-500/20">PHASE 03</span>
-                <h2 class="text-2xl font-bold text-white">Backend Systems</h2>
+                <span class="px-4 py-1 bg-purple-500/10 text-purple-500 text-xs font-black rounded-full border border-purple-500/20">PHASE 03</span>
+                <h2 class="text-2xl font-bold text-white">Backend & DevOps</h2>
                 <div class="h-px flex-1 bg-gradient-to-r from-white/10 to-transparent"></div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div class="group bg-[#0f0f0f] border border-white/5 p-8 rounded-[2.5rem] opacity-60 grayscale hover:grayscale-0 transition-all cursor-not-allowed" 
-                     onclick="showModal('Module Locked', 'You need to reach Level 15 in JavaScript to unlock the Python Neural track.')">
-                    <div class="flex justify-between items-start mb-6">
-                        <div class="w-16 h-16 bg-yellow-500/10 rounded-2xl flex items-center justify-center text-yellow-500">
-                            <i class="fa-brands fa-python text-3xl"></i>
-                        </div>
-                        <i class="fa-solid fa-lock text-gray-600"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-white mb-2">Python for Backend</h3>
-                    <p class="text-gray-500 text-sm leading-relaxed">Server-side logic, data structures, and working with Python's Fast API framework.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="group bg-[#0f0f0f] border border-white/5 p-8 rounded-[2.5rem] opacity-40 cursor-not-allowed" 
+                     onclick="showModal('Access Denied', 'Complete the Logic Engine phase to unlock Python Backend modules.')">
+                    <i class="fa-brands fa-python text-3xl text-yellow-500 mb-6 block"></i>
+                    <h3 class="text-lg font-bold text-white mb-2">Python Systems</h3>
+                    <p class="text-gray-500 text-xs">FastAPI & Scalable logic.</p>
                 </div>
 
-                <div class="group bg-[#0f0f0f] border border-white/5 p-8 rounded-[2.5rem] opacity-60 grayscale hover:grayscale-0 transition-all cursor-not-allowed"
-                     onclick="showModal('Restricted Area', 'Complete the Backend Foundation to unlock Vector Databases.')">
-                    <div class="flex justify-between items-start mb-6">
-                        <div class="w-16 h-16 bg-purple-500/10 rounded-2xl flex items-center justify-center text-purple-500">
-                            <i class="fa-solid fa-database text-3xl"></i>
-                        </div>
-                        <i class="fa-solid fa-lock text-gray-600"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-white mb-2">Databases (SQL & NoSQL)</h3>
-                    <p class="text-gray-500 text-sm leading-relaxed">Designing schemas, managing state, and scaling data across distributed systems.</p>
+                <div class="group bg-[#0f0f0f] border border-white/5 p-8 rounded-[2.5rem] opacity-40 cursor-not-allowed"
+                     onclick="showModal('Restricted', 'Database schemas require Level 10 JavaScript Proficiency.')">
+                    <i class="fa-solid fa-database text-3xl text-purple-500 mb-6 block"></i>
+                    <h3 class="text-lg font-bold text-white mb-2">Cloud Databases</h3>
+                    <p class="text-gray-500 text-xs">SQL, NoSQL, and Vector stores.</p>
+                </div>
+
+                <div class="group bg-[#0f0f0f] border border-white/5 p-8 rounded-[2.5rem] opacity-40 cursor-not-allowed"
+                     onclick="showModal('Locked', 'Final Phase: Requires completion of all previous modules.')">
+                    <i class="fa-solid fa-server text-3xl text-blue-500 mb-6 block"></i>
+                    <h3 class="text-lg font-bold text-white mb-2">Deployment</h3>
+                    <p class="text-gray-500 text-xs">Docker, AWS, and CI/CD pipelines.</p>
                 </div>
             </div>
         </section>
     </main>
 
-    <div id="alertModal" class="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/80 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300">
-        <div class="bg-[#111] border border-white/10 p-8 rounded-[2.5rem] max-w-sm w-full text-center shadow-2xl scale-90 transition-transform duration-300" id="modalContent">
-            <div class="w-20 h-20 bg-blue-500/10 rounded-full flex items-center justify-center text-blue-500 mx-auto mb-6">
-                <i class="fa-solid fa-shield-halved text-3xl"></i>
+    <div id="alertModal" class="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/90 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="bg-[#111] border border-white/10 p-10 rounded-[3rem] max-w-sm w-full text-center shadow-[0_0_50px_rgba(0,0,0,0.5)] scale-90 transition-transform duration-300" id="modalContent">
+            <div class="w-20 h-20 bg-red-500/10 rounded-full flex items-center justify-center text-red-500 mx-auto mb-6 border border-red-500/20">
+                <i class="fa-solid fa-lock text-3xl"></i>
             </div>
-            <h4 id="modalTitle" class="text-2xl font-black text-white uppercase italic mb-2">Title</h4>
-            <p id="modalBody" class="text-gray-400 text-sm leading-relaxed mb-8">Message body goes here.</p>
-            <button onclick="closeModal()" class="w-full py-4 bg-white text-black font-black uppercase tracking-widest rounded-2xl hover:bg-gray-200 transition-colors">Understood</button>
+            <h4 id="modalTitle" class="text-2xl font-black text-white uppercase italic mb-3 tracking-widest">Locked</h4>
+            <p id="modalBody" class="text-gray-400 text-sm leading-relaxed mb-8">You need more XP to access this sector.</p>
+            <button onclick="closeModal()" class="w-full py-4 bg-white text-black font-black uppercase tracking-widest rounded-2xl hover:bg-blue-500 hover:text-white transition-all">Back to Mission</button>
         </div>
     </div>
 </div>
-
-
 `,
     
 
