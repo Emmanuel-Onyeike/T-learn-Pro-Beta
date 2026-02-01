@@ -63,6 +63,24 @@ const views = {
             <i class="fas fa-chart-line absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-green-500/[0.05] transition-all"></i>
         </div>
     </div>
+    <div class="bg-[#fdfbf4] p-8 rounded-[2.5rem] border border-black/5 shadow-sm relative overflow-hidden font-sans">
+    <div class="flex justify-between items-start mb-12">
+        <h3 class="text-3xl font-black text-[#2d2d2d] tracking-tight">Order status</h3>
+        <div class="flex gap-[3px] items-end h-6 opacity-40">
+            <div class="w-[3px] bg-[#2d2d2d] h-2 rounded-full"></div>
+            <div class="w-[3px] bg-[#2d2d2d] h-4 rounded-full"></div>
+            <div class="w-[3px] bg-[#2d2d2d] h-5 rounded-full"></div>
+        </div>
+    </div>
+    
+    <div class="relative w-full h-[280px]">
+        <div class="absolute inset-0 flex items-center justify-center z-10">
+            <span class="px-4 py-2 bg-black/5 rounded-full text-[10px] font-bold text-gray-400 uppercase tracking-widest">No Data Recorded</span>
+        </div>
+        
+        <canvas id="orderStatusChart"></canvas>
+    </div>
+</div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
         <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-blue-500/30 transition-all">
