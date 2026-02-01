@@ -128,45 +128,7 @@ const views = {
 </div>
 
 
-    <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-orange-500/30 transition-all">
-        <div class="flex items-center gap-4 relative z-10">
-            <div class="w-12 h-12 bg-orange-600/10 rounded-2xl flex items-center justify-center border border-orange-500/20">
-                <i class="fas fa-fire text-orange-500"></i>
-            </div>
-            <div>
-                <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Streaks</p>
-                <h3 id="streakCount" class="text-3xl font-black text-white mt-1">0 <span class="text-xs text-orange-500/50">DAYS</span></h3>
-            </div>
-        </div>
-        <i class="fas fa-bolt absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-orange-500/[0.05] transition-all"></i>
-    </div>
-
-    <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-cyan-500/30 transition-all">
-        <div class="flex items-center gap-4 relative z-10">
-            <div class="w-12 h-12 bg-cyan-600/10 rounded-2xl flex items-center justify-center border border-cyan-500/20">
-                <i class="fas fa-rocket text-cyan-500"></i>
-            </div>
-            <div>
-                <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Deployed</p>
-                <h3 id="deployCount" class="text-3xl font-black text-white mt-1">0</h3>
-            </div>
-        </div>
-        <i class="fas fa-cloud-upload-alt absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-cyan-500/[0.05] transition-all"></i>
-    </div>
-
-    <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-indigo-500/30 transition-all">
-        <div class="flex items-center gap-4 relative z-10">
-            <div class="w-12 h-12 bg-indigo-600/10 rounded-2xl flex items-center justify-center border border-indigo-500/20">
-                <i class="fas fa-user-friends text-indigo-500"></i>
-            </div>
-            <div>
-                <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Teams</p>
-                <h3 id="teamCount" class="text-3xl font-black text-white mt-1">0</h3>
-            </div>
-        </div>
-        <i class="fas fa-network-wired absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-indigo-500/[0.05] transition-all"></i>
-    </div>
-
+  
 </div>
     <div class="bg-[#050b1d] border border-white/5 p-8 rounded-[2.5rem] relative overflow-hidden">
         <div class="flex justify-between items-center mb-6">
