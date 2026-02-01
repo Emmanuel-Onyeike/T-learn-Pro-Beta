@@ -81,23 +81,61 @@ const views = {
             Visualizing your deployment frequency and session uptime
         </p>
     </div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
 
+    <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-blue-500/30 transition-all">
+        <div class="flex items-center gap-4 relative z-10">
+            <div class="w-12 h-12 bg-blue-600/10 rounded-2xl flex items-center justify-center border border-blue-500/20">
+                <i class="fas fa-handshake text-blue-500"></i>
+            </div>
+            <div>
+                <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Collab</p>
+                <h3 id="collabCount" class="text-3xl font-black text-white mt-1">0</h3>
+            </div>
+        </div>
+        <i class="fas fa-users absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-blue-500/[0.05] transition-all"></i>
+    </div>
+
+    <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-purple-500/30 transition-all">
+        <div class="flex items-center gap-4 relative z-10">
+            <div class="w-12 h-12 bg-purple-600/10 rounded-2xl flex items-center justify-center border border-purple-500/20">
+                <i class="fas fa-calendar-alt text-purple-500"></i>
+            </div>
+            <div>
+                <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Semester</p>
+                <h3 id="semesterVal" class="text-3xl font-black text-white mt-1">01</h3>
+            </div>
+        </div>
+        <i class="fas fa-graduation-cap absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-purple-500/[0.05] transition-all"></i>
+    </div>
+
+    <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-yellow-500/30 transition-all">
+        <div class="flex items-center gap-4 relative z-10">
+            <div class="w-12 h-12 bg-yellow-600/10 rounded-2xl flex items-center justify-center border border-yellow-500/20">
+                <i class="fas fa-medal text-yellow-500"></i>
+            </div>
+            <div>
+                <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Rank</p>
+                <h3 class="text-3xl font-black text-white mt-1">
+                    <span id="rankVal">#0</span> 
+                    <span class="text-xs text-yellow-500/50 uppercase">Global</span>
+                </h3>
+            </div>
+        </div>
+        <i class="fas fa-crown absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-yellow-500/[0.05] transition-all"></i>
+    </div>
+
+</div>
     <div class="bg-[#050b1d] border border-white/5 p-8 rounded-[2.5rem] relative overflow-hidden">
         <div class="flex justify-between items-center mb-6">
             <h3 class="text-lg font-black text-white italic uppercase tracking-tighter">Project History</h3>
             <span class="px-3 py-1 bg-white/5 rounded-full text-[10px] text-gray-400 font-bold uppercase tracking-widest">Tracking Live Session</span>
-
-
         </div>
 
         <div id="project-feed" class="space-y-4">
             <div class="flex flex-col items-center justify-center py-12 text-center">
                 <div class="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mb-4 border border-white/10">
                     <i class="fas fa-folder-open text-gray-600 text-xl"></i>
-
-
-
-
                 </div>
                 <h4 class="text-white font-black uppercase italic tracking-tighter">No projects yet</h4>
                 <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest mt-1">Start a new workspace to see your activity here</p>
