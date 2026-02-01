@@ -22,167 +22,175 @@ const ActivityEngine = {
 ActivityEngine.track();
 const views = {
 'Overview': `
-<div class="space-y-8 animate-in">
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-        <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-blue-500/30 transition-all">
-            <div class="flex items-center gap-4 relative z-10">
-                <div class="w-12 h-12 bg-blue-600/10 rounded-2xl flex items-center justify-center border border-blue-500/20">
-                    <i class="fas fa-code-branch text-blue-500"></i>
+<div class="space-y-10 animate-in fade-in duration-700">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="group relative overflow-hidden rounded-[2.5rem] border border-white/10 bg-gradient-to-br from-[#0a0f25] to-[#050b1d] p-7 transition-all duration-500 hover:border-blue-500/50 hover:shadow-[0_0_30px_-10px_rgba(59,130,246,0.3)]">
+            <div class="relative z-10 flex items-center gap-5">
+                <div class="flex h-14 w-14 items-center justify-center rounded-2xl border border-blue-500/30 bg-blue-500/10 shadow-[inset_0_0_15px_rgba(59,130,246,0.2)] transition-transform duration-500 group-hover:scale-110">
+                    <i class="fas fa-code-branch text-2xl text-blue-400"></i>
                 </div>
                 <div>
-                    <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Projects</p>
-                    <h3 id="projectCount" class="text-3xl font-black text-white mt-1">0</h3>
+                    <p class="text-[11px] font-black uppercase tracking-[0.2em] text-blue-400/60"> Projects</p>
+                    <h3 id="projectCount" class="mt-1 text-4xl font-black tracking-tighter text-white">0</h3>
                 </div>
             </div>
-            <i class="fas fa-project-diagram absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-blue-500/[0.05] transition-all"></i>
+            <div class="absolute -right-6 -bottom-6 opacity-[0.03] transition-all duration-700 group-hover:scale-110 group-hover:opacity-[0.08] group-hover:text-blue-500">
+                <i class="fas fa-project-diagram text-[10rem] rotate-12"></i>
+            </div>
         </div>
 
-        <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-purple-500/30 transition-all">
-            <div class="flex items-center gap-4 relative z-10">
-                <div class="w-12 h-12 bg-purple-600/10 rounded-2xl flex items-center justify-center border border-purple-500/20">
-                    <i class="fas fa-calendar-alt text-purple-500"></i>
+        <div class="group relative overflow-hidden rounded-[2.5rem] border border-white/10 bg-gradient-to-br from-[#0a0f25] to-[#050b1d] p-7 transition-all duration-500 hover:border-purple-500/50 hover:shadow-[0_0_30px_-10px_rgba(168,85,247,0.3)]">
+            <div class="relative z-10 flex items-center gap-5">
+                <div class="flex h-14 w-14 items-center justify-center rounded-2xl border border-purple-500/30 bg-purple-500/10 shadow-[inset_0_0_15px_rgba(168,85,247,0.2)] transition-transform duration-500 group-hover:scale-110">
+                    <i class="fas fa-calendar-alt text-2xl text-purple-400"></i>
                 </div>
                 <div>
-                    <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Semester</p>
-                    <h3 id="semesterVal" class="text-3xl font-black text-white mt-1">01</h3>
+                    <p class="text-[11px] font-black uppercase tracking-[0.2em] text-purple-400/60">Semester</p>
+                    <h3 id="semesterVal" class="mt-1 text-4xl font-black tracking-tighter text-white">000</h3>
                 </div>
             </div>
-            <i class="fas fa-graduation-cap absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-purple-500/[0.05] transition-all"></i>
+            <div class="absolute -right-6 -bottom-6 opacity-[0.03] transition-all duration-700 group-hover:scale-110 group-hover:opacity-[0.08] group-hover:text-purple-500">
+                <i class="fas fa-graduation-cap text-[10rem] rotate-12"></i>
+            </div>
         </div>
 
-        <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-green-500/30 transition-all">
-            <div class="flex items-center gap-4 relative z-10">
-                <div class="w-12 h-12 bg-green-600/10 rounded-2xl flex items-center justify-center border border-green-500/20">
-                    <i class="fas fa-layer-group text-green-500"></i>
+        <div class="group relative overflow-hidden rounded-[2.5rem] border border-white/10 bg-gradient-to-br from-[#0a0f25] to-[#050b1d] p-7 transition-all duration-500 hover:border-cyan-500/50 hover:shadow-[0_0_30px_-10px_rgba(6,182,212,0.3)]">
+            <div class="relative z-10 flex items-center gap-5">
+                <div class="flex h-14 w-14 items-center justify-center rounded-2xl border border-cyan-500/30 bg-cyan-500/10 shadow-[inset_0_0_15px_rgba(6,182,212,0.2)] transition-transform duration-500 group-hover:scale-110">
+                    <i class="fas fa-layer-group text-2xl text-cyan-400"></i>
                 </div>
                 <div>
-                    <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Level</p>
-                    <h3 id="dash-level-val" class="text-3xl font-black text-white mt-1">000</h3>
+                    <p class="text-[11px] font-black uppercase tracking-[0.2em] text-cyan-400/60">Level</p>
+                    <h3 id="dash-level-val" class="mt-1 text-4xl font-black tracking-tighter text-white">000</h3>
                 </div>
             </div>
-            <i class="fas fa-chart-line absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-green-500/[0.05] transition-all"></i>
+            <div class="absolute -right-6 -bottom-6 opacity-[0.03] transition-all duration-700 group-hover:scale-110 group-hover:opacity-[0.08] group-hover:text-cyan-500">
+                <i class="fas fa-chart-line text-[10rem] rotate-12"></i>
+            </div>
         </div>
     </div>
-    
-   <div class="bg-[#050b1d] border border-white/5 p-8 rounded-[2.5rem] relative overflow-hidden group transition-all duration-500 hover:border-emerald-500/20">
-    <div class="flex justify-between items-start mb-12">
-        <div>
-            <h3 class="text-lg font-black text-white italic uppercase tracking-tighter">Order status</h3>
-            <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest mt-1">Live Tracking</p>
+
+    <div class="group relative overflow-hidden rounded-[3rem] border border-white/5 bg-[#050b1d] p-8 transition-all duration-700 hover:border-emerald-500/20">
+        <div class="flex justify-between items-center mb-10">
+            <div>
+                <h3 class="text-2xl font-black text-white italic uppercase tracking-tighter">System Core <span class="text-emerald-500">.</span></h3>
+                <div class="flex items-center gap-2 mt-2">
+                    <span class="relative flex h-2 w-2">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                    </span>
+                    <p class="text-[10px] text-gray-400 font-bold uppercase tracking-[0.3em]">Live Order Stream</p>
+                </div>
+            </div>
+            
+            <div class="flex gap-1.5 items-end h-8">
+                <div class="w-1 bg-emerald-500/40 h-3 rounded-full animate-[bounce_1s_infinite]"></div>
+                <div class="w-1 bg-emerald-500 h-6 rounded-full animate-[bounce_1.2s_infinite]"></div>
+                <div class="w-1 bg-emerald-500/60 h-4 rounded-full animate-[bounce_0.8s_infinite]"></div>
+            </div>
         </div>
         
-        <div class="flex gap-[3px] items-end h-5 opacity-20 group-hover:opacity-100 transition-opacity">
-            <div class="w-[3px] bg-emerald-500 h-2 rounded-full"></div>
-            <div class="w-[3px] bg-emerald-500 h-4 rounded-full"></div>
-            <div class="w-[3px] bg-emerald-500 h-3 rounded-full"></div>
+        <div class="relative w-full h-[320px] rounded-3xl bg-black/40 border border-white/5 backdrop-blur-sm overflow-hidden">
+            <div class="absolute inset-0 flex flex-col items-center justify-center z-10">
+                <div class="w-20 h-20 mb-4 rounded-full bg-emerald-500/5 flex items-center justify-center border border-emerald-500/10 group-hover:border-emerald-500/30 transition-all duration-1000">
+                    <i class="fas fa-satellite-dish text-emerald-500/20 group-hover:text-emerald-500 group-hover:animate-pulse"></i>
+                </div>
+                <span class="text-[10px] font-black text-emerald-500/40 uppercase tracking-[0.4em]">Awaiting Uplink...</span>
+            </div>
+            
+            <canvas id="orderStatusChart" class="relative z-0"></canvas>
         </div>
     </div>
-    
-    <div class="relative w-full h-[280px]">
-        <div class="absolute inset-0 flex flex-col items-center justify-center z-10 pointer-events-none">
-            <div class="w-12 h-12 mb-3 rounded-full bg-emerald-500/5 flex items-center justify-center border border-emerald-500/10">
-                <i class="fas fa-layer-group text-emerald-500/20"></i>
-            </div>
-            <span class="text-[10px] font-black text-gray-600 uppercase tracking-[0.2em]">System: No Data Recorded</span>
-        </div>
-        
-        <canvas id="orderStatusChart"></canvas>
-    </div>
 
-    <i class="fas fa-chart-area absolute -bottom-6 -right-6 text-white/[0.02] text-9xl rotate-12 group-hover:text-emerald-500/[0.03] transition-all duration-700"></i>
-</div>
-
-
-
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-        <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-blue-500/30 transition-all">
-            <div class="flex items-center gap-4 relative z-10">
-                <div class="w-12 h-12 bg-blue-600/10 rounded-2xl flex items-center justify-center border border-blue-500/20">
-                    <i class="fas fa-handshake text-blue-500"></i>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="group relative overflow-hidden rounded-[2.5rem] border border-white/10 bg-[#050b1d] p-7 transition-all duration-500 hover:border-indigo-500/40">
+            <div class="relative z-10 flex items-center gap-5">
+                <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400">
+                    <i class="fas fa-handshake text-2xl"></i>
                 </div>
                 <div>
-                    <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Collab</p>
-                    <h3 id="collabCount" class="text-3xl font-black text-white mt-1">0</h3>
+                    <p class="text-[11px] font-black uppercase tracking-widest text-gray-500">Collab</p>
+                    <h3 id="collabCount" class="mt-1 text-3xl font-black text-white">0</h3>
                 </div>
             </div>
-            <i class="fas fa-users absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-blue-500/[0.05] transition-all"></i>
+            <i class="fas fa-users absolute -right-4 -bottom-4 text-8xl text-white/[0.02] transition-all group-hover:text-indigo-500/[0.05] rotate-12"></i>
         </div>
 
-        <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-yellow-500/30 transition-all">
-            <div class="flex items-center gap-4 relative z-10">
-                <div class="w-12 h-12 bg-yellow-600/10 rounded-2xl flex items-center justify-center border border-yellow-500/20">
-                    <i class="fas fa-medal text-yellow-500"></i>
+        <div class="group relative overflow-hidden rounded-[2.5rem] border border-white/10 bg-[#050b1d] p-7 transition-all duration-500 hover:border-amber-500/40">
+            <div class="relative z-10 flex items-center gap-5">
+                <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-400">
+                    <i class="fas fa-medal text-2xl"></i>
                 </div>
                 <div>
-                    <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Rank</p>
-                    <h3 class="text-3xl font-black text-white mt-1"><span id="rankVal">#0</span></h3>
+                    <p class="text-[11px] font-black uppercase tracking-widest text-gray-500">Rank</p>
+                    <h3 class="mt-1 text-3xl font-black text-white italic"><span id="rankVal">#0</span></h3>
                 </div>
             </div>
-            <i class="fas fa-crown absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-yellow-500/[0.05] transition-all"></i>
+            <i class="fas fa-crown absolute -right-4 -bottom-4 text-8xl text-white/[0.02] transition-all group-hover:text-amber-500/[0.05] rotate-12"></i>
         </div>
 
-        <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-yellow-500/30 transition-all">
-            <div class="flex items-center gap-4 relative z-10">
-                <div class="w-12 h-12 bg-yellow-600/10 rounded-2xl flex items-center justify-center border border-yellow-500/20">
-                    <i class="fas fa-star text-yellow-500"></i>
+        <div class="group relative overflow-hidden rounded-[2.5rem] border border-white/10 bg-[#050b1d] p-7 transition-all duration-500 hover:border-yellow-500/40">
+            <div class="relative z-10 flex items-center gap-5">
+                <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-yellow-500/10 border border-yellow-500/20 text-yellow-400">
+                    <i class="fas fa-star text-2xl"></i>
                 </div>
                 <div>
-                    <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">XT Points</p>
-                    <h3 class="text-3xl font-black text-white mt-1">
+                    <p class="text-[11px] font-black uppercase tracking-widest text-gray-500">XT Gifts</p>
+                    <h3 class="mt-1 text-3xl font-black text-white">
                         <span id="dash-xp-val">0</span> 
-                        <span class="text-xs text-yellow-500/50 uppercase">XP</span>
+                        <span class="text-xs text-yellow-500 font-black ml-1">XP</span>
                     </h3>
                 </div>
             </div>
-            <i class="fas fa-trophy absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-yellow-500/[0.05] transition-all"></i>
+            <i class="fas fa-trophy absolute -right-4 -bottom-4 text-8xl text-white/[0.02] transition-all group-hover:text-yellow-500/[0.05] rotate-12"></i>
         </div>
     </div>
 
-    <div class="bg-[#050b1d] border border-white/5 p-8 rounded-[2.5rem] relative overflow-hidden">
-        <h3 class="text-lg font-black text-white italic uppercase tracking-tighter mb-4">Activity Nebula</h3>
-        <div class="relative w-full h-[250px] bg-black/20 rounded-2xl border border-white/5">
+    <div class="group relative overflow-hidden rounded-[3rem] border border-white/5 bg-[#050b1d] p-8 transition-all duration-700 hover:border-blue-500/20">
+        <h3 class="text-lg font-black text-white italic uppercase tracking-[0.3em] mb-6">Activity Nebula <span class="text-blue-500 text-2xl">.</span></h3>
+        <div class="relative w-full h-[280px] bg-black/40 rounded-[2rem] border border-white/5 shadow-inner">
             <canvas id="nebula" class="w-full h-full"></canvas>
         </div>
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-        <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-orange-500/30 transition-all">
-            <div class="flex items-center gap-4 relative z-10">
-                <div class="w-12 h-12 bg-orange-600/10 rounded-2xl flex items-center justify-center border border-orange-500/20">
-                    <i class="fas fa-fire text-orange-500"></i>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="group relative overflow-hidden rounded-[2.5rem] border border-white/10 bg-[#050b1d] p-7 transition-all duration-500 hover:border-orange-600/50">
+            <div class="relative z-10 flex items-center gap-5">
+                <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-orange-600/10 border border-orange-500/20 text-orange-500">
+                    <i class="fas fa-fire text-2xl"></i>
                 </div>
                 <div>
-                    <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Streaks</p>
-                    <h3 id="streakCount" class="text-3xl font-black text-white mt-1">0</h3>
+                    <p class="text-[11px] font-black uppercase tracking-widest text-gray-500">Streaks</p>
+                    <h3 id="streakCount" class="mt-1 text-3xl font-black text-white">0</h3>
                 </div>
             </div>
-            <i class="fas fa-bolt absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-orange-500/[0.05] transition-all"></i>
+            <i class="fas fa-bolt absolute -right-4 -bottom-4 text-8xl text-white/[0.02] transition-all group-hover:text-orange-500/[0.05] rotate-12"></i>
         </div>
 
-        <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-cyan-500/30 transition-all">
-            <div class="flex items-center gap-4 relative z-10">
-                <div class="w-12 h-12 bg-cyan-600/10 rounded-2xl flex items-center justify-center border border-cyan-500/20">
-                    <i class="fas fa-rocket text-cyan-500"></i>
+        <div class="group relative overflow-hidden rounded-[2.5rem] border border-white/10 bg-[#050b1d] p-7 transition-all duration-500 hover:border-cyan-400/50">
+            <div class="relative z-10 flex items-center gap-5">
+                <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-cyan-600/10 border border-cyan-500/20 text-cyan-400">
+                    <i class="fas fa-rocket text-2xl"></i>
                 </div>
                 <div>
-                    <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Deployed</p>
-                    <h3 id="deployCount" class="text-3xl font-black text-white mt-1">0</h3>
+                    <p class="text-[11px] font-black uppercase tracking-widest text-gray-500">Deployed</p>
+                    <h3 id="deployCount" class="mt-1 text-3xl font-black text-white">0</h3>
                 </div>
             </div>
-            <i class="fas fa-cloud-upload-alt absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-cyan-500/[0.05] transition-all"></i>
+            <i class="fas fa-cloud-upload-alt absolute -right-4 -bottom-4 text-8xl text-white/[0.02] transition-all group-hover:text-cyan-500/[0.05] rotate-12"></i>
         </div>
 
-        <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-emerald-500/30 transition-all">
-            <div class="flex items-center gap-4 relative z-10">
-                <div class="w-12 h-12 bg-emerald-600/10 rounded-2xl flex items-center justify-center border border-emerald-500/20">
-                    <i class="fas fa-briefcase text-emerald-500"></i>
+        <div class="group relative overflow-hidden rounded-[2.5rem] border border-white/10 bg-[#050b1d] p-7 transition-all duration-500 hover:border-emerald-400/50">
+            <div class="relative z-10 flex items-center gap-5">
+                <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-600/10 border border-emerald-500/20 text-emerald-400">
+                    <i class="fas fa-briefcase text-2xl"></i>
                 </div>
                 <div>
-                    <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Gig</p>
-                    <h3 id="gigCount" class="text-3xl font-black text-white mt-1">0</h3>
+                    <p class="text-[11px] font-black uppercase tracking-widest text-gray-500"> Gigs</p>
+                    <h3 id="gigCount" class="mt-1 text-3xl font-black text-white">0</h3>
                 </div>
             </div>
-            <i class="fas fa-money-bill-wave absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-emerald-500/[0.05] transition-all"></i>
+            <i class="fas fa-money-bill-wave absolute -right-4 -bottom-4 text-8xl text-white/[0.02] transition-all group-hover:text-emerald-500/[0.05] rotate-12"></i>
         </div>
     </div>
 </div>
