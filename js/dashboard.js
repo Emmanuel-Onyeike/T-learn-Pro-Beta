@@ -1114,6 +1114,9 @@ const curriculumData = {
 /**
  * 2. INITIALIZATION
  */
+/**
+ * 2. INITIALIZATION (Updated with Analytics)
+ */
 function initLMS() {
     const app = document.getElementById('lesson-app-root');
     if (!app) return;
@@ -1121,10 +1124,10 @@ function initLMS() {
     app.innerHTML = `
         <div class="space-y-8 animate-in fade-in duration-700 bg-[#050b1d] p-4 sm:p-8 min-h-screen">
             <div class="flex justify-center sticky top-0 z-50 py-4 backdrop-blur-md">
-                <div class="bg-white/5 border border-white/10 p-1.5 rounded-2xl flex gap-1 shadow-2xl">
-                    ${['Courses', 'Exam', 'Result'].map(tab => `
+                <div class="bg-white/5 border border-white/10 p-1.5 rounded-2xl flex flex-wrap justify-center gap-1 shadow-2xl">
+                    ${['Courses', 'Exam', 'Result', 'Analytics'].map(tab => `
                         <button id="btn-${tab}" onclick="switchLessonSubTab('${tab}')" 
-                            class="lesson-nav-btn px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all">
+                            class="lesson-nav-btn px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all text-white/50">
                             ${tab}
                         </button>
                     `).join('')}
@@ -1149,6 +1152,78 @@ function initLMS() {
     switchLessonSubTab('Courses');
 }
 
+/**
+ * 3. SEPARATED TAB LOGIC
+ */
+function switchLessonSubTab(tab) {
+    const contentArea = document.getElementById('lesson-sub-content');
+    const buttons = document.querySelectorAll('.lesson-nav-btn');
+
+    // Update Button UI
+    buttons.forEach(btn => {
+        const isActive = btn.id === `btn-${tab}`;
+        btn.classList.toggle('bg-blue-600', isActive);
+        btn.classList.toggle('text-white', isActive);
+        btn.classList.toggle('text-white/50', !isActive);
+    });
+
+    // Handle Content Separately
+    switch(tab) {
+        case 'Courses':
+            contentArea.innerHTML = `
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 animate-in slide-in-from-bottom-8">
+                    ${Object.keys(curriculumData).map(name => `
+                        <div onclick="openTopics('${name}')" class="group cursor-pointer p-8 bg-white/5 border border-white/10 rounded-[2.5rem] hover:bg-blue-600 transition-all">
+                            <i class="fab ${curriculumData[name].icon} text-3xl text-white mb-4"></i>
+                            <h4 class="text-white font-black text-2xl uppercase">${name}</h4>
+                            <p class="text-white/40 text-[10px] uppercase font-bold mt-2">Professional Curriculum</p>
+                        </div>
+                    `).join('')}
+                </div>`;
+            break;
+
+        case 'Exam':
+            contentArea.innerHTML = renderPlaceholder(
+                'fa-file-signature', 
+                'Exam Terminal', 
+                'No active assessments. Complete modules to unlock final exams.'
+            );
+            break;
+
+        case 'Result':
+            contentArea.innerHTML = renderPlaceholder(
+                'fa-award', 
+                'Certification Vault', 
+                'Your transcripts and certificates will appear here after grading.'
+            );
+            break;
+
+        case 'Analytics':
+            contentArea.innerHTML = renderPlaceholder(
+                'fa-chart-pie', 
+                'Performance Metrics', 
+                'Data synchronization in progress. Start a lesson to track growth.'
+            );
+            break;
+    }
+}
+
+/**
+ * UI HELPER: Distinctive Empty States
+ */
+function renderPlaceholder(icon, title, subtitle) {
+    return `
+        <div class="py-32 flex flex-col items-center justify-center animate-in fade-in zoom-in duration-500">
+            <div class="w-20 h-20 mb-6 bg-white/5 rounded-full flex items-center justify-center border border-white/10 shadow-xl">
+                <i class="fas ${icon} text-blue-500/40 text-2xl"></i>
+            </div>
+            <h3 class="text-white/40 font-black uppercase tracking-[0.4em] text-lg">${title}</h3>
+            <p class="text-white/10 text-[9px] uppercase font-bold mt-2 tracking-widest max-w-xs text-center leading-loose">
+                ${subtitle}
+            </p>
+        </div>
+    `;
+}
 /**
  * 3. COURSE GRID
  */
