@@ -201,57 +201,62 @@ const views = {
     
     
 'Lessons': `
-    <div class="space-y-6 animate-in">
-        <div class="flex justify-center mb-8">
-            <div class="bg-[#050b1d] border border-white/5 p-2 rounded-2xl flex gap-1 overflow-x-auto no-scrollbar">
-                ${['Courses', 'Exam', 'Result', 'Semester', 'Analytics'].map(tab => `
-                    <button onclick="switchLessonSubTab('${tab}')" 
-                        class="lesson-nav-btn px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all
-                        ${tab === 'Courses' ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'text-gray-500 hover:text-white hover:bg-white/5'}">
-                        ${tab}
-                    </button>
-                `).join('')}
-            </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-            <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-green-500/30 transition-all">
-                <div class="flex items-center gap-4 relative z-10">
-                    <div class="w-12 h-12 bg-green-600/10 rounded-2xl flex items-center justify-center border border-green-500/20">
-                        <i class="fas fa-layer-group text-green-500"></i>
-                    </div>
-                    <div>
-                        <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Level</p>
-                        <h3 id="lesson-level-val" class="text-3xl font-black text-white mt-1">000</h3>
-                    </div>
-                </div>
-                <i class="fas fa-chart-line absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-green-500/[0.05] transition-all"></i>
-            </div>
-
-            <div class="bg-[#050b1d] border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group hover:border-blue-400/30 transition-all">
-                <div class="flex items-center gap-4 relative z-10">
-                    <div class="w-12 h-12 bg-blue-400/10 rounded-2xl flex items-center justify-center border border-blue-400/20">
-                        <i class="fas fa-graduation-cap text-blue-400"></i>
-                    </div>
-                    <div>
-                        <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Semester</p>
-                        <h3 id="lesson-semester-val" class="text-3xl font-black text-white mt-1">0</h3>
-                    </div>
-                </div>
-                <i class="fas fa-graduation-cap absolute -bottom-4 -right-4 text-white/[0.02] text-8xl rotate-12 group-hover:text-blue-400/[0.05] transition-all"></i>
-            </div>
-        </div>
-
-        <div id="lesson-sub-content">
-            <div class="bg-[#050b1d] border border-white/5 p-8 rounded-[2.5rem] text-center">
-                <h3 class="text-xl font-black text-white uppercase tracking-tighter mb-4 italic">Ready to advance?</h3>
-                <p class="text-gray-500 text-[10px] font-bold uppercase tracking-widest mb-6">Begin your beginner course to unlock HTML, CSS, and more.</p>
-                <button onclick="startBeginnerCourse()" class="px-10 py-4 bg-white text-black rounded-2xl text-[11px] font-black uppercase tracking-[0.2em] hover:bg-blue-500 hover:text-white transition-all">
-                    Begin Course
+  <div class="space-y-8 animate-in fade-in duration-700">
+    <div class="flex justify-center sticky top-0 z-50 py-4 backdrop-blur-md">
+        <div class="bg-white/5 border border-white/10 p-1.5 rounded-2xl flex gap-1 overflow-x-auto no-scrollbar shadow-2xl backdrop-blur-xl">
+            ${['Courses', 'Exam', 'Result', 'Semester', 'Analytics'].map(tab => `
+                <button id="btn-${tab}" onclick="switchLessonSubTab('${tab}')" 
+                    class="lesson-nav-btn px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300
+                    ${tab === 'Courses' ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/40' : 'text-gray-400 hover:text-white hover:bg-white/5'}">
+                    ${tab}
                 </button>
-            </div>
+            `).join('')}
         </div>
     </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-gradient-to-br from-[#0a1128] to-[#050b1d] border border-white/5 p-8 rounded-[2.5rem] relative overflow-hidden group hover:border-green-500/50 transition-all duration-500 shadow-2xl">
+            <div class="flex items-center gap-6 relative z-10">
+                <div class="w-16 h-16 bg-green-500/10 rounded-3xl flex items-center justify-center border border-green-500/20 group-hover:scale-110 transition-transform">
+                    <i class="fas fa-layer-group text-2xl text-green-500"></i>
+                </div>
+                <div>
+                    <p class="text-[10px] font-black text-green-500/60 uppercase tracking-[0.2em]">Current Level</p>
+                    <h3 id="lesson-level-val" class="text-4xl font-black text-white mt-1 tabular-nums">000</h3>
+                </div>
+            </div>
+            <i class="fas fa-chart-line absolute -bottom-6 -right-6 text-white/[0.03] text-9xl rotate-12 group-hover:text-green-500/[0.08] group-hover:rotate-0 transition-all duration-700"></i>
+        </div>
+
+        <div class="bg-gradient-to-br from-[#0a1128] to-[#050b1d] border border-white/5 p-8 rounded-[2.5rem] relative overflow-hidden group hover:border-blue-400/50 transition-all duration-500 shadow-2xl">
+            <div class="flex items-center gap-6 relative z-10">
+                <div class="w-16 h-16 bg-blue-400/10 rounded-3xl flex items-center justify-center border border-blue-400/20 group-hover:scale-110 transition-transform">
+                    <i class="fas fa-graduation-cap text-2xl text-blue-400"></i>
+                </div>
+                <div>
+                    <p class="text-[10px] font-black text-blue-400/60 uppercase tracking-[0.2em]">Semester</p>
+                    <h3 id="lesson-semester-val" class="text-4xl font-black text-white mt-1 tabular-nums">0</h3>
+                </div>
+            </div>
+            <i class="fas fa-university absolute -bottom-6 -right-6 text-white/[0.03] text-9xl rotate-12 group-hover:text-blue-400/[0.08] group-hover:rotate-0 transition-all duration-700"></i>
+        </div>
+    </div>
+
+    <div id="lesson-sub-content" class="min-h-[300px] transition-all duration-500">
+        <div class="bg-white/[0.02] border border-white/5 p-12 rounded-[3rem] text-center backdrop-blur-sm">
+            <div class="inline-block p-4 rounded-full bg-blue-500/10 mb-6">
+                <i class="fas fa-rocket text-blue-500 text-2xl"></i>
+            </div>
+            <h3 class="text-3xl font-black text-white uppercase tracking-tighter mb-4 italic">Ready to advance?</h3>
+            <p class="text-gray-400 text-xs font-medium uppercase tracking-widest mb-8 max-w-md mx-auto leading-relaxed">
+                Begin your beginner course to unlock <span class="text-blue-400">HTML</span>, <span class="text-blue-400">CSS</span>, and professional workflows.
+            </p>
+            <button onclick="startBeginnerCourse()" class="px-12 py-5 bg-white text-black rounded-2xl text-[12px] font-black uppercase tracking-[0.3em] hover:bg-blue-600 hover:text-white hover:scale-105 active:scale-95 transition-all shadow-xl shadow-white/5">
+                Begin Course
+            </button>
+        </div>
+    </div>
+</div>
 `,
 
 
