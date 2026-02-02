@@ -1073,10 +1073,6 @@ function closePaymentModal() {
 
 
 ////// LESSON ONLY//////
-
-/**
- * Switch between Lesson sub-tabs
- */
 /**
  * 1. ENHANCED CURRICULUM DATA
  */
@@ -1084,8 +1080,8 @@ const curriculumData = {
     'HTML': {
         icon: 'fa-html5',
         topics: [
-            { title: 'Semantic Structure', theory: 'Semantic HTML tags like &lt;header&gt;, &lt;main&gt;, and &lt;section&gt; provide meaning to the web page structure.', challenge: 'Create a semantic layout with a header and a main section.', snippet: '<header>\n  <h1>My Site</h1>\n</header>\n<main>\n  <p>Hello World</p>\n</main>' },
-            { title: 'Forms & Inputs', theory: 'Forms allow users to enter data. Use &lt;label&gt; for accessibility.', challenge: 'Create a text input with a placeholder.', snippet: '<label for="name">Name:</label>\n<input type="text" id="name" placeholder="Enter Name">' }
+            { title: 'Semantic Structure', theory: 'Semantic HTML tags like <header>, <main>, and <section> provide meaning to the web page structure.', challenge: 'Create a semantic layout with a header and a main section.', snippet: '<header>\n  <h1>My Site</h1>\n</header>\n<main>\n  <p>Hello World</p>\n</main>' },
+            { title: 'Forms & Inputs', theory: 'Forms allow users to enter data. Use <label> for accessibility.', challenge: 'Create a text input with a placeholder.', snippet: '<label for="name">Name:</label>\n<input type="text" id="name" placeholder="Enter Name">' }
         ]
     },
     'CSS': {
@@ -1113,12 +1109,6 @@ const curriculumData = {
 
 /**
  * 2. INITIALIZATION
- */
-/**
- * 2. INITIALIZATION (Updated with Analytics)
- */
-/**
- * 2. INITIALIZATION (Updated with Analytics)
  */
 function initLMS() {
     const app = document.getElementById('lesson-app-root');
@@ -1156,7 +1146,7 @@ function initLMS() {
 }
 
 /**
- * 3. SEPARATED TAB LOGIC
+ * 3. TAB NAVIGATION
  */
 function switchLessonSubTab(tab) {
     const contentArea = document.getElementById('lesson-sub-content');
@@ -1170,171 +1160,156 @@ function switchLessonSubTab(tab) {
         btn.classList.toggle('text-white/50', !isActive);
     });
 
-    // Handle Content Separately
+    // Content Switcher
     switch(tab) {
         case 'Courses':
             contentArea.innerHTML = `
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 animate-in slide-in-from-bottom-8">
                     ${Object.keys(curriculumData).map(name => `
                         <div onclick="openTopics('${name}')" class="group cursor-pointer p-8 bg-white/5 border border-white/10 rounded-[2.5rem] hover:bg-blue-600 transition-all">
-                            <i class="fab ${curriculumData[name].icon} text-3xl text-white mb-4"></i>
+                            <i class="fab ${curriculumData[name].icon} text-3xl text-white mb-4 group-hover:scale-110 transition-transform"></i>
                             <h4 class="text-white font-black text-2xl uppercase">${name}</h4>
                             <p class="text-white/40 text-[10px] uppercase font-bold mt-2">Professional Curriculum</p>
                         </div>
                     `).join('')}
                 </div>`;
             break;
-
         case 'Exam':
-            contentArea.innerHTML = renderPlaceholder(
-                'fa-file-signature', 
-                'Exam Terminal', 
-                'No active assessments. Complete modules to unlock final exams.'
-            );
+            contentArea.innerHTML = renderPlaceholder('fa-file-signature', 'Exam Terminal', 'No active assessments available.');
             break;
-
         case 'Result':
-            contentArea.innerHTML = renderPlaceholder(
-                'fa-award', 
-                'Certification Vault', 
-                'Your transcripts and certificates will appear here after grading.'
-            );
+            contentArea.innerHTML = renderPlaceholder('fa-award', 'Certification Vault', 'Complete modules to view results.');
             break;
-
         case 'Analytics':
-            contentArea.innerHTML = renderPlaceholder(
-                'fa-chart-pie', 
-                'Performance Metrics', 
-                'Data synchronization in progress. Start a lesson to track growth.'
-            );
+            contentArea.innerHTML = renderPlaceholder('fa-chart-pie', 'Performance Metrics', 'Data is synced after lesson completion.');
             break;
     }
 }
 
-/**
- * UI HELPER: Distinctive Empty States
- */
 function renderPlaceholder(icon, title, subtitle) {
     return `
         <div class="py-32 flex flex-col items-center justify-center animate-in fade-in zoom-in duration-500">
-            <div class="w-20 h-20 mb-6 bg-white/5 rounded-full flex items-center justify-center border border-white/10 shadow-xl">
+            <div class="w-20 h-20 mb-6 bg-white/5 rounded-full flex items-center justify-center border border-white/10">
                 <i class="fas ${icon} text-blue-500/40 text-2xl"></i>
             </div>
             <h3 class="text-white/40 font-black uppercase tracking-[0.4em] text-lg">${title}</h3>
-            <p class="text-white/10 text-[9px] uppercase font-bold mt-2 tracking-widest max-w-xs text-center leading-loose">
+            <p class="text-white/10 text-[9px] uppercase font-bold mt-2 tracking-widest text-center">
                 ${subtitle}
             </p>
-        </div>
-    `;
-}
-
-//// course Grid
-function switchLessonSubTab(tab) {
-    const contentArea = document.getElementById('lesson-sub-content');
-    const buttons = document.querySelectorAll('.lesson-nav-btn');
-
-    buttons.forEach(btn => btn.classList.toggle('bg-blue-600', btn.id === `btn-${tab}`));
-
-    if (tab === 'Courses') {
-        contentArea.innerHTML = `
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 animate-in slide-in-from-bottom-8">
-                ${Object.keys(curriculumData).map(name => `
-                    <div onclick="openTopics('${name}')" class="group cursor-pointer p-8 bg-white/5 border border-white/10 rounded-[2.5rem] hover:bg-blue-600 transition-all">
-                        <i class="fab ${curriculumData[name].icon} text-3xl text-white mb-4"></i>
-                        <h4 class="text-white font-black text-2xl uppercase">${name}</h4>
-                        <p class="text-white/40 text-[10px] uppercase font-bold mt-2">Professional Curriculum</p>
-                    </div>
-                `).join('')}
-            </div>`;
-    } else {
-        contentArea.innerHTML = `<div class="py-20 text-center text-white/20 font-black uppercase tracking-widest">No Content in ${tab}</div>`;
-    }
+        </div>`;
 }
 
 /**
- * 4. TOPIC LIST
+ * 4. MODAL INTERACTIONS (Topics -> Detail -> Workspace)
  */
 function openTopics(courseName) {
     const title = document.getElementById('modal-title');
     const body = document.getElementById('modal-body');
+    const container = document.getElementById('modal-container');
+    
+    container.classList.replace('max-w-6xl', 'max-w-lg'); // Reset size if coming from workspace
     title.innerText = `${courseName} Modules`;
     
     const topics = curriculumData[courseName].topics;
     body.innerHTML = topics.map((t, i) => `
-        <div onclick="openTopicDetail('${courseName}', ${i})" class="p-5 mb-3 bg-white/5 border border-white/5 rounded-2xl flex justify-between items-center cursor-pointer hover:bg-blue-600 transition-all">
+        <div onclick="openTopicDetail('${courseName}', ${i})" class="p-5 mb-3 bg-white/5 border border-white/5 rounded-2xl flex justify-between items-center cursor-pointer hover:bg-blue-600 transition-all group">
             <span class="text-white font-black uppercase text-xs tracking-tight">${t.title}</span>
-            <span class="text-[9px] text-white/30 uppercase font-black">Level ${i+1}</span>
+            <span class="text-[9px] text-white/30 uppercase font-black group-hover:text-white">Level ${i+1}</span>
         </div>
     `).join('');
+    
     document.getElementById('global-modal').classList.remove('hidden');
 }
 
-/**
- * 5. TOPIC ALERT (CENTRAL MODAL)
- */
 function openTopicDetail(course, index) {
     const topic = curriculumData[course].topics[index];
     const body = document.getElementById('modal-body');
+    
     body.innerHTML = `
-        <div class="text-center py-4">
+        <div class="text-center py-4 animate-in fade-in slide-in-from-bottom-4">
             <div class="w-16 h-16 bg-blue-500/10 rounded-full flex items-center justify-center mx-auto mb-6 border border-blue-500/20">
                 <i class="fas fa-book-open text-blue-500 text-xl"></i>
             </div>
             <h3 class="text-white text-3xl font-black uppercase italic mb-2">${topic.title}</h3>
-            <p class="text-gray-400 text-[10px] font-bold uppercase tracking-[0.2em] mb-8 leading-relaxed">
+            <p class="text-gray-400 text-[10px] font-bold uppercase tracking-[0.2em] mb-8">
                 Unlock professional workflows for ${course}.
             </p>
-            <button onclick="launchWorkspace('${course}', ${index})" class="w-full py-5 bg-blue-600 text-white rounded-2xl font-black uppercase tracking-widest text-[10px]">Start Lesson</button>
+            <button onclick="launchWorkspace('${course}', ${index})" class="w-full py-5 bg-blue-600 text-white rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-blue-500 shadow-lg shadow-blue-600/20 transition-all">
+                Start Lesson
+            </button>
         </div>
     `;
 }
 
-/**
- * 6. WORKSPACE (W3SCHOOLS STYLE)
- */
 function launchWorkspace(course, index) {
     const container = document.getElementById('modal-container');
     const body = document.getElementById('modal-body');
     const topic = curriculumData[course].topics[index];
 
+    // Expand modal for IDE view
     container.classList.replace('max-w-lg', 'max-w-6xl');
     
     body.innerHTML = `
-        <div class="grid lg:grid-cols-12 gap-8 h-[60vh]">
+        <div class="grid lg:grid-cols-12 gap-8 h-[60vh] animate-in zoom-in-95 duration-300">
             <div class="lg:col-span-5 overflow-y-auto no-scrollbar bg-white/5 p-8 rounded-[2rem] border border-white/5">
-                <h3 class="text-white font-black text-xl uppercase mb-4">Learn</h3>
-                <p class="text-gray-400 text-sm mb-6">${topic.theory}</p>
-                <h3 class="text-white font-black text-xl uppercase mb-4">Task</h3>
-                <p class="text-blue-400 text-sm font-bold italic">${topic.challenge}</p>
+                <div class="flex items-center gap-3 mb-6">
+                    <span class="px-3 py-1 bg-blue-600 text-[8px] font-black text-white rounded-full uppercase">Theory</span>
+                </div>
+                <h3 class="text-white font-black text-xl uppercase mb-4">${topic.title}</h3>
+                <p class="text-gray-400 text-sm leading-relaxed mb-8">${topic.theory}</p>
+                <div class="p-6 bg-blue-500/5 border border-blue-500/20 rounded-2xl">
+                    <h4 class="text-blue-400 font-black text-xs uppercase mb-2">Challenge</h4>
+                    <p class="text-white text-sm italic">${topic.challenge}</p>
+                </div>
             </div>
             <div class="lg:col-span-7 flex flex-col bg-black/40 rounded-[2rem] border border-white/5 overflow-hidden">
-                <div class="px-6 py-4 bg-white/5 text-[10px] font-black text-white/30 tracking-widest">EDITOR</div>
+                <div class="px-6 py-4 bg-white/5 flex justify-between items-center">
+                    <span class="text-[10px] font-black text-white/30 tracking-widest uppercase">Console Editor</span>
+                    <span class="text-[10px] text-green-500 font-mono italic">main.${course.toLowerCase()}</span>
+                </div>
                 <textarea id="code-editor" class="flex-grow bg-transparent p-8 font-mono text-sm text-green-400 outline-none resize-none" spellcheck="false">${topic.snippet}</textarea>
                 <div class="p-6 bg-white/5 border-t border-white/5">
-                    <button onclick="triggerExam()" class="w-full py-4 bg-white text-black rounded-xl font-black uppercase text-[10px] hover:bg-green-500 hover:text-white transition-all">Submit Solution</button>
+                    <button onclick="triggerSuccess()" class="w-full py-4 bg-white text-black rounded-xl font-black uppercase text-[10px] hover:bg-green-500 hover:text-white transition-all shadow-xl">
+                        Submit Solution
+                    </button>
                 </div>
             </div>
         </div>
     `;
 }
 
-function triggerExam() {
+/**
+ * 5. FEEDBACK & CLOSURE
+ */
+function triggerSuccess() {
     const body = document.getElementById('modal-body');
+    const container = document.getElementById('modal-container');
+    
+    // Bring back to smaller size for the alert
+    container.classList.replace('max-w-6xl', 'max-w-lg');
+    
     body.innerHTML = `
-        <div class="text-center py-20">
-            <i class="fas fa-check-circle text-green-500 text-6xl mb-6"></i>
-            <h2 class="text-white text-4xl font-black uppercase mb-2">Success!</h2>
-            <p class="text-gray-500 text-[10px] font-black uppercase tracking-[0.3em] mb-12">Solution Verified • Credits Awarded</p>
-            <button onclick="closeModal()" class="px-12 py-5 bg-white text-black rounded-2xl font-black uppercase text-[10px]">Back to Dashboard</button>
+        <div class="text-center py-12 animate-in zoom-in duration-500">
+            <div class="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                <i class="fas fa-check-circle text-green-500 text-4xl"></i>
+            </div>
+            <h2 class="text-white text-4xl font-black uppercase mb-2 italic">Success!</h2>
+            <p class="text-gray-500 text-[10px] font-black uppercase tracking-[0.3em] mb-12">Solution Verified • XP Awarded</p>
+            <button onclick="closeModal()" class="px-12 py-5 bg-white text-black rounded-2xl font-black uppercase text-[10px] hover:invert transition-all">
+                Back to Dashboard
+            </button>
         </div>
     `;
 }
 
 function closeModal() {
-    document.getElementById('global-modal').classList.add('hidden');
+    const modal = document.getElementById('global-modal');
+    modal.classList.add('hidden');
+    // Reset container size for next use
     setTimeout(() => {
         document.getElementById('modal-container').classList.replace('max-w-6xl', 'max-w-lg');
     }, 300);
 }
 
+// Start the App
 initLMS();
