@@ -1069,69 +1069,106 @@ function closePaymentModal() {
 
 ////// LESSON ONLY//////
 
+/**
+ * Switch between Lesson sub-tabs
+ */
 function switchLessonSubTab(tab) {
     const contentArea = document.getElementById('lesson-sub-content');
     const buttons = document.querySelectorAll('.lesson-nav-btn');
 
-    // 1. Update Button States
+    // Update Nav Buttons
     buttons.forEach(btn => {
-        if (btn.id === `btn-${tab}`) {
-            btn.classList.add('bg-blue-600', 'text-white', 'shadow-lg', 'shadow-blue-600/40');
-            btn.classList.remove('text-gray-400', 'hover:text-white', 'hover:bg-white/5');
-        } else {
-            btn.classList.remove('bg-blue-600', 'text-white', 'shadow-lg', 'shadow-blue-600/40');
-            btn.classList.add('text-gray-400', 'hover:text-white', 'hover:bg-white/5');
-        }
+        const isActive = btn.id === `btn-${tab}`;
+        btn.classList.toggle('bg-blue-600', isActive);
+        btn.classList.toggle('text-white', isActive);
+        btn.classList.toggle('shadow-lg', isActive);
+        btn.classList.toggle('text-gray-400', !isActive);
     });
 
-    // 2. Define Content Templates
+    // Content Templates
     const templates = {
         'Courses': `
-            <div class="grid grid-cols-1 gap-4 animate-in slide-in-from-bottom-4 duration-500">
-                <div class="p-6 bg-white/5 border border-white/10 rounded-3xl flex justify-between items-center">
-                    <div>
-                        <h4 class="text-white font-black uppercase tracking-widest text-sm">Introduction to Web3</h4>
-                        <p class="text-gray-500 text-[10px] mt-1">12 Modules • 4 Hours</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 animate-in slide-in-from-bottom-6 duration-700">
+                ${['HTML', 'CSS', 'JavaScript', 'Python'].map(course => `
+                    <div onclick="openTopics('${course}')" 
+                         class="group cursor-pointer p-8 bg-white/5 border border-white/10 rounded-[2.5rem] hover:bg-blue-600 hover:border-blue-400 transition-all duration-500 relative overflow-hidden">
+                        <div class="relative z-10">
+                            <div class="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-white/20 transition-colors">
+                                <i class="fas ${course === 'Python' ? 'fa-code' : 'fa-terminal'} text-white text-xl"></i>
+                            </div>
+                            <h4 class="text-white font-black uppercase tracking-tighter text-2xl">${course}</h4>
+                            <p class="text-white/40 group-hover:text-white/70 text-[10px] font-bold uppercase tracking-[0.2em] mt-2">20 Pro Modules • 4.5 Hours</p>
+                        </div>
+                        <i class="fas fa-arrow-right absolute bottom-8 right-8 text-white/10 text-2xl group-hover:text-white group-hover:translate-x-2 transition-all"></i>
                     </div>
-                    <button class="px-4 py-2 bg-blue-600 text-white rounded-xl text-[10px] font-bold">RESUME</button>
-                </div>
+                `).join('')}
             </div>`,
-        'Exam': `
-            <div class="text-center py-12 animate-in zoom-in-95 duration-500">
-                <i class="fas fa-file-signature text-5xl text-gray-700 mb-4"></i>
-                <h3 class="text-white font-black uppercase">No Active Exams</h3>
-                <p class="text-gray-500 text-[10px] mt-2 tracking-widest">Complete your courses to unlock exams.</p>
-            </div>`,
-        'Result': `
-            <div class="bg-white/5 border border-white/10 rounded-[2rem] p-8 animate-in fade-in">
-                <p class="text-center text-gray-500 font-black text-[10px] uppercase tracking-widest">Grade History is Empty</p>
-            </div>`,
-        'Semester': `
-            <div class="p-6 bg-blue-500/5 border border-blue-500/10 rounded-3xl animate-in slide-in-from-left-4">
-                <h4 class="text-blue-400 font-black text-xs uppercase tracking-widest mb-4">Current Schedule</h4>
-                <div class="space-y-3 text-[10px] text-gray-400 font-bold uppercase">
-                    <div class="flex justify-between border-b border-white/5 pb-2"><span>Monday</span> <span class="text-white">UI Design</span></div>
-                    <div class="flex justify-between border-b border-white/5 pb-2"><span>Wednesday</span> <span class="text-white">Backend Logic</span></div>
-                </div>
-            </div>`,
-        'Analytics': `
-            <div class="bg-[#050b1d] p-8 rounded-[2rem] border border-white/5 animate-in slide-in-from-right-4">
-                <div class="h-32 flex items-end gap-2 justify-center">
-                    ${[40, 70, 45, 90, 65].map(h => `<div class="w-8 bg-blue-600/40 rounded-t-lg transition-all hover:bg-blue-500" style="height: ${h}%"></div>`).join('')}
-                </div>
-                <p class="text-center mt-4 text-[10px] text-gray-500 font-black uppercase tracking-[0.2em]">Weekly Progress</p>
-            </div>`
+        'Exam': `<div class="py-20 text-center opacity-20 font-black uppercase tracking-[0.5em] text-white">No Exams Found</div>`,
+        'Result': `<div class="py-20 text-center opacity-20 font-black uppercase tracking-[0.5em] text-white">History Empty</div>`,
+        'Semester': `<div class="bg-white/5 p-10 rounded-[3rem] border border-white/10 text-center text-white font-black uppercase tracking-widest">Semester 01 Active</div>`,
+        'Analytics': `<div class="h-40 flex items-end justify-center gap-3">${[40, 70, 45, 90, 65].map(h => `<div class="w-10 bg-blue-600/40 rounded-t-xl" style="height:${h}%"></div>`).join('')}</div>`
     };
 
-    // 3. Inject Content with a small fade-out/in effect
+    // Inject with Fade
     contentArea.style.opacity = '0';
     setTimeout(() => {
-        contentArea.innerHTML = templates[tab] || `<p class="text-white">Content for ${tab} coming soon...</p>`;
+        contentArea.innerHTML = templates[tab] || '';
         contentArea.style.opacity = '1';
     }, 150);
 }
 
-function startBeginnerCourse() {
-    // This is where you'd trigger your custom Modal logic
-    console.log("Course Started!");
+/**
+ * Opens the Level 1 Modal: Topic List
+ */
+function openTopics(courseName) {
+    const title = document.getElementById('modal-title');
+    const body = document.getElementById('modal-body');
+    
+    title.innerText = `${courseName} Curriculum`;
+    
+    let html = '';
+    for(let i=1; i<=20; i++) {
+        html += `
+            <div onclick="openTopicDetail('${courseName}', ${i})" 
+                 class="p-4 bg-white/5 border border-white/5 rounded-2xl flex justify-between items-center cursor-pointer hover:bg-blue-500 group transition-all">
+                <span class="text-[10px] font-black text-gray-500 group-hover:text-white/50 uppercase italic">Topic #${i}</span>
+                <span class="text-white font-bold text-xs uppercase tracking-wider underline decoration-blue-500 group-hover:decoration-white">View Module</span>
+            </div>
+        `;
+    }
+    
+    body.innerHTML = html;
+    document.getElementById('global-modal').classList.remove('hidden');
 }
+
+/**
+ * Opens the Level 2 Modal: Specific Topic "Alert"
+ */
+function openTopicDetail(course, id) {
+    const body = document.getElementById('modal-body');
+    const title = document.getElementById('modal-title');
+
+    title.innerText = `Module Content`;
+    body.innerHTML = `
+        <div class="text-center py-8 animate-in fade-in zoom-in-90 duration-300">
+            <div class="w-20 h-20 bg-blue-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                <i class="fas fa-bolt text-blue-500 text-3xl"></i>
+            </div>
+            <h3 class="text-white text-2xl font-black uppercase tracking-tighter italic mb-4">${course} - Lesson ${id}</h3>
+            <p class="text-gray-400 text-xs font-medium leading-relaxed uppercase tracking-widest mb-8">
+                Mastering the core principles of ${course} and professional development workflows.
+            </p>
+            <div class="flex flex-col gap-3">
+                <button onclick="closeModal()" class="w-full py-4 bg-blue-600 text-white rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-blue-700 transition-all">Start Lesson</button>
+                <button onclick="openTopics('${course}')" class="w-full py-4 bg-white/5 text-gray-400 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:text-white transition-all">Back to List</button>
+            </div>
+        </div>
+    `;
+}
+
+function closeModal() {
+    document.getElementById('global-modal').classList.add('hidden');
+}
+
+// Initialize on load
+switchLessonSubTab('Courses');
