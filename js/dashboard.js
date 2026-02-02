@@ -1117,6 +1117,9 @@ const curriculumData = {
 /**
  * 2. INITIALIZATION (Updated with Analytics)
  */
+/**
+ * 2. INITIALIZATION (Updated with Analytics)
+ */
 function initLMS() {
     const app = document.getElementById('lesson-app-root');
     if (!app) return;
@@ -1224,9 +1227,8 @@ function renderPlaceholder(icon, title, subtitle) {
         </div>
     `;
 }
-/**
- * 3. COURSE GRID
- */
+
+//// course Grid
 function switchLessonSubTab(tab) {
     const contentArea = document.getElementById('lesson-sub-content');
     const buttons = document.querySelectorAll('.lesson-nav-btn');
