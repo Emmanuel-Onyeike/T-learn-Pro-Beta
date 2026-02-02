@@ -1064,70 +1064,71 @@ function closePaymentModal() {
 
 
 
-////// for the lesson only 
+////// LESSON ONLY//////
 
- 
+function switchLessonSubTab(tab) {
+    const contentArea = document.getElementById('lesson-sub-content');
+    const buttons = document.querySelectorAll('.lesson-nav-btn');
 
-    function showModal(title, body) {
-        const modal = document.getElementById('alertModal');
-        const content = document.getElementById('modalContent');
-        document.getElementById('modalTitle').innerText = title;
-        document.getElementById('modalBody').innerText = body;
-        
-        modal.classList.remove('opacity-0', 'pointer-events-none');
-        content.classList.remove('scale-90');
-        content.classList.add('scale-100');
-    }
-
-    function closeModal() {
-        const modal = document.getElementById('alertModal');
-        const content = document.getElementById('modalContent');
-        
-        modal.classList.add('opacity-0', 'pointer-events-none');
-        content.classList.remove('scale-100');
-        content.classList.add('scale-90');
-    }
-
-function showTab(tabId) {
-    document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.classList.remove('bg-white', 'text-black');
-        btn.classList.add('bg-white/5', 'border-white/10', 'text-white');
+    // 1. Update Button States
+    buttons.forEach(btn => {
+        if (btn.id === `btn-${tab}`) {
+            btn.classList.add('bg-blue-600', 'text-white', 'shadow-lg', 'shadow-blue-600/40');
+            btn.classList.remove('text-gray-400', 'hover:text-white', 'hover:bg-white/5');
+        } else {
+            btn.classList.remove('bg-blue-600', 'text-white', 'shadow-lg', 'shadow-blue-600/40');
+            btn.classList.add('text-gray-400', 'hover:text-white', 'hover:bg-white/5');
+        }
     });
-    document.getElementById(tabId).classList.remove('hidden');
-    const btn = document.querySelector(`.tab-btn[data-tab="${tabId}"]`);
-    if (btn) {
-        btn.classList.remove('bg-white/5', 'border-white/10', 'text-white');
-        btn.classList.add('bg-white', 'text-black');
-    }
-}
-showTab('categories');
 
-function toggleLessons(el) {
-    const lessons = el.nextElementSibling;
-    if (lessons && lessons.classList.contains('lessons')) {
-        lessons.classList.toggle('hidden');
-    }
+    // 2. Define Content Templates
+    const templates = {
+        'Courses': `
+            <div class="grid grid-cols-1 gap-4 animate-in slide-in-from-bottom-4 duration-500">
+                <div class="p-6 bg-white/5 border border-white/10 rounded-3xl flex justify-between items-center">
+                    <div>
+                        <h4 class="text-white font-black uppercase tracking-widest text-sm">Introduction to Web3</h4>
+                        <p class="text-gray-500 text-[10px] mt-1">12 Modules • 4 Hours</p>
+                    </div>
+                    <button class="px-4 py-2 bg-blue-600 text-white rounded-xl text-[10px] font-bold">RESUME</button>
+                </div>
+            </div>`,
+        'Exam': `
+            <div class="text-center py-12 animate-in zoom-in-95 duration-500">
+                <i class="fas fa-file-signature text-5xl text-gray-700 mb-4"></i>
+                <h3 class="text-white font-black uppercase">No Active Exams</h3>
+                <p class="text-gray-500 text-[10px] mt-2 tracking-widest">Complete your courses to unlock exams.</p>
+            </div>`,
+        'Result': `
+            <div class="bg-white/5 border border-white/10 rounded-[2rem] p-8 animate-in fade-in">
+                <p class="text-center text-gray-500 font-black text-[10px] uppercase tracking-widest">Grade History is Empty</p>
+            </div>`,
+        'Semester': `
+            <div class="p-6 bg-blue-500/5 border border-blue-500/10 rounded-3xl animate-in slide-in-from-left-4">
+                <h4 class="text-blue-400 font-black text-xs uppercase tracking-widest mb-4">Current Schedule</h4>
+                <div class="space-y-3 text-[10px] text-gray-400 font-bold uppercase">
+                    <div class="flex justify-between border-b border-white/5 pb-2"><span>Monday</span> <span class="text-white">UI Design</span></div>
+                    <div class="flex justify-between border-b border-white/5 pb-2"><span>Wednesday</span> <span class="text-white">Backend Logic</span></div>
+                </div>
+            </div>`,
+        'Analytics': `
+            <div class="bg-[#050b1d] p-8 rounded-[2rem] border border-white/5 animate-in slide-in-from-right-4">
+                <div class="h-32 flex items-end gap-2 justify-center">
+                    ${[40, 70, 45, 90, 65].map(h => `<div class="w-8 bg-blue-600/40 rounded-t-lg transition-all hover:bg-blue-500" style="height: ${h}%"></div>`).join('')}
+                </div>
+                <p class="text-center mt-4 text-[10px] text-gray-500 font-black uppercase tracking-[0.2em]">Weekly Progress</p>
+            </div>`
+    };
+
+    // 3. Inject Content with a small fade-out/in effect
+    contentArea.style.opacity = '0';
+    setTimeout(() => {
+        contentArea.innerHTML = templates[tab] || `<p class="text-white">Content for ${tab} coming soon...</p>`;
+        contentArea.style.opacity = '1';
+    }, 150);
 }
 
-function showTab(tabId) {
-    document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.classList.remove('bg-gradient-to-r', 'from-indigo-600', 'to-purple-600', 'text-white', 'shadow-lg', 'shadow-indigo-700/40');
-        btn.classList.add('bg-white/8', 'border-white/15', 'text-white');
-    });
-    document.getElementById(tabId).classList.remove('hidden');
-    const activeBtn = document.querySelector(`.tab-btn[data-tab="${tabId}"]`);
-    if (activeBtn) {
-        activeBtn.classList.remove('bg-white/8', 'border-white/15', 'text-white');
-        activeBtn.classList.add('bg-gradient-to-r', 'from-indigo-600', 'to-purple-600', 'text-white', 'shadow-lg', 'shadow-indigo-700/40');
-    }
-}
-showTab('categories');
-
-function toggleLessons(element) {
-    const lessonsDiv = element.nextElementSibling;
-    if (lessonsDiv && lessonsDiv.classList.contains('lessons')) {
-        lessonsDiv.classList.toggle('hidden');
-    }
+function startBeginnerCourse() {
+    // This is where you'd trigger your custom Modal logic
+    console.log("Course Started!");
 }
