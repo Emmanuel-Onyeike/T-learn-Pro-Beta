@@ -223,7 +223,7 @@ const views = {
                 </div>
                 <div>
                     <p class="text-[10px] font-black text-green-500/60 uppercase tracking-[0.2em]">Current Level</p>
-                    <h3 class="text-4xl font-black text-white mt-1 tabular-nums">012</h3>
+                    <h3 class="text-4xl font-black text-white mt-1 tabular-nums">000</h3>
                 </div>
             </div>
             <i class="fas fa-chart-line absolute -bottom-6 -right-6 text-white/[0.03] text-9xl rotate-12 transition-all duration-700"></i>
@@ -236,7 +236,7 @@ const views = {
                 </div>
                 <div>
                     <p class="text-[10px] font-black text-blue-400/60 uppercase tracking-[0.2em]">Semester</p>
-                    <h3 class="text-4xl font-black text-white mt-1 tabular-nums">01</h3>
+                    <h3 class="text-4xl font-black text-white mt-1 tabular-nums">000</h3>
                 </div>
             </div>
             <i class="fas fa-university absolute -bottom-6 -right-6 text-white/[0.03] text-9xl rotate-12 transition-all duration-700"></i>
