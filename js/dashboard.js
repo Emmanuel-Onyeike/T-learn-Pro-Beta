@@ -201,174 +201,205 @@ const views = {
     
     
 'Lessons': `
-<div class="p-4 md:p-12 bg-[#050505] min-h-screen text-gray-200 font-sans selection:bg-blue-500/30">
+<div class="p-4 md:p-12 bg-transparent min-h-screen text-gray-200 font-sans selection:bg-blue-500/30">
+    <!-- Sticky Navigation -->
     <nav class="sticky top-0 z-50 max-w-6xl mx-auto mb-8 bg-[#0f0f0f]/80 backdrop-blur-xl border border-white/10 rounded-3xl p-2">
-        <div class="flex items-center justify-start md:justify-center gap-4 overflow-x-auto no-scrollbar whitespace-nowrap px-2 py-1">
-            <button class="px-6 py-2 rounded-2xl bg-white text-black font-black text-[10px] uppercase tracking-widest hover:bg-blue-500 hover:text-white transition-all shrink-0">
-                <i class="fa-solid fa-Layer-group mr-2"></i>Categories
+        <div class="flex items-center justify-start md:justify-center gap-3 sm:gap-4 overflow-x-auto no-scrollbar whitespace-nowrap px-2 py-1">
+            <button onclick="showTab('categories')" class="tab-btn px-5 sm:px-6 py-2.5 rounded-2xl bg-white text-black font-black text-xs sm:text-sm uppercase tracking-widest hover:bg-blue-500 hover:text-white transition-all shrink-0 active:scale-95" data-tab="categories">
+                <i class="fa-solid fa-layer-group mr-2"></i> Categories
             </button>
-            <button class="px-6 py-2 rounded-2xl bg-white/5 border border-white/10 text-white font-black text-[10px] uppercase tracking-widest hover:border-blue-500 transition-all shrink-0">
-                <i class="fa-solid fa-file-lines mr-2"></i>Results
+            <button onclick="showTab('results')" class="tab-btn px-5 sm:px-6 py-2.5 rounded-2xl bg-white/5 border border-white/10 text-white font-black text-xs sm:text-sm uppercase tracking-widest hover:border-blue-500 hover:bg-white/10 transition-all shrink-0 active:scale-95" data-tab="results">
+                <i class="fa-solid fa-file-lines mr-2"></i> Results
             </button>
-            <button class="px-6 py-2 rounded-2xl bg-white/5 border border-white/10 text-white font-black text-[10px] uppercase tracking-widest hover:border-purple-500 transition-all shrink-0">
-                <i class="fa-solid fa-pen-to-square mr-2"></i>Exams
+            <button onclick="showTab('exams')" class="tab-btn px-5 sm:px-6 py-2.5 rounded-2xl bg-white/5 border border-white/10 text-white font-black text-xs sm:text-sm uppercase tracking-widest hover:border-purple-500 hover:bg-white/10 transition-all shrink-0 active:scale-95" data-tab="exams">
+                <i class="fa-solid fa-pen-to-square mr-2"></i> Exams
             </button>
-            <button class="px-6 py-2 rounded-2xl bg-white/5 border border-white/10 text-white font-black text-[10px] uppercase tracking-widest hover:border-green-500 transition-all shrink-0">
-                <i class="fa-solid fa-chart-pie mr-2"></i>Analytics
+            <button onclick="showTab('analytics')" class="tab-btn px-5 sm:px-6 py-2.5 rounded-2xl bg-white/5 border border-white/10 text-white font-black text-xs sm:text-sm uppercase tracking-widest hover:border-green-500 hover:bg-white/10 transition-all shrink-0 active:scale-95" data-tab="analytics">
+                <i class="fa-solid fa-chart-pie mr-2"></i> Analytics
             </button>
         </div>
     </nav>
 
-    <header class="max-w-6xl mx-auto mb-16 flex flex-col md:flex-row justify-between items-center gap-8">
+    <!-- Header -->
+    <header class="max-w-6xl mx-auto mb-12 flex flex-col md:flex-row justify-between items-center gap-8">
         <div>
-            <h1 class="text-4xl font-black text-white tracking-tight mb-2">Learning Path</h1>
-            <p class="text-gray-400 font-medium">Welcome, Recruit. Your journey begins here.</p>
+            <h1 class="text-4xl md:text-5xl font-black text-white tracking-tight mb-2">Learning Path</h1>
+            <p class="text-gray-400 font-medium text-lg">Start from zero — HTML → CSS → JavaScript → Python</p>
         </div>
-        <div class="flex gap-12 items-center bg-white/5 px-8 py-4 rounded-3xl border border-white/10">
+        <div class="flex flex-wrap sm:flex-nowrap gap-8 sm:gap-12 items-center bg-white/5 px-6 sm:px-8 py-5 rounded-3xl border border-white/10">
             <div class="text-center">
-                <p class="text-[10px] uppercase tracking-widest text-blue-400 font-bold mb-1">Total Progress</p>
-                <p class="text-2xl font-mono font-bold text-white">0.0%</p>
+                <p class="text-[10px] sm:text-xs uppercase tracking-widest text-blue-400 font-bold mb-1">Total Progress</p>
+                <p class="text-2xl sm:text-3xl font-mono font-bold text-white">0.0%</p>
             </div>
-            <div class="w-[1px] h-10 bg-white/10"></div>
+            <div class="hidden sm:block w-[1px] h-12 bg-white/15"></div>
             <div class="text-center">
-                <p class="text-[10px] uppercase tracking-widest text-purple-400 font-bold mb-1">Global Rank</p>
-                <p class="text-2xl font-mono font-bold text-white">#--</p>
+                <p class="text-[10px] sm:text-xs uppercase tracking-widest text-purple-400 font-bold mb-1">Global Rank</p>
+                <p class="text-2xl sm:text-3xl font-mono font-bold text-white">#---</p>
             </div>
         </div>
     </header>
 
-    <main class="max-w-6xl mx-auto space-y-20">
-        <section>
-            <div class="flex items-center gap-6 mb-10">
-                <span class="px-4 py-1 bg-green-500/10 text-green-500 text-xs font-black rounded-full border border-green-500/20">PHASE 01</span>
-                <h2 class="text-2xl font-bold text-white">The Frontend Foundation</h2>
-                <div class="h-px flex-1 bg-gradient-to-r from-white/10 to-transparent"></div>
+    <!-- Tab Content -->
+    <main class="max-w-6xl mx-auto">
+
+        <!-- Categories Tab -->
+        <section id="categories" class="tab-content grid gap-6 md:gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+
+            <!-- HTML -->
+            <div class="course-card bg-white/5 border border-white/10 rounded-2xl overflow-hidden transition-all hover:border-blue-500/50 group">
+                <div class="p-6 cursor-pointer" onclick="toggleLessons(this)">
+                    <h3 class="text-2xl font-black text-white mb-2">HTML</h3>
+                    <p class="text-gray-400 mb-4 text-sm">Structure of the web — 15 core lessons</p>
+                    <div class="flex justify-between text-xs text-gray-500 mb-4">
+                        <span>15 Lessons</span>
+                        <span>≈ 5–6 hours</span>
+                    </div>
+                    <div class="inline-block px-5 py-2.5 bg-blue-600/80 text-white font-semibold rounded-xl transition group-hover:bg-blue-600">
+                        View Lessons
+                    </div>
+                </div>
+                <div class="lessons hidden bg-black/30 border-t border-white/10 p-5 space-y-4 text-sm">
+                    <div class="lesson bg-white/5 p-4 rounded-xl"><h4 class="font-semibold text-white">1. What is HTML & basic structure</h4><p class="text-gray-400 text-xs">~12 min</p></div>
+                    <div class="lesson bg-white/5 p-4 rounded-xl"><h4 class="font-semibold text-white">2. Headings (h1–h6) & paragraphs</h4><p class="text-gray-400 text-xs">~10 min</p></div>
+                    <div class="lesson bg-white/5 p-4 rounded-xl"><h4 class="font-semibold text-white">3. Text formatting: strong, em, small, mark</h4><p class="text-gray-400 text-xs">~12 min</p></div>
+                    <div class="lesson bg-white/5 p-4 rounded-xl"><h4 class="font-semibold text-white">4. Links (a href, target, title)</h4><p class="text-gray-400 text-xs">~15 min</p></div>
+                    <div class="lesson bg-white/5 p-4 rounded-xl"><h4 class="font-semibold text-white">5. Images (img, src, alt, width/height)</h4><p class="text-gray-400 text-xs">~15 min</p></div>
+                    <div class="lesson bg-white/5 p-4 rounded-xl"><h4 class="font-semibold text-white">6. Ordered & unordered lists</h4><p class="text-gray-400 text-xs">~12 min</p></div>
+                    <div class="lesson bg-white/5 p-4 rounded-xl"><h4 class="font-semibold text-white">7. Description lists (dl, dt, dd)</h4><p class="text-gray-400 text-xs">~10 min</p></div>
+                    <div class="lesson bg-white/5 p-4 rounded-xl"><h4 class="font-semibold text-white">8. Tables: basic structure & attributes</h4><p class="text-gray-400 text-xs">~18 min</p></div>
+                    <div class="lesson bg-white/5 p-4 rounded-xl"><h4 class="font-semibold text-white">9. Forms: input types (text, email, password)</h4><p class="text-gray-400 text-xs">~20 min</p></div>
+                    <div class="lesson bg-white/5 p-4 rounded-xl"><h4 class="font-semibold text-white">10. Checkboxes, radio buttons, select</h4><p class="text-gray-400 text-xs">~18 min</p></div>
+                    <div class="lesson bg-white/5 p-4 rounded-xl"><h4 class="font-semibold text-white">11. Textarea, buttons, labels</h4><p class="text-gray-400 text-xs">~15 min</p></div>
+                    <div class="lesson bg-white/5 p-4 rounded-xl"><h4 class="font-semibold text-white">12. Semantic elements: header, nav, main, article</h4><p class="text-gray-400 text-xs">~18 min</p></div>
+                    <div class="lesson bg-white/5 p-4 rounded-xl"><h4 class="font-semibold text-white">13. Semantic elements: section, aside, footer</h4><p class="text-gray-400 text-xs">~15 min</p></div>
+                    <div class="lesson bg-white/5 p-4 rounded-xl"><h4 class="font-semibold text-white">14. Meta tags & favicon basics</h4><p class="text-gray-400 text-xs">~12 min</p></div>
+                    <div class="lesson bg-white/5 p-4 rounded-xl"><h4 class="font-semibold text-white">15. Mini-project: Complete personal page</h4><p class="text-gray-400 text-xs">~45–60 min</p><a href="#" class="mt-2 inline-block px-4 py-2 bg-green-600/80 hover:bg-green-600 rounded-lg text-xs">Start Lesson</a></div>
+                </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="group bg-[#0f0f0f] border border-white/5 p-8 rounded-[2.5rem] hover:border-orange-500/50 transition-all duration-500 cursor-pointer">
-                    <div class="flex justify-between items-start mb-6">
-                        <div class="w-14 h-14 bg-orange-500/10 rounded-2xl flex items-center justify-center text-orange-500 group-hover:rotate-12 transition-transform">
-                            <i class="fa-brands fa-html5 text-3xl"></i>
-                        </div>
-                        <span class="text-[10px] font-black bg-white/5 text-gray-500 px-3 py-1 rounded-full">NOT STARTED</span>
+            <!-- CSS -->
+            <div class="course-card bg-white/5 border border-white/10 rounded-2xl overflow-hidden transition-all hover:border-blue-500/50 group">
+                <div class="p-6 cursor-pointer" onclick="toggleLessons(this)">
+                    <h3 class="text-2xl font-black text-white mb-2">CSS</h3>
+                    <p class="text-gray-400 mb-4 text-sm">Styling & layout — 15 core lessons</p>
+                    <div class="flex justify-between text-xs text-gray-500 mb-4">
+                        <span>15 Lessons</span>
+                        <span>≈ 6–8 hours</span>
                     </div>
-                    <h3 class="text-lg font-bold text-white mb-2">HTML5 Mastery</h3>
-                    <p class="text-gray-500 text-xs leading-relaxed mb-6">Semantic architecture and web standards.</p>
-                    <div class="w-full bg-white/5 h-1 rounded-full overflow-hidden">
-                        <div class="bg-orange-500 h-full w-0"></div>
+                    <div class="inline-block px-5 py-2.5 bg-blue-600/80 text-white font-semibold rounded-xl transition group-hover:bg-blue-600">
+                        View Lessons
                     </div>
                 </div>
+                <div class="lessons hidden bg-black/30 border-t border-white/10 p-5 space-y-4 text-sm">
+                    <div class="lesson bg-white/5 p-4 rounded-xl"><h4 class="font-semibold text-white">1. What is CSS? Ways to include it</h4><p class="text-gray-400 text-xs">~12 min</p></div>
+                    <div class="lesson bg-white/5 p-4 rounded-xl"><h4 class="font-semibold text-white">2. Basic selectors (element, class, id)</h4><p class="text-gray-400 text-xs">~15 min</p></div>
+                    <div class="lesson bg-white/5 p-4 rounded-xl"><h4 class="font-semibold text-white">3. Colors: named, hex, rgb, hsl</h4><p class="text-gray-400 text-xs">~12 min</p></div>
+                    <div class="lesson bg-white/5 p-4 rounded-xl"><h4 class="font-semibold text-white">4. Box model: margin, border, padding</h4><p class="text-gray-400 text-xs">~20 min</p></div>
+                    <div class="lesson bg-white/5 p-4 rounded-xl"><h4 class="font-semibold text-white">5. Width, height, box-sizing</h4><p class="text-gray-400 text-xs">~15 min</p></div>
+                    <div class="lesson bg-white/5 p-4 rounded-xl"><h4 class="font-semibold text-white">6. Typography: font-family, size, weight</h4><p class="text-gray-400 text-xs">~18 min</p></div>
+                    <div class="lesson bg-white/5 p-4 rounded-xl"><h4 class="font-semibold text-white">7. Text properties: align, transform, decoration</h4><p class="text-gray-400 text-xs">~15 min</p></div>
+                    <div class="lesson bg-white/5 p-4 rounded-xl"><h4 class="font-semibold text-white">8. Display: block, inline, inline-block</h4><p class="text-gray-400 text-xs">~18 min</p></div>
+                    <div class="lesson bg-white/5 p-4 rounded-xl"><h4 class="font-semibold text-white">9. Position: static, relative, absolute, fixed</h4><p class="text-gray-400 text-xs">~22 min</p></div>
+                    <div class="lesson bg-white/5 p-4 rounded-xl"><h4 class="font-semibold text-white">10. Float & clear (legacy layout)</h4><p class="text-gray-400 text-xs">~15 min</p></div>
+                    <div class="lesson bg-white/5 p-4 rounded-xl"><h4 class="font-semibold text-white">11. Units: px, %, em, rem, vw/vh</h4><p class="text-gray-400 text-xs">~18 min</p></div>
+                    <div class="lesson bg-white/5 p-4 rounded-xl"><h4 class="font-semibold text-white">12. Specificity & cascade rules</h4><p class="text-gray-400 text-xs">~20 min</p></div>
+                    <div class="lesson bg-white/5 p-4 rounded-xl"><h4 class="font-semibold text-white">13. Pseudo-classes: :hover, :focus, :first-child</h4><p class="text-gray-400 text-xs">~18 min</p></div>
+                    <div class="lesson bg-white/5 p-4 rounded-xl"><h4 class="font-semibold text-white">14. Media queries & mobile-first</h4><p class="text-gray-400 text-xs">~25 min</p></div>
+                    <div class="lesson bg-white/5 p-4 rounded-xl"><h4 class="font-semibold text-white">15. Mini-project: Responsive card component</h4><p class="text-gray-400 text-xs">~50–70 min</p><a href="#" class="mt-2 inline-block px-4 py-2 bg-green-600/80 hover:bg-green-600 rounded-lg text-xs">Start Lesson</a></div>
+                </div>
+            </div>
 
-                <div class="group bg-[#0f0f0f] border border-white/5 p-8 rounded-[2.5rem] hover:border-blue-400/50 transition-all duration-500 cursor-pointer">
-                    <div class="flex justify-between items-start mb-6">
-                        <div class="w-14 h-14 bg-blue-400/10 rounded-2xl flex items-center justify-center text-blue-400">
-                            <i class="fa-brands fa-css3-alt text-3xl"></i>
-                        </div>
-                        <span class="text-[10px] font-black bg-white/5 text-gray-500 px-3 py-1 rounded-full">NOT STARTED</span>
+            <!-- JavaScript -->
+            <div class="course-card bg-white/5 border border-white/10 rounded-2xl overflow-hidden transition-all hover:border-blue-500/50 group">
+                <div class="p-6 cursor-pointer" onclick="toggleLessons(this)">
+                    <h3 class="text-2xl font-black text-white mb-2">JavaScript</h3>
+                    <p class="text-gray-400 mb-4 text-sm">Programming & interactivity — 15 core lessons</p>
+                    <div class="flex justify-between text-xs text-gray-500 mb-4">
+                        <span>15 Lessons</span>
+                        <span>≈ 8–10 hours</span>
                     </div>
-                    <h3 class="text-lg font-bold text-white mb-2">Modern CSS</h3>
-                    <p class="text-gray-500 text-xs leading-relaxed mb-6">Flexbox, Grid, and Tailwind CSS systems.</p>
-                    <div class="w-full bg-white/5 h-1 rounded-full overflow-hidden">
-                        <div class="bg-blue-400 h-full w-0"></div>
+                    <div class="inline-block px-5 py-2.5 bg-blue-600/80 text-white font-semibold rounded-xl transition group-hover:bg-blue-600">
+                        View Lessons
                     </div>
                 </div>
+                <div class="lessons hidden bg-black/30 border-t border-white/10 p-5 space-y-4 text-sm">
+                    <div class="lesson bg-white/5 p-4 rounded-xl"><h4 class="font-semibold text-white">1. JavaScript basics & where to write code</h4><p class="text-gray-400 text-xs">~12 min</p></div>
+                    <div class="lesson bg-white/5 p-4 rounded-xl"><h4 class="font-semibold text-white">2. Variables: let, const, var</h4><p class="text-gray-400 text-xs">~15 min</p></div>
+                    <div class="lesson bg-white/5 p-4 rounded-xl"><h4 class="font-semibold text-white">3. Data types & typeof operator</h4><p class="text-gray-400 text-xs">~15 min</p></div>
+                    <div class="lesson bg-white/5 p-4 rounded-xl"><h4 class="font-semibold text-white">4. Numbers, Math object, operators</h4><p class="text-gray-400 text-xs">~18 min</p></div>
+                    <div class="lesson bg-white/5 p-4 rounded-xl"><h4 class="font-semibold text-white">5. Strings & template literals</h4><p class="text-gray-400 text-xs">~18 min</p></div>
+                    <div class="lesson bg-white/5 p-4 rounded-xl"><h4 class="font-semibold text-white">6. Booleans, comparison & logical operators</h4><p class="text-gray-400 text-xs">~15 min</p></div>
+                    <div class="lesson bg-white/5 p-4 rounded-xl"><h4 class="font-semibold text-white">7. Conditionals: if, else if, else, ternary</h4><p class="text-gray-400 text-xs">~20 min</p></div>
+                    <div class="lesson bg-white/5 p-4 rounded-xl"><h4 class="font-semibold text-white">8. Switch statement</h4><p class="text-gray-400 text-xs">~12 min</p></div>
+                    <div class="lesson bg-white/5 p-4 rounded-xl"><h4 class="font-semibold text-white">9. Loops: for, while, do-while</h4><p class="text-gray-400 text-xs">~25 min</p></div>
+                    <div class="lesson bg-white/5 p-4 rounded-xl"><h4 class="font-semibold text-white">10. Arrays & basic methods (push, pop, shift)</h4><p class="text-gray-400 text-xs">~20 min</p></div>
+                    <div class="lesson bg-white/5 p-4 rounded-xl"><h4 class="font-semibold text-white">11. Objects & object literals</h4><p class="text-gray-400 text-xs">~20 min</p></div>
+                    <div class="lesson bg-white/5 p-4 rounded-xl"><h4 class="font-semibold text-white">12. Functions: declaration, expression, arrow</h4><p class="text-gray-400 text-xs">~25 min</p></div>
+                    <div class="lesson bg-white/5 p-4 rounded-xl"><h4 class="font-semibold text-white">13. Scope & hoisting basics</h4><p class="text-gray-400 text-xs">~18 min</p></div>
+                    <div class="lesson bg-white/5 p-4 rounded-xl"><h4 class="font-semibold text-white">14. DOM intro: getElementById, querySelector</h4><p class="text-gray-400 text-xs">~20 min</p></div>
+                    <div class="lesson bg-white/5 p-4 rounded-xl"><h4 class="font-semibold text-white">15. Mini-project: Interactive counter + todo</h4><p class="text-gray-400 text-xs">~60–90 min</p><a href="#" class="mt-2 inline-block px-4 py-2 bg-green-600/80 hover:bg-green-600 rounded-lg text-xs">Start Lesson</a></div>
+                </div>
+            </div>
 
-                <div class="group bg-[#0f0f0f] border border-white/5 p-8 rounded-[2.5rem] hover:border-red-500/50 transition-all duration-500 cursor-pointer">
-                    <div class="flex justify-between items-start mb-6">
-                        <div class="w-14 h-14 bg-red-500/10 rounded-2xl flex items-center justify-center text-red-500">
-                            <i class="fa-brands fa-git-alt text-3xl"></i>
-                        </div>
-                        <span class="text-[10px] font-black bg-white/5 text-gray-500 px-3 py-1 rounded-full">NOT STARTED</span>
+            <!-- Python -->
+            <div class="course-card bg-white/5 border border-white/10 rounded-2xl overflow-hidden transition-all hover:border-blue-500/50 group">
+                <div class="p-6 cursor-pointer" onclick="toggleLessons(this)">
+                    <h3 class="text-2xl font-black text-white mb-2">Python</h3>
+                    <p class="text-gray-400 mb-4 text-sm">General-purpose programming — 15 core lessons</p>
+                    <div class="flex justify-between text-xs text-gray-500 mb-4">
+                        <span>15 Lessons</span>
+                        <span>≈ 7–9 hours</span>
                     </div>
-                    <h3 class="text-lg font-bold text-white mb-2">Version Control</h3>
-                    <p class="text-gray-500 text-xs leading-relaxed mb-6">Branching strategies and Git workflow.</p>
-                    <div class="w-full bg-white/5 h-1 rounded-full overflow-hidden">
-                        <div class="bg-red-500 h-full w-0"></div>
+                    <div class="inline-block px-5 py-2.5 bg-blue-600/80 text-white font-semibold rounded-xl transition group-hover:bg-blue-600">
+                        View Lessons
                     </div>
                 </div>
+                <div class="lessons hidden bg-black/30 border-t border-white/10 p-5 space-y-4 text-sm">
+                    <div class="lesson bg-white/5 p-4 rounded-xl"><h4 class="font-semibold text-white">1. Installing Python & first program</h4><p class="text-gray-400 text-xs">~15 min</p></div>
+                    <div class="lesson bg-white/5 p-4 rounded-xl"><h4 class="font-semibold text-white">2. Variables & basic data types</h4><p class="text-gray-400 text-xs">~15 min</p></div>
+                    <div class="lesson bg-white/5 p-4 rounded-xl"><h4 class="font-semibold text-white">3. Numbers & arithmetic operators</h4><p class="text-gray-400 text-xs">~12 min</p></div>
+                    <div class="lesson bg-white/5 p-4 rounded-xl"><h4 class="font-semibold text-white">4. Strings & string methods</h4><p class="text-gray-400 text-xs">~18 min</p></div>
+                    <div class="lesson bg-white/5 p-4 rounded-xl"><h4 class="font-semibold text-white">5. Getting input from user (input())</h4><p class="text-gray-400 text-xs">~12 min</p></div>
+                    <div class="lesson bg-white/5 p-4 rounded-xl"><h4 class="font-semibold text-white">6. Booleans & comparison operators</h4><p class="text-gray-400 text-xs">~12 min</p></div>
+                    <div class="lesson bg-white/5 p-4 rounded-xl"><h4 class="font-semibold text-white">7. if, elif, else statements</h4><p class="text-gray-400 text-xs">~18 min</p></div>
+                    <div class="lesson bg-white/5 p-4 rounded-xl"><h4 class="font-semibold text-white">8. while loop & break/continue</h4><p class="text-gray-400 text-xs">~18 min</p></div>
+                    <div class="lesson bg-white/5 p-4 rounded-xl"><h4 class="font-semibold text-white">9. for loop & range()</h4><p class="text-gray-400 text-xs">~20 min</p></div>
+                    <div class="lesson bg-white/5 p-4 rounded-xl"><h4 class="font-semibold text-white">10. Lists & list methods</h4><p class="text-gray-400 text-xs">~22 min</p></div>
+                    <div class="lesson bg-white/5 p-4 rounded-xl"><h4 class="font-semibold text-white">11. Tuples & basic slicing</h4><p class="text-gray-400 text-xs">~15 min</p></div>
+                    <div class="lesson bg-white/5 p-4 rounded-xl"><h4 class="font-semibold text-white">12. Dictionaries & common operations</h4><p class="text-gray-400 text-xs">~20 min</p></div>
+                    <div class="lesson bg-white/5 p-4 rounded-xl"><h4 class="font-semibold text-white">13. Functions: def, parameters, return</h4><p class="text-gray-400 text-xs">~25 min</p></div>
+                    <div class="lesson bg-white/5 p-4 rounded-xl"><h4 class="font-semibold text-white">14. Basic error handling (try/except)</h4><p class="text-gray-400 text-xs">~18 min</p></div>
+                    <div class="lesson bg-white/5 p-4 rounded-xl"><h4 class="font-semibold text-white">15. Mini-project: Simple calculator + guessing game</h4><p class="text-gray-400 text-xs">~60–90 min</p><a href="#" class="mt-2 inline-block px-4 py-2 bg-green-600/80 hover:bg-green-600 rounded-lg text-xs">Start Lesson</a></div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- Results / Exams / Analytics (placeholders - same as before) -->
+        <section id="results" class="tab-content hidden">
+            <div class="bg-white/5 border border-white/10 rounded-3xl p-8 text-center">
+                <h2 class="text-3xl font-bold mb-6">Your Results</h2>
+                <p class="text-gray-400">Progress, completed lessons & scores appear here.</p>
             </div>
         </section>
 
-        <section>
-            <div class="flex items-center gap-6 mb-10">
-                <span class="px-4 py-1 bg-blue-600/10 text-blue-600 text-xs font-black rounded-full border border-blue-600/20">PHASE 02</span>
-                <h2 class="text-2xl font-bold text-white">Dynamic Programming</h2>
-                <div class="h-px flex-1 bg-gradient-to-r from-white/10 to-transparent"></div>
-            </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <div class="relative overflow-hidden group bg-[#0f0f0f] border border-white/5 p-10 rounded-[3rem] hover:border-yellow-500/50 transition-all">
-                    <div class="relative z-10 flex gap-8">
-                        <div class="w-20 h-20 bg-yellow-500/10 rounded-3xl flex items-center justify-center text-yellow-500 shrink-0">
-                            <i class="fa-brands fa-js text-4xl"></i>
-                        </div>
-                        <div>
-                            <h3 class="text-2xl font-black text-white uppercase italic tracking-tighter mb-2">JavaScript ES6+</h3>
-                            <p class="text-gray-400 text-sm mb-6 max-w-sm">Mastering the engine: Asynchronous logic, APIs, and the DOM.</p>
-                            <button class="px-6 py-2 bg-yellow-500 text-black rounded-xl font-black text-[10px] uppercase tracking-widest">Begin Unit 01</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="relative overflow-hidden group bg-[#0f0f0f] border border-white/5 p-10 rounded-[3rem] opacity-50 grayscale">
-                    <div class="relative z-10 flex gap-8">
-                        <div class="w-20 h-20 bg-cyan-500/10 rounded-3xl flex items-center justify-center text-cyan-500 shrink-0">
-                            <i class="fa-brands fa-react text-4xl"></i>
-                        </div>
-                        <div>
-                            <h3 class="text-2xl font-black text-white uppercase italic tracking-tighter mb-2">React Framework</h3>
-                            <p class="text-gray-500 text-sm mb-2">State management and component architecture.</p>
-                            <span class="text-[10px] font-bold text-cyan-500/50 uppercase"><i class="fa-solid fa-lock mr-2"></i>Unlocks at Phase 01 Completion</span>
-                        </div>
-                    </div>
-                </div>
+        <section id="exams" class="tab-content hidden">
+            <div class="bg-white/5 border border-white/10 rounded-3xl p-8">
+                <h2 class="text-3xl font-bold mb-6 text-center">Exams & Quizzes</h2>
+                <p class="text-center text-gray-400 mb-8">Test yourself after completing sections.</p>
             </div>
         </section>
 
-        <section class="pb-20">
-            <div class="flex items-center gap-6 mb-10">
-                <span class="px-4 py-1 bg-purple-500/10 text-purple-500 text-xs font-black rounded-full border border-purple-500/20">PHASE 03</span>
-                <h2 class="text-2xl font-bold text-white">Backend & DevOps</h2>
-                <div class="h-px flex-1 bg-gradient-to-r from-white/10 to-transparent"></div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <div class="group bg-[#0f0f0f] border border-white/5 p-8 rounded-[2.5rem] opacity-40 cursor-not-allowed" 
-                     onclick="showModal('Access Denied', 'Complete the Logic Engine phase to unlock Python Backend modules.')">
-                    <i class="fa-brands fa-python text-3xl text-yellow-500 mb-6 block"></i>
-                    <h3 class="text-lg font-bold text-white mb-2">Python Systems</h3>
-                    <p class="text-gray-500 text-xs">FastAPI & Scalable logic.</p>
-                </div>
-
-                <div class="group bg-[#0f0f0f] border border-white/5 p-8 rounded-[2.5rem] opacity-40 cursor-not-allowed"
-                     onclick="showModal('Restricted', 'Database schemas require Level 10 JavaScript Proficiency.')">
-                    <i class="fa-solid fa-database text-3xl text-purple-500 mb-6 block"></i>
-                    <h3 class="text-lg font-bold text-white mb-2">Cloud Databases</h3>
-                    <p class="text-gray-500 text-xs">SQL, NoSQL, and Vector stores.</p>
-                </div>
-
-                <div class="group bg-[#0f0f0f] border border-white/5 p-8 rounded-[2.5rem] opacity-40 cursor-not-allowed"
-                     onclick="showModal('Locked', 'Final Phase: Requires completion of all previous modules.')">
-                    <i class="fa-solid fa-server text-3xl text-blue-500 mb-6 block"></i>
-                    <h3 class="text-lg font-bold text-white mb-2">Deployment</h3>
-                    <p class="text-gray-500 text-xs">Docker, AWS, and CI/CD pipelines.</p>
-                </div>
+        <section id="analytics" class="tab-content hidden">
+            <div class="bg-white/5 border border-white/10 rounded-3xl p-8 text-center">
+                <h2 class="text-3xl font-bold mb-6">Analytics</h2>
+                <p class="text-gray-400">Time spent, strengths & weak areas — coming soon.</p>
             </div>
         </section>
+
     </main>
-
-    <div id="alertModal" class="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/90 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300">
-        <div class="bg-[#111] border border-white/10 p-10 rounded-[3rem] max-w-sm w-full text-center shadow-[0_0_50px_rgba(0,0,0,0.5)] scale-90 transition-transform duration-300" id="modalContent">
-            <div class="w-20 h-20 bg-red-500/10 rounded-full flex items-center justify-center text-red-500 mx-auto mb-6 border border-red-500/20">
-                <i class="fa-solid fa-lock text-3xl"></i>
-            </div>
-            <h4 id="modalTitle" class="text-2xl font-black text-white uppercase italic mb-3 tracking-widest">Locked</h4>
-            <p id="modalBody" class="text-gray-400 text-sm leading-relaxed mb-8">You need more XP to access this sector.</p>
-            <button onclick="closeModal()" class="w-full py-4 bg-white text-black font-black uppercase tracking-widest rounded-2xl hover:bg-blue-500 hover:text-white transition-all">Back to Mission</button>
-        </div>
-    </div>
 </div>
+
 
 
 `,
@@ -1200,3 +1231,25 @@ function closePaymentModal() {
         content.classList.remove('scale-100');
         content.classList.add('scale-90');
     }
+
+function showTab(tabId) {
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('bg-white', 'text-black');
+        btn.classList.add('bg-white/5', 'border-white/10', 'text-white');
+    });
+    document.getElementById(tabId).classList.remove('hidden');
+    const btn = document.querySelector(`.tab-btn[data-tab="${tabId}"]`);
+    if (btn) {
+        btn.classList.remove('bg-white/5', 'border-white/10', 'text-white');
+        btn.classList.add('bg-white', 'text-black');
+    }
+}
+showTab('categories');
+
+function toggleLessons(el) {
+    const lessons = el.nextElementSibling;
+    if (lessons && lessons.classList.contains('lessons')) {
+        lessons.classList.toggle('hidden');
+    }
+}
