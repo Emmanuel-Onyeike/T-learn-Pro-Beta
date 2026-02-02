@@ -201,7 +201,8 @@ const views = {
     
     
 'Lessons': `
-  <div class="space-y-8 animate-in fade-in duration-700">
+<div class="space-y-8 animate-in fade-in duration-700 bg-[#050b1d] p-4 sm:p-8 min-h-screen text-sans">
+    
     <div class="flex justify-center sticky top-0 z-50 py-4 backdrop-blur-md">
         <div class="bg-white/5 border border-white/10 p-1.5 rounded-2xl flex gap-1 overflow-x-auto no-scrollbar shadow-2xl backdrop-blur-xl">
             ${['Courses', 'Exam', 'Result', 'Semester', 'Analytics'].map(tab => `
@@ -222,10 +223,10 @@ const views = {
                 </div>
                 <div>
                     <p class="text-[10px] font-black text-green-500/60 uppercase tracking-[0.2em]">Current Level</p>
-                    <h3 id="lesson-level-val" class="text-4xl font-black text-white mt-1 tabular-nums">000</h3>
+                    <h3 class="text-4xl font-black text-white mt-1 tabular-nums">012</h3>
                 </div>
             </div>
-            <i class="fas fa-chart-line absolute -bottom-6 -right-6 text-white/[0.03] text-9xl rotate-12 group-hover:text-green-500/[0.08] group-hover:rotate-0 transition-all duration-700"></i>
+            <i class="fas fa-chart-line absolute -bottom-6 -right-6 text-white/[0.03] text-9xl rotate-12 transition-all duration-700"></i>
         </div>
 
         <div class="bg-gradient-to-br from-[#0a1128] to-[#050b1d] border border-white/5 p-8 rounded-[2.5rem] relative overflow-hidden group hover:border-blue-400/50 transition-all duration-500 shadow-2xl">
@@ -235,26 +236,28 @@ const views = {
                 </div>
                 <div>
                     <p class="text-[10px] font-black text-blue-400/60 uppercase tracking-[0.2em]">Semester</p>
-                    <h3 id="lesson-semester-val" class="text-4xl font-black text-white mt-1 tabular-nums">0</h3>
+                    <h3 class="text-4xl font-black text-white mt-1 tabular-nums">01</h3>
                 </div>
             </div>
-            <i class="fas fa-university absolute -bottom-6 -right-6 text-white/[0.03] text-9xl rotate-12 group-hover:text-blue-400/[0.08] group-hover:rotate-0 transition-all duration-700"></i>
+            <i class="fas fa-university absolute -bottom-6 -right-6 text-white/[0.03] text-9xl rotate-12 transition-all duration-700"></i>
         </div>
     </div>
 
-    <div id="lesson-sub-content" class="min-h-[300px] transition-all duration-500">
-        <div class="bg-white/[0.02] border border-white/5 p-12 rounded-[3rem] text-center backdrop-blur-sm">
-            <div class="inline-block p-4 rounded-full bg-blue-500/10 mb-6">
-                <i class="fas fa-rocket text-blue-500 text-2xl"></i>
-            </div>
-            <h3 class="text-3xl font-black text-white uppercase tracking-tighter mb-4 italic">Ready to advance?</h3>
-            <p class="text-gray-400 text-xs font-medium uppercase tracking-widest mb-8 max-w-md mx-auto leading-relaxed">
-                Begin your beginner course to unlock <span class="text-blue-400">HTML</span>, <span class="text-blue-400">CSS</span>, and professional workflows.
-            </p>
-            <button onclick="startBeginnerCourse()" class="px-12 py-5 bg-white text-black rounded-2xl text-[12px] font-black uppercase tracking-[0.3em] hover:bg-blue-600 hover:text-white hover:scale-105 active:scale-95 transition-all shadow-xl shadow-white/5">
-                Begin Course
+    <div id="lesson-sub-content" class="min-h-[400px] transition-all duration-500">
+        </div>
+</div>
+
+<div id="global-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md">
+    <div class="absolute inset-0" onclick="closeModal()"></div>
+    <div class="bg-[#0a1128] border border-white/10 w-full max-w-lg rounded-[2.5rem] shadow-2xl relative z-10 max-h-[85vh] flex flex-col overflow-hidden animate-in zoom-in-95 duration-300">
+        <div class="p-8 border-b border-white/5 flex justify-between items-center">
+            <h2 id="modal-title" class="text-white font-black uppercase tracking-widest italic text-sm">Course Details</h2>
+            <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-white/5 text-gray-400 hover:text-white flex items-center justify-center transition-all">
+                <i class="fas fa-times text-xs"></i>
             </button>
         </div>
+        <div id="modal-body" class="p-6 overflow-y-auto no-scrollbar space-y-3">
+            </div>
     </div>
 </div>
 `,
