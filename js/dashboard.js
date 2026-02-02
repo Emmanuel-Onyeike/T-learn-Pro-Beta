@@ -247,16 +247,21 @@ const views = {
         </div>
 </div>
 
-<div id="global-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md">
+<div id="global-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-2 sm:p-4 bg-black/95 backdrop-blur-xl">
     <div class="absolute inset-0" onclick="closeModal()"></div>
-    <div class="bg-[#0a1128] border border-white/10 w-full max-w-lg rounded-[2.5rem] shadow-2xl relative z-10 max-h-[85vh] flex flex-col overflow-hidden animate-in zoom-in-95 duration-300">
-        <div class="p-8 border-b border-white/5 flex justify-between items-center">
-            <h2 id="modal-title" class="text-white font-black uppercase tracking-widest italic text-sm">Course Details</h2>
-            <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-white/5 text-gray-400 hover:text-white flex items-center justify-center transition-all">
+    
+    <div id="modal-container" class="bg-[#0a1128] border border-white/10 w-full max-w-lg rounded-[2.5rem] shadow-2xl relative z-10 max-h-[90vh] flex flex-col overflow-hidden transition-all duration-500">
+        
+        <div class="p-6 border-b border-white/5 flex justify-between items-center bg-white/[0.02]">
+            <div id="modal-header-content">
+                <h2 id="modal-title" class="text-white font-black uppercase tracking-widest italic text-sm">Course Details</h2>
+            </div>
+            <button onclick="closeModal()" class="w-10 h-10 rounded-full bg-white/5 text-gray-400 hover:text-white flex items-center justify-center transition-all">
                 <i class="fas fa-times text-xs"></i>
             </button>
         </div>
-        <div id="modal-body" class="p-6 overflow-y-auto no-scrollbar space-y-3">
+
+        <div id="modal-body" class="p-6 overflow-y-auto custom-scrollbar flex-grow">
             </div>
     </div>
 </div>
@@ -1072,103 +1077,187 @@ function closePaymentModal() {
 /**
  * Switch between Lesson sub-tabs
  */
+/**
+ * 1. ENHANCED CURRICULUM DATA
+ */
+const curriculumData = {
+    'HTML': {
+        icon: 'fa-html5',
+        topics: [
+            { title: 'Semantic Structure', theory: 'Semantic HTML tags like &lt;header&gt;, &lt;main&gt;, and &lt;section&gt; provide meaning to the web page structure.', challenge: 'Create a semantic layout with a header and a main section.', snippet: '<header>\n  <h1>My Site</h1>\n</header>\n<main>\n  <p>Hello World</p>\n</main>' },
+            { title: 'Forms & Inputs', theory: 'Forms allow users to enter data. Use &lt;label&gt; for accessibility.', challenge: 'Create a text input with a placeholder.', snippet: '<label for="name">Name:</label>\n<input type="text" id="name" placeholder="Enter Name">' }
+        ]
+    },
+    'CSS': {
+        icon: 'fa-css3-alt',
+        topics: [
+            { title: 'Flexbox Mastery', theory: 'Flexbox is a one-dimensional layout method for arranging items in rows or columns.', challenge: 'Use display: flex to center a div.', snippet: '.container {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n}' },
+            { title: 'Grid Layout', theory: 'CSS Grid is a two-dimensional layout system for the web.', challenge: 'Create a 3-column grid layout.', snippet: '.grid-container {\n  display: grid;\n  grid-template-columns: repeat(3, 1fr);\n}' }
+        ]
+    },
+    'JavaScript': {
+        icon: 'fa-js',
+        topics: [
+            { title: 'Arrow Functions', theory: 'Arrow functions allow a short syntax for writing function expressions.', challenge: 'Rewrite a standard function as an arrow function.', snippet: 'const greet = () => {\n  console.log("Hello JS!");\n};' },
+            { title: 'DOM Manipulation', theory: 'The Document Object Model (DOM) is a programming interface for web documents.', challenge: 'Change the text of an element using innerHTML.', snippet: 'document.getElementById("demo").innerHTML = "Updated!";' }
+        ]
+    },
+    'Python': {
+        icon: 'fa-python',
+        topics: [
+            { title: 'List Comprehensions', theory: 'List comprehensions offer a shorter syntax when you want to create a new list based on values of an existing list.', challenge: 'Create a list of squares using comprehension.', snippet: 'numbers = [1, 2, 3]\nsquares = [x**2 for x in numbers]' },
+            { title: 'Dictionary Methods', theory: 'Dictionaries are used to store data values in key:value pairs.', challenge: 'Access a value using the .get() method.', snippet: 'user = {"name": "Gemini", "level": 1}\nprint(user.get("name"))' }
+        ]
+    }
+};
+
+/**
+ * 2. INITIALIZATION
+ */
+function initLMS() {
+    const app = document.getElementById('lesson-app-root');
+    if (!app) return;
+
+    app.innerHTML = `
+        <div class="space-y-8 animate-in fade-in duration-700 bg-[#050b1d] p-4 sm:p-8 min-h-screen">
+            <div class="flex justify-center sticky top-0 z-50 py-4 backdrop-blur-md">
+                <div class="bg-white/5 border border-white/10 p-1.5 rounded-2xl flex gap-1 shadow-2xl">
+                    ${['Courses', 'Exam', 'Result'].map(tab => `
+                        <button id="btn-${tab}" onclick="switchLessonSubTab('${tab}')" 
+                            class="lesson-nav-btn px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all">
+                            ${tab}
+                        </button>
+                    `).join('')}
+                </div>
+            </div>
+            <div id="lesson-sub-content" class="min-h-[400px]"></div>
+        </div>
+
+        <div id="global-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/90 backdrop-blur-xl">
+            <div class="absolute inset-0" onclick="closeModal()"></div>
+            <div id="modal-container" class="bg-[#0a1128] border border-white/10 w-full max-w-lg rounded-[2.5rem] shadow-2xl relative z-10 max-h-[90vh] flex flex-col overflow-hidden transition-all duration-500">
+                <div class="p-8 border-b border-white/5 flex justify-between items-center">
+                    <h2 id="modal-title" class="text-white font-black uppercase tracking-widest italic text-sm"></h2>
+                    <button onclick="closeModal()" class="w-10 h-10 rounded-full bg-white/5 text-gray-400 hover:text-white flex items-center justify-center transition-all">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div id="modal-body" class="p-8 overflow-y-auto no-scrollbar flex-grow"></div>
+            </div>
+        </div>
+    `;
+    switchLessonSubTab('Courses');
+}
+
+/**
+ * 3. COURSE GRID
+ */
 function switchLessonSubTab(tab) {
     const contentArea = document.getElementById('lesson-sub-content');
     const buttons = document.querySelectorAll('.lesson-nav-btn');
 
-    // Update Nav Buttons
-    buttons.forEach(btn => {
-        const isActive = btn.id === `btn-${tab}`;
-        btn.classList.toggle('bg-blue-600', isActive);
-        btn.classList.toggle('text-white', isActive);
-        btn.classList.toggle('shadow-lg', isActive);
-        btn.classList.toggle('text-gray-400', !isActive);
-    });
+    buttons.forEach(btn => btn.classList.toggle('bg-blue-600', btn.id === `btn-${tab}`));
 
-    // Content Templates
-    const templates = {
-        'Courses': `
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 animate-in slide-in-from-bottom-6 duration-700">
-                ${['HTML', 'CSS', 'JavaScript', 'Python'].map(course => `
-                    <div onclick="openTopics('${course}')" 
-                         class="group cursor-pointer p-8 bg-white/5 border border-white/10 rounded-[2.5rem] hover:bg-blue-600 hover:border-blue-400 transition-all duration-500 relative overflow-hidden">
-                        <div class="relative z-10">
-                            <div class="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-white/20 transition-colors">
-                                <i class="fas ${course === 'Python' ? 'fa-code' : 'fa-terminal'} text-white text-xl"></i>
-                            </div>
-                            <h4 class="text-white font-black uppercase tracking-tighter text-2xl">${course}</h4>
-                            <p class="text-white/40 group-hover:text-white/70 text-[10px] font-bold uppercase tracking-[0.2em] mt-2">20 Pro Modules • 4.5 Hours</p>
-                        </div>
-                        <i class="fas fa-arrow-right absolute bottom-8 right-8 text-white/10 text-2xl group-hover:text-white group-hover:translate-x-2 transition-all"></i>
+    if (tab === 'Courses') {
+        contentArea.innerHTML = `
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 animate-in slide-in-from-bottom-8">
+                ${Object.keys(curriculumData).map(name => `
+                    <div onclick="openTopics('${name}')" class="group cursor-pointer p-8 bg-white/5 border border-white/10 rounded-[2.5rem] hover:bg-blue-600 transition-all">
+                        <i class="fab ${curriculumData[name].icon} text-3xl text-white mb-4"></i>
+                        <h4 class="text-white font-black text-2xl uppercase">${name}</h4>
+                        <p class="text-white/40 text-[10px] uppercase font-bold mt-2">Professional Curriculum</p>
                     </div>
                 `).join('')}
-            </div>`,
-        'Exam': `<div class="py-20 text-center opacity-20 font-black uppercase tracking-[0.5em] text-white">No Exams Found</div>`,
-        'Result': `<div class="py-20 text-center opacity-20 font-black uppercase tracking-[0.5em] text-white">History Empty</div>`,
-        'Semester': `<div class="bg-white/5 p-10 rounded-[3rem] border border-white/10 text-center text-white font-black uppercase tracking-widest">Semester 01 Active</div>`,
-        'Analytics': `<div class="h-40 flex items-end justify-center gap-3">${[40, 70, 45, 90, 65].map(h => `<div class="w-10 bg-blue-600/40 rounded-t-xl" style="height:${h}%"></div>`).join('')}</div>`
-    };
-
-    // Inject with Fade
-    contentArea.style.opacity = '0';
-    setTimeout(() => {
-        contentArea.innerHTML = templates[tab] || '';
-        contentArea.style.opacity = '1';
-    }, 150);
+            </div>`;
+    } else {
+        contentArea.innerHTML = `<div class="py-20 text-center text-white/20 font-black uppercase tracking-widest">No Content in ${tab}</div>`;
+    }
 }
 
 /**
- * Opens the Level 1 Modal: Topic List
+ * 4. TOPIC LIST
  */
 function openTopics(courseName) {
     const title = document.getElementById('modal-title');
     const body = document.getElementById('modal-body');
+    title.innerText = `${courseName} Modules`;
     
-    title.innerText = `${courseName} Curriculum`;
-    
-    let html = '';
-    for(let i=1; i<=20; i++) {
-        html += `
-            <div onclick="openTopicDetail('${courseName}', ${i})" 
-                 class="p-4 bg-white/5 border border-white/5 rounded-2xl flex justify-between items-center cursor-pointer hover:bg-blue-500 group transition-all">
-                <span class="text-[10px] font-black text-gray-500 group-hover:text-white/50 uppercase italic">Topic #${i}</span>
-                <span class="text-white font-bold text-xs uppercase tracking-wider underline decoration-blue-500 group-hover:decoration-white">View Module</span>
-            </div>
-        `;
-    }
-    
-    body.innerHTML = html;
+    const topics = curriculumData[courseName].topics;
+    body.innerHTML = topics.map((t, i) => `
+        <div onclick="openTopicDetail('${courseName}', ${i})" class="p-5 mb-3 bg-white/5 border border-white/5 rounded-2xl flex justify-between items-center cursor-pointer hover:bg-blue-600 transition-all">
+            <span class="text-white font-black uppercase text-xs tracking-tight">${t.title}</span>
+            <span class="text-[9px] text-white/30 uppercase font-black">Level ${i+1}</span>
+        </div>
+    `).join('');
     document.getElementById('global-modal').classList.remove('hidden');
 }
 
 /**
- * Opens the Level 2 Modal: Specific Topic "Alert"
+ * 5. TOPIC ALERT (CENTRAL MODAL)
  */
-function openTopicDetail(course, id) {
+function openTopicDetail(course, index) {
+    const topic = curriculumData[course].topics[index];
     const body = document.getElementById('modal-body');
-    const title = document.getElementById('modal-title');
-
-    title.innerText = `Module Content`;
     body.innerHTML = `
-        <div class="text-center py-8 animate-in fade-in zoom-in-90 duration-300">
-            <div class="w-20 h-20 bg-blue-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
-                <i class="fas fa-bolt text-blue-500 text-3xl"></i>
+        <div class="text-center py-4">
+            <div class="w-16 h-16 bg-blue-500/10 rounded-full flex items-center justify-center mx-auto mb-6 border border-blue-500/20">
+                <i class="fas fa-book-open text-blue-500 text-xl"></i>
             </div>
-            <h3 class="text-white text-2xl font-black uppercase tracking-tighter italic mb-4">${course} - Lesson ${id}</h3>
-            <p class="text-gray-400 text-xs font-medium leading-relaxed uppercase tracking-widest mb-8">
-                Mastering the core principles of ${course} and professional development workflows.
+            <h3 class="text-white text-3xl font-black uppercase italic mb-2">${topic.title}</h3>
+            <p class="text-gray-400 text-[10px] font-bold uppercase tracking-[0.2em] mb-8 leading-relaxed">
+                Unlock professional workflows for ${course}.
             </p>
-            <div class="flex flex-col gap-3">
-                <button onclick="closeModal()" class="w-full py-4 bg-blue-600 text-white rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-blue-700 transition-all">Start Lesson</button>
-                <button onclick="openTopics('${course}')" class="w-full py-4 bg-white/5 text-gray-400 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:text-white transition-all">Back to List</button>
+            <button onclick="launchWorkspace('${course}', ${index})" class="w-full py-5 bg-blue-600 text-white rounded-2xl font-black uppercase tracking-widest text-[10px]">Start Lesson</button>
+        </div>
+    `;
+}
+
+/**
+ * 6. WORKSPACE (W3SCHOOLS STYLE)
+ */
+function launchWorkspace(course, index) {
+    const container = document.getElementById('modal-container');
+    const body = document.getElementById('modal-body');
+    const topic = curriculumData[course].topics[index];
+
+    container.classList.replace('max-w-lg', 'max-w-6xl');
+    
+    body.innerHTML = `
+        <div class="grid lg:grid-cols-12 gap-8 h-[60vh]">
+            <div class="lg:col-span-5 overflow-y-auto no-scrollbar bg-white/5 p-8 rounded-[2rem] border border-white/5">
+                <h3 class="text-white font-black text-xl uppercase mb-4">Learn</h3>
+                <p class="text-gray-400 text-sm mb-6">${topic.theory}</p>
+                <h3 class="text-white font-black text-xl uppercase mb-4">Task</h3>
+                <p class="text-blue-400 text-sm font-bold italic">${topic.challenge}</p>
             </div>
+            <div class="lg:col-span-7 flex flex-col bg-black/40 rounded-[2rem] border border-white/5 overflow-hidden">
+                <div class="px-6 py-4 bg-white/5 text-[10px] font-black text-white/30 tracking-widest">EDITOR</div>
+                <textarea id="code-editor" class="flex-grow bg-transparent p-8 font-mono text-sm text-green-400 outline-none resize-none" spellcheck="false">${topic.snippet}</textarea>
+                <div class="p-6 bg-white/5 border-t border-white/5">
+                    <button onclick="triggerExam()" class="w-full py-4 bg-white text-black rounded-xl font-black uppercase text-[10px] hover:bg-green-500 hover:text-white transition-all">Submit Solution</button>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function triggerExam() {
+    const body = document.getElementById('modal-body');
+    body.innerHTML = `
+        <div class="text-center py-20">
+            <i class="fas fa-check-circle text-green-500 text-6xl mb-6"></i>
+            <h2 class="text-white text-4xl font-black uppercase mb-2">Success!</h2>
+            <p class="text-gray-500 text-[10px] font-black uppercase tracking-[0.3em] mb-12">Solution Verified • Credits Awarded</p>
+            <button onclick="closeModal()" class="px-12 py-5 bg-white text-black rounded-2xl font-black uppercase text-[10px]">Back to Dashboard</button>
         </div>
     `;
 }
 
 function closeModal() {
     document.getElementById('global-modal').classList.add('hidden');
+    setTimeout(() => {
+        document.getElementById('modal-container').classList.replace('max-w-6xl', 'max-w-lg');
+    }, 300);
 }
 
-// Initialize on load
-switchLessonSubTab('Courses');
+initLMS();
