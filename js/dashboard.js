@@ -1291,126 +1291,167 @@ function switchLessonSubTab(tab) {
                     `).join('')}
                 </div>`;
             break;
-      case 'Exam':
+case 'Exam':
     contentArea.innerHTML = `
-        <div class="exam-container" style="padding: 20px; max-width: 900px; margin: 0 auto;">
-            <div class="search-section" style="margin-bottom: 30px;">
-                <input type="text" id="examSearch" placeholder="Search for past exams or certificates..." 
-                    style="width: 100%; padding: 12px 20px; border-radius: 25px; border: 1px solid #ddd; outline: none; font-size: 16px;">
+        <div class="max-w-4xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700">
+            <div class="relative mb-8 group">
+                <i class="fas fa-search absolute left-5 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-blue-500 transition-colors"></i>
+                <input type="text" id="examSearch" placeholder="SEARCH TEST REPOSITORY..." 
+                    class="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-14 pr-6 text-white text-[10px] font-black tracking-[0.2em] outline-none focus:border-blue-500/50 focus:bg-white/[0.08] transition-all">
             </div>
 
-            <div class="terminal-header" style="background: #2d2d2d; color: #fff; padding: 15px; border-radius: 8px 8px 0 0; display: flex; justify-content: space-between; align-items: center;">
-                <span><i class="fas fa-terminal"></i> Online Coding Exam Terminal</span>
-                <div id="examTimer" style="color: #ff4757; font-weight: bold; font-family: monospace; font-size: 1.2rem;">Time: 15:00</div>
-            </div>
+            <div class="rounded-[2rem] overflow-hidden border border-white/10 shadow-2xl shadow-blue-900/20">
+                <div class="bg-white/10 backdrop-blur-md p-6 border-b border-white/10 flex justify-between items-center">
+                    <div class="flex items-center gap-3">
+                        <div class="flex gap-1.5">
+                            <div class="w-2.5 h-2.5 rounded-full bg-red-500/50"></div>
+                            <div class="w-2.5 h-2.5 rounded-full bg-yellow-500/50"></div>
+                            <div class="w-2.5 h-2.5 rounded-full bg-green-500/50"></div>
+                        </div>
+                        <span class="text-white/40 font-black text-[9px] uppercase tracking-widest ml-4">Terminal Alpha-01</span>
+                    </div>
+                    <div id="examTimer" class="px-4 py-1.5 bg-red-500/10 border border-red-500/20 rounded-full text-red-500 font-mono font-bold text-xs tracking-tighter">
+                        STATUS: STANDBY
+                    </div>
+                </div>
 
-            <div class="terminal-body" id="terminalDisplay" style="background: #1e1e1e; color: #00ff00; padding: 30px; min-height: 300px; border-radius: 0 0 8px 8px; font-family: 'Courier New', monospace; border: 1px solid #333;">
-                <div id="terminalContent">
-                    <p>> System initialized...</p>
-                    <p>> No active assessment detected. Please generate an exam code to begin.</p>
+                <div class="bg-[#050b1d] p-8 min-h-[350px] font-mono relative">
+                    <div id="terminalContent" class="text-blue-400/80 text-xs leading-loose">
+                        <p class="flex gap-3"><span class="text-white/20">01</span> <span class="text-green-500">></span> System initialized...</p>
+                        <p class="flex gap-3"><span class="text-white/20">02</span> <span class="text-green-500">></span> Waiting for authentication code...</p>
+                    </div>
+                    <div class="absolute inset-0 pointer-events-none bg-gradient-to-b from-transparent via-white/[0.02] to-transparent bg-[length:100%_4px]"></div>
                 </div>
             </div>
 
-            <div class="exam-actions" style="margin-top: 20px; display: flex; gap: 15px; flex-wrap: wrap;">
-                <select id="examLanguage" style="padding: 10px; border-radius: 5px; flex-grow: 1;">
-                    <option value="html">HTML5</option>
-                    <option value="css">CSS3</option>
-                    <option value="javascript">JavaScript</option>
-                    <option value="python">Python</option>
-                </select>
-                
-                <button onclick="generateExamCode()" style="padding: 10px 20px; background: #3498db; color: white; border: none; border-radius: 5px; cursor: pointer;">
-                    Generate Exam Code
-                </button>
-            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
+                <div class="relative">
+                    <select id="examLanguage" class="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white font-black text-[10px] uppercase tracking-widest appearance-none outline-none focus:border-blue-500 transition-all cursor-pointer">
+                        <option value="html">HTML5 Master</option>
+                        <option value="css">CSS3 Architect</option>
+                        <option value="javascript">JS Engineer</option>
+                        <option value="python">Python Dev</option>
+                    </select>
+                    <i class="fas fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-white/20 pointer-events-none"></i>
+                </div>
 
-            <div class="code-entry" style="margin-top: 20px; display: flex; gap: 10px;">
-                <input type="text" id="generatedCodeDisplay" placeholder="Code will appear here" readonly 
-                    style="background: #f4f4f4; padding: 10px; border-radius: 5px; border: 1px solid #ccc; width: 150px; text-align: center; font-weight: bold;">
-                
-                <input type="text" id="examCodeInput" placeholder="Enter Exam Code to Start" 
-                    style="flex-grow: 1; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
-                
-                <button onclick="startExam()" style="padding: 10px 20px; background: #27ae60; color: white; border: none; border-radius: 5px; cursor: pointer;">
-                    Upload & Start Exam
+                <button onclick="generateExamCode()" class="bg-blue-600 hover:bg-blue-500 text-white font-black uppercase text-[10px] tracking-widest py-4 rounded-xl transition-all shadow-lg shadow-blue-600/20 active:scale-95">
+                    Generate Token
                 </button>
+
+                <div class="flex gap-2 bg-white/5 border border-white/10 rounded-xl p-1">
+                     <input type="text" id="generatedCodeDisplay" readonly placeholder="----"
+                        class="bg-transparent w-24 text-center text-blue-400 font-mono font-bold text-xs outline-none">
+                     <input type="text" id="examCodeInput" placeholder="ENTER TOKEN" 
+                        class="flex-grow bg-white/10 rounded-lg px-4 text-white font-black text-[10px] uppercase tracking-widest outline-none border border-transparent focus:border-blue-500/50 transition-all">
+                     <button onclick="startExam()" class="bg-white text-black px-4 rounded-lg font-black text-[9px] uppercase hover:bg-green-500 hover:text-white transition-all active:scale-95">
+                        START
+                     </button>
+                </div>
             </div>
         </div>
     `;
 
-    // --- LOGIC ---
+    // Initialize the Functional Logic
+    setupExamLogic();
+    break;
 
+// --- Supporting Logic Functions ---
+
+function setupExamLogic() {
     let timerInterval;
     let isExamActive = false;
 
-    // 1. Generate Random Code
+    // 1. Generate Token
     window.generateExamCode = function() {
         const code = "EX-" + Math.random().toString(36).substring(2, 8).toUpperCase();
         document.getElementById('generatedCodeDisplay').value = code;
-        // In a real app, you'd save this code to a database here
     };
 
-    // 2. Start Exam Logic
+    // 2. Start Assessment
     window.startExam = function() {
         const input = document.getElementById('examCodeInput').value;
         const generated = document.getElementById('generatedCodeDisplay').value;
 
         if (input === "" || input !== generated) {
-            showModalAlert("Invalid Code", "Please generate a code and enter it correctly.");
+            showCustomModal("AUTH_FAILURE", "Invalid session token. Please ensure the token matches the generated value.");
             return;
         }
 
         isExamActive = true;
-        document.getElementById('terminalContent').innerHTML = `<p>> Exam Started. 30 Questions loaded. Good luck!</p><p>> Monitoring tab activity...</p>`;
-        startTimer(15 * 60); // 15 minutes
+        const terminal = document.getElementById('terminalContent');
+        terminal.innerHTML += `
+            <p class="flex gap-3 text-white"><span class="text-white/20">03</span> <span class="text-blue-500">></span> Token Verified.</p>
+            <p class="flex gap-3 text-white"><span class="text-white/20">04</span> <span class="text-blue-500">></span> Loading Core Assessment [30 Nodes]...</p>
+            <p class="flex gap-3 text-yellow-500 font-bold"><span class="text-white/20">05</span> > PROCTORING ACTIVE: DO NOT SWITCH TABS OR MINIMIZE WINDOW.</p>
+        `;
+        
+        startTimer(15 * 60); // 15 Minute countdown
     };
 
-    // 3. Timer Function
+    // 3. Timer Logic
     function startTimer(duration) {
         let timer = duration, minutes, seconds;
+        const display = document.getElementById('examTimer');
+        
         timerInterval = setInterval(() => {
             minutes = parseInt(timer / 60, 10);
             seconds = parseInt(timer % 60, 10);
-
-            minutes = minutes < 10 ? "0" + minutes : minutes;
-            seconds = seconds < 10 ? "0" + seconds : seconds;
-
-            document.getElementById('examTimer').textContent = "Time: " + minutes + ":" + seconds;
-
+            
+            display.textContent = `T-MINUS ${minutes}:${seconds < 10 ? "0" + seconds : seconds}`;
+            
             if (--timer < 0) {
                 clearInterval(timerInterval);
-                autoSubmitExam("Time Expired");
+                autoSubmitExam("TIME_EXPIRY");
             }
         }, 1000);
     }
 
-    // 4. Anti-Cheat: Detect Tab Switch
+    // 4. Anti-Cheat (Tab Switching Detection)
     window.onblur = function() {
         if (isExamActive) {
-            autoSubmitExam("Tab Switch Detected (Security Violation)");
+            autoSubmitExam("TAB_VIOLATION");
         }
     };
 
-    // 5. Auto-Submit Function
+    // 5. Termination / Submission
     function autoSubmitExam(reason) {
         isExamActive = false;
         clearInterval(timerInterval);
+        
         document.getElementById('terminalContent').innerHTML = `
-            <p style="color: #ff4757;">> EXAM TERMINATED</p>
-            <p style="color: #ff4757;">> Reason: ${reason}</p>
-            <p>> Data uploaded to server...</p>
+            <div class="mt-4 p-4 bg-red-500/10 border border-red-500/20 rounded-lg animate-pulse">
+                <p class="text-red-500 font-black uppercase text-[10px]">Critical Error: Terminal Locked</p>
+                <p class="text-white/60 text-[9px] mt-1">Reason: ${reason}</p>
+                <p class="text-white/40 text-[8px] mt-2 italic">> Data packets sent to administration...</p>
+            </div>
         `;
-        showModalAlert("Exam Submitted", `Your exam was automatically submitted. Reason: ${reason}`);
+        
+        showCustomModal("EXAM_TERMINATED", `Your session has been forcibly closed. <br><br> <strong>Reason:</strong> ${reason.replace('_', ' ')}`);
     }
+}
 
-    // Modal Helper (Based on your preference for center-page modals)
-    function showModalAlert(title, message) {
-        // This is a placeholder for your modal logic
-        // You would trigger your specific modal component here
-        alert(`[${title}]\n\n${message}`); 
-    }
-
-    break;
+// 6. Centralized Modal Helper (Displays in page center)
+function showCustomModal(title, msg) {
+    const modal = document.getElementById('global-modal');
+    const mTitle = document.getElementById('modal-title');
+    const mBody = document.getElementById('modal-body');
+    
+    mTitle.innerText = title;
+    mBody.innerHTML = `
+        <div class="text-center py-6 px-4">
+            <div class="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                <i class="fas fa-shield-alt text-red-500 text-2xl"></i>
+            </div>
+            <p class="text-white text-sm font-medium leading-relaxed mb-8">${msg}</p>
+            <button onclick="closeModal()" class="w-full py-4 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-black text-[10px] uppercase tracking-widest transition-all">
+                Acknowledge & Exit
+            </button>
+        </div>
+    `;
+    modal.classList.remove('hidden');
+    modal.classList.add('flex'); // Ensures centering if using Flexbox
+}
         case 'Result':
             contentArea.innerHTML = renderPlaceholder('fa-award', 'Certification Vault', 'Complete modules to view results.');
             break;
