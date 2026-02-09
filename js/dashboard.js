@@ -1602,10 +1602,10 @@ window.showAlert = function(title, message) {
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-                ${renderStatCard('Course Progress', '84%', 'text-blue-500', 'fa-battery-three-quarters')}
-                ${renderStatCard('Avg. Score', '92.4', 'text-green-500', 'fa-bullseye')}
-                ${renderStatCard('Time Invested', '142h', 'text-purple-500', 'fa-stopwatch')}
-                ${renderStatCard('Rank', 'Global #12', 'text-yellow-500', 'fa-trophy')}
+                ${renderStatCard('Course Progress', '0%', 'text-blue-500', 'fa-battery-three-quarters')}
+                ${renderStatCard('Avg. Score', '00.0', 'text-green-500', 'fa-bullseye')}
+                ${renderStatCard('Time Invested', '000h', 'text-purple-500', 'fa-stopwatch')}
+                ${renderStatCard('Rank', 'Global #0', 'text-yellow-500', 'fa-trophy')}
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -1628,9 +1628,9 @@ window.showAlert = function(title, message) {
                         <div class="text-center z-10">
                             <i class="fas fa-microchip text-blue-500/40 text-6xl mb-6"></i>
                             <div class="grid grid-cols-2 gap-x-8 gap-y-2">
-                                <span class="text-white/40 text-[9px] font-black uppercase tracking-widest text-right">Logic: <span class="text-white">95%</span></span>
-                                <span class="text-white/40 text-[9px] font-black uppercase tracking-widest text-left">Syntax: <span class="text-white">88%</span></span>
-                                <span class="text-white/40 text-[9px] font-black uppercase tracking-widest text-right">Speed: <span class="text-white">72%</span></span>
+                                <span class="text-white/40 text-[9px] font-black uppercase tracking-widest text-right">Logic: <span class="text-white">0%</span></span>
+                                <span class="text-white/40 text-[9px] font-black uppercase tracking-widest text-left">Syntax: <span class="text-white">0%</span></span>
+                                <span class="text-white/40 text-[9px] font-black uppercase tracking-widest text-right">Speed: <span class="text-white">0%</span></span>
                                 <span class="text-white/40 text-[9px] font-black uppercase tracking-widest text-left">Memory: <span class="text-white">91%</span></span>
                             </div>
                         </div>
