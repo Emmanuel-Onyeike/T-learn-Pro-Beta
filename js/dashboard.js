@@ -1678,7 +1678,7 @@ function renderActivityRow(title, time, colorBg) {
         </div>
     `;
 }
-
+    }
 function renderPlaceholder(icon, title, subtitle) {
     return `
         <div class="py-32 flex flex-col items-center justify-center animate-in fade-in zoom-in duration-500">
@@ -1691,6 +1691,7 @@ function renderPlaceholder(icon, title, subtitle) {
             </p>
         </div>`;
 }
+
 
 /**
  * 4. MODAL INTERACTIONS (Topics -> Detail -> Workspace)
