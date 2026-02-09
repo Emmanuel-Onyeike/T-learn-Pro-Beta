@@ -1077,35 +1077,218 @@ function closePaymentModal() {
  * 1. ENHANCED CURRICULUM DATA
  */
 const curriculumData = {
-    'HTML': {
-        icon: 'fa-html5',
-        topics: [
-            { title: 'Semantic Structure', theory: 'Semantic HTML tags like <header>, <main>, and <section> provide meaning to the web page structure.', challenge: 'Create a semantic layout with a header and a main section.', snippet: '<header>\n  <h1>My Site</h1>\n</header>\n<main>\n  <p>Hello World</p>\n</main>' },
-            { title: 'Forms & Inputs', theory: 'Forms allow users to enter data. Use <label> for accessibility.', challenge: 'Create a text input with a placeholder.', snippet: '<label for="name">Name:</label>\n<input type="text" id="name" placeholder="Enter Name">' }
-        ]
-    },
-    'CSS': {
-        icon: 'fa-css3-alt',
-        topics: [
-            { title: 'Flexbox Mastery', theory: 'Flexbox is a one-dimensional layout method for arranging items in rows or columns.', challenge: 'Use display: flex to center a div.', snippet: '.container {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n}' },
-            { title: 'Grid Layout', theory: 'CSS Grid is a two-dimensional layout system for the web.', challenge: 'Create a 3-column grid layout.', snippet: '.grid-container {\n  display: grid;\n  grid-template-columns: repeat(3, 1fr);\n}' }
-        ]
-    },
-    'JavaScript': {
-        icon: 'fa-js',
-        topics: [
-            { title: 'Arrow Functions', theory: 'Arrow functions allow a short syntax for writing function expressions.', challenge: 'Rewrite a standard function as an arrow function.', snippet: 'const greet = () => {\n  console.log("Hello JS!");\n};' },
-            { title: 'DOM Manipulation', theory: 'The Document Object Model (DOM) is a programming interface for web documents.', challenge: 'Change the text of an element using innerHTML.', snippet: 'document.getElementById("demo").innerHTML = "Updated!";' }
-        ]
-    },
-    'Python': {
-        icon: 'fa-python',
-        topics: [
-            { title: 'List Comprehensions', theory: 'List comprehensions offer a shorter syntax when you want to create a new list based on values of an existing list.', challenge: 'Create a list of squares using comprehension.', snippet: 'numbers = [1, 2, 3]\nsquares = [x**2 for x in numbers]' },
-            { title: 'Dictionary Methods', theory: 'Dictionaries are used to store data values in key:value pairs.', challenge: 'Access a value using the .get() method.', snippet: 'user = {"name": "Gemini", "level": 1}\nprint(user.get("name"))' }
-        ]
-    }
+  HTML: {
+    icon: 'fa-html5',
+    topics: [
+      {
+        title: 'Semantic Structure',
+        theory: 'Semantic HTML tags like <header>, <main>, and <section> provide meaning to the web page structure.',
+        challenge: 'Create a semantic layout with a header and a main section.',
+        snippet: `<header>
+  <h1>My Site</h1>
+</header>
+<main>
+  <p>Hello World</p>
+</main>`
+      },
+      {
+        title: 'Forms & Inputs',
+        theory: 'Forms allow users to enter data. Use <label> for accessibility.',
+        challenge: 'Create a text input with a placeholder.',
+        snippet: `<label for="name">Name:</label>
+<input type="text" id="name" placeholder="Enter Name">`
+      },
+      {
+        title: 'Media Elements',
+        theory: 'HTML supports multimedia using <img>, <audio>, and <video>.',
+        challenge: 'Embed an image with alt text.',
+        snippet: `<img src="photo.jpg" alt="Profile photo">`
+      },
+      {
+        title: 'Tables',
+        theory: 'Tables are used to display tabular data.',
+        challenge: 'Create a 2-row table.',
+        snippet: `<table>
+  <tr><th>Name</th><th>Age</th></tr>
+  <tr><td>Alex</td><td>22</td></tr>
+</table>`
+      }
+    ]
+  },
+
+  CSS: {
+    icon: 'fa-css3-alt',
+    topics: [
+      {
+        title: 'Flexbox Mastery',
+        theory: 'Flexbox is a one-dimensional layout method for rows or columns.',
+        challenge: 'Center a div horizontally and vertically.',
+        snippet: `.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}`
+      },
+      {
+        title: 'Grid Layout',
+        theory: 'CSS Grid is a two-dimensional layout system.',
+        challenge: 'Create a 3-column grid.',
+        snippet: `.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}`
+      },
+      {
+        title: 'Responsive Design',
+        theory: 'Media queries adapt layouts for different screen sizes.',
+        challenge: 'Change background color on small screens.',
+        snippet: `@media (max-width: 600px) {
+  body {
+    background: #f2f2f2;
+  }
+}`
+      },
+      {
+        title: 'Animations',
+        theory: 'CSS animations allow elements to change styles smoothly.',
+        challenge: 'Create a simple fade-in animation.',
+        snippet: `@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}`
+      }
+    ]
+  },
+
+  JavaScript: {
+    icon: 'fa-js',
+    topics: [
+      {
+        title: 'Arrow Functions',
+        theory: 'Arrow functions provide a shorter function syntax.',
+        challenge: 'Convert a function to arrow syntax.',
+        snippet: `const greet = () => {
+  console.log("Hello JS!");
+};`
+      },
+      {
+        title: 'DOM Manipulation',
+        theory: 'The DOM allows JavaScript to interact with HTML.',
+        challenge: 'Update text content of an element.',
+        snippet: `document.getElementById("demo").innerHTML = "Updated!";`
+      },
+      {
+        title: 'Events',
+        theory: 'Events respond to user interactions.',
+        challenge: 'Run code when a button is clicked.',
+        snippet: `button.addEventListener("click", () => {
+  alert("Clicked!");
+});`
+      },
+      {
+        title: 'Arrays & Methods',
+        theory: 'Arrays store multiple values and provide helper methods.',
+        challenge: 'Filter even numbers from an array.',
+        snippet: `const nums = [1,2,3,4];
+const evens = nums.filter(n => n % 2 === 0);`
+      }
+    ]
+  },
+
+  Python: {
+    icon: 'fa-python',
+    topics: [
+      {
+        title: 'List Comprehensions',
+        theory: 'Concise way to create lists.',
+        challenge: 'Generate squares of numbers.',
+        snippet: `numbers = [1, 2, 3]
+squares = [x**2 for x in numbers]`
+      },
+      {
+        title: 'Dictionary Methods',
+        theory: 'Dictionaries store key-value pairs.',
+        challenge: 'Access a value safely.',
+        snippet: `user = {"name": "Gemini", "level": 1}
+print(user.get("name"))`
+      },
+      {
+        title: 'Functions',
+        theory: 'Functions organize reusable logic.',
+        challenge: 'Write a function that adds two numbers.',
+        snippet: `def add(a, b):
+  return a + b`
+      },
+      {
+        title: 'Loops',
+        theory: 'Loops repeat actions.',
+        challenge: 'Loop through a list and print values.',
+        snippet: `for item in ["a", "b", "c"]:
+  print(item)`
+      }
+    ]
+  },
+
+  Git: {
+    icon: 'fa-git-alt',
+    topics: [
+      {
+        title: 'Version Control Basics',
+        theory: 'Git tracks changes in code over time.',
+        challenge: 'Initialize a git repository.',
+        snippet: `git init`
+      },
+      {
+        title: 'Commits',
+        theory: 'Commits save project snapshots.',
+        challenge: 'Commit a file.',
+        snippet: `git add .
+git commit -m "Initial commit"`
+      }
+    ]
+  },
+
+  React: {
+    icon: 'fa-react',
+    topics: [
+      {
+        title: 'Components',
+        theory: 'Components are reusable UI pieces.',
+        challenge: 'Create a functional component.',
+        snippet: `function Hello() {
+  return <h1>Hello React</h1>;
+}`
+      },
+      {
+        title: 'Props',
+        theory: 'Props pass data to components.',
+        challenge: 'Display a prop value.',
+        snippet: `function User({ name }) {
+  return <p>{name}</p>;
+}`
+      }
+    ]
+  },
+
+  SQL: {
+    icon: 'fa-database',
+    topics: [
+      {
+        title: 'SELECT Queries',
+        theory: 'SELECT retrieves data from tables.',
+        challenge: 'Get all users.',
+        snippet: `SELECT * FROM users;`
+      },
+      {
+        title: 'WHERE Clause',
+        theory: 'Filters query results.',
+        challenge: 'Find users with level > 1.',
+        snippet: `SELECT * FROM users WHERE level > 1;`
+      }
+    ]
+  }
 };
+
 
 /**
  * 2. INITIALIZATION
