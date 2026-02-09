@@ -1452,9 +1452,142 @@ function showCustomModal(title, msg) {
     modal.classList.remove('hidden');
     modal.classList.add('flex'); // Ensures centering if using Flexbox
 }
-        case 'Result':
-            contentArea.innerHTML = renderPlaceholder('fa-award', 'Certification Vault', 'Complete modules to view results.');
-            break;
+       case 'Result':
+    contentArea.innerHTML = `
+        <div class="max-w-4xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
+                <div>
+                    <h2 class="text-white font-black text-2xl tracking-tighter uppercase">Certification Vault</h2>
+                    <p class="text-white/40 text-[10px] tracking-[0.2em] uppercase mt-1">Archive of all processed assessments</p>
+                </div>
+                
+                <div class="flex bg-white/5 border border-white/10 p-1 rounded-2xl backdrop-blur-md">
+                    <button onclick="filterResults('pending', this)" class="result-tab px-6 py-2.5 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all text-white/40">Pending</button>
+                    <button onclick="filterResults('success', this)" class="result-tab px-6 py-2.5 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all text-white/40">Success</button>
+                    <button onclick="filterResults('failed', this)" class="result-tab px-6 py-2.5 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all text-white/40">Failed</button>
+                </div>
+            </div>
+
+            <div id="resultDisplayArea" class="min-h-[400px]"></div>
+        </div>
+    `;
+    // Initialize Default View
+    setTimeout(() => {
+        const successTab = document.querySelectorAll('.result-tab')[1];
+        filterResults('success', successTab);
+    }, 0);
+    break;
+
+
+// --- LOGIC FUNCTIONS ---
+
+function setupExamLogic() {
+    let timerInterval;
+    let isExamActive = false;
+
+    window.generateExamCode = function() {
+        const code = "EX-" + Math.random().toString(36).substring(2, 8).toUpperCase();
+        document.getElementById('generatedCodeDisplay').value = code;
+    };
+
+    window.startExam = function() {
+        const input = document.getElementById('examCodeInput').value;
+        const generated = document.getElementById('generatedCodeDisplay').value;
+
+        if (input === "" || input !== generated) {
+            showCustomModal("AUTH_FAILURE", "Invalid session token. Please re-generate.");
+            return;
+        }
+
+        isExamActive = true;
+        document.getElementById('terminalContent').innerHTML += `
+            <p class="flex gap-3 text-white"><span class="text-white/20">03</span> <span class="text-blue-500">></span> Token Verified.</p>
+            <p class="flex gap-3 text-yellow-500 font-bold"><span class="text-white/20">04</span> > PROCTORING ACTIVE: DO NOT SWITCH TABS.</p>
+        `;
+        startTimer(15 * 60);
+    };
+
+    function startTimer(duration) {
+        let timer = duration, minutes, seconds;
+        const display = document.getElementById('examTimer');
+        timerInterval = setInterval(() => {
+            minutes = parseInt(timer / 60, 10);
+            seconds = parseInt(timer % 60, 10);
+            display.textContent = `T-MINUS ${minutes}:${seconds < 10 ? "0" + seconds : seconds}`;
+            if (--timer < 0) {
+                clearInterval(timerInterval);
+                autoSubmitExam("TIME_EXPIRY");
+            }
+        }, 1000);
+    }
+
+    window.onblur = function() {
+        if (isExamActive) autoSubmitExam("TAB_VIOLATION");
+    };
+
+    function autoSubmitExam(reason) {
+        isExamActive = false;
+        clearInterval(timerInterval);
+        document.getElementById('terminalContent').innerHTML = `
+            <div class="mt-4 p-4 bg-red-500/10 border border-red-500/20 rounded-lg">
+                <p class="text-red-500 font-black uppercase text-[10px]">Critical Error: Terminal Locked</p>
+                <p class="text-white/60 text-[9px] mt-1">Reason: ${reason}</p>
+            </div>
+        `;
+        showCustomModal("EXAM_TERMINATED", `Assessment halted due to: ${reason}`);
+    }
+}
+
+window.filterResults = function(status, element) {
+    const displayArea = document.getElementById('resultDisplayArea');
+    
+    document.querySelectorAll('.result-tab').forEach(tab => {
+        tab.classList.remove('bg-blue-600', 'text-white', 'shadow-lg', 'shadow-blue-600/20');
+        tab.classList.add('text-white/40');
+    });
+    element.classList.remove('text-white/40');
+    element.classList.add('bg-blue-600', 'text-white', 'shadow-lg', 'shadow-blue-600/20');
+
+    const states = {
+        pending: { icon: 'fa-hourglass-half', color: 'text-yellow-500', title: 'Processing...', desc: 'No assessments are currently under review.' },
+        success: { icon: 'fa-award', color: 'text-green-500', title: 'No Certifications Yet', desc: 'Pass an exam to unlock your official digital certificate.' },
+        failed: { icon: 'fa-shield-virus', color: 'text-red-500', title: 'Clean Record', desc: 'No failed attempts detected in the system.' }
+    };
+
+    const state = states[status];
+    displayArea.innerHTML = `
+        <div class="flex flex-col items-center justify-center bg-white/5 border border-white/10 rounded-[2.5rem] p-12 text-center animate-in fade-in zoom-in-95 duration-500">
+            <div class="w-20 h-20 rounded-full bg-white/5 flex items-center justify-center mb-6 border border-white/10">
+                <i class="fas ${state.icon} ${state.color} text-3xl"></i>
+            </div>
+            <h3 class="text-white font-black text-lg uppercase tracking-widest">${state.title}</h3>
+            <p class="text-white/40 text-xs max-w-sm mx-auto mt-4 leading-relaxed">${state.desc}</p>
+        </div>
+    `;
+};
+
+// --- GLOBAL MODAL SYSTEM (Centered) ---
+
+function showCustomModal(title, msg) {
+    const modal = document.getElementById('global-modal');
+    const mTitle = document.getElementById('modal-title');
+    const mBody = document.getElementById('modal-body');
+    
+    mTitle.innerText = title;
+    mBody.innerHTML = `
+        <div class="text-center py-6 px-4">
+            <i class="fas fa-exclamation-triangle text-red-500 text-4xl mb-4"></i>
+            <p class="text-white text-sm font-medium leading-relaxed mb-8">${msg}</p>
+            <button onclick="closeModal()" class="w-full py-4 bg-white/10 hover:bg-white/20 text-white rounded-xl font-black text-[10px] uppercase transition-all">
+                Acknowledge
+            </button>
+        </div>
+    `;
+    
+    // Applying modal styles to ensure it is centered on the page
+    modal.className = "fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4";
+}
+            
         case 'Analytics':
             contentArea.innerHTML = renderPlaceholder('fa-chart-pie', 'Performance Metrics', 'Data is synced after lesson completion.');
             break;
