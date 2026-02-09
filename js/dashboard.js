@@ -205,7 +205,7 @@ const views = {
     
     <div class="flex justify-center sticky top-0 z-50 py-4 backdrop-blur-md">
         <div class="bg-white/5 border border-white/10 p-1.5 rounded-2xl flex gap-1 overflow-x-auto no-scrollbar shadow-2xl backdrop-blur-xl">
-            ${['Courses', 'Exam', 'Result', 'Semester', 'Analytics'].map(tab => `
+            ${['Courses', 'Exam', 'Result', 'Analytics'].map(tab => `
                 <button id="btn-${tab}" onclick="switchLessonSubTab('${tab}')" 
                     class="lesson-nav-btn px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300
                     ${tab === 'Courses' ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/40' : 'text-gray-400 hover:text-white hover:bg-white/5'}">
@@ -1291,9 +1291,126 @@ function switchLessonSubTab(tab) {
                     `).join('')}
                 </div>`;
             break;
-        case 'Exam':
-            contentArea.innerHTML = renderPlaceholder('fa-file-signature', 'Exam Terminal', 'No active assessments available.');
-            break;
+      case 'Exam':
+    contentArea.innerHTML = `
+        <div class="exam-container" style="padding: 20px; max-width: 900px; margin: 0 auto;">
+            <div class="search-section" style="margin-bottom: 30px;">
+                <input type="text" id="examSearch" placeholder="Search for past exams or certificates..." 
+                    style="width: 100%; padding: 12px 20px; border-radius: 25px; border: 1px solid #ddd; outline: none; font-size: 16px;">
+            </div>
+
+            <div class="terminal-header" style="background: #2d2d2d; color: #fff; padding: 15px; border-radius: 8px 8px 0 0; display: flex; justify-content: space-between; align-items: center;">
+                <span><i class="fas fa-terminal"></i> Online Coding Exam Terminal</span>
+                <div id="examTimer" style="color: #ff4757; font-weight: bold; font-family: monospace; font-size: 1.2rem;">Time: 15:00</div>
+            </div>
+
+            <div class="terminal-body" id="terminalDisplay" style="background: #1e1e1e; color: #00ff00; padding: 30px; min-height: 300px; border-radius: 0 0 8px 8px; font-family: 'Courier New', monospace; border: 1px solid #333;">
+                <div id="terminalContent">
+                    <p>> System initialized...</p>
+                    <p>> No active assessment detected. Please generate an exam code to begin.</p>
+                </div>
+            </div>
+
+            <div class="exam-actions" style="margin-top: 20px; display: flex; gap: 15px; flex-wrap: wrap;">
+                <select id="examLanguage" style="padding: 10px; border-radius: 5px; flex-grow: 1;">
+                    <option value="html">HTML5</option>
+                    <option value="css">CSS3</option>
+                    <option value="javascript">JavaScript</option>
+                    <option value="python">Python</option>
+                </select>
+                
+                <button onclick="generateExamCode()" style="padding: 10px 20px; background: #3498db; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                    Generate Exam Code
+                </button>
+            </div>
+
+            <div class="code-entry" style="margin-top: 20px; display: flex; gap: 10px;">
+                <input type="text" id="generatedCodeDisplay" placeholder="Code will appear here" readonly 
+                    style="background: #f4f4f4; padding: 10px; border-radius: 5px; border: 1px solid #ccc; width: 150px; text-align: center; font-weight: bold;">
+                
+                <input type="text" id="examCodeInput" placeholder="Enter Exam Code to Start" 
+                    style="flex-grow: 1; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
+                
+                <button onclick="startExam()" style="padding: 10px 20px; background: #27ae60; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                    Upload & Start Exam
+                </button>
+            </div>
+        </div>
+    `;
+
+    // --- LOGIC ---
+
+    let timerInterval;
+    let isExamActive = false;
+
+    // 1. Generate Random Code
+    window.generateExamCode = function() {
+        const code = "EX-" + Math.random().toString(36).substring(2, 8).toUpperCase();
+        document.getElementById('generatedCodeDisplay').value = code;
+        // In a real app, you'd save this code to a database here
+    };
+
+    // 2. Start Exam Logic
+    window.startExam = function() {
+        const input = document.getElementById('examCodeInput').value;
+        const generated = document.getElementById('generatedCodeDisplay').value;
+
+        if (input === "" || input !== generated) {
+            showModalAlert("Invalid Code", "Please generate a code and enter it correctly.");
+            return;
+        }
+
+        isExamActive = true;
+        document.getElementById('terminalContent').innerHTML = `<p>> Exam Started. 30 Questions loaded. Good luck!</p><p>> Monitoring tab activity...</p>`;
+        startTimer(15 * 60); // 15 minutes
+    };
+
+    // 3. Timer Function
+    function startTimer(duration) {
+        let timer = duration, minutes, seconds;
+        timerInterval = setInterval(() => {
+            minutes = parseInt(timer / 60, 10);
+            seconds = parseInt(timer % 60, 10);
+
+            minutes = minutes < 10 ? "0" + minutes : minutes;
+            seconds = seconds < 10 ? "0" + seconds : seconds;
+
+            document.getElementById('examTimer').textContent = "Time: " + minutes + ":" + seconds;
+
+            if (--timer < 0) {
+                clearInterval(timerInterval);
+                autoSubmitExam("Time Expired");
+            }
+        }, 1000);
+    }
+
+    // 4. Anti-Cheat: Detect Tab Switch
+    window.onblur = function() {
+        if (isExamActive) {
+            autoSubmitExam("Tab Switch Detected (Security Violation)");
+        }
+    };
+
+    // 5. Auto-Submit Function
+    function autoSubmitExam(reason) {
+        isExamActive = false;
+        clearInterval(timerInterval);
+        document.getElementById('terminalContent').innerHTML = `
+            <p style="color: #ff4757;">> EXAM TERMINATED</p>
+            <p style="color: #ff4757;">> Reason: ${reason}</p>
+            <p>> Data uploaded to server...</p>
+        `;
+        showModalAlert("Exam Submitted", `Your exam was automatically submitted. Reason: ${reason}`);
+    }
+
+    // Modal Helper (Based on your preference for center-page modals)
+    function showModalAlert(title, message) {
+        // This is a placeholder for your modal logic
+        // You would trigger your specific modal component here
+        alert(`[${title}]\n\n${message}`); 
+    }
+
+    break;
         case 'Result':
             contentArea.innerHTML = renderPlaceholder('fa-award', 'Certification Vault', 'Complete modules to view results.');
             break;
