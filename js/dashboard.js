@@ -1577,8 +1577,111 @@ window.showAlert = function(title, message) {
 };
             
  case 'Analytics':
-            contentArea.innerHTML = renderPlaceholder('fa-chart-pie', 'Performance Metrics', 'Data is synced after lesson completion.');
-            break;
+    contentArea.innerHTML = `
+        <style>
+            @keyframes spin-slow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+            @keyframes reverse-slow { from { transform: rotate(360deg); } to { transform: rotate(0deg); } }
+            .animate-spin-slow { animation: spin-slow 12s linear infinite; }
+            .animate-reverse-slow { animation: reverse-slow 20s linear infinite; }
+        </style>
+
+        <div class="max-w-6xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700">
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+                <div>
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="px-3 py-1 bg-blue-600/20 border border-blue-500/30 rounded-full text-blue-400 text-[8px] font-black uppercase tracking-[0.2em]">Live Telemetry</span>
+                    </div>
+                    <h2 class="text-white font-black text-3xl tracking-tighter uppercase">Performance Metrics</h2>
+                    <p class="text-white/40 text-[10px] tracking-[0.2em] uppercase mt-1">Real-time synchronization with neural training modules</p>
+                </div>
+                <div class="flex gap-4">
+                    <button class="px-5 py-3 bg-white/5 border border-white/10 rounded-xl text-white/60 text-[9px] font-black uppercase tracking-widest hover:bg-white/10 transition-all">
+                        <i class="fas fa-download mr-2"></i> Export Data
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+                ${renderStatCard('Course Progress', '84%', 'text-blue-500', 'fa-battery-three-quarters')}
+                ${renderStatCard('Avg. Score', '92.4', 'text-green-500', 'fa-bullseye')}
+                ${renderStatCard('Time Invested', '142h', 'text-purple-500', 'fa-stopwatch')}
+                ${renderStatCard('Rank', 'Global #12', 'text-yellow-500', 'fa-trophy')}
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="lg:col-span-2 bg-white/5 border border-white/10 rounded-[2.5rem] p-8 backdrop-blur-md relative overflow-hidden">
+                    <div class="flex justify-between items-center mb-10">
+                        <h3 class="text-white font-black text-xs uppercase tracking-[0.2em]">Cognitive Skill Distribution</h3>
+                        <div class="flex gap-2 text-blue-500">
+                            <span class="w-2 h-2 rounded-full bg-current animate-pulse"></span>
+                            <span class="text-[8px] font-bold uppercase tracking-widest">Active Scan</span>
+                        </div>
+                    </div>
+                    
+                    <div class="h-[300px] flex items-center justify-center relative">
+                        <div class="absolute inset-0 flex items-center justify-center opacity-20">
+                            <div class="w-64 h-64 border-[1px] border-dashed border-blue-500 rounded-full animate-spin-slow"></div>
+                            <div class="absolute w-48 h-48 border-[1px] border-dashed border-blue-400/50 rounded-full animate-reverse-slow"></div>
+                            <div class="absolute w-full h-[1px] bg-gradient-to-r from-transparent via-blue-500/50 to-transparent"></div>
+                        </div>
+                        
+                        <div class="text-center z-10">
+                            <i class="fas fa-microchip text-blue-500/40 text-6xl mb-6"></i>
+                            <div class="grid grid-cols-2 gap-x-8 gap-y-2">
+                                <span class="text-white/40 text-[9px] font-black uppercase tracking-widest text-right">Logic: <span class="text-white">95%</span></span>
+                                <span class="text-white/40 text-[9px] font-black uppercase tracking-widest text-left">Syntax: <span class="text-white">88%</span></span>
+                                <span class="text-white/40 text-[9px] font-black uppercase tracking-widest text-right">Speed: <span class="text-white">72%</span></span>
+                                <span class="text-white/40 text-[9px] font-black uppercase tracking-widest text-left">Memory: <span class="text-white">91%</span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white/5 border border-white/10 rounded-[2.5rem] p-8 backdrop-blur-md">
+                    <h3 class="text-white font-black text-xs uppercase tracking-[0.2em] mb-8 text-center">Neural Activity Log</h3>
+                    <div class="space-y-6">
+                        ${renderActivityRow('Module 04 Complete', '2 mins ago', 'bg-green-500')}
+                        ${renderActivityRow('Exam Token Generated', '4 hours ago', 'bg-blue-500')}
+                        ${renderActivityRow('System Login: NY-Node', '12 hours ago', 'bg-white/40')}
+                        ${renderActivityRow('Assessment Failed: JS-02', '1 day ago', 'bg-red-500')}
+                    </div>
+                    <button class="w-full mt-10 py-4 bg-white/5 border border-white/10 rounded-xl text-white/40 text-[9px] font-black uppercase tracking-widest hover:text-white transition-all">
+                        View Full History
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+    break;
+
+/**
+ * HELPER FUNCTIONS
+ * Ensure these are defined in your global script scope
+ */
+function renderStatCard(label, value, colorClass, icon) {
+    return `
+        <div class="bg-white/5 border border-white/10 rounded-3xl p-6 hover:bg-white/[0.08] transition-all group">
+            <div class="flex justify-between items-start mb-4">
+                <i class="fas ${icon} ${colorClass} opacity-50 group-hover:opacity-100 transition-opacity"></i>
+                <div class="text-[8px] text-green-500 font-bold">+2.4%</div>
+            </div>
+            <p class="text-white/40 text-[9px] font-black uppercase tracking-widest mb-1">${label}</p>
+            <h4 class="text-white text-2xl font-black tracking-tighter">${value}</h4>
+        </div>
+    `;
+}
+
+function renderActivityRow(title, time, dotColor) {
+    return `
+        <div class="flex items-center gap-4 group">
+            <div class="w-1.5 h-1.5 rounded-full ${dotColor} shadow-[0_0_8px_currentColor]"></div>
+            <div class="flex-1 border-b border-white/5 pb-2 group-last:border-0">
+                <p class="text-white/80 text-[10px] font-bold uppercase tracking-tight">${title}</p>
+                <p class="text-white/20 text-[8px] uppercase mt-0.5">${time}</p>
+            </div>
+        </div>
+    `;
+}
     }
 } 
 
