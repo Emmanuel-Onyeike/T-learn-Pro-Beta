@@ -271,9 +271,21 @@ const views = {
     
 
 'Projects': `
+    <div class="max-w-6xl mx-auto space-y-10 p-4">
+        <div class="flex flex-col items-center gap-6">
+            <div class="relative w-full max-w-2xl">
+                <i class="fas fa-search absolute left-6 top-1/2 -translate-y-1/2 text-white/20"></i>
+                <input type="text" placeholder="SEARCH PROJECTS BY NAME..." class="w-full bg-white/5 border border-white/10 rounded-full py-5 pl-14 pr-6 text-white text-[11px] font-black tracking-[0.2em] focus:border-blue-500/50 outline-none transition-all">
+            </div>
+            <button onclick="openProjectInitiator()" class="px-10 py-5 bg-blue-600 hover:bg-blue-500 text-white font-black text-[11px] uppercase tracking-[0.3em] rounded-2xl transition-all shadow-xl shadow-blue-600/20">
+                <i class="fas fa-plus-circle mr-2"></i> Create New Project
+            </button>
+        </div>
 
+        <div id="projectContainerGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            </div>
+    </div>
 `,
-
     
 
 'Leaderboard': `
@@ -320,10 +332,52 @@ const views = {
 
 
 'Notifications': `
-   
+    <div class="max-w-2xl mx-auto p-4 space-y-4 animate-in fade-in duration-500">
+        <div class="flex justify-between items-end mb-8 px-2">
+            <div>
+                <h2 class="text-white font-black text-2xl uppercase tracking-tighter">Activity Feed</h2>
+                <p class="text-white/30 text-[9px] font-bold uppercase tracking-widest mt-1">Real-time system event logging</p>
+            </div>
+            <button onclick="localStorage.removeItem('app_notifications'); renderTab('Notifications');" class="text-[9px] font-black text-red-500/40 hover:text-red-500 uppercase tracking-widest transition-all">
+                Clear All
+            </div>
+        </div>
 
+        <div id="notifList" class="space-y-4">
+            ${(JSON.parse(localStorage.getItem('app_notifications')) || []).filter(l => !l.archived).length === 0 ? `
+                <div class="flex flex-col items-center justify-center p-20 border border-dashed border-white/5 rounded-[3rem]">
+                    <i class="fas fa-bell-slash text-white/5 text-4xl mb-4"></i>
+                    <p class="text-white/20 text-[10px] font-black uppercase tracking-widest">No activity found</p>
+                </div>
+            ` : (JSON.parse(localStorage.getItem('app_notifications')) || []).filter(l => !l.archived).map(log => `
+                <div id="notif-${log.id}" class="group relative overflow-hidden bg-white/5 border border-white/10 p-6 rounded-[2.5rem] transition-all hover:bg-white/[0.08]">
+                    <div class="flex items-center gap-5">
+                        <div class="w-12 h-12 rounded-2xl bg-[#0a0f25] flex items-center justify-center border border-white/5">
+                            <i class="fas ${log.type === 'success' ? 'fa-check text-green-500' : log.type === 'failed' ? 'fa-times text-red-500' : 'fa-sync fa-spin text-yellow-500'}"></i>
+                        </div>
+                        
+                        <div class="flex-1">
+                            <div class="flex justify-between items-start">
+                                <p class="text-white text-[11px] font-black uppercase tracking-widest">${log.msg}</p>
+                                <span class="text-white/20 text-[8px] font-bold">${log.time}</span>
+                            </div>
+                            <p class="text-white/40 text-[9px] mt-1 uppercase">Action Log #${log.id.toString().slice(-4)}</p>
+                        </div>
+
+                        <div class="flex gap-2 translate-x-4 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-300">
+                            <button onclick="archiveNotif(${log.id})" class="w-9 h-9 rounded-xl bg-blue-500/10 text-blue-400 hover:bg-blue-500 hover:text-white transition-all shadow-lg" title="Archive">
+                                <i class="fas fa-archive text-[10px]"></i>
+                            </button>
+                            <button onclick="deleteNotif(${log.id})" class="w-9 h-9 rounded-xl bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white transition-all shadow-lg" title="Delete">
+                                <i class="fas fa-trash text-[10px]"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('')}
+        </div>
+    </div>
 `,
-
 
 
 
@@ -558,7 +612,11 @@ function updateSettingsTab(tabId) {
             </div>`,
         
 'Projects': `
-
+<div class="max-w-4xl mx-auto p-4">
+        <h2 class="text-white font-black text-2xl uppercase mb-8">Management</h2>
+        <div id="settingsProjectList" class="space-y-4">
+            </div>
+    </div>
 `,
 
         'Billing': `
@@ -1813,3 +1871,180 @@ function closeModal() {
 
 // Start the App
 initLMS();
+
+
+////// FOR THE NOTIFICATIONS
+window.archiveNotif = function(id) {
+    let logs = JSON.parse(localStorage.getItem('app_notifications')) || [];
+    const idx = logs.findIndex(l => l.id === id);
+    if (idx !== -1) {
+        logs[idx].archived = true;
+        localStorage.setItem('app_notifications', JSON.stringify(logs));
+        
+        // Visual feedback first
+        const el = document.getElementById(`notif-${id}`);
+        if(el) el.classList.add('opacity-0', 'translate-x-10');
+        
+        // Re-render after animation to check for empty state
+        setTimeout(() => {
+            renderTab('Notifications');
+        }, 300);
+    }
+};
+
+window.deleteNotif = function(id) {
+    let logs = JSON.parse(localStorage.getItem('app_notifications')) || [];
+    logs = logs.filter(l => l.id !== id);
+    localStorage.setItem('app_notifications', JSON.stringify(logs));
+    
+    // Visual feedback first
+    const el = document.getElementById(`notif-${id}`);
+    if(el) el.classList.add('scale-95', 'opacity-0');
+    
+    // Re-render after animation
+    setTimeout(() => {
+        renderTab('Notifications');
+    }, 300);
+};
+
+
+
+
+//////  FOR THE PROJECTS   
+// Persistent Data & Sound
+let projects = JSON.parse(localStorage.getItem('app_projects')) || [];
+const notifySound = new Audio('https://assets.mixkit.co/active_storage/sfx/2354/2354-preview.mp3');
+
+function saveAndSync() {
+    localStorage.setItem('app_projects', JSON.stringify(projects));
+    const countEl = document.getElementById('projectCount');
+    if (countEl) countEl.innerText = projects.length;
+}
+
+// Notification Trigger
+function triggerNotification(msg, type = 'pending') {
+    notifySound.play().catch(() => {}); // Play sound
+    const id = Date.now();
+    const toast = document.createElement('div');
+    toast.className = `fixed top-5 right-5 z-[2000] p-4 rounded-2xl bg-[#0a0f25] border border-white/10 shadow-2xl animate-in slide-in-from-right duration-500`;
+    toast.innerHTML = `
+        <div class="flex items-center gap-3">
+            <div class="w-2 h-2 rounded-full ${type === 'success' ? 'bg-green-500' : type === 'failed' ? 'bg-red-500' : 'bg-yellow-500'} animate-pulse"></div>
+            <p class="text-white text-[10px] font-black uppercase tracking-widest">${msg}</p>
+        </div>
+    `;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 4000);
+
+    // Save to Notifications tab
+    let logs = JSON.parse(localStorage.getItem('app_notifications')) || [];
+    logs.unshift({ msg, type, time: new Date().toLocaleTimeString() });
+    localStorage.setItem('app_notifications', JSON.stringify(logs));
+}
+// Step 1: Center Modal
+function openProjectInitiator() {
+    const modalHtml = `
+    <div id="centerModal" class="fixed inset-0 z-[1000] flex items-center justify-center bg-black/80 backdrop-blur-md p-4">
+        <div class="bg-[#0a0f1d] border border-white/10 w-full max-w-md rounded-[3rem] p-10 animate-in zoom-in-95 duration-300">
+            <i class="fas fa-rocket text-blue-500 text-3xl mb-6"></i>
+            <h2 class="text-white font-black text-2xl uppercase tracking-tighter mb-2">Project Name</h2>
+            <input id="initName" type="text" placeholder="Enter name..." class="w-full bg-white/5 border border-white/10 p-5 rounded-2xl text-white mb-4 outline-none focus:border-blue-500/50">
+            <textarea id="initDesc" placeholder="Description (Optional)" class="w-full bg-white/5 border border-white/10 p-5 rounded-2xl text-white h-24 mb-6 outline-none focus:border-blue-500/50"></textarea>
+            <div class="flex gap-4">
+                <button onclick="closeModal('centerModal')" class="flex-1 py-4 text-white/30 font-black text-[10px] uppercase">Cancel</button>
+                <button onclick="openRightSlide()" class="flex-1 py-4 bg-blue-600 rounded-2xl text-white font-black text-[10px] uppercase">Continue</button>
+            </div>
+        </div>
+    </div>`;
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+}
+
+// Step 2: Right Side Slide-out
+function openRightSlide() {
+    const name = document.getElementById('initName').value || "Untitled";
+    const desc = document.getElementById('initDesc').value;
+    closeModal('centerModal');
+
+    const rightHtml = `
+    <div id="rightModal" class="fixed inset-0 z-[1001] flex justify-end bg-black/40 backdrop-blur-sm">
+        <div class="w-full max-w-lg bg-[#050b1d] h-full p-10 border-l border-white/10 animate-in slide-in-from-right duration-500 overflow-y-auto">
+            <h3 class="text-white font-black text-3xl uppercase tracking-tighter mb-8">${name}</h3>
+            
+            <div class="space-y-8">
+                <div>
+                    <label class="text-blue-400 text-[10px] font-black uppercase tracking-widest mb-4 block">Project Image</label>
+                    <input type="file" id="imgInp" class="hidden" onchange="previewImg(this)">
+                    <div onclick="document.getElementById('imgInp').click()" class="group relative h-48 w-full bg-white/5 border-2 border-dashed border-white/10 rounded-[2rem] flex items-center justify-center cursor-pointer overflow-hidden hover:border-blue-500/50">
+                        <img id="prev" class="absolute inset-0 w-full h-full object-cover hidden">
+                        <i class="fas fa-image text-white/10 text-4xl group-hover:scale-110 transition-transform"></i>
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <input id="pLink" type="text" placeholder="Project Link (URL)" class="w-full bg-white/5 border border-white/10 p-5 rounded-2xl text-white text-xs">
+                    
+                    <div class="grid grid-cols-2 gap-3">
+                        <button onclick="setType('Job', this)" class="type-btn p-4 rounded-xl border border-white/10 text-white/40 text-[9px] font-black uppercase">Job</button>
+                        <button onclick="setType('Private', this)" class="type-btn p-4 rounded-xl border border-white/10 text-white/40 text-[9px] font-black uppercase">Private</button>
+                        <button onclick="setType('Personal', this)" class="type-btn p-4 rounded-xl border border-white/10 text-white/40 text-[9px] font-black uppercase">Personal</button>
+                        <button class="p-4 rounded-xl border border-white/5 text-white/10 text-[9px] font-black uppercase cursor-not-allowed"><i class="fas fa-lock mr-2"></i> Locked</button>
+                    </div>
+
+                    <div class="bg-white/5 p-5 rounded-2xl border border-white/5">
+                        <label class="text-white/40 text-[9px] font-black uppercase mb-2 block">User Limit</label>
+                        <div class="flex items-center justify-between">
+                             <input id="pUsers" type="number" value="5" class="bg-transparent text-white font-black text-2xl outline-none w-20">
+                             <span class="text-[8px] text-blue-500 font-bold">Standard Capacity</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex gap-4 pt-10">
+                    <button onclick="closeModal('rightModal')" class="flex-1 py-5 text-white/30 font-black text-[10px] uppercase tracking-widest">Cancel</button>
+                    <button id="finishBtn" onclick="finalizeProject('${name}', '${desc}')" class="flex-1 py-5 bg-green-600 rounded-2xl text-white font-black text-[10px] uppercase tracking-widest shadow-lg shadow-green-600/20">Create Project</button>
+                </div>
+            </div>
+        </div>
+    </div>`;
+    document.body.insertAdjacentHTML('beforeend', rightHtml);
+}
+
+// Final Build Logic
+let activeType = 'Personal';
+function setType(t, btn) {
+    document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('border-blue-500', 'text-white'));
+    btn.classList.add('border-blue-500', 'text-white');
+    activeType = t;
+}
+
+function finalizeProject(name, desc) {
+    const btn = document.getElementById('finishBtn');
+    const link = document.getElementById('pLink').value;
+    const users = document.getElementById('pUsers').value;
+    const img = document.getElementById('prev').src;
+
+    btn.innerHTML = `<i class="fas fa-circle-notch fa-spin"></i>`;
+    
+    // Initial Notification
+    triggerNotification(`Initializing ${name}...`, 'pending');
+
+    setTimeout(() => {
+        const statusChance = Math.random();
+        const finalStatus = statusChance > 0.4 ? 'success' : 'failed';
+        
+        const newProj = {
+            id: Date.now(),
+            name, desc, link, users, img,
+            type: activeType,
+            status: finalStatus
+        };
+
+        projects.push(newProj);
+        saveAndSync();
+        closeModal('rightModal');
+        triggerNotification(`${name} Build ${finalStatus.toUpperCase()}`, finalStatus);
+        
+        // Refresh the specific view if we are on Projects tab
+        renderProjects();
+    }, 5000);
+}
