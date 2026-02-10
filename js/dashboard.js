@@ -416,21 +416,204 @@ const views = {
 
 
 
+'Team': `
+    <div class="max-w-6xl mx-auto p-6 space-y-10 animate-in fade-in zoom-in-95 duration-700">
+        
+        <div class="flex flex-col md:flex-row justify-between items-end gap-6 mb-12">
+            <div class="space-y-2">
+                <div class="flex items-center gap-2">
+                    <div class="w-2 h-2 rounded-full bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.8)]"></div>
+                    <span class="text-[9px] font-black text-blue-500 uppercase tracking-[0.3em]">Operational Unit</span>
+                </div>
+                <h2 class="text-white font-black text-5xl uppercase tracking-tighter">My Squad</h2>
+            </div>
+            
+            <button class="px-8 py-4 bg-white/5 border border-white/10 rounded-2xl text-white/40 text-[10px] font-black uppercase tracking-widest hover:bg-blue-600 hover:text-white hover:border-blue-500 transition-all duration-300">
+                <i class="fas fa-user-plus mr-2"></i> Recruit Member
+            </button>
+        </div>
 
-    'Team': `
-   `,
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+            
+            <div class="md:col-span-2 md:row-span-2 relative group overflow-hidden bg-gradient-to-br from-blue-600/10 to-transparent border border-blue-500/20 rounded-[3rem] p-10 flex flex-col justify-between">
+                <div class="absolute top-0 right-0 p-8">
+                    <i class="fas fa-crown text-blue-500/20 text-6xl rotate-12 group-hover:rotate-0 transition-transform duration-500"></i>
+                </div>
+                
+                <div class="space-y-4">
+                    <div class="w-24 h-24 rounded-[2.5rem] bg-white/5 border border-white/10 flex items-center justify-center">
+                        <i class="fas fa-user-shield text-white/10 text-4xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-white font-black text-3xl uppercase tracking-tighter">Squad Leader</h3>
+                        <p class="text-blue-400 text-[10px] font-black uppercase tracking-[0.2em]">Unassigned Slot</p>
+                    </div>
+                </div>
 
+                <div class="pt-10">
+                    <div class="h-1 w-full bg-white/5 rounded-full overflow-hidden">
+                        <div class="h-full bg-blue-500 w-0 group-hover:w-full transition-all duration-1000"></div>
+                    </div>
+                    <p class="mt-4 text-white/20 text-[9px] font-bold uppercase italic">Awaiting authentication...</p>
+                </div>
+            </div>
 
-'Inbox': `
+            ${['Engineer', 'Designer', 'Analyst', 'Strategist'].map(role => `
+                <div class="bg-[#0a0f1d] border border-white/5 rounded-[2.5rem] p-8 flex flex-col items-center text-center group hover:border-white/20 transition-all">
+                    <div class="w-16 h-16 rounded-2xl bg-white/[0.03] border border-white/5 mb-6 flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <i class="fas fa-id-badge text-white/5 text-2xl"></i>
+                    </div>
+                    <h4 class="text-white/60 font-black text-xs uppercase tracking-widest mb-1">${role}</h4>
+                    <span class="text-[8px] text-white/10 font-black uppercase tracking-tighter">System Standby</span>
+                    
+                    <div class="mt-6 flex gap-1">
+                        <div class="w-1 h-1 rounded-full bg-white/10"></div>
+                        <div class="w-1 h-1 rounded-full bg-white/10"></div>
+                        <div class="w-1 h-1 rounded-full bg-white/10"></div>
+                    </div>
+                </div>
+            `).join('')}
+
+            <div class="md:col-span-2 bg-white/[0.01] border-2 border-dashed border-white/5 rounded-[2.5rem] p-8 flex items-center justify-center">
+                <div class="text-center">
+                    <p class="text-white/10 text-[10px] font-black uppercase tracking-[0.4em] mb-4">Engineering team in progress</p>
+                    <div class="flex items-center gap-4 justify-center">
+                        <div class="animate-bounce p-2"><i class="fas fa-hard-hat text-white/20"></i></div>
+                        <div class="animate-bounce delay-100 p-2"><i class="fas fa-tools text-white/20"></i></div>
+                        <div class="animate-bounce delay-200 p-2"><i class="fas fa-project-diagram text-white/20"></i></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
 `,
 
 
+    
+'Inbox': `
+    <div class="max-w-6xl mx-auto h-[700px] flex flex-col animate-in fade-in slide-in-from-bottom-8 duration-700">
+        
+        <div class="flex items-center justify-between mb-8 px-2">
+            <div>
+                <h2 class="text-white font-black text-4xl uppercase tracking-tighter">Inbox</h2>
+                <p class="text-blue-500/50 text-[9px] font-black uppercase tracking-[0.3em]">Encrypted Terminal v2.0</p>
+            </div>
+            <div class="flex gap-3">
+                <button class="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-white/40 hover:text-white transition-colors">
+                    <i class="fas fa-sliders-h text-xs"></i>
+                </button>
+                <button class="px-6 py-3 bg-blue-600 rounded-2xl text-white text-[10px] font-black uppercase tracking-widest shadow-lg shadow-blue-600/20">
+                    Compose
+                </button>
+            </div>
+        </div>
+
+        <div class="flex-1 flex bg-[#0a0f1d]/50 border border-white/5 rounded-[3rem] overflow-hidden">
+            
+            <div class="w-1/3 border-r border-white/5 flex flex-col">
+                <div class="p-6 border-b border-white/5">
+                    <div class="relative group">
+                        <i class="fas fa-filter absolute left-4 top-1/2 -translate-y-1/2 text-white/10 text-[10px]"></i>
+                        <input type="text" placeholder="Filter transmissions..." class="w-full bg-white/5 border border-white/10 py-3 pl-10 pr-4 rounded-xl text-white text-[10px] uppercase font-black tracking-widest outline-none focus:border-blue-500/40 transition-all">
+                    </div>
+                </div>
+                
+                <div class="flex-1 overflow-y-auto p-4 space-y-4 opacity-40">
+                    ${[1, 2, 3, 4].map(() => `
+                        <div class="p-5 rounded-[2rem] border border-dashed border-white/10 flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-full bg-white/5 shrink-0"></div>
+                            <div class="space-y-2 flex-1">
+                                <div class="h-2 w-20 bg-white/10 rounded-full"></div>
+                                <div class="h-1.5 w-full bg-white/5 rounded-full"></div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+
+            <div class="flex-1 flex flex-col items-center justify-center p-20 text-center relative">
+                <div class="absolute inset-0 flex items-center justify-center opacity-[0.02] pointer-events-none">
+                    <i class="fas fa-satellite-dish text-[20rem]"></i>
+                </div>
+
+                <div class="relative space-y-6">
+                    <div class="inline-block p-6 rounded-[2.5rem] bg-gradient-to-b from-blue-500/10 to-transparent border border-blue-500/20 animate-pulse">
+                        <i class="fas fa-signal text-blue-500 text-4xl"></i>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-white font-black text-2xl uppercase tracking-tighter mb-2">Signal Intercepted</h3>
+                        <p class="text-white/20 text-[10px] font-bold uppercase tracking-widest max-w-sm mx-auto leading-relaxed">
+                            Engineers are currently calibrating the <span class="text-blue-500">end-to-end neural encryption</span>. Communications will resume once the link is secured.
+                        </p>
+                    </div>
+
+                    <div class="pt-8">
+                        <div class="flex items-center justify-center gap-2">
+                            <span class="w-1 h-1 bg-blue-500 rounded-full animate-ping"></span>
+                            <span class="text-[8px] font-black text-blue-400 uppercase tracking-[0.5em]">Establishing Protocol...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+`,
+    
 
 
 'Nxxt AI': `
+    <div class="flex flex-col h-[85vh] max-w-4xl mx-auto relative animate-in fade-in duration-500" id="nxxtContainer">
+        
+        <div class="flex justify-center gap-4 py-4 sticky top-0 z-20 bg-[#0a0f1d]/80 backdrop-blur-md">
+            <button onclick="window.nxxtMode = 'standard'" class="px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest border border-white/10 hover:bg-white/5 transition-all focus:bg-white focus:text-black">Standard</button>
+            <button onclick="window.nxxtMode = 'fun'" class="px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest border border-white/10 hover:bg-white/5 transition-all focus:border-blue-500 focus:text-blue-500">Fun Mode</button>
+        </div>
 
+        <div id="nxxtWatermark" class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none opacity-[0.03] transition-opacity duration-1000">
+            <h1 class="text-white font-black text-[12rem] tracking-tighter italic">NXXT</h1>
+            <p class="text-white font-black text-xs uppercase tracking-[1em] -mt-8">Neural Engine</p>
+        </div>
+
+        <div id="aiThread" class="flex-1 overflow-y-auto space-y-12 px-6 py-10 custom-scrollbar relative z-10 pb-32">
+            </div>
+
+        <div class="p-6 absolute bottom-0 left-0 right-0 bg-gradient-to-t from-[#0a0f1d] via-[#0a0f1d] to-transparent z-20">
+            <div class="relative group max-w-3xl mx-auto">
+                <div class="absolute -inset-0.5 bg-gradient-to-r from-blue-500/20 to-purple-600/20 rounded-[2rem] blur opacity-0 group-focus-within:opacity-100 transition duration-500"></div>
+                
+                <div class="relative bg-[#0d1117] border border-white/10 rounded-[2.5rem] p-4 shadow-2xl transition-all group-focus-within:border-white/20">
+                    <textarea 
+                        id="nxxtInput"
+                        rows="1" 
+                        placeholder="Ask Nxxt anything..." 
+                        class="w-full bg-transparent border-none outline-none text-white text-lg px-4 py-2 resize-none placeholder:text-white/20"
+                        oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'"
+                        onkeydown="if(event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); sendMessage(); }"
+                    ></textarea>
+                    
+                    <div class="flex items-center justify-between mt-4 px-2">
+                        <div class="flex gap-2">
+                            <button class="w-10 h-10 rounded-xl bg-white/5 border border-white/5 flex items-center justify-center text-white/20 hover:text-white transition-all"><i class="fas fa-plus text-xs"></i></button>
+                        </div>
+                        
+                        <div class="flex items-center gap-4">
+                            <div class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-blue-500/5 border border-blue-500/10">
+                                <span class="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></span>
+                                <span class="text-[9px] font-black text-blue-500/80 uppercase tracking-widest">Nxxt-1.5</span>
+                            </div>
+                            <button onclick="sendMessage()" class="w-12 h-12 rounded-2xl bg-white text-black flex items-center justify-center hover:scale-110 active:scale-95 transition-all shadow-xl shadow-white/5">
+                                <i class="fas fa-paper-plane text-sm"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 `,
-
 
 
 
@@ -2205,3 +2388,72 @@ window.finalizeProject = function(name, desc) {
         if (typeof renderTab !== 'undefined') renderTab('Projects');
     }, 3000);
 };
+
+
+///// FOR THE NXXT AI ALONE
+window.nxxtMode = 'standard';
+
+function sendMessage() {
+    const input = document.getElementById('nxxtInput');
+    const thread = document.getElementById('aiThread');
+    const watermark = document.getElementById('nxxtWatermark');
+    const prompt = input.value.trim();
+
+    if (!prompt) return;
+
+    // Fade watermark on first message
+    watermark.style.opacity = '0.01';
+
+    // 1. Add User Message
+    thread.insertAdjacentHTML('beforeend', `
+        <div class="flex justify-end animate-in slide-in-from-right-4 duration-300">
+            <div class="bg-blue-600 text-white rounded-[2rem] rounded-tr-sm p-5 max-w-[80%] shadow-lg shadow-blue-600/10">
+                <p class="text-[16px] font-medium leading-relaxed">${prompt}</p>
+            </div>
+        </div>
+    `);
+
+    input.value = '';
+    input.style.height = 'auto';
+    thread.scrollTo({ top: thread.scrollHeight, behavior: 'smooth' });
+
+    // 2. Thinking State
+    const id = 'think-' + Date.now();
+    thread.insertAdjacentHTML('beforeend', `
+        <div id="${id}" class="flex gap-4 animate-in fade-in">
+            <div class="w-8 h-8 rounded-xl bg-white/5 flex items-center justify-center border border-white/10">
+                <i class="fas fa-brain text-[10px] text-blue-500 animate-pulse"></i>
+            </div>
+            <div class="flex items-center gap-1">
+                <div class="w-1 h-1 bg-blue-500 rounded-full animate-bounce" style="animation-delay:0ms"></div>
+                <div class="w-1 h-1 bg-blue-500 rounded-full animate-bounce" style="animation-delay:150ms"></div>
+                <div class="w-1 h-1 bg-blue-500 rounded-full animate-bounce" style="animation-delay:300ms"></div>
+            </div>
+        </div>
+    `);
+
+    // 3. AI Response
+    setTimeout(() => {
+        document.getElementById(id).remove();
+        
+        const response = window.nxxtMode === 'fun' 
+            ? "Oh, you want to talk about " + prompt + "? Bold move. Let's see if your neural hardware can handle my roast-level analysis. 😉"
+            : "I have analyzed your query regarding '" + prompt + "'. The current architectural constraints suggest a multi-layered approach is optimal.";
+
+        thread.insertAdjacentHTML('beforeend', `
+            <div class="flex gap-6 group animate-in slide-in-from-left-4 duration-500">
+                <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-blue-600 to-purple-600 shrink-0 flex items-center justify-center shadow-lg shadow-blue-500/20">
+                    <i class="fas fa-robot text-white text-sm"></i>
+                </div>
+                <div class="space-y-4 pt-1">
+                    <p class="text-white/90 text-lg font-medium leading-relaxed tracking-tight">${response}</p>
+                    <div class="flex gap-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button class="text-white/20 hover:text-white text-[9px] font-black uppercase tracking-widest transition-colors">Copy Link</button>
+                        <button class="text-white/20 hover:text-white text-[9px] font-black uppercase tracking-widest transition-colors">Share</button>
+                    </div>
+                </div>
+            </div>
+        `);
+        thread.scrollTo({ top: thread.scrollHeight, behavior: 'smooth' });
+    }, 1500);
+}
