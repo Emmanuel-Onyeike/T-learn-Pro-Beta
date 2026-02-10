@@ -3045,12 +3045,13 @@ window.NxxtDashboard = NxxtDashboard;
 
 //////// FOR THE ASSITANT AI NOT NXXT AI 
 // --- AI CHAT SYSTEM ---
+// --- AI CHAT SYSTEM ---
 function toggleChat() {
     const chatWin = document.getElementById('aiChatWindow');
     chatWin.classList.toggle('hidden');
 }
 
-// Helper to show your central modal alerts
+// Helper for Central Modal Alerts (Per your instruction)
 function showCentralAlert(text) {
     const modal = document.getElementById('centralModal');
     const modalText = document.getElementById('modalText');
@@ -3071,7 +3072,7 @@ function sendChatMessage() {
 
     if (!message) return;
 
-    // 1. Add User Message (Terminal Style)
+    // 1. Add User Message
     const userDiv = document.createElement('div');
     userDiv.className = "flex flex-col items-end space-y-1 mb-4";
     userDiv.innerHTML = `
@@ -3118,17 +3119,28 @@ function sendChatMessage() {
         if (isHelpRequest) {
             setTimeout(() => {
                 if (window.jivo_api) {
-                    // Hide James and Open Jivo
+                    // Tell CSS it's okay to show Jivo now
+                    document.body.classList.add('agent-bridge-active');
                     toggleChat(); 
                     jivo_api.open();
                 } else {
-                    // If Jivo fails to load, use the central modal alert
                     showCentralAlert("UPLINK_FAILURE: LIVE AGENT MODULE OFFLINE");
                 }
             }, 2500); 
         }
     }, 1000);
 }
+
+// 4. THE FIX: Watch for Jivo trying to "pop out" and hide it
+const observer = new MutationObserver(() => {
+    const jivoContainer = document.querySelector('.jivo-iframe-container') || document.getElementById('jivo-iframe-container');
+    if (jivoContainer && !document.body.classList.contains('agent-bridge-active')) {
+        jivoContainer.style.display = 'none';
+    } else if (jivoContainer && document.body.classList.contains('agent-bridge-active')) {
+        jivoContainer.style.display = 'block';
+    }
+});
+observer.observe(document.documentElement, { childList: true, subtree: true });
 
 document.addEventListener('keypress', (e) => {
     if (e.key === 'Enter' && document.activeElement.id === 'chatInput') {
