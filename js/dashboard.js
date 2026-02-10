@@ -3050,6 +3050,20 @@ function toggleChat() {
     chatWin.classList.toggle('hidden');
 }
 
+// Helper to show your central modal alerts
+function showCentralAlert(text) {
+    const modal = document.getElementById('centralModal');
+    const modalText = document.getElementById('modalText');
+    if (modal && modalText) {
+        modalText.innerText = text;
+        modal.classList.remove('hidden');
+    }
+}
+
+function closeModal() {
+    document.getElementById('centralModal').classList.add('hidden');
+}
+
 function sendChatMessage() {
     const input = document.getElementById('chatInput');
     const container = document.getElementById('chatMessages');
@@ -3081,13 +3095,10 @@ function sendChatMessage() {
         let response = `[${agentName}]: Packet received. Engineers are reviewing your request.`;
         let isHelpRequest = false;
 
-        // Detection for Live Agent
         const helpKeywords = ['help', 'agent', 'human', 'person', 'support', 'talk to someone'];
         if (helpKeywords.some(k => message.toLowerCase().includes(k))) {
             response = `[SYSTEM]: Help protocol initiated. **Please hold on** while I bridge a secure connection to a live agent...`;
             isHelpRequest = true;
-        } else if (message.toLowerCase().includes('lab')) {
-            response = `[${agentName}]: Redirecting focus to Lab Modules. Optimization in progress.`;
         }
 
         agentDiv.innerHTML = `
@@ -3107,19 +3118,18 @@ function sendChatMessage() {
         if (isHelpRequest) {
             setTimeout(() => {
                 if (window.jivo_api) {
-                    // Close James to avoid cluttering the mobile screen
+                    // Hide James and Open Jivo
                     toggleChat(); 
-                    // Open the real JivoChat widget
                     jivo_api.open();
                 } else {
-                    console.error("JivoChat Bridge Failed: Script not loaded.");
+                    // If Jivo fails to load, use the central modal alert
+                    showCentralAlert("UPLINK_FAILURE: LIVE AGENT MODULE OFFLINE");
                 }
-            }, 2500); // 2.5s delay so the user reads the "Hold on" message
+            }, 2500); 
         }
     }, 1000);
 }
 
-// Allow "Enter" key to send message
 document.addEventListener('keypress', (e) => {
     if (e.key === 'Enter' && document.activeElement.id === 'chatInput') {
         sendChatMessage();
