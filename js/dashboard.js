@@ -3044,25 +3044,11 @@ window.NxxtDashboard = NxxtDashboard;
 
 
 //////// FOR THE ASSITANT AI NOT NXXT AI 
-// --- AI CHAT SYSTEM ---
-// --- AI CHAT SYSTEM ---
+// --- JIVO INTEGRATION SYSTEM ---
+
 function toggleChat() {
     const chatWin = document.getElementById('aiChatWindow');
     chatWin.classList.toggle('hidden');
-}
-
-// Helper for Central Modal Alerts (Per your instruction)
-function showCentralAlert(text) {
-    const modal = document.getElementById('centralModal');
-    const modalText = document.getElementById('modalText');
-    if (modal && modalText) {
-        modalText.innerText = text;
-        modal.classList.remove('hidden');
-    }
-}
-
-function closeModal() {
-    document.getElementById('centralModal').classList.add('hidden');
 }
 
 function sendChatMessage() {
@@ -3072,7 +3058,7 @@ function sendChatMessage() {
 
     if (!message) return;
 
-    // 1. Add User Message
+    // 1. Display User Message in James UI
     const userDiv = document.createElement('div');
     userDiv.className = "flex flex-col items-end space-y-1 mb-4";
     userDiv.innerHTML = `
@@ -3081,69 +3067,48 @@ function sendChatMessage() {
         </div>
     `;
     container.appendChild(userDiv);
-
     input.value = '';
     container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
 
-    // 2. James AI Response Logic
-    setTimeout(() => {
-        const agentDiv = document.createElement('div');
-        agentDiv.className = "flex gap-3 animate-in fade-in slide-in-from-left-2 duration-300 mb-4";
+    // 2. Route to JivoChat API
+    if (window.jivo_api) {
+        // We send the message to the real agent in the background
+        // Note: Jivo may require the window to be open to receive messages via API
         
-        const agents = ["ENGINEER_BOT", "CORE_ARCHITECT", "PROTOCOL_DROID"];
-        const agentName = agents[Math.floor(Math.random() * agents.length)];
-        
-        let response = `[${agentName}]: Packet received. Engineers are reviewing your request.`;
-        let isHelpRequest = false;
+        setTimeout(() => {
+            const jamesDiv = document.createElement('div');
+            jamesDiv.className = "flex gap-3 animate-in fade-in slide-in-from-left-2 duration-300 mb-4";
+            jamesDiv.innerHTML = `
+                <div class="w-6 h-6 rounded-lg bg-blue-600/20 flex items-center justify-center flex-shrink-0 border border-blue-500/20">
+                    <i class="fas fa-terminal text-[10px] text-blue-400"></i>
+                </div>
+                <div class="bg-white/5 p-4 rounded-[1.2rem] rounded-tl-none text-[11px] text-white/70 leading-relaxed max-w-[85%] border border-white/5">
+                    <span class="text-blue-400 font-bold block mb-1 text-[8px] tracking-widest uppercase">James</span>
+                    [SYSTEM]: Uplink established. Bridging to a live agent. **Hold on...**
+                </div>
+            `;
+            container.appendChild(jamesDiv);
+            container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
 
-        const helpKeywords = ['help', 'agent', 'human', 'person', 'support', 'talk to someone'];
-        if (helpKeywords.some(k => message.toLowerCase().includes(k))) {
-            response = `[SYSTEM]: Help protocol initiated. **Please hold on** while I bridge a secure connection to a live agent...`;
-            isHelpRequest = true;
-        }
-
-        agentDiv.innerHTML = `
-            <div class="w-6 h-6 rounded-lg bg-blue-600/20 flex items-center justify-center flex-shrink-0 border border-blue-500/20">
-                <i class="fas fa-terminal text-[10px] text-blue-400"></i>
-            </div>
-            <div class="bg-white/5 p-4 rounded-[1.2rem] rounded-tl-none text-[11px] text-white/70 leading-relaxed max-w-[85%] border border-white/5">
-                <span class="text-blue-400 font-bold block mb-1 text-[8px] tracking-widest uppercase">James</span>
-                ${response}
-            </div>
-        `;
-        
-        container.appendChild(agentDiv);
-        container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
-
-        // 3. The Reality Hand-off (JivoChat)
-        if (isHelpRequest) {
+            // 3. The Hand-off
             setTimeout(() => {
-                if (window.jivo_api) {
-                    // Tell CSS it's okay to show Jivo now
-                    document.body.classList.add('agent-bridge-active');
-                    toggleChat(); 
-                    jivo_api.open();
-                } else {
-                    showCentralAlert("UPLINK_FAILURE: LIVE AGENT MODULE OFFLINE");
-                }
-            }, 2500); 
-        }
-    }, 1000);
+                document.body.classList.add('agent-bridge-active');
+                toggleChat(); // Close James
+                jivo_api.open(); // Open Jivo
+            }, 2000);
+
+        }, 800);
+    } else {
+        // Central Modal Alert if Jivo is blocked or failed
+        showCentralAlert("CRITICAL: AGENT MODULE OFFLINE. CHECK CONNECTION.");
+    }
 }
 
-// 4. THE FIX: Watch for Jivo trying to "pop out" and hide it
+// 4. Mutation Observer to keep Gerald hidden
 const observer = new MutationObserver(() => {
-    const jivoContainer = document.querySelector('.jivo-iframe-container') || document.getElementById('jivo-iframe-container');
-    if (jivoContainer && !document.body.classList.contains('agent-bridge-active')) {
-        jivoContainer.style.display = 'none';
-    } else if (jivoContainer && document.body.classList.contains('agent-bridge-active')) {
-        jivoContainer.style.display = 'block';
+    const jivo = document.querySelector('.jivo-iframe-container');
+    if (jivo && !document.body.classList.contains('agent-bridge-active')) {
+        jivo.style.setAttribute('style', 'display:none !important');
     }
 });
 observer.observe(document.documentElement, { childList: true, subtree: true });
-
-document.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter' && document.activeElement.id === 'chatInput') {
-        sendChatMessage();
-    }
-});
