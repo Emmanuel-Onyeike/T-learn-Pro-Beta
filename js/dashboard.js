@@ -602,17 +602,18 @@ const views = {
     <div class="p-10 bg-gradient-to-t from-[#05070a] via-[#05070a]/90 to-transparent">
         <div class="max-w-4xl mx-auto relative">
             <div class="absolute -inset-2 bg-blue-500/10 blur-2xl rounded-[3rem]"></div>
-            <div class="relative bg-[#0f1420] border border-white/10 rounded-[2.5rem] p-2 flex flex-col items-end shadow-2xl focus-within:border-blue-500/50 transition-all">
+            <div class="relative bg-[#0f1420] border border-white/10 rounded-[2.5rem] p-2 flex flex-col shadow-2xl focus-within:border-blue-500/50 transition-all">
                 <textarea id="nxxtInput" rows="1" 
                     placeholder="Describe your next objective..." 
-                    class="flex-1 bg-transparent border-none outline-none text-white text-lg px-8 py-5 resize-none placeholder:text-white/10 w-full"
-                    oninput="this.style.height = 'auto'; this.style.height = this.scrollHeight + 'px'; updateNxxtCounter(this)"></textarea>
+                    class="w-full bg-transparent border-none outline-none text-white text-lg px-8 py-5 resize-none placeholder:text-white/10"
+                    oninput="this.style.height = 'auto'; this.style.height = this.scrollHeight + 'px'; updateNxxtCounter(this.value)"></textarea>
                 
-                <div id="nxxtCounter" class="hidden text-[11px] text-blue-400/70 font-mono mt-1 mr-4 self-end">
-                    <span id="charCount">0</span> characters • <span id="wordCount">0</span> words
+                <div id="nxxtCounter" class="hidden text-xs text-blue-400/70 font-mono mt-1 self-end pr-4">
+                    <span id="nxxtCharCount">0</span> characters • 
+                    <span id="nxxtWordCount">0</span> words
                 </div>
 
-                <div class="flex items-center gap-4 p-2 w-full justify-end">
+                <div class="flex items-center gap-4 p-2 self-end">
                     <div class="hidden md:flex flex-col items-end px-4 border-r border-white/5">
                         <span class="text-[9px] font-bold text-green-500 flex items-center gap-2">
                             <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
@@ -1089,7 +1090,7 @@ const views = {
 </div>
 `,
 
-'Settings': `
+    'Settings': `
     <div class="animate-in">
         <div class="flex items-center gap-4 overflow-x-auto no-scrollbar pb-6 mb-8 border-b border-white/5 scroll-smooth">
             <button onclick="updateSettingsTab('Profile')" class="settings-tab active">Profile</button>
@@ -1139,24 +1140,20 @@ const views = {
 };
 
 // ────────────────────────────────────────────────
-//     NEW HELPER FUNCTION - only for Nxxt AI input
+//   Small helper - live counter for Nxxt AI input only
 // ────────────────────────────────────────────────
 
-function updateNxxtCounter(textarea) {
-    const counterDiv = document.getElementById('nxxtCounter');
-    if (!counterDiv) return;
+function updateNxxtCounter(value) {
+    const counter = document.getElementById('nxxtCounter');
+    if (!counter) return;
 
-    const charSpan = document.getElementById('charCount');
-    const wordSpan = document.getElementById('wordCount');
+    const chars = value.length;
+    const words = value.trim() === '' ? 0 : value.trim().split(/\s+/).length;
 
-    const text = textarea.value || '';
-    const chars = text.length;
-    const words = text.trim() === '' ? 0 : text.trim().split(/\s+/).length;
+    document.getElementById('nxxtCharCount').textContent = chars;
+    document.getElementById('nxxtWordCount').textContent = words;
 
-    charSpan.textContent = chars;
-    wordSpan.textContent = words;
-
-    counterDiv.classList.toggle('hidden', chars === 0);
+    counter.classList.toggle('hidden', chars === 0);
 }
 
 // SYSTEM LOGIC - DON'T CHANGE THIS PART
@@ -1600,4 +1597,6 @@ async function syncProfileUI() {
     // Update all image places
     document.querySelectorAll('[data-user-img]').forEach(img => {
         img.src = savedImg;
-        if
+        if (savedImg !== "Logo.webp") {
+            img.classList.remove('hidden');
+            img.parentElement.querySelector('#defaultUserIcon')?.classList.add('hidden
