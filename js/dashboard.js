@@ -1,27 +1,4 @@
-const ActivityEngine = {
-    track() {
-        const today = new Date().toISOString().split('T')[0];
-        setInterval(() => {
-            let log = JSON.parse(localStorage.getItem('user_node_activity') || '{}');
-            log[today] = (log[today] || 0) + 1; // Tracks seconds
-            localStorage.setItem('user_node_activity', JSON.stringify(log));
-        }, 1000);
-    },
-
-    // Decides box thickness based on time spent
-    getBoxClass(date) {
-        const log = JSON.parse(localStorage.getItem('user_node_activity') || '{}');
-        const seconds = log[date] || 0;
-        if (seconds === 0) return 'bg-white/[0.03]'; // No activity
-        if (seconds < 60) return 'bg-green-900';    // < 1 min
-        if (seconds < 600) return 'bg-green-700';   // < 10 mins
-        if (seconds < 1800) return 'bg-green-500';  // < 30 mins
-        return 'bg-green-400';                      // Long stay
-    }
-};
-ActivityEngine.track();
-const views = {
-    // ────────────────────────────────────────────────
+  // ────────────────────────────────────────────────
 // Step 2: Load Real Stats from Supabase Profiles Table
 // ────────────────────────────────────────────────
 
@@ -87,6 +64,30 @@ function updateView(viewName) {
         loadRealOverviewStats();
     }
 }
+
+const ActivityEngine = {
+    track() {
+        const today = new Date().toISOString().split('T')[0];
+        setInterval(() => {
+            let log = JSON.parse(localStorage.getItem('user_node_activity') || '{}');
+            log[today] = (log[today] || 0) + 1; // Tracks seconds
+            localStorage.setItem('user_node_activity', JSON.stringify(log));
+        }, 1000);
+    },
+
+    // Decides box thickness based on time spent
+    getBoxClass(date) {
+        const log = JSON.parse(localStorage.getItem('user_node_activity') || '{}');
+        const seconds = log[date] || 0;
+        if (seconds === 0) return 'bg-white/[0.03]'; // No activity
+        if (seconds < 60) return 'bg-green-900';    // < 1 min
+        if (seconds < 600) return 'bg-green-700';   // < 10 mins
+        if (seconds < 1800) return 'bg-green-500';  // < 30 mins
+        return 'bg-green-400';                      // Long stay
+    }
+};
+ActivityEngine.track();
+const views = {
 'Overview': `
 <div class="space-y-10 animate-in fade-in duration-700">
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
