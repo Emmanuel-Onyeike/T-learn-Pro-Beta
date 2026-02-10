@@ -1911,7 +1911,7 @@ window.deleteNotif = function(id) {
 
 
 //////  FOR THE PROJECTS   
-// Persistent Data & Sound
+// --- 1. Persistent Data & Sound ---
 let projects = JSON.parse(localStorage.getItem('app_projects')) || [];
 const notifySound = new Audio('https://assets.mixkit.co/active_storage/sfx/2354/2354-preview.mp3');
 
@@ -1921,12 +1921,12 @@ function saveAndSync() {
     if (countEl) countEl.innerText = projects.length;
 }
 
-// Notification Trigger
+// --- 2. Notification System ---
 function triggerNotification(msg, type = 'pending') {
-    notifySound.play().catch(() => {}); // Play sound
-    const id = Date.now();
+    notifySound.play().catch(() => {}); 
+    
     const toast = document.createElement('div');
-    toast.className = `fixed top-5 right-5 z-[2000] p-4 rounded-2xl bg-[#0a0f25] border border-white/10 shadow-2xl animate-in slide-in-from-right duration-500`;
+    toast.className = `fixed top-5 right-5 z-[3000] p-4 rounded-2xl bg-[#0a0f25] border border-white/10 shadow-2xl animate-in slide-in-from-right duration-500`;
     toast.innerHTML = `
         <div class="flex items-center gap-3">
             <div class="w-2 h-2 rounded-full ${type === 'success' ? 'bg-green-500' : type === 'failed' ? 'bg-red-500' : 'bg-yellow-500'} animate-pulse"></div>
@@ -1934,103 +1934,143 @@ function triggerNotification(msg, type = 'pending') {
         </div>
     `;
     document.body.appendChild(toast);
-    setTimeout(() => toast.remove(), 4000);
+    setTimeout(() => {
+        toast.classList.replace('slide-in-from-right', 'slide-out-to-right');
+        setTimeout(() => toast.remove(), 500);
+    }, 4000);
 
-    // Save to Notifications tab
+    // Save to Notifications tab storage
     let logs = JSON.parse(localStorage.getItem('app_notifications')) || [];
-    logs.unshift({ msg, type, time: new Date().toLocaleTimeString() });
+    logs.unshift({ id: Date.now(), msg, type, time: new Date().toLocaleTimeString(), archived: false });
     localStorage.setItem('app_notifications', JSON.stringify(logs));
+    
+    // Auto-refresh notifications if tab is active
+    if (typeof currentTab !== 'undefined' && currentTab === 'Notifications') renderTab('Notifications');
 }
-// Step 1: Center Modal
-function openProjectInitiator() {
+
+// --- 3. Modal Logic (Fixed Null Errors) ---
+window.closeModal = function(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.classList.add('opacity-0');
+        // If it's the center modal, also zoom it out
+        const inner = modal.querySelector('.animate-in');
+        if (inner) inner.classList.add('zoom-out-95');
+        
+        setTimeout(() => modal.remove(), 300);
+    }
+};
+
+window.openProjectInitiator = function() {
     const modalHtml = `
-    <div id="centerModal" class="fixed inset-0 z-[1000] flex items-center justify-center bg-black/80 backdrop-blur-md p-4">
+    <div id="centerModal" class="fixed inset-0 z-[1000] flex items-center justify-center bg-black/80 backdrop-blur-md p-4 transition-all duration-300">
         <div class="bg-[#0a0f1d] border border-white/10 w-full max-w-md rounded-[3rem] p-10 animate-in zoom-in-95 duration-300">
             <i class="fas fa-rocket text-blue-500 text-3xl mb-6"></i>
-            <h2 class="text-white font-black text-2xl uppercase tracking-tighter mb-2">Project Name</h2>
-            <input id="initName" type="text" placeholder="Enter name..." class="w-full bg-white/5 border border-white/10 p-5 rounded-2xl text-white mb-4 outline-none focus:border-blue-500/50">
-            <textarea id="initDesc" placeholder="Description (Optional)" class="w-full bg-white/5 border border-white/10 p-5 rounded-2xl text-white h-24 mb-6 outline-none focus:border-blue-500/50"></textarea>
+            <h2 class="text-white font-black text-2xl uppercase tracking-tighter mb-2">New Project</h2>
+            <input id="initName" type="text" placeholder="Project Name" class="w-full bg-white/5 border border-white/10 p-5 rounded-2xl text-white mb-4 outline-none focus:border-blue-500/50">
+            <textarea id="initDesc" placeholder="Brief Description" class="w-full bg-white/5 border border-white/10 p-5 rounded-2xl text-white h-24 mb-6 outline-none focus:border-blue-500/50"></textarea>
             <div class="flex gap-4">
                 <button onclick="closeModal('centerModal')" class="flex-1 py-4 text-white/30 font-black text-[10px] uppercase">Cancel</button>
-                <button onclick="openRightSlide()" class="flex-1 py-4 bg-blue-600 rounded-2xl text-white font-black text-[10px] uppercase">Continue</button>
+                <button onclick="openRightSlide()" class="flex-1 py-4 bg-blue-600 rounded-2xl text-white font-black text-[10px] uppercase shadow-lg shadow-blue-600/20">Continue</button>
             </div>
         </div>
     </div>`;
     document.body.insertAdjacentHTML('beforeend', modalHtml);
-}
+};
 
-// Step 2: Right Side Slide-out
-function openRightSlide() {
-    const name = document.getElementById('initName').value || "Untitled";
-    const desc = document.getElementById('initDesc').value;
+window.openRightSlide = function() {
+    const name = document.getElementById('initName')?.value || "Untitled";
+    const desc = document.getElementById('initDesc')?.value || "";
+    
     closeModal('centerModal');
 
-    const rightHtml = `
-    <div id="rightModal" class="fixed inset-0 z-[1001] flex justify-end bg-black/40 backdrop-blur-sm">
-        <div class="w-full max-w-lg bg-[#050b1d] h-full p-10 border-l border-white/10 animate-in slide-in-from-right duration-500 overflow-y-auto">
-            <h3 class="text-white font-black text-3xl uppercase tracking-tighter mb-8">${name}</h3>
-            
-            <div class="space-y-8">
-                <div>
-                    <label class="text-blue-400 text-[10px] font-black uppercase tracking-widest mb-4 block">Project Image</label>
-                    <input type="file" id="imgInp" class="hidden" onchange="previewImg(this)">
-                    <div onclick="document.getElementById('imgInp').click()" class="group relative h-48 w-full bg-white/5 border-2 border-dashed border-white/10 rounded-[2rem] flex items-center justify-center cursor-pointer overflow-hidden hover:border-blue-500/50">
-                        <img id="prev" class="absolute inset-0 w-full h-full object-cover hidden">
-                        <i class="fas fa-image text-white/10 text-4xl group-hover:scale-110 transition-transform"></i>
-                    </div>
+    setTimeout(() => {
+        const rightHtml = `
+        <div id="rightModal" class="fixed inset-0 z-[1001] flex justify-end bg-black/40 backdrop-blur-sm transition-all duration-500">
+            <div class="w-full max-w-lg bg-[#050b1d] h-full p-10 border-l border-white/10 animate-in slide-in-from-right duration-500 overflow-y-auto">
+                <div class="flex justify-between items-center mb-8">
+                    <h3 class="text-white font-black text-3xl uppercase tracking-tighter">${name}</h3>
+                    <button onclick="closeModal('rightModal')" class="text-white/20 hover:text-white"><i class="fas fa-times"></i></button>
                 </div>
-
-                <div class="space-y-4">
-                    <input id="pLink" type="text" placeholder="Project Link (URL)" class="w-full bg-white/5 border border-white/10 p-5 rounded-2xl text-white text-xs">
-                    
-                    <div class="grid grid-cols-2 gap-3">
-                        <button onclick="setType('Job', this)" class="type-btn p-4 rounded-xl border border-white/10 text-white/40 text-[9px] font-black uppercase">Job</button>
-                        <button onclick="setType('Private', this)" class="type-btn p-4 rounded-xl border border-white/10 text-white/40 text-[9px] font-black uppercase">Private</button>
-                        <button onclick="setType('Personal', this)" class="type-btn p-4 rounded-xl border border-white/10 text-white/40 text-[9px] font-black uppercase">Personal</button>
-                        <button class="p-4 rounded-xl border border-white/5 text-white/10 text-[9px] font-black uppercase cursor-not-allowed"><i class="fas fa-lock mr-2"></i> Locked</button>
-                    </div>
-
-                    <div class="bg-white/5 p-5 rounded-2xl border border-white/5">
-                        <label class="text-white/40 text-[9px] font-black uppercase mb-2 block">User Limit</label>
-                        <div class="flex items-center justify-between">
-                             <input id="pUsers" type="number" value="5" class="bg-transparent text-white font-black text-2xl outline-none w-20">
-                             <span class="text-[8px] text-blue-500 font-bold">Standard Capacity</span>
+                
+                <div class="space-y-8">
+                    <div>
+                        <label class="text-blue-400 text-[10px] font-black uppercase tracking-widest mb-4 block">Project Image</label>
+                        <input type="file" id="imgInp" class="hidden" onchange="previewImg(this)">
+                        <div onclick="document.getElementById('imgInp').click()" class="group relative h-48 w-full bg-white/5 border-2 border-dashed border-white/10 rounded-[2rem] flex items-center justify-center cursor-pointer overflow-hidden hover:border-blue-500/50">
+                            <img id="prev" class="absolute inset-0 w-full h-full object-cover hidden">
+                            <i id="imgIcon" class="fas fa-image text-white/10 text-4xl group-hover:scale-110 transition-transform"></i>
                         </div>
                     </div>
-                </div>
 
-                <div class="flex gap-4 pt-10">
-                    <button onclick="closeModal('rightModal')" class="flex-1 py-5 text-white/30 font-black text-[10px] uppercase tracking-widest">Cancel</button>
-                    <button id="finishBtn" onclick="finalizeProject('${name}', '${desc}')" class="flex-1 py-5 bg-green-600 rounded-2xl text-white font-black text-[10px] uppercase tracking-widest shadow-lg shadow-green-600/20">Create Project</button>
+                    <div class="space-y-4">
+                        <input id="pLink" type="text" placeholder="Project Link (URL)" class="w-full bg-white/5 border border-white/10 p-5 rounded-2xl text-white text-xs outline-none">
+                        
+                        <div class="grid grid-cols-2 gap-3">
+                            <button onclick="setType('Job', this)" class="type-btn p-4 rounded-xl border border-white/10 text-white/40 text-[9px] font-black uppercase transition-all">Job</button>
+                            <button onclick="setType('Private', this)" class="type-btn p-4 rounded-xl border border-white/10 text-white/40 text-[9px] font-black uppercase transition-all">Private</button>
+                            <button onclick="setType('Personal', this)" class="type-btn p-4 rounded-xl border border-blue-500 text-white text-[9px] font-black uppercase transition-all">Personal</button>
+                            <button class="p-4 rounded-xl border border-white/5 text-white/10 text-[9px] font-black uppercase cursor-not-allowed"><i class="fas fa-lock mr-2"></i> Locked</button>
+                        </div>
+
+                        <div class="bg-white/5 p-5 rounded-2xl border border-white/5">
+                            <label class="text-white/40 text-[9px] font-black uppercase mb-2 block">User Limit</label>
+                            <div class="flex items-center justify-between">
+                                 <input id="pUsers" type="number" value="5" class="bg-transparent text-white font-black text-2xl outline-none w-20">
+                                 <span class="text-[8px] text-blue-500 font-bold uppercase">Standard Capacity</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-4 pt-10">
+                        <button onclick="closeModal('rightModal')" class="flex-1 py-5 text-white/30 font-black text-[10px] uppercase tracking-widest">Cancel</button>
+                        <button id="finishBtn" onclick="finalizeProject('${name.replace(/'/g, "\\'")}', '${desc.replace(/'/g, "\\'")}')" class="flex-1 py-5 bg-green-600 rounded-2xl text-white font-black text-[10px] uppercase tracking-widest shadow-lg shadow-green-600/20 transition-all active:scale-95">Create Project</button>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>`;
-    document.body.insertAdjacentHTML('beforeend', rightHtml);
-}
+        </div>`;
+        document.body.insertAdjacentHTML('beforeend', rightHtml);
+    }, 100);
+};
 
-// Final Build Logic
+// --- 4. Helper & Finalize Functions ---
+window.previewImg = function(input) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const img = document.getElementById('prev');
+            img.src = e.target.result;
+            img.classList.remove('hidden');
+            document.getElementById('imgIcon').classList.add('hidden');
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
+};
+
 let activeType = 'Personal';
-function setType(t, btn) {
-    document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('border-blue-500', 'text-white'));
+window.setType = function(t, btn) {
+    document.querySelectorAll('.type-btn').forEach(b => {
+        b.classList.remove('border-blue-500', 'text-white');
+        b.classList.add('border-white/10', 'text-white/40');
+    });
     btn.classList.add('border-blue-500', 'text-white');
+    btn.classList.remove('border-white/10', 'text-white/40');
     activeType = t;
-}
+};
 
-function finalizeProject(name, desc) {
+window.finalizeProject = function(name, desc) {
     const btn = document.getElementById('finishBtn');
-    const link = document.getElementById('pLink').value;
+    const link = document.getElementById('pLink').value || "No Link";
     const users = document.getElementById('pUsers').value;
     const img = document.getElementById('prev').src;
 
+    btn.disabled = true;
     btn.innerHTML = `<i class="fas fa-circle-notch fa-spin"></i>`;
     
-    // Initial Notification
-    triggerNotification(`Initializing ${name}...`, 'pending');
+    triggerNotification(`Initializing Build: ${name}...`, 'pending');
 
     setTimeout(() => {
-        const statusChance = Math.random();
-        const finalStatus = statusChance > 0.4 ? 'success' : 'failed';
+        const finalStatus = Math.random() > 0.3 ? 'success' : 'failed';
         
         const newProj = {
             id: Date.now(),
@@ -2042,9 +2082,9 @@ function finalizeProject(name, desc) {
         projects.push(newProj);
         saveAndSync();
         closeModal('rightModal');
-        triggerNotification(`${name} Build ${finalStatus.toUpperCase()}`, finalStatus);
+        triggerNotification(`${name} Deployment ${finalStatus.toUpperCase()}`, finalStatus);
         
-        // Refresh the specific view if we are on Projects tab
-        renderProjects();
-    }, 5000);
-}
+        // Refresh the Projects Grid
+        if (typeof renderTab !== 'undefined') renderTab('Projects');
+    }, 3000);
+};
