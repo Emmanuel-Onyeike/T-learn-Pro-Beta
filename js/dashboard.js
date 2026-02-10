@@ -1,69 +1,3 @@
-  // ────────────────────────────────────────────────
-// Step 2: Load Real Stats from Supabase Profiles Table
-// ────────────────────────────────────────────────
-
-async function loadRealOverviewStats() {
-    // Get Supabase client (from your loader)
-    const supabase = window.supabaseLoader.getClient();
-
-    // Check if user is logged in
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
-        // Shouldn't happen if auth.js redirected, but safety net
-        window.location.href = '../login.html';
-        return;
-    }
-
-    // Fetch the user's profile row
-    const { data: profile, error } = await supabase
-        .from('profiles')
-        .select('level, semester, xt_points, streak')
-        .eq('id', session.user.id)
-        .single();
-
-    if (error || !profile) {
-        console.warn('Could not load stats:', error?.message);
-        // Optional: show user-friendly message
-        // Modal.show('Stats Issue', 'Could not load your latest stats. Showing defaults.', true);
-        return;
-    }
-
-    // Update the four main cards in Overview
-    document.getElementById('dash-level-val')?.textContent = profile.level || '100';
-    document.getElementById('semesterVal')?.textContent   = profile.semester || '1';
-    document.getElementById('dash-xp-val')?.textContent   = profile.xt_points || '0';
-    document.getElementById('streakCount')?.textContent   = profile.streak || '0';
-
-    // Optional: small visual feedback (pulse animation)
-    const cards = [
-        document.getElementById('dash-level-val'),
-        document.getElementById('semesterVal'),
-        document.getElementById('dash-xp-val'),
-        document.getElementById('streakCount')
-    ];
-    cards.forEach(el => {
-        if (el) {
-            el.parentElement?.classList.add('animate-pulse');
-            setTimeout(() => el.parentElement?.classList.remove('animate-pulse'), 1500);
-        }
-    });
-}
-
-// Call this when the page loads (or when switching to Overview)
-document.addEventListener('DOMContentLoaded', () => {
-    loadRealOverviewStats();
-    // ... your existing DOMContentLoaded code (updateView('Overview'), etc.)
-});
-
-// Also call it every time user switches to Overview view
-// (add this inside your existing updateView function)
-function updateView(viewName) {
-    // ... your existing code ...
-
-    if (viewName === 'Overview') {
-        loadRealOverviewStats();
-    }
-}
 
 const ActivityEngine = {
     track() {
@@ -1544,6 +1478,74 @@ function updateSettingsTab(tabId) {
         setTimeout(loadToggleStates, 50);
     }
 }
+
+  // ────────────────────────────────────────────────
+// Step 2: Load Real Stats from Supabase Profiles Table
+// ────────────────────────────────────────────────
+
+async function loadRealOverviewStats() {
+    // Get Supabase client (from your loader)
+    const supabase = window.supabaseLoader.getClient();
+
+    // Check if user is logged in
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+        // Shouldn't happen if auth.js redirected, but safety net
+        window.location.href = '../login.html';
+        return;
+    }
+
+    // Fetch the user's profile row
+    const { data: profile, error } = await supabase
+        .from('profiles')
+        .select('level, semester, xt_points, streak')
+        .eq('id', session.user.id)
+        .single();
+
+    if (error || !profile) {
+        console.warn('Could not load stats:', error?.message);
+        // Optional: show user-friendly message
+        // Modal.show('Stats Issue', 'Could not load your latest stats. Showing defaults.', true);
+        return;
+    }
+
+    // Update the four main cards in Overview
+    document.getElementById('dash-level-val')?.textContent = profile.level || '100';
+    document.getElementById('semesterVal')?.textContent   = profile.semester || '1';
+    document.getElementById('dash-xp-val')?.textContent   = profile.xt_points || '0';
+    document.getElementById('streakCount')?.textContent   = profile.streak || '0';
+
+    // Optional: small visual feedback (pulse animation)
+    const cards = [
+        document.getElementById('dash-level-val'),
+        document.getElementById('semesterVal'),
+        document.getElementById('dash-xp-val'),
+        document.getElementById('streakCount')
+    ];
+    cards.forEach(el => {
+        if (el) {
+            el.parentElement?.classList.add('animate-pulse');
+            setTimeout(() => el.parentElement?.classList.remove('animate-pulse'), 1500);
+        }
+    });
+}
+
+// Call this when the page loads (or when switching to Overview)
+document.addEventListener('DOMContentLoaded', () => {
+    loadRealOverviewStats();
+    // ... your existing DOMContentLoaded code (updateView('Overview'), etc.)
+});
+
+// Also call it every time user switches to Overview view
+// (add this inside your existing updateView function)
+function updateView(viewName) {
+    // ... your existing code ...
+
+    if (viewName === 'Overview') {
+        loadRealOverviewStats();
+    }
+}
+
 //// for the login history
 // Add this to your general script to handle the clock in the history tab
 function startHistoryClock() {
