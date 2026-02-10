@@ -3045,10 +3045,9 @@ window.NxxtDashboard = NxxtDashboard;
 
 //////// FOR THE ASSITANT AI NOT NXXT AI 
 // --- AI CHAT SYSTEM ---
-
 function toggleChat() {
-    const window = document.getElementById('aiChatWindow');
-    window.classList.toggle('hidden');
+    const chatWin = document.getElementById('aiChatWindow');
+    chatWin.classList.toggle('hidden');
 }
 
 function sendChatMessage() {
@@ -3058,32 +3057,65 @@ function sendChatMessage() {
 
     if (!message) return;
 
-    // 1. Add User Message
+    // 1. Add User Message (Terminal Style)
     const userDiv = document.createElement('div');
-    userDiv.className = "bg-blue-600/20 p-3 rounded-2xl rounded-tr-none text-blue-200 ml-8 text-right";
-    userDiv.innerText = message;
+    userDiv.className = "flex flex-col items-end space-y-1 mb-4";
+    userDiv.innerHTML = `
+        <div class="bg-blue-600 px-4 py-2.5 rounded-[1.2rem] rounded-tr-none text-[11px] text-white font-medium max-w-[90%] shadow-lg">
+            ${message}
+        </div>
+    `;
     container.appendChild(userDiv);
 
     input.value = '';
-    container.scrollTop = container.scrollHeight;
+    container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
 
-    // 2. Simulate Agent Response
+    // 2. James AI Response Logic
     setTimeout(() => {
-        const agents = ["ENGINEER_BOT", "CORE_ARCHITECT", "PROTOCOL_DROID"];
-        const agent = agents[Math.floor(Math.random() * agents.length)];
-        
         const agentDiv = document.createElement('div');
-        agentDiv.className = "bg-white/5 p-3 rounded-2xl rounded-tl-none text-white/60 mr-8 border border-white/5";
+        agentDiv.className = "flex gap-3 animate-in fade-in slide-in-from-left-2 duration-300 mb-4";
         
-        // Dynamic responses based on context
-        let response = `[${agent}]: Packet received. Engineers are reviewing your request.`;
-        if (message.toLowerCase().includes('help')) response = `[${agent}]: Help protocol initiated. Which module (Lab/Pay/Hub) requires optimization?`;
+        const agents = ["ENGINEER_BOT", "CORE_ARCHITECT", "PROTOCOL_DROID"];
+        const agentName = agents[Math.floor(Math.random() * agents.length)];
         
-        agentDiv.innerText = response;
+        let response = `[${agentName}]: Packet received. Engineers are reviewing your request.`;
+        let isHelpRequest = false;
+
+        // Detection for Live Agent
+        const helpKeywords = ['help', 'agent', 'human', 'person', 'support', 'talk to someone'];
+        if (helpKeywords.some(k => message.toLowerCase().includes(k))) {
+            response = `[SYSTEM]: Help protocol initiated. **Please hold on** while I bridge a secure connection to a live agent...`;
+            isHelpRequest = true;
+        } else if (message.toLowerCase().includes('lab')) {
+            response = `[${agentName}]: Redirecting focus to Lab Modules. Optimization in progress.`;
+        }
+
+        agentDiv.innerHTML = `
+            <div class="w-6 h-6 rounded-lg bg-blue-600/20 flex items-center justify-center flex-shrink-0 border border-blue-500/20">
+                <i class="fas fa-terminal text-[10px] text-blue-400"></i>
+            </div>
+            <div class="bg-white/5 p-4 rounded-[1.2rem] rounded-tl-none text-[11px] text-white/70 leading-relaxed max-w-[85%] border border-white/5">
+                <span class="text-blue-400 font-bold block mb-1 text-[8px] tracking-widest uppercase">James</span>
+                ${response}
+            </div>
+        `;
+        
         container.appendChild(agentDiv);
-        container.scrollTop = container.scrollHeight;
-        
-        // Play a subtle sound if you have one
+        container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
+
+        // 3. The Reality Hand-off (JivoChat)
+        if (isHelpRequest) {
+            setTimeout(() => {
+                if (window.jivo_api) {
+                    // Close James to avoid cluttering the mobile screen
+                    toggleChat(); 
+                    // Open the real JivoChat widget
+                    jivo_api.open();
+                } else {
+                    console.error("JivoChat Bridge Failed: Script not loaded.");
+                }
+            }, 2500); // 2.5s delay so the user reads the "Hold on" message
+        }
     }, 1000);
 }
 
