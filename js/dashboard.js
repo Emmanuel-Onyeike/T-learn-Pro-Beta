@@ -564,91 +564,101 @@ const views = {
     
 
 'Nxxt AI': `
-   <div class="flex flex-col h-[85vh] max-w-5xl mx-auto relative animate-in fade-in zoom-in-95 duration-700 font-sans selection:bg-blue-500/30 text-white overflow-hidden bg-[#05070a] rounded-[2.5rem] border border-white/5 shadow-2xl">
-    
-    <div class="flex justify-between items-center px-10 py-6 sticky top-0 z-30 bg-[#05070a]/80 backdrop-blur-2xl border-b border-white/[0.05]">
-        <div class="flex items-center gap-8">
-            <h2 class="text-lg font-bold tracking-tighter text-white">NXXT <span class="text-blue-500 text-xs ml-1 font-black uppercase tracking-widest">v4.0</span></h2>
-            
-            <div class="flex bg-white/[0.03] p-1 rounded-xl border border-white/5">
-                <button onclick="setMode('standard')" id="btnStd" class="px-6 py-2 rounded-lg text-[11px] font-bold uppercase tracking-wider transition-all bg-blue-600 text-white shadow-lg">Standard</button>
-                <button onclick="setMode('fun')" id="btnFun" class="px-6 py-2 rounded-lg text-[11px] font-bold uppercase tracking-wider transition-all text-white/40 hover:text-white">Creative</button>
-            </div>
-        </div>
-        
-        <div class="flex items-center gap-6">
-            <div class="flex items-center gap-3 bg-white/[0.03] px-4 py-2 rounded-xl border border-white/5">
-                <span class="text-[10px] font-bold text-white/30 uppercase tracking-widest">Usage Balance</span>
-                <div id="creditBar" class="flex gap-1">
-                    <div class="w-1.5 h-3 bg-blue-500 rounded-full"></div>
-                    <div class="w-1.5 h-3 bg-blue-500 rounded-full"></div>
-                    <div class="w-1.5 h-3 bg-blue-500 rounded-full"></div>
-                    <div class="w-1.5 h-3 bg-white/10 rounded-full"></div>
-                </div>
-            </div>
-        </div>
-    </div>
+   <div class="flex flex-col h-[85vh] max-w-5xl mx-auto relative animate-in fade-in zoom-in-95 duration-700 font-sans selection:bg-blue-500/30 text-white overflow-hidden">
+    
+    <div class="flex justify-between items-center px-8 py-6 sticky top-0 z-30 bg-[#0a0f1d]/60 backdrop-blur-xl border-b border-white/[0.03]">
+        <div class="flex items-center gap-6">
+            <div class="flex bg-black/40 p-1 rounded-2xl border border-white/5">
+                <button onclick="window.nxxtMode = 'standard'" class="px-5 py-2 rounded-xl text-[10px] font-bold uppercase tracking-[0.15em] transition-all hover:text-white text-white/40 focus:bg-blue-600 focus:text-white focus:shadow-[0_0_20px_rgba(37,99,235,0.4)]">Standard</button>
+                <button onclick="window.nxxtMode = 'fun'" class="px-5 py-2 rounded-xl text-[10px] font-bold uppercase tracking-[0.15em] transition-all hover:text-white text-white/40 focus:bg-purple-600 focus:text-white focus:shadow-[0_0_20px_rgba(147,51,234,0.4)]">Fun Mode</button>
+            </div>
+        </div>
+        
+        <div class="flex items-center gap-4 bg-white/[0.02] px-4 py-2 rounded-2xl border border-white/[0.05]">
+            <span class="text-[10px] font-black text-blue-500 uppercase tracking-widest">Neural Credits</span>
+            <div id="imageCredits" class="flex gap-1.5">
+                <div class="w-1 h-4 bg-blue-500 rounded-full shadow-[0_0_8px_#3b82f6]"></div>
+                <div class="w-1 h-4 bg-blue-500 rounded-full shadow-[0_0_8px_#3b82f6]"></div>
+                <div class="w-1 h-4 bg-blue-500 rounded-full shadow-[0_0_8px_#3b82f6]"></div>
+                <div class="w-1 h-4 bg-blue-400/30 rounded-full"></div>
+                <div class="w-1 h-4 bg-blue-400/30 rounded-full"></div>
+            </div>
+        </div>
+    </div>
 
-    <div id="aiThread" class="flex-1 overflow-y-auto space-y-10 px-10 py-10 custom-scrollbar pb-40">
-        
-        <div id="nxxtWatermark" class="opacity-[0.03] text-center py-20 pointer-events-none select-none transition-opacity duration-700">
-            <h1 class="text-white font-black text-[10rem] tracking-tighter leading-none">NXXT</h1>
-            <p class="text-white text-xs tracking-[1.5em] font-medium mt-2 uppercase">Professional Interface</p>
-        </div>
+    <div id="aiThread" class="flex-1 overflow-y-auto space-y-12 px-8 py-12 custom-scrollbar pb-48">
+        
+        <div id="nxxtWatermark" class="opacity-[0.02] text-center py-32 pointer-events-none select-none transition-all duration-1000">
+            <h1 class="text-white font-black text-[12rem] tracking-tighter italic leading-none">NXXT</h1>
+            <p class="text-white text-sm tracking-[1em] font-light mt-4 uppercase">Advanced Intelligence System</p>
+        </div>
 
-        <div class="flex flex-col gap-5 animate-in fade-in slide-in-from-left-4 duration-500">
-            <div class="flex items-center gap-3">
-                <div class="w-6 h-6 rounded-lg bg-blue-600 flex items-center justify-center shadow-lg">
-                    <i class="fas fa-check text-[10px] text-white"></i>
-                </div>
-                <span class="text-[10px] font-bold text-white/40 uppercase tracking-widest">System Status</span>
-            </div>
-            <div class="pl-9 flex-1 text-white/80 text-[17px] font-light leading-relaxed max-w-2xl">
-                System is online and ready. I am currently operating in <span class="text-blue-400 font-medium text-sm">Testing Mode</span>. How can I assist you today?
-            </div>
-        </div>
-    </div>
+        <div class="flex justify-end mb-12 animate-in slide-in-from-bottom-4 duration-500">
+            <div class="relative">
+                <div class="bg-blue-600/10 border border-blue-500/20 backdrop-blur-md text-white rounded-[2rem] rounded-tr-md px-7 py-5 max-w-lg shadow-[0_10px_40px_rgba(0,0,0,0.3)]">
+                    <p class="text-[17px] leading-relaxed font-normal text-blue-50">Hello Nxxt, initialize system diagnostics.</p>
+                </div>
+                <span class="absolute -bottom-6 right-2 text-[9px] font-bold text-white/10 uppercase tracking-widest">Authorized User</span>
+            </div>
+        </div>
 
-    <div class="absolute bottom-8 left-0 right-0 px-10">
-        <div class="max-w-3xl mx-auto">
-            <div class="relative group">
-                <div class="relative bg-[#0d1117] border border-white/10 rounded-[2rem] p-2 shadow-2xl ring-1 ring-white/5">
-                    <textarea id="nxxtInput" rows="1" 
-                        placeholder="Type your message here..." 
-                        class="w-full bg-transparent border-none outline-none text-white text-lg px-6 py-4 resize-none placeholder:text-white/20"
-                        oninput="this.style.height = 'auto'; this.style.height = this.scrollHeight + 'px'"></textarea>
-                    
-                    <div class="flex items-center justify-between mt-2 pl-4 pr-1 pb-1">
-                        <div class="flex items-center gap-4">
-                            <span class="flex items-center gap-2 text-[10px] font-bold text-white/20 uppercase tracking-widest">
-                                <span class="w-2 h-2 rounded-full bg-blue-500/50"></span>
-                                Local Test Instance
-                            </span>
-                        </div>
-                        
-                        <button onclick="handleFlow()" class="w-12 h-12 rounded-2xl bg-white hover:bg-blue-600 text-black hover:text-white transition-all duration-300 flex items-center justify-center group/btn">
-                            <i class="fas fa-arrow-up text-sm transition-transform group-hover/btn:-translate-y-1"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+        <div class="flex flex-col gap-4 animate-in fade-in slide-in-from-left-6 duration-700 mb-12">
+            <div class="flex items-center gap-4">
+                <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-blue-500/20">
+                    <i class="fas fa-bolt text-[10px] text-white"></i>
+                </div>
+                <span class="text-[10px] font-black text-white/40 uppercase tracking-[0.3em]">Neural Response</span>
+            </div>
+            <div class="pl-12 flex-1">
+                <div class="text-white/90 text-[18px] leading-[1.8] font-light tracking-tight">
+                    System diagnostics initialized. All neural pathways are operating at peak efficiency. Ready for your next command.
+                </div>
+            </div>
+        </div>
 
-    <div id="nxxtModal" class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
-        <div class="bg-[#12161f] border border-white/10 p-10 rounded-[2.5rem] max-w-sm w-full text-center shadow-[0_0_50px_rgba(0,0,0,0.5)] scale-95 animate-in zoom-in-95 duration-300">
-            <div class="w-20 h-20 bg-red-500/10 rounded-3xl flex items-center justify-center mx-auto mb-6 border border-red-500/20">
-                <i id="modalIcon" class="fas fa-exclamation-circle text-red-500 text-2xl"></i>
-            </div>
-            <h3 id="modalTitle" class="text-white font-bold text-2xl mb-3">Notice</h3>
-            <p id="modalMessage" class="text-white/50 text-base mb-8">This action is not available in the current test build.</p>
-            <button onclick="document.getElementById('nxxtModal').classList.add('hidden')" class="w-full py-4 bg-white text-black font-bold uppercase text-xs tracking-widest rounded-2xl hover:bg-blue-600 hover:text-white transition-all">Dismiss</button>
-        </div>
-    </div>
+    </div>
+
+    <div class="absolute bottom-8 left-0 right-0 px-8">
+        <div class="max-w-3xl mx-auto">
+            <div class="relative group">
+                <div class="absolute -inset-1 bg-gradient-to-r from-blue-600/20 to-purple-600/20 rounded-[3rem] blur-xl opacity-0 group-focus-within:opacity-100 transition duration-1000"></div>
+                <div class="relative bg-[#0d1117]/80 backdrop-blur-2xl border border-white/10 rounded-[2.5rem] p-3 shadow-3xl">
+                    <textarea id="nxxtInput" rows="1" 
+                        placeholder="Initialize command..." 
+                        class="w-full bg-transparent border-none outline-none text-white text-lg px-6 py-4 resize-none placeholder:text-white/10"
+                        oninput="this.style.height = 'auto'; this.style.height = this.scrollHeight + 'px'"></textarea>
+                    
+                    <div class="flex items-center justify-between mt-2 pl-4 pr-1 pb-1">
+                        <span class="flex items-center gap-2 text-[10px] font-bold text-white/20 uppercase tracking-tighter">
+                            <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+                            Nxxt-4 Turbo Active
+                        </span>
+                        
+                        <button onclick="handleNxxtFlow()" class="group/btn relative w-14 h-14 rounded-[1.5rem] bg-white hover:bg-blue-500 transition-all duration-500 flex items-center justify-center overflow-hidden">
+                            <i class="fas fa-arrow-up text-black group-hover/btn:text-white group-hover/btn:-translate-y-12 transition-all duration-500 absolute"></i>
+                            <i class="fas fa-arrow-up text-white translate-y-12 group-hover/btn:translate-y-0 transition-all duration-500 absolute"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="nxxtModal" class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-[#0a0f1d]/90 backdrop-blur-md animate-in fade-in duration-300">
+        <div class="bg-[#161b22] border border-white/10 p-8 rounded-[2rem] max-w-sm w-full text-center shadow-2xl scale-95 animate-in zoom-in-95 duration-300">
+            <div class="w-16 h-16 bg-blue-500/10 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-blue-500/20">
+                <i class="fas fa-exclamation-triangle text-blue-500 text-xl"></i>
+            </div>
+            <h3 class="text-white font-bold text-xl mb-2">System Alert</h3>
+            <p class="text-white/60 text-sm mb-6">Neural processing error. Please re-initialize command sequence.</p>
+            <button onclick="this.closest('#nxxtModal').classList.add('hidden')" class="w-full py-3 bg-white text-black font-black uppercase text-[10px] tracking-widest rounded-xl hover:bg-blue-500 hover:text-white transition-all">Acknowledge</button>
+        </div>
+    </div>
 </div>
 `,
 
 
+    
     
  'Nxxt Lab': `
 
