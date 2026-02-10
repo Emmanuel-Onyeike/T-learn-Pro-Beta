@@ -449,3 +449,18 @@ body.jivo-chat-open .jivo-iframe-container {
     opacity: 1 !important;
     pointer-events: auto !important;
 }
+/* Extreme override to hide the Jivo bottom label/bar */
+div[class*="label"], 
+div[class*="button"], 
+div[class*="bar-"],
+div[class^="jivo-"].jivo-label,
+#jivo-label-wrapper {
+    display: none !important;
+    visibility: hidden !important;
+}
+
+/* Hide the container entirely unless we are in "Agent Mode" */
+body:not(.jivo-chat-open) .jivo-iframe-container,
+body:not(.jivo-chat-open) [id^="jivo-"] {
+    display: none !important;
+}
