@@ -3027,22 +3027,3 @@ function showModalAlert(message) {
 
 /////  FOR THE XT PAY
 
-    function showPayModal(title, msg, icon) {
-        document.getElementById('payTitle').innerText = title;
-        document.getElementById('payMsg').innerText = msg;
-        document.getElementById('payIcon').className = 'fas ' + icon + ' text-blue-500 text-2xl';
-        document.getElementById('payModal').classList.remove('hidden');
-    }
-
-    // Engineering Stream simulator
-    setInterval(() => {
-        const logContainer = document.getElementById('payLogs');
-        if(!logContainer) return;
-        const count = logContainer.children.length + 1;
-        const newLog = document.createElement('div');
-        newLog.className = "flex gap-3 animate-in slide-in-from-right-4 duration-700";
-        newLog.innerHTML = \`<span class="text-blue-600">\${count.toString().padStart(2, '0')}</span><p class="text-white/40 leading-relaxed">ENGINEER_ACTION: MODIFIED_CORE_\${Math.floor(Math.random() * 999)}</p>\`;
-        logContainer.appendChild(newLog);
-        if(logContainer.children.length > 10) logContainer.removeChild(logContainer.firstChild);
-    }, 4000);
-
