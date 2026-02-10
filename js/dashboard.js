@@ -3026,4 +3026,60 @@ function showModalAlert(message) {
 
 
 /////  FOR THE XT PAY
+'Xt Pay': `
+<script>
+    // 1. Use a unique namespace for XtPay to avoid global conflicts
+    window.XtPay = {
+        logInterval: null,
+        
+        showModal: function(title, msg, icon) {
+            const modal = document.getElementById('payModal');
+            if (!modal) return;
+            
+            document.getElementById('payTitle').innerText = title;
+            document.getElementById('payMsg').innerText = msg;
+            document.getElementById('payIcon').className = 'fas ' + icon + ' text-blue-500 text-2xl';
+            modal.classList.remove('hidden');
+        },
 
+        initLogs: function() {
+            // 2. Clear any previous intervals to prevent memory leaks/conflicts
+            if (this.logInterval) clearInterval(this.logInterval);
+
+            const logContainer = document.getElementById('payLogs');
+            if (!logContainer) return;
+
+            this.logInterval = setInterval(() => {
+                const logs = document.getElementById('payLogs');
+                if (!logs) {
+                    clearInterval(this.XtPay.logInterval);
+                    return;
+                }
+
+                const count = logs.children.length + 1;
+                const newLog = document.createElement('div');
+                newLog.className = "flex gap-3 animate-in slide-in-from-right-4 duration-700";
+                
+                // Using template literal safely
+                newLog.innerHTML = \`
+                    <span class="text-blue-600">\${count.toString().padStart(2, '0')}</span>
+                    <p class="text-white/40 leading-relaxed">ENGINEER_ACTION: MODIFIED_CORE_\${Math.floor(Math.random() * 999)}</p>
+                \`;
+
+                logs.appendChild(newLog);
+                logs.scrollTop = logs.scrollHeight;
+
+                if (logs.children.length > 10) {
+                    logs.removeChild(logs.firstChild);
+                }
+            }, 4000);
+        }
+    };
+
+    // 3. Initialize the component
+    window.XtPay.initLogs();
+
+    // 4. Update your HTML button to use the new namespaced function:
+    // onclick="window.XtPay.showModal(...)"
+</script>
+`
