@@ -433,14 +433,19 @@ nav.flex {
 
 
 /* Hide the default JivoChat button to prevent overlap */
+/* Hide JivoChat default bar/label (Gerald) */
 #jivo-iframe-container, 
 .jivo-iframe-container,
-[class^="jivo-"] {
-    display: none !important;
+div[class^="jivo-"] {
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
 }
 
-/* Ensure that when James triggers the API, the window actually shows */
+/* Show JivoChat only when it is active/opened */
 body.jivo-chat-open #jivo-iframe-container,
 body.jivo-chat-open .jivo-iframe-container {
-    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
 }
