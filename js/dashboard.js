@@ -3039,3 +3039,57 @@ window.NxxtDashboard = NxxtDashboard;
 
     // Initialize the engineering stream for this module
     NxxtDashboard.startBuildStream('payLogs');
+
+
+
+
+//////// FOR THE ASSITANT AI NOT NXXT AI 
+// --- AI CHAT SYSTEM ---
+
+function toggleChat() {
+    const window = document.getElementById('aiChatWindow');
+    window.classList.toggle('hidden');
+}
+
+function sendChatMessage() {
+    const input = document.getElementById('chatInput');
+    const container = document.getElementById('chatMessages');
+    const message = input.value.trim();
+
+    if (!message) return;
+
+    // 1. Add User Message
+    const userDiv = document.createElement('div');
+    userDiv.className = "bg-blue-600/20 p-3 rounded-2xl rounded-tr-none text-blue-200 ml-8 text-right";
+    userDiv.innerText = message;
+    container.appendChild(userDiv);
+
+    input.value = '';
+    container.scrollTop = container.scrollHeight;
+
+    // 2. Simulate Agent Response
+    setTimeout(() => {
+        const agents = ["ENGINEER_BOT", "CORE_ARCHITECT", "PROTOCOL_DROID"];
+        const agent = agents[Math.floor(Math.random() * agents.length)];
+        
+        const agentDiv = document.createElement('div');
+        agentDiv.className = "bg-white/5 p-3 rounded-2xl rounded-tl-none text-white/60 mr-8 border border-white/5";
+        
+        // Dynamic responses based on context
+        let response = `[${agent}]: Packet received. Engineers are reviewing your request.`;
+        if (message.toLowerCase().includes('help')) response = `[${agent}]: Help protocol initiated. Which module (Lab/Pay/Hub) requires optimization?`;
+        
+        agentDiv.innerText = response;
+        container.appendChild(agentDiv);
+        container.scrollTop = container.scrollHeight;
+        
+        // Play a subtle sound if you have one
+    }, 1000);
+}
+
+// Allow "Enter" key to send message
+document.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter' && document.activeElement.id === 'chatInput') {
+        sendChatMessage();
+    }
+});
