@@ -363,6 +363,26 @@
 function jivo_onLoadCallback() {
     jivo_api.hideRegistrationForm();
 }
+    // Function to hide JivoChat elements unless the chat is actually open
+function enforceJamesUplink() {
+    const jivoElements = document.querySelectorAll('.jivo-iframe-container, [class^="jivo-"], #jivo-iframe-container');
+    jivoElements.forEach(el => {
+        // Only show if the body has the 'jivo-chat-open' class (meaning James called them)
+        if (!document.body.classList.contains('jivo-chat-open')) {
+            el.style.display = 'none';
+            el.style.opacity = '0';
+            el.style.pointerEvents = 'none';
+        } else {
+            el.style.display = 'block';
+            el.style.opacity = '1';
+            el.style.pointerEvents = 'auto';
+        }
+    });
+}
+
+// Run every time the DOM changes to catch Jivo trying to sneak back in
+const observer = new MutationObserver(enforceJamesUplink);
+observer.observe(document.body, { childList: true, subtree: true });
 </script>
 </body>
 </html>
