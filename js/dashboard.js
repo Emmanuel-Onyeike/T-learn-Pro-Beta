@@ -1124,39 +1124,6 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-//// SUPABASE CLIENT FOR DASHBOARD.JS
-let supabaseClient = null;
-
-async function getSupabaseClient() {
-    if (supabaseClient) return supabaseClient;
-
-    return new Promise((resolve) => {
-        if (typeof supabase !== 'undefined') {
-            const { createClient } = supabase;
-            supabaseClient = createClient(
-                'https://mddlkobjiquicopymipy.supabase.co',
-                'sb_publishable_w5jI7FaNhpSCsT1GBHEmIw_Wmekf2dH'
-            );
-            resolve(supabaseClient);
-            return;
-        }
-
-        const script = document.createElement('script');
-        script.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
-        script.onload = () => {
-            const { createClient } = supabase;
-            supabaseClient = createClient(
-                'https://mddlkobjiquicopymipy.supabase.co',
-                'sb_publishable_w5jI7FaNhpSCsT1GBHEmIw_Wmekf2dH'
-            );
-            resolve(supabaseClient);
-        };
-        script.onerror = () => {
-            alert("Failed to load Supabase. Check your connection.");
-        };
-        document.head.appendChild(script);
-    });
-}
 
 /**
  * 1. GALLERY SYSTEM (CAMERA ICON)
