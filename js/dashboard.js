@@ -2400,10 +2400,26 @@ window.finalizeProject = function(name, desc) {
 
 
 ///// FOR THE NXXT AI ALONE
-// --- CONFIGURATION ---
-const OPENAI_API_KEY = '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'; // Add your key here
+// --- CONFIGURATION & MOCK DATA ---
 window.imgCredits = 5;
 window.nxxtMode = 'standard';
+
+// TESTING PHASE: Pre-set responses for auto-replies
+const TEST_RESPONSES = {
+    "hello": "Hello. How can I help you today?",
+    "who are you": "I am Nxxt AI, your professional assistant. I'm currently in the testing phase to ensure all systems work correctly.",
+    "is this real": "This is a local testing environment. The responses you see now are pre-set for development, but the live version will connect to GPT-4.",
+    "help": "I can assist with writing, analysis, and image generation. Try typing 'generate an image' to see the visual output in action.",
+    "capabilities": "Currently testing UI performance, message speed, and image generation. Live features like data analysis and coding will be added in the next phase.",
+    "default": "I've received your message. In the live version, I would provide a detailed response here, but for now, I'm just confirming the input works."
+};
+
+/**
+ * Bridge function to connect HTML onclick to our logic
+ */
+function handleNxxtFlow() {
+    sendMessage();
+}
 
 /**
  * Main function called by the Send Button or Enter Key
@@ -2448,67 +2464,52 @@ async function sendMessage() {
     `);
     scrollThread();
 
-    // 4. LOGIC: TEXT VS IMAGE
+    // 4. LOGIC: TEXT VS IMAGE (SIMULATED)
     const isImageRequest = /image|draw|generate|create|picture/i.test(prompt);
 
-    try {
-        if (isImageRequest) {
-            if (window.imgCredits <= 0) throw new Error("CREDIT_LIMIT");
-            await handleImageGeneration(prompt, thinkId);
-        } else {
-            await handleTextGeneration(prompt, thinkId);
-        }
-    } catch (error) {
+    setTimeout(() => {
         document.getElementById(thinkId)?.remove();
-        let errorMsg = "Critical: Neural Link Severed. Check API Key/Balance.";
-        if (error.message === "CREDIT_LIMIT") errorMsg = "Visual bandwidth exhausted. (0/5 Credits left).";
         
-        // Modal Alert as requested
-        showModalAlert(errorMsg);
-    }
+        try {
+            if (isImageRequest) {
+                if (window.imgCredits <= 0) throw new Error("CREDIT_LIMIT");
+                handleImageGeneration(prompt);
+            } else {
+                // AUTO-REPLY LOGIC
+                const cleanPrompt = prompt.toLowerCase();
+                let reply = TEST_RESPONSES["default"];
+                
+                // Check if any keyword matches our test keys
+                for (let key in TEST_RESPONSES) {
+                    if (cleanPrompt.includes(key)) {
+                        reply = TEST_RESPONSES[key];
+                        break;
+                    }
+                }
+                
+                // Edge/Fun Mode Modifier
+                if(window.nxxtMode === 'fun') {
+                    reply = "🙄 [TEST MODE]: " + reply + " 🔥";
+                }
+
+                renderAiResponse(reply, 'text');
+            }
+        } catch (error) {
+            let errorMsg = "Critical: Neural Link Severed.";
+            if (error.message === "CREDIT_LIMIT") errorMsg = "Visual bandwidth exhausted. (0/5 Credits left).";
+            showModalAlert(errorMsg);
+        }
+    }, 1200); // Simulated "Thinking" delay
 }
 
-// --- GENERATION HANDLERS ---
+// --- SIMULATED GENERATION HANDLERS ---
 
-async function handleTextGeneration(prompt, thinkId) {
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-            'Authorization': `Bearer ${OPENAI_API_KEY}`,
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            model: "gpt-4-turbo-preview",
-            messages: [
-                { 
-                    role: "system", 
-                    content: window.nxxtMode === 'fun' 
-                        ? "You are Nxxt AI in Fun Mode. Be sarcastic, edgy, and use emojis." 
-                        : "You are Nxxt AI, a high-end professional neural assistant." 
-                },
-                { role: "user", content: prompt }
-            ]
-        })
-    });
-
-    const data = await response.json();
-    if (data.error) throw new Error(data.error.message);
-
-    document.getElementById(thinkId).remove();
-    renderAiResponse(data.choices[0].message.content, 'text');
-}
-
-async function handleImageGeneration(prompt, thinkId) {
+function handleImageGeneration(prompt) {
     window.imgCredits--;
     updateCreditUI();
 
     const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=1024&height=1024&nologo=true&seed=${Math.floor(Math.random()*1000)}`;
-    
-    // Slight delay to feel like it's "computing"
-    setTimeout(() => {
-        document.getElementById(thinkId).remove();
-        renderAiResponse(imageUrl, 'image');
-    }, 2000);
+    renderAiResponse(imageUrl, 'image');
 }
 
 // --- UI RENDERING ---
@@ -2535,8 +2536,6 @@ function renderAiResponse(content, type) {
     scrollThread();
 }
 
-// --- UTILITIES ---
-
 function scrollThread() {
     const thread = document.getElementById('aiThread');
     thread.scrollTo({ top: thread.scrollHeight, behavior: 'smooth' });
@@ -2550,14 +2549,13 @@ function updateCreditUI() {
 }
 
 function showModalAlert(message) {
-    // Custom modal logic to keep alerts centered and stylish
     const modal = document.createElement('div');
     modal.className = "fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4";
     modal.innerHTML = `
-        <div class="bg-[#0d1117] border border-white/10 p-8 rounded-[2rem] max-w-sm w-full text-center shadow-2xl">
+        <div class="bg-[#0d1117] border border-white/10 p-8 rounded-[2rem] max-w-sm w-full text-center shadow-2xl animate-in zoom-in duration-300">
             <i class="fas fa-exclamation-triangle text-blue-500 text-3xl mb-4"></i>
-            <p class="text-white font-medium mb-6">${message}</p>
-            <button onclick="this.parentElement.parentElement.remove()" class="w-full py-3 bg-blue-600 text-white rounded-xl font-bold uppercase tracking-widest text-xs">Acknowledge</button>
+            <p class="text-white font-medium mb-6 uppercase tracking-tighter text-sm">${message}</p>
+            <button onclick="this.parentElement.parentElement.remove()" class="w-full py-3 bg-white text-black rounded-xl font-bold uppercase tracking-widest text-[10px] hover:bg-blue-600 hover:text-white transition-all">Acknowledge</button>
         </div>
     `;
     document.body.appendChild(modal);
