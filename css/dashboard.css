@@ -464,3 +464,21 @@ body:not(.jivo-chat-open) .jivo-iframe-container,
 body:not(.jivo-chat-open) [id^="jivo-"] {
     display: none !important;
 }
+/* Strictly hide the default Jivo button and labels */
+#jivo-iframe-container,
+.jivo-iframe-container,
+div[class^="jivo-"],
+#jivo-label-wrapper {
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    transform: translateY(100px) !important; /* Move it off-screen */
+}
+
+/* Allow the actual chat window to show only when we trigger it */
+body.agent-bridge-active #jivo-iframe-container {
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    transform: translateY(0) !important;
+}
