@@ -3026,60 +3026,79 @@ function showModalAlert(message) {
 
 
 /////  FOR THE XT PAY
-'Xt Pay': `
-<script>
-    // 1. Use a unique namespace for XtPay to avoid global conflicts
-    window.XtPay = {
-        logInterval: null,
-        
-        showModal: function(title, msg, icon) {
-            const modal = document.getElementById('payModal');
-            if (!modal) return;
-            
-            document.getElementById('payTitle').innerText = title;
-            document.getElementById('payMsg').innerText = msg;
-            document.getElementById('payIcon').className = 'fas ' + icon + ' text-blue-500 text-2xl';
+/**
+ * NXXT HUB CENTRAL CONTROLLER
+ * Manages Modals and Engineering Build Streams
+ */
+
+const NxxtDashboard = {
+    logInterval: null,
+
+    // 1. UNIVERSAL MODAL HANDLER (Works for Lab, Pay, and Hub)
+    // Always centers the modal as per system requirements
+    showAlert: function(type, title, msg, icon) {
+        // Find the active modal based on the type (e.g., 'pay', 'lab', 'hustle')
+        const modalId = `${type}Modal`;
+        const titleId = `${type}Title`;
+        const msgId = `${type}Msg`;
+        const iconId = `${type}Icon`;
+
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            document.getElementById(titleId).innerText = title;
+            document.getElementById(msgId).innerText = msg;
+            document.getElementById(iconId).className = `fas ${icon} text-blue-500 text-2xl`;
             modal.classList.remove('hidden');
-        },
-
-        initLogs: function() {
-            // 2. Clear any previous intervals to prevent memory leaks/conflicts
-            if (this.logInterval) clearInterval(this.logInterval);
-
-            const logContainer = document.getElementById('payLogs');
-            if (!logContainer) return;
-
-            this.logInterval = setInterval(() => {
-                const logs = document.getElementById('payLogs');
-                if (!logs) {
-                    clearInterval(this.XtPay.logInterval);
-                    return;
-                }
-
-                const count = logs.children.length + 1;
-                const newLog = document.createElement('div');
-                newLog.className = "flex gap-3 animate-in slide-in-from-right-4 duration-700";
-                
-                // Using template literal safely
-                newLog.innerHTML = \`
-                    <span class="text-blue-600">\${count.toString().padStart(2, '0')}</span>
-                    <p class="text-white/40 leading-relaxed">ENGINEER_ACTION: MODIFIED_CORE_\${Math.floor(Math.random() * 999)}</p>
-                \`;
-
-                logs.appendChild(newLog);
-                logs.scrollTop = logs.scrollHeight;
-
-                if (logs.children.length > 10) {
-                    logs.removeChild(logs.firstChild);
-                }
-            }, 4000);
+        } else {
+            console.error(`Modal ${modalId} not found in the DOM.`);
         }
-    };
+    },
 
-    // 3. Initialize the component
-    window.XtPay.initLogs();
+    // 2. LIVE BUILD STREAMER
+    // Call this when a module loads to start the "Engineers are cooking" logs
+    startBuildStream: function(containerId) {
+        // Clear any existing "ghost" intervals from other pages
+        if (this.logInterval) clearInterval(this.logInterval);
 
-    // 4. Update your HTML button to use the new namespaced function:
-    // onclick="window.XtPay.showModal(...)"
-</script>
-`
+        const container = document.getElementById(containerId);
+        if (!container) return;
+
+        const engineerActions = [
+            "OPTIMIZING_CORE_NODES",
+            "PATCHING_SECURITY_FLAW",
+            "SYNCING_DATABASE_CLUSTER",
+            "REFINING_UI_COMPONENTS",
+            "ENCRYPTING_GATEWAY_TUNNEL",
+            "DEPLOYING_BETA_ASSETS"
+        ];
+
+        this.logInterval = setInterval(() => {
+            const logs = document.getElementById(containerId);
+            // If user navigated away and element is gone, kill the interval
+            if (!logs) {
+                clearInterval(NxxtDashboard.logInterval);
+                return;
+            }
+
+            const action = engineerActions[Math.floor(Math.random() * engineerActions.length)];
+            const id = Math.floor(Math.random() * 999).toString().padStart(3, '0');
+            const newLog = document.createElement('div');
+            
+            newLog.className = "flex gap-3 animate-in slide-in-from-right-4 duration-500 text-[10px] font-mono";
+            newLog.innerHTML = `
+                <span class="text-blue-600 font-bold">${new Date().toLocaleTimeString([], {hour12: false, hour: '2-digit', minute:'2-digit', second:'2-digit'})}</span>
+                <p class="text-white/40 uppercase tracking-tighter">ENGINEER_LOG: ${action}_${id}</p>
+            `;
+
+            logs.appendChild(newLog);
+            logs.scrollTop = logs.scrollHeight;
+
+            if (logs.children.length > 12) {
+                logs.removeChild(logs.firstChild);
+            }
+        }, 3500);
+    }
+};
+
+// Expose to window so HTML on-clicks can find it
+window.NxxtDashboard = NxxtDashboard;
