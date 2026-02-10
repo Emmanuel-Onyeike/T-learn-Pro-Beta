@@ -563,51 +563,46 @@ const views = {
 `,
     
 
-
 'Nxxt AI': `
-    <div class="flex flex-col h-[85vh] max-w-4xl mx-auto relative animate-in fade-in duration-500" id="nxxtContainer">
+    <div class="flex flex-col h-[85vh] max-w-4xl mx-auto relative animate-in fade-in duration-500">
         
-        <div class="flex justify-center gap-4 py-4 sticky top-0 z-20 bg-[#0a0f1d]/80 backdrop-blur-md">
-            <button onclick="window.nxxtMode = 'standard'" class="px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest border border-white/10 hover:bg-white/5 transition-all focus:bg-white focus:text-black">Standard</button>
-            <button onclick="window.nxxtMode = 'fun'" class="px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest border border-white/10 hover:bg-white/5 transition-all focus:border-blue-500 focus:text-blue-500">Fun Mode</button>
-        </div>
-
-        <div id="nxxtWatermark" class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none opacity-[0.03] transition-opacity duration-1000">
-            <h1 class="text-white font-black text-[12rem] tracking-tighter italic">NXXT</h1>
-            <p class="text-white font-black text-xs uppercase tracking-[1em] -mt-8">Neural Engine</p>
-        </div>
-
-        <div id="aiThread" class="flex-1 overflow-y-auto space-y-12 px-6 py-10 custom-scrollbar relative z-10 pb-32">
+        <div class="flex justify-between items-center px-6 py-4 sticky top-0 z-20 bg-[#0a0f1d]/80 backdrop-blur-md border-b border-white/5">
+            <div class="flex gap-4">
+                <button onclick="window.nxxtMode = 'standard'" class="px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest border border-white/10 hover:bg-white/5 focus:bg-white focus:text-black transition-all">Standard</button>
+                <button onclick="window.nxxtMode = 'fun'" class="px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest border border-white/10 hover:bg-white/5 focus:border-blue-500 focus:text-blue-500 transition-all">Fun Mode</button>
             </div>
+            <div class="flex items-center gap-3">
+                <span class="text-[9px] font-black text-white/30 uppercase tracking-widest">Image Credits:</span>
+                <div id="imageCredits" class="flex gap-1">
+                    <div class="w-1.5 h-3 bg-blue-500 rounded-full"></div>
+                    <div class="w-1.5 h-3 bg-blue-500 rounded-full"></div>
+                    <div class="w-1.5 h-3 bg-blue-500 rounded-full"></div>
+                    <div class="w-1.5 h-3 bg-blue-500 rounded-full"></div>
+                    <div class="w-1.5 h-3 bg-blue-500 rounded-full"></div>
+                </div>
+            </div>
+        </div>
 
-        <div class="p-6 absolute bottom-0 left-0 right-0 bg-gradient-to-t from-[#0a0f1d] via-[#0a0f1d] to-transparent z-20">
+        <div id="aiThread" class="flex-1 overflow-y-auto space-y-10 px-6 py-10 custom-scrollbar pb-40">
+            <div id="nxxtWatermark" class="opacity-[0.03] text-center py-20 pointer-events-none">
+                <h1 class="text-white font-black text-9xl tracking-tighter italic">NXXT</h1>
+            </div>
+        </div>
+
+        <div class="p-6 absolute bottom-0 left-0 right-0 bg-gradient-to-t from-[#0a0f1d] via-[#0a0f1d] to-transparent">
             <div class="relative group max-w-3xl mx-auto">
-                <div class="absolute -inset-0.5 bg-gradient-to-r from-blue-500/20 to-purple-600/20 rounded-[2rem] blur opacity-0 group-focus-within:opacity-100 transition duration-500"></div>
-                
-                <div class="relative bg-[#0d1117] border border-white/10 rounded-[2.5rem] p-4 shadow-2xl transition-all group-focus-within:border-white/20">
-                    <textarea 
-                        id="nxxtInput"
-                        rows="1" 
-                        placeholder="Ask Nxxt anything..." 
-                        class="w-full bg-transparent border-none outline-none text-white text-lg px-4 py-2 resize-none placeholder:text-white/20"
-                        oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'"
-                        onkeydown="if(event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); sendMessage(); }"
-                    ></textarea>
+                <div class="relative bg-[#0d1117] border border-white/10 rounded-[2.5rem] p-4 shadow-2xl">
+                    <textarea id="nxxtInput" rows="1" placeholder="Type a message or 'generate an image of...'" 
+                        class="w-full bg-transparent border-none outline-none text-white text-lg px-4 py-2 resize-none"
+                        onkeydown="if(event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); handleNxxtFlow(); }"></textarea>
                     
                     <div class="flex items-center justify-between mt-4 px-2">
-                        <div class="flex gap-2">
-                            <button class="w-10 h-10 rounded-xl bg-white/5 border border-white/5 flex items-center justify-center text-white/20 hover:text-white transition-all"><i class="fas fa-plus text-xs"></i></button>
-                        </div>
-                        
-                        <div class="flex items-center gap-4">
-                            <div class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-blue-500/5 border border-blue-500/10">
-                                <span class="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></span>
-                                <span class="text-[9px] font-black text-blue-500/80 uppercase tracking-widest">Nxxt-1.5</span>
-                            </div>
-                            <button onclick="sendMessage()" class="w-12 h-12 rounded-2xl bg-white text-black flex items-center justify-center hover:scale-110 active:scale-95 transition-all shadow-xl shadow-white/5">
-                                <i class="fas fa-paper-plane text-sm"></i>
-                            </button>
-                        </div>
+                        <button class="text-white/20 hover:text-white transition-colors text-xs uppercase font-black tracking-widest px-4">
+                            <i class="fas fa-bolt mr-2 text-blue-500"></i> Nxxt-4 Turbo
+                        </button>
+                        <button onclick="handleNxxtFlow()" class="w-12 h-12 rounded-2xl bg-white text-black flex items-center justify-center hover:scale-105 active:scale-95 transition-all">
+                            <i class="fas fa-arrow-up"></i>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -616,7 +611,7 @@ const views = {
 `,
 
 
-
+    
  'Nxxt Lab': `
 
 `,
@@ -2391,9 +2386,12 @@ window.finalizeProject = function(name, desc) {
 
 
 ///// FOR THE NXXT AI ALONE
+// --- CONFIGURATION ---
+const OPENAI_API_KEY = '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'; // Add your key here
+window.imgCredits = 5;
 window.nxxtMode = 'standard';
 
-function sendMessage() {
+async function sendMessage() {
     const input = document.getElementById('nxxtInput');
     const thread = document.getElementById('aiThread');
     const watermark = document.getElementById('nxxtWatermark');
@@ -2401,12 +2399,15 @@ function sendMessage() {
 
     if (!prompt) return;
 
-    // Fade watermark on first message
-    watermark.style.opacity = '0.01';
+    // Fade watermark
+    if (watermark) watermark.style.opacity = '0.01';
 
-    // 1. Add User Message
+    // 1. Detect Intent (Image vs Text)
+    const isImageRequest = /image|draw|generate|create|picture/i.test(prompt);
+
+    // 2. Add User Message UI
     thread.insertAdjacentHTML('beforeend', `
-        <div class="flex justify-end animate-in slide-in-from-right-4 duration-300">
+        <div class="flex justify-end animate-in slide-in-from-right-4 duration-300 mb-8">
             <div class="bg-blue-600 text-white rounded-[2rem] rounded-tr-sm p-5 max-w-[80%] shadow-lg shadow-blue-600/10">
                 <p class="text-[16px] font-medium leading-relaxed">${prompt}</p>
             </div>
@@ -2417,10 +2418,10 @@ function sendMessage() {
     input.style.height = 'auto';
     thread.scrollTo({ top: thread.scrollHeight, behavior: 'smooth' });
 
-    // 2. Thinking State
-    const id = 'think-' + Date.now();
+    // 3. Add Thinking State
+    const thinkId = 'think-' + Date.now();
     thread.insertAdjacentHTML('beforeend', `
-        <div id="${id}" class="flex gap-4 animate-in fade-in">
+        <div id="${thinkId}" class="flex gap-4 animate-in fade-in mb-8">
             <div class="w-8 h-8 rounded-xl bg-white/5 flex items-center justify-center border border-white/10">
                 <i class="fas fa-brain text-[10px] text-blue-500 animate-pulse"></i>
             </div>
@@ -2432,28 +2433,88 @@ function sendMessage() {
         </div>
     `);
 
-    // 3. AI Response
-    setTimeout(() => {
-        document.getElementById(id).remove();
+    try {
+        if (isImageRequest) {
+            if (window.imgCredits <= 0) throw new Error("CREDIT_LIMIT");
+            await handleImageGeneration(prompt, thinkId);
+        } else {
+            await handleTextGeneration(prompt, thinkId);
+        }
+    } catch (error) {
+        document.getElementById(thinkId)?.remove();
+        let errorText = "Neural link failed. Please check your API configuration.";
+        if (error.message === "CREDIT_LIMIT") errorText = "Visual protocols depleted. (0/5 Image credits remaining).";
         
-        const response = window.nxxtMode === 'fun' 
-            ? "Oh, you want to talk about " + prompt + "? Bold move. Let's see if your neural hardware can handle my roast-level analysis. 😉"
-            : "I have analyzed your query regarding '" + prompt + "'. The current architectural constraints suggest a multi-layered approach is optimal.";
+        // Show error in a modal style as per your preferences
+        alert(errorText); 
+    }
+}
 
-        thread.insertAdjacentHTML('beforeend', `
-            <div class="flex gap-6 group animate-in slide-in-from-left-4 duration-500">
-                <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-blue-600 to-purple-600 shrink-0 flex items-center justify-center shadow-lg shadow-blue-500/20">
-                    <i class="fas fa-robot text-white text-sm"></i>
-                </div>
-                <div class="space-y-4 pt-1">
-                    <p class="text-white/90 text-lg font-medium leading-relaxed tracking-tight">${response}</p>
-                    <div class="flex gap-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <button class="text-white/20 hover:text-white text-[9px] font-black uppercase tracking-widest transition-colors">Copy Link</button>
-                        <button class="text-white/20 hover:text-white text-[9px] font-black uppercase tracking-widest transition-colors">Share</button>
-                    </div>
+async function handleTextGeneration(prompt, thinkId) {
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${OPENAI_API_KEY}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            model: "gpt-4-turbo-preview",
+            messages: [
+                { 
+                    role: "system", 
+                    content: window.nxxtMode === 'fun' 
+                        ? "You are Nxxt AI in Fun Mode. Be sarcastic, witty, and use a touch of tech-humor." 
+                        : "You are Nxxt AI, a professional and highly advanced neural assistant." 
+                },
+                { role: "user", content: prompt }
+            ],
+            temperature: window.nxxtMode === 'fun' ? 0.9 : 0.5
+        })
+    });
+
+    const data = await response.json();
+    document.getElementById(thinkId).remove();
+    renderAiResponse(data.choices[0].message.content, 'text');
+}
+
+async function handleImageGeneration(prompt, thinkId) {
+    // Deduct Credit & Update UI
+    window.imgCredits--;
+    const creditBar = document.getElementById('imageCredits');
+    if (creditBar && creditBar.lastElementChild) creditBar.removeChild(creditBar.lastElementChild);
+
+    // Using high-speed image generation
+    const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=1024&height=1024&nologo=true`;
+    
+    // Simulate generation time for immersion
+    setTimeout(() => {
+        document.getElementById(thinkId).remove();
+        renderAiResponse(imageUrl, 'image');
+    }, 2500);
+}
+
+function renderAiResponse(content, type) {
+    const thread = document.getElementById('aiThread');
+    const displayContent = type === 'image' 
+        ? `<div class="space-y-4">
+            <img src="${content}" class="rounded-[2rem] border border-white/10 shadow-2xl max-w-full h-auto animate-in zoom-in-95 duration-700" />
+            <a href="${content}" target="_blank" class="inline-block text-[9px] font-black text-white/20 uppercase tracking-[0.3em] hover:text-blue-500 transition-colors">Download Artifact</a>
+           </div>`
+        : `<p class="text-white/90 text-lg font-medium leading-relaxed tracking-tight">${content.replace(/\n/g, '<br>')}</p>`;
+
+    thread.insertAdjacentHTML('beforeend', `
+        <div class="flex gap-6 group animate-in slide-in-from-left-4 duration-500 mb-10">
+            <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-blue-600 to-purple-600 shrink-0 flex items-center justify-center shadow-lg shadow-blue-500/20">
+                <i class="fas fa-robot text-white text-sm"></i>
+            </div>
+            <div class="space-y-4 pt-1 flex-1">
+                ${displayContent}
+                <div class="flex gap-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button class="text-white/20 hover:text-white text-[9px] font-black uppercase tracking-widest transition-colors">Copy Link</button>
+                    <button class="text-white/20 hover:text-white text-[9px] font-black uppercase tracking-widest transition-colors">Share</button>
                 </div>
             </div>
-        `);
-        thread.scrollTo({ top: thread.scrollHeight, behavior: 'smooth' });
-    }, 1500);
+        </div>
+    `);
+    thread.scrollTo({ top: thread.scrollHeight, behavior: 'smooth' });
 }
