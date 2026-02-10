@@ -602,13 +602,17 @@ const views = {
     <div class="p-10 bg-gradient-to-t from-[#05070a] via-[#05070a]/90 to-transparent">
         <div class="max-w-4xl mx-auto relative">
             <div class="absolute -inset-2 bg-blue-500/10 blur-2xl rounded-[3rem]"></div>
-            <div class="relative bg-[#0f1420] border border-white/10 rounded-[2.5rem] p-2 flex items-end shadow-2xl focus-within:border-blue-500/50 transition-all">
+            <div class="relative bg-[#0f1420] border border-white/10 rounded-[2.5rem] p-2 flex flex-col items-end shadow-2xl focus-within:border-blue-500/50 transition-all">
                 <textarea id="nxxtInput" rows="1" 
                     placeholder="Describe your next objective..." 
-                    class="flex-1 bg-transparent border-none outline-none text-white text-lg px-8 py-5 resize-none placeholder:text-white/10"
-                    oninput="this.style.height = 'auto'; this.style.height = this.scrollHeight + 'px'"></textarea>
+                    class="flex-1 bg-transparent border-none outline-none text-white text-lg px-8 py-5 resize-none placeholder:text-white/10 w-full"
+                    oninput="this.style.height = 'auto'; this.style.height = this.scrollHeight + 'px'; updateNxxtCounter(this)"></textarea>
                 
-                <div class="flex items-center gap-4 p-2">
+                <div id="nxxtCounter" class="hidden text-[11px] text-blue-400/70 font-mono mt-1 mr-4 self-end">
+                    <span id="charCount">0</span> characters • <span id="wordCount">0</span> words
+                </div>
+
+                <div class="flex items-center gap-4 p-2 w-full justify-end">
                     <div class="hidden md:flex flex-col items-end px-4 border-r border-white/5">
                         <span class="text-[9px] font-bold text-green-500 flex items-center gap-2">
                             <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
@@ -631,7 +635,7 @@ const views = {
             </div>
             <h3 class="text-white font-black text-2xl mb-3 tracking-tight">System Interrupt</h3>
             <p class="text-white/50 text-[15px] leading-relaxed mb-8">Nxxt encountered a neural sync error. Command sequence must be re-initialized for safety.</p>
-            <button onclick="this.closest('#nxxtModal').classList.add('hidden')" class="w-full py-4 bg-white text-black font-black uppercase text-[11px] tracking-[0.2em] rounded-2xl hover:bg-blue-500 hover:text-white transition-all">Acknowledge & Reboot</button>
+            <button onclick="this.closest('#nxxtModal').classList.add('hidden')" class="w-full py-4 bg-white text-black font-black uppercase text-[11px] tracking-[0.2em] rounded-2xl hover:bg-blue-500 hover:text-white transition-all shadow-lg active:scale-[0.98]">Acknowledge & Reboot</button>
         </div>
     </div>
 </div>
@@ -1019,31 +1023,31 @@ const views = {
                 <span id="studentPrice" class="text-5xl font-black text-white transition-all">₦8,000</span> 
                 <span id="studentPeriod" class="text-xs font-bold text-blue-400/50 uppercase">/ Month</span>
             </div>
-         <ul class="space-y-4 mb-12 flex-grow">
-    <li class="flex items-center gap-3 text-[10px] text-white font-bold uppercase">
-        <i class="fas fa-book-open text-blue-400 w-4"></i> Limited Pro Courses
-    </li>
-    <li class="flex items-center gap-3 text-[10px] text-white font-bold uppercase">
-        <i class="fas fa-project-diagram text-blue-400 w-4"></i> Limited Projects Feature
-    </li>
-    <li class="flex items-center gap-3 text-[10px] text-white font-bold uppercase">
-        <i class="fas fa-chart-line text-blue-400 w-4"></i> Real-Time Hustle Hub Update
-    </li>
-    <li class="flex items-center gap-3 text-[10px] text-white font-bold uppercase">
-        <i class="fas fa-sync text-blue-400 w-4"></i> Limited Collaboration Feature
-    </li>
-    <li class="flex items-center gap-3 text-[10px] text-white font-bold uppercase">
-        <i class="fas fa-users-cog text-blue-400 w-4"></i> Limited Team Feature
-    </li>
-    <li class="flex items-center gap-3 text-[10px] text-white font-bold uppercase">
-        <i class="fas fa-brain text-blue-400 w-4"></i> Nxxt AI Tutor (24/7)
-    </li>
-    <li class="flex items-center gap-3 text-[10px] text-white font-bold uppercase">
-        <i class="fas fa-medal text-blue-400 w-4"></i> Verified Certificates
-    </li>
-    <li class="flex items-center gap-3 text-[10px] text-white font-bold uppercase">
-        <i class="fas fa-server text-blue-400 w-4"></i> 5GB Cloud Lab Space
-    </li>
+     <ul class="space-y-4 mb-12 flex-grow">
+<li class="flex items-center gap-3 text-[10px] text-white font-bold uppercase">
+    <i class="fas fa-book-open text-blue-400 w-4"></i> Limited Pro Courses
+</li>
+<li class="flex items-center gap-3 text-[10px] text-white font-bold uppercase">
+    <i class="fas fa-project-diagram text-blue-400 w-4"></i> Limited Projects Feature
+</li>
+<li class="flex items-center gap-3 text-[10px] text-white font-bold uppercase">
+    <i class="fas fa-chart-line text-blue-400 w-4"></i> Real-Time Hustle Hub Update
+</li>
+<li class="flex items-center gap-3 text-[10px] text-white font-bold uppercase">
+    <i class="fas fa-sync text-blue-400 w-4"></i> Limited Collaboration Feature
+</li>
+<li class="flex items-center gap-3 text-[10px] text-white font-bold uppercase">
+    <i class="fas fa-users-cog text-blue-400 w-4"></i> Limited Team Feature
+</li>
+<li class="flex items-center gap-3 text-[10px] text-white font-bold uppercase">
+    <i class="fas fa-brain text-blue-400 w-4"></i> Nxxt AI Tutor (24/7)
+</li>
+<li class="flex items-center gap-3 text-[10px] text-white font-bold uppercase">
+    <i class="fas fa-medal text-blue-400 w-4"></i> Verified Certificates
+</li>
+<li class="flex items-center gap-3 text-[10px] text-white font-bold uppercase">
+    <i class="fas fa-server text-blue-400 w-4"></i> 5GB Cloud Lab Space
+</li>
 </ul>
           <button onclick="openPaymentModal('Student Node')" class="w-full py-5 bg-blue-600 rounded-xl text-[10px] font-black uppercase tracking-widest text-white hover:bg-white hover:text-black transition-all shadow-[0_0_30px_rgba(37,99,235,0.4)]">
     Upgrade 
@@ -1054,30 +1058,29 @@ const views = {
             <span class="text-[10px] font-black uppercase tracking-widest text-gray-500 mb-2">Authority Node</span>
             <h3 class="text-3xl font-black italic uppercase text-white mb-6">Pro</h3>
             <div class="mb-8"><span id="proPrice" class="text-4xl font-black text-white">₦16,000</span> <span id="proPeriod" class="text-xs font-bold text-gray-600 uppercase">/ Month</span></div>
-          <ul class="space-y-4 mb-12 flex-grow">
-    <li class="flex items-center gap-3 text-[10px] text-gray-400 font-bold uppercase">
-        <i class="fas fa-layer-group text-blue-500 w-4"></i> Unlimited Pro Courses
-    </li>
-    <li class="flex items-center gap-3 text-[10px] text-gray-400 font-bold uppercase">
-        <i class="fas fa-microchip text-blue-500 w-4"></i> Nxxt AI Full Support
-    </li>
-    <li class="flex items-center gap-3 text-[10px] text-gray-400 font-bold uppercase">
-        <i class="fas fa-network-wired text-blue-500 w-4"></i> Unlimited Team Feature
-    </li>
-    <li class="flex items-center gap-3 text-[10px] text-gray-400 font-bold uppercase">
-        <i class="fas fa-hands-helping text-blue-500 w-4"></i> Unlimited Collaboration Feature
-    </li>
-    <li class="flex items-center gap-3 text-[10px] text-gray-400 font-bold uppercase">
-        <i class="fas fa-rocket text-blue-500 w-4"></i> Unlimited Projects Feature
-    </li>
-    <li class="flex items-center gap-3 text-[10px] text-gray-400 font-bold uppercase">
-        <i class="fas fa-user-tie text-blue-500 w-4"></i> Priority Job Placement
-    </li>
-    <li class="flex items-center gap-3 text-[10px] text-gray-400 font-bold uppercase">
-        <i class="fas fa-chalkboard-teacher text-blue-500 w-4"></i> Private Mentor Access
-    </li>
+         <ul class="space-y-4 mb-12 flex-grow">
+<li class="flex items-center gap-3 text-[10px] text-gray-400 font-bold uppercase">
+    <i class="fas fa-layer-group text-blue-500 w-4"></i> Unlimited Pro Courses
+</li>
+<li class="flex items-center gap-3 text-[10px] text-gray-400 font-bold uppercase">
+    <i class="fas fa-microchip text-blue-500 w-4"></i> Nxxt AI Full Support
+</li>
+<li class="flex items-center gap-3 text-[10px] text-gray-400 font-bold uppercase">
+    <i class="fas fa-network-wired text-blue-500 w-4"></i> Unlimited Team Feature
+</li>
+<li class="flex items-center gap-3 text-[10px] text-gray-400 font-bold uppercase">
+    <i class="fas fa-hands-helping text-blue-500 w-4"></i> Unlimited Collaboration Feature
+</li>
+<li class="flex items-center gap-3 text-[10px] text-gray-400 font-bold uppercase">
+    <i class="fas fa-rocket text-blue-500 w-4"></i> Unlimited Projects Feature
+</li>
+<li class="flex items-center gap-3 text-[10px] text-gray-400 font-bold uppercase">
+    <i class="fas fa-user-tie text-blue-500 w-4"></i> Priority Job Placement
+</li>
+<li class="flex items-center gap-3 text-[10px] text-gray-400 font-bold uppercase">
+    <i class="fas fa-chalkboard-teacher text-blue-500 w-4"></i> Private Mentor Access
+</li>
 </ul>
-           
            <button onclick="openPaymentModal('Authority Node')" class="w-full py-4 border border-white/10 rounded-xl text-[10px] font-black uppercase tracking-widest text-white hover:bg-white hover:text-black transition-all">
     Execute Mastery
 </button>
@@ -1086,7 +1089,7 @@ const views = {
 </div>
 `,
 
-    'Settings': `
+'Settings': `
     <div class="animate-in">
         <div class="flex items-center gap-4 overflow-x-auto no-scrollbar pb-6 mb-8 border-b border-white/5 scroll-smooth">
             <button onclick="updateSettingsTab('Profile')" class="settings-tab active">Profile</button>
@@ -1136,88 +1139,25 @@ const views = {
 };
 
 // ────────────────────────────────────────────────
-// NEW: REAL PROFILE LOADING FROM SUPABASE (added here)
-// This loads level, semester, xt_points, streak into Overview cards
+//     NEW HELPER FUNCTION - only for Nxxt AI input
 // ────────────────────────────────────────────────
 
-async function loadRealOverviewStats() {
-    try {
-        // 1. Get Supabase client (using your existing supabaseLoader)
-        const supabase = window.supabaseLoader.getClient();
+function updateNxxtCounter(textarea) {
+    const counterDiv = document.getElementById('nxxtCounter');
+    if (!counterDiv) return;
 
-        // 2. Get current logged-in user
-        const { data: { session } } = await supabase.auth.getSession();
-        if (!session || !session.user) {
-            console.warn("No active session — user not logged in");
-            return;
-        }
+    const charSpan = document.getElementById('charCount');
+    const wordSpan = document.getElementById('wordCount');
 
-        // 3. Fetch profile data
-        const { data: profile, error } = await supabase
-            .from('profiles')
-            .select('level, semester, xt_points, streak')
-            .eq('id', session.user.id)
-            .single();
+    const text = textarea.value || '';
+    const chars = text.length;
+    const words = text.trim() === '' ? 0 : text.trim().split(/\s+/).length;
 
-        if (error) {
-            console.warn("Profile fetch failed:", error.message);
-            return;
-        }
+    charSpan.textContent = chars;
+    wordSpan.textContent = words;
 
-        if (!profile) {
-            console.warn("No profile row found for this user");
-            return;
-        }
-
-        // 4. Update the DOM elements (your exact IDs)
-        const els = {
-            level:   document.getElementById('dash-level-val'),
-            semester: document.getElementById('semesterVal'),
-            xp:      document.getElementById('dash-xp-val'),
-            streak:  document.getElementById('streakCount')
-        };
-
-        if (els.level)   els.level.textContent   = profile.level   ?? '100';
-        if (els.semester) els.semester.textContent = profile.semester ?? '1';
-        if (els.xp)      els.xp.textContent      = profile.xt_points ?? '0';
-        if (els.streak)  els.streak.textContent  = profile.streak  ?? '0';
-
-        // Optional: subtle pulse animation on update
-        Object.values(els).forEach(el => {
-            if (el) {
-                el.classList.add('animate-pulse');
-                setTimeout(() => el.classList.remove('animate-pulse'), 1800);
-            }
-        });
-
-    } catch (err) {
-        console.error("Error loading real stats:", err);
-    }
+    counterDiv.classList.toggle('hidden', chars === 0);
 }
-
-// ────────────────────────────────────────────────
-// Call real stats loading when:
-//   - Page loads (DOMContentLoaded)
-//   - User switches to 'Overview' view
-// ────────────────────────────────────────────────
-
-document.addEventListener('DOMContentLoaded', () => {
-    loadRealOverviewStats();
-    // Your existing initial setup code...
-    updateView('Overview');
-    updateHeaderInfo();
-    // ... any other DOMContentLoaded listeners you had
-});
-
-// Hook into your existing updateView function
-const originalUpdateView = updateView;
-updateView = function(viewName) {
-    originalUpdateView(viewName);
-
-    if (viewName === 'Overview') {
-        loadRealOverviewStats();
-    }
-};
 
 // SYSTEM LOGIC - DON'T CHANGE THIS PART
 function updateView(viewName) {
@@ -1245,12 +1185,14 @@ function updateView(viewName) {
         });
     }, 200);
 }
+
 // Initial Setup
 const d = new Date();
 document.getElementById('currentDate').innerText = d.toLocaleDateString('en-US', {
     weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
 });
 updateView('Overview');
+
 //// for the meun toggle
 // Function to open the Mobile Menu
 function openFullMenu() {
@@ -1384,7 +1326,7 @@ function updateSettingsTab(tabId) {
                 </div>
                 <button class="w-full md:w-auto px-12 py-4 bg-white/5 border border-white/10 rounded-2xl text-[10px] font-black uppercase tracking-widest">Update Security</button>
             </div>`,
-        
+
 'Projects': `
 <div class="max-w-4xl mx-auto p-4">
         <h2 class="text-white font-black text-2xl uppercase mb-8">Management</h2>
@@ -1597,5 +1539,65 @@ async function updateUserDisplay() {
     }
 }
 
-// Call updateUserDisplay on page load and after login
-document.addEventListener('DOMContentLoaded', ()
+document.addEventListener('DOMContentLoaded', () => {
+    updateUserDisplay();
+});
+
+/**
+ * 1. GALLERY SYSTEM (CAMERA ICON)
+ */
+function triggerImageUpload() {
+    let imgInput = document.getElementById('hiddenGalleryInput');
+    if (!imgInput) {
+        imgInput = document.createElement('input');
+        imgInput.type = 'file';
+        imgInput.accept = 'image/*';
+        imgInput.id = 'hiddenGalleryInput';
+        imgInput.style.display = 'none';
+        document.body.appendChild(imgInput);
+
+        imgInput.onchange = async (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const base64Image = event.target.result;
+                    // Immediate preview
+                    document.querySelectorAll('[data-user-img]').forEach(img => {
+                        img.src = base64Image;
+                        img.classList.remove('hidden');
+                        img.parentElement.querySelector('#defaultUserIcon')?.classList.add('hidden');
+                    });
+                    localStorage.setItem('temp_img_buffer', base64Image);
+                };
+                reader.readAsDataURL(file);
+            }
+        };
+    }
+    imgInput.click();
+}
+
+/**
+ * 2. UI SYNC (Loads from Supabase → Shows on Dashboard)
+ */
+async function syncProfileUI() {
+    const client = await getSupabaseClient();
+    const { data: { user } } = await client.auth.getUser();
+
+    let savedName = "New User";
+    let savedImg = "Logo.webp";
+    let savedBio = "";
+
+    if (user) {
+        savedName = user.user_metadata?.full_name || user.email.split('@')[0];
+        savedImg = user.user_metadata?.avatar_url || "Logo.webp";
+        savedBio = user.user_metadata?.bio || "";
+    }
+
+    // Update all name places
+    document.querySelectorAll('[data-user-name]').forEach(el => el.textContent = savedName);
+
+    // Update all image places
+    document.querySelectorAll('[data-user-img]').forEach(img => {
+        img.src = savedImg;
+        if
