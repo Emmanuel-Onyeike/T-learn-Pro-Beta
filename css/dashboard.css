@@ -430,3 +430,17 @@ nav.flex {
         -ms-overflow-style: none;  /* IE and Edge */
         scrollbar-width: none;  /* Firefox */
     }
+
+
+/* Hide the default JivoChat button to prevent overlap */
+#jivo-iframe-container, 
+.jivo-iframe-container,
+[class^="jivo-"] {
+    display: none !important;
+}
+
+/* Ensure that when James triggers the API, the window actually shows */
+body.jivo-chat-open #jivo-iframe-container,
+body.jivo-chat-open .jivo-iframe-container {
+    display: block !important;
+}
