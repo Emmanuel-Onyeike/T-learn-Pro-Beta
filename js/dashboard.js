@@ -2609,20 +2609,26 @@ window.deleteNotif = function(id) {
 
 
 //////  FOR THE PROJECTS   
-// --- 1. Persistent Data & Sync ---
 // --- 1. Persistent Data & Global State ---
+// This line ensures data persists "forever" in the browser's localStorage
 let projects = JSON.parse(localStorage.getItem('app_projects')) || [];
-let activeType = 'Personal'; // Default selection
+let activeType = 'Personal'; 
 const notifySound = new Audio('https://assets.mixkit.co/active_storage/sfx/2354/2354-preview.mp3');
 
+// --- 2. The Core Sync Engine ---
 function saveAndSync() {
+    // Save to browser memory
     localStorage.setItem('app_projects', JSON.stringify(projects));
+    
+    // Update the counter card (if it exists on current page)
     const countEl = document.getElementById('projectCount');
     if (countEl) countEl.innerText = projects.length;
+
+    // Run the UI refresh
     renderProjects();
 }
 
-// --- 2. Notification System (Centered Modal Alert) ---
+// --- 3. Notification System (Centered Modal Alert) ---
 function triggerNotification(msg, type = 'pending') {
     notifySound.play().catch(() => {}); 
     
@@ -2651,7 +2657,7 @@ function triggerNotification(msg, type = 'pending') {
     }, 2500);
 }
 
-// --- 3. Modal Navigation & UI Logic ---
+// --- 4. Modal Navigation & UI Logic ---
 window.closeModal = function(modalId) {
     const modal = document.getElementById(modalId);
     if (!modal) return;
@@ -2716,7 +2722,7 @@ window.openRightSlide = function() {
                             <button onclick="setType('Personal', this)" class="type-btn p-4 rounded-xl border border-blue-500 text-white text-[9px] font-black uppercase transition-all">Personal</button>
                             <button class="p-4 rounded-xl border border-white/5 text-white/10 text-[9px] font-black uppercase cursor-not-allowed"><i class="fas fa-lock mr-2"></i> Locked</button>
                         </div>
-                        <input id="pUsers" type="number" value="5" class="w-full bg-white/5 border border-white/10 p-5 rounded-2xl text-white text-xs outline-none" title="User Limit">
+                        <input id="pUsers" type="number" value="5" class="w-full bg-white/5 border border-white/10 p-5 rounded-2xl text-white text-xs outline-none">
                     </div>
                     <div class="flex gap-4 pt-10">
                         <button onclick="closeModal('rightModal')" class="flex-1 py-5 text-white/30 font-black text-[10px] uppercase">Cancel</button>
@@ -2729,7 +2735,7 @@ window.openRightSlide = function() {
     }, 100);
 };
 
-// --- 4. Helpers ---
+// --- 5. Helpers ---
 window.previewImg = function(input) {
     if (input.files && input.files[0]) {
         const reader = new FileReader();
@@ -2753,7 +2759,7 @@ window.setType = function(t, btn) {
     activeType = t;
 };
 
-// --- 5. Core Engine (Render & Actions) ---
+// --- 6. The Unified Render Function ---
 function renderProjects() {
     const grid = document.getElementById('projectContainerGrid');
     const settingsList = document.getElementById('settingsProjectList');
@@ -2761,12 +2767,14 @@ function renderProjects() {
     if (grid) grid.innerHTML = '';
     if (settingsList) settingsList.innerHTML = '';
 
+    // If no projects, you can show a placeholder if desired
     projects.forEach(proj => {
         const isSuccess = proj.status === 'success';
         
+        // Render to Dashboard Grid
         if (grid) {
             grid.insertAdjacentHTML('beforeend', `
-                <div class="group relative bg-white/5 border border-white/10 rounded-[2rem] overflow-hidden hover:border-blue-500/50 transition-all duration-500">
+                <div class="group relative bg-white/5 border border-white/10 rounded-[2rem] overflow-hidden hover:border-blue-500/50 transition-all duration-500 animate-in fade-in zoom-in-95">
                     <div class="h-40 w-full bg-black/20 relative">
                         ${proj.img ? `<img src="${proj.img}" class="w-full h-full object-cover">` : `<div class="w-full h-full flex items-center justify-center"><i class="fas fa-project-diagram text-white/10 text-4xl"></i></div>`}
                         <div class="absolute top-4 right-4 px-3 py-1 rounded-full bg-black/60 backdrop-blur-md border border-white/10">
@@ -2784,9 +2792,10 @@ function renderProjects() {
                 </div>`);
         }
 
+        // Render to Settings Management List
         if (settingsList) {
             settingsList.insertAdjacentHTML('beforeend', `
-                <div class="flex items-center justify-between p-4 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition-all">
+                <div class="flex items-center justify-between p-4 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition-all animate-in slide-in-from-left">
                     <div class="flex items-center gap-4">
                         <div class="w-10 h-10 rounded-xl bg-blue-600/20 flex items-center justify-center border border-blue-500/30">
                             <i class="fas fa-cube text-blue-400 text-sm"></i>
@@ -2804,6 +2813,7 @@ function renderProjects() {
     });
 }
 
+// --- 7. Finalize & Delete ---
 window.finalizeProject = function(name, desc) {
     const btn = document.getElementById('finishBtn');
     const link = document.getElementById('pLink')?.value || "#";
@@ -2818,7 +2828,8 @@ window.finalizeProject = function(name, desc) {
     setTimeout(() => {
         const finalStatus = Math.random() > 0.1 ? 'success' : 'failed';
         projects.push({ id: Date.now(), name, desc, link, users, img, type: activeType, status: finalStatus });
-        saveAndSync();
+        
+        saveAndSync(); // This saves to localStorage and renders the new UI
         closeModal('rightModal');
         triggerNotification(`${name} DEPLOYED`, 'success');
     }, 2000);
@@ -2830,8 +2841,10 @@ window.deleteProject = function(id) {
     triggerNotification("Project Deleted", "failed");
 };
 
-document.addEventListener('DOMContentLoaded', saveAndSync);
-
+// Initialize everything as soon as the page loads
+document.addEventListener('DOMContentLoaded', () => {
+    saveAndSync();
+});
 
 
 
