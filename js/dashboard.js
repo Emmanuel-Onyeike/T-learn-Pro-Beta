@@ -2609,157 +2609,206 @@ window.deleteNotif = function(id) {
 
 
 //////  FOR THE PROJECTS   
+// ================================================
+//          PROJECT MANAGER - FIXED & IMPROVED SCRIPT
+// ================================================
+
 // --- 1. Persistent Data & Global State ---
-// This line ensures data persists "forever" in the browser's localStorage
-let projects = JSON.parse(localStorage.getItem('app_projects')) || [];
-let activeType = 'Personal'; 
+let projects = [];
+let activeType = 'Personal';
 const notifySound = new Audio('https://assets.mixkit.co/active_storage/sfx/2354/2354-preview.mp3');
 
-// --- 2. The Core Sync Engine ---
-function saveAndSync() {
-    // Save to browser memory
-    localStorage.setItem('app_projects', JSON.stringify(projects));
-    
-    // Update the counter card (if it exists on current page)
-    const countEl = document.getElementById('projectCount');
-    if (countEl) countEl.innerText = projects.length;
+// Safe load from localStorage with fallback & error recovery
+function loadProjects() {
+    try {
+        const saved = localStorage.getItem('app_projects');
+        if (saved) {
+            projects = JSON.parse(saved);
+            // Basic validation / migration
+            projects = projects.filter(p => p && p.id && p.name);
+        } else {
+            projects = [];
+        }
+    } catch (err) {
+        console.error("Failed to parse projects from localStorage:", err);
+        projects = [];
+        localStorage.removeItem('app_projects'); // clean broken data
+    }
+}
 
-    // Run the UI refresh
+// --- 2. Core Sync Engine ---
+function saveAndSync() {
+    try {
+        localStorage.setItem('app_projects', JSON.stringify(projects));
+    } catch (err) {
+        console.warn("localStorage write failed (quota exceeded?)", err);
+    }
+
+    // Update counter if element exists
+    const countEl = document.getElementById('projectCount');
+    if (countEl) {
+        countEl.textContent = projects.length;
+    }
+
+    // Refresh UI
     renderProjects();
 }
 
-// --- 3. Notification System (Centered Modal Alert) ---
+// Listen to changes from OTHER tabs / windows
+window.addEventListener('storage', (event) => {
+    if (event.key === 'app_projects') {
+        loadProjects();
+        renderProjects();
+    }
+});
+
+// Re-sync when tab becomes visible again
+document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') {
+        loadProjects();
+        renderProjects();
+    }
+});
+
+// --- 3. Notification System ---
 function triggerNotification(msg, type = 'pending') {
-    notifySound.play().catch(() => {}); 
-    
-    const alertModal = document.createElement('div');
-    alertModal.className = `fixed inset-0 z-[5000] flex items-center justify-center bg-black/60 backdrop-blur-sm animate-in fade-in duration-300`;
-    alertModal.id = "activeAlert";
-    
-    alertModal.innerHTML = `
-        <div class="bg-[#0a0f25] border border-white/10 p-8 rounded-[2.5rem] shadow-2xl flex flex-col items-center text-center max-w-xs animate-in zoom-in-95 duration-300">
-            <div class="w-14 h-14 rounded-2xl mb-5 flex items-center justify-center ${
-                type === 'success' ? 'bg-green-500/20 text-green-500' : 
-                type === 'failed' ? 'bg-red-500/20 text-red-500' : 
-                'bg-blue-500/20 text-blue-500'
+    notifySound.play().catch(() => {});
+
+    const alert = document.createElement('div');
+    alert.className = `fixed inset-0 z-[5000] flex items-center justify-center bg-black/70 backdrop-blur-sm pointer-events-none`;
+    alert.innerHTML = `
+        <div class="bg-[#0a0f25] border border-white/10 px-10 py-8 rounded-3xl shadow-2xl flex flex-col items-center text-center max-w-sm transform scale-95 transition-all duration-300">
+            <div class="w-16 h-16 rounded-2xl mb-5 flex items-center justify-center ${
+                type === 'success' ? 'bg-green-500/20 text-green-400' :
+                type === 'failed'  ? 'bg-red-500/20 text-red-400' :
+                'bg-blue-500/20 text-blue-400'
             }">
-                <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'failed' ? 'fa-exclamation-triangle' : 'fa-sync fa-spin'} text-2xl"></i>
+                <i class="fas ${
+                    type === 'success' ? 'fa-check-circle' :
+                    type === 'failed'  ? 'fa-exclamation-triangle' :
+                    'fa-sync fa-spin'
+                } text-3xl"></i>
             </div>
-            <p class="text-white text-[11px] font-black uppercase tracking-[0.2em] leading-relaxed">${msg}</p>
+            <p class="text-white text-sm font-black uppercase tracking-wider leading-snug">${msg}</p>
         </div>
     `;
 
-    document.body.appendChild(alertModal);
+    document.body.appendChild(alert);
 
     setTimeout(() => {
-        alertModal.classList.add('opacity-0');
-        setTimeout(() => alertModal.remove(), 300);
-    }, 2500);
+        alert.firstElementChild.style.transform = 'scale(0.92)';
+        alert.firstElementChild.style.opacity = '0';
+        setTimeout(() => alert.remove(), 400);
+    }, 2200);
 }
 
-// --- 4. Modal Navigation & UI Logic ---
+// --- 4. Modal Helpers ---
 window.closeModal = function(modalId) {
     const modal = document.getElementById(modalId);
     if (!modal) return;
 
-    modal.classList.add('opacity-0');
-    const inner = modal.querySelector('.animate-in');
-    
-    if (inner) {
-        if (inner.classList.contains('slide-in-from-right')) {
-            inner.classList.replace('slide-in-from-right', 'slide-out-to-right');
-        } else {
-            inner.classList.add('zoom-out-95');
-        }
-    }
-    setTimeout(() => modal.remove(), 300);
+    modal.style.transition = 'opacity 0.3s ease';
+    modal.style.opacity = '0';
+
+    setTimeout(() => {
+        modal.remove();
+    }, 350);
 };
 
 window.openProjectInitiator = function() {
-    const modalHtml = `
-    <div id="centerModal" class="fixed inset-0 z-[1000] flex items-center justify-center bg-black/80 backdrop-blur-md p-4 transition-all duration-300">
-        <div class="bg-[#0a0f1d] border border-white/10 w-full max-w-md rounded-[3rem] p-10 animate-in zoom-in-95 duration-300">
-            <i class="fas fa-rocket text-blue-500 text-3xl mb-6"></i>
-            <h2 class="text-white font-black text-2xl uppercase tracking-tighter mb-2">New Project</h2>
-            <input id="initName" type="text" placeholder="Project Name" class="w-full bg-white/5 border border-white/10 p-5 rounded-2xl text-white mb-4 outline-none focus:border-blue-500/50 text-xs">
-            <textarea id="initDesc" placeholder="Brief Description" class="w-full bg-white/5 border border-white/10 p-5 rounded-2xl text-white h-24 mb-6 outline-none focus:border-blue-500/50 text-xs"></textarea>
+    document.body.insertAdjacentHTML('beforeend', `
+    <div id="centerModal" class="fixed inset-0 z-[1000] flex items-center justify-center bg-black/80 backdrop-blur-lg p-5">
+        <div class="bg-[#0a0f1d] border border-white/10 w-full max-w-md rounded-3xl p-10 animate-[zoomIn_0.4s]">
+            <i class="fas fa-rocket text-blue-500 text-4xl mb-6 block text-center"></i>
+            <h2 class="text-white font-black text-3xl tracking-tight mb-6 text-center">New Project</h2>
+            <input id="initName" type="text" placeholder="Project Name" class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder-white/40 focus:border-blue-500 outline-none mb-5 text-sm">
+            <textarea id="initDesc" placeholder="Brief description..." rows="4" class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder-white/40 focus:border-blue-500 outline-none mb-8 text-sm"></textarea>
             <div class="flex gap-4">
-                <button onclick="closeModal('centerModal')" class="flex-1 py-4 text-white/30 font-black text-[10px] uppercase">Cancel</button>
-                <button onclick="openRightSlide()" class="flex-1 py-4 bg-blue-600 rounded-2xl text-white font-black text-[10px] uppercase shadow-lg shadow-blue-600/20">Continue</button>
+                <button onclick="closeModal('centerModal')" class="flex-1 py-4 bg-white/5 hover:bg-white/10 rounded-2xl text-white/60 font-black text-xs uppercase tracking-widest transition">Cancel</button>
+                <button onclick="openRightSlide()" class="flex-1 py-4 bg-blue-600 hover:bg-blue-500 rounded-2xl text-white font-black text-xs uppercase tracking-widest shadow-lg shadow-blue-700/30 transition">Continue</button>
             </div>
         </div>
-    </div>`;
-    document.body.insertAdjacentHTML('beforeend', modalHtml);
+    </div>`);
 };
 
 window.openRightSlide = function() {
-    const name = document.getElementById('initName')?.value || "Untitled";
-    const desc = document.getElementById('initDesc')?.value || "";
+    const name = (document.getElementById('initName')?.value || "Untitled").trim();
+    const desc = (document.getElementById('initDesc')?.value || "").trim();
+
     closeModal('centerModal');
 
     setTimeout(() => {
-        const rightHtml = `
-        <div id="rightModal" class="fixed inset-0 z-[1001] flex justify-end bg-black/40 backdrop-blur-sm transition-all duration-500">
-            <div class="w-full max-w-lg bg-[#050b1d] h-full p-10 border-l border-white/10 animate-in slide-in-from-right duration-500 overflow-y-auto">
-                <div class="flex justify-between items-center mb-8">
-                    <h3 class="text-white font-black text-3xl uppercase tracking-tighter">${name}</h3>
-                    <button onclick="closeModal('rightModal')" class="text-white/20 hover:text-white"><i class="fas fa-times"></i></button>
-                </div>
-                <div class="space-y-8">
-                    <div>
-                        <label class="text-blue-400 text-[10px] font-black uppercase tracking-widest mb-4 block">Project Image</label>
-                        <input type="file" id="imgInp" class="hidden" onchange="previewImg(this)">
-                        <div onclick="document.getElementById('imgInp').click()" class="group relative h-48 w-full bg-white/5 border-2 border-dashed border-white/10 rounded-[2rem] flex items-center justify-center cursor-pointer overflow-hidden hover:border-blue-500/50">
-                            <img id="prev" class="absolute inset-0 w-full h-full object-cover hidden">
-                            <i id="imgIcon" class="fas fa-image text-white/10 text-4xl group-hover:scale-110 transition-transform"></i>
-                        </div>
+        document.body.insertAdjacentHTML('beforeend', `
+        <div id="rightModal" class="fixed inset-0 z-[1001] flex justify-end bg-black/60 backdrop-blur-sm">
+            <div class="w-full max-w-lg bg-[#050b1d] h-full border-l border-white/10 overflow-y-auto animate-[slideInRight_0.5s]">
+                <div class="p-10">
+                    <div class="flex justify-between items-center mb-10">
+                        <h3 class="text-3xl font-black tracking-tight">${name}</h3>
+                        <button onclick="closeModal('rightModal')" class="text-2xl text-white/40 hover:text-white">×</button>
                     </div>
-                    <div class="space-y-4">
-                        <input id="pLink" type="text" placeholder="Project Link (URL)" class="w-full bg-white/5 border border-white/10 p-5 rounded-2xl text-white text-xs outline-none">
-                        <div class="grid grid-cols-2 gap-3">
-                            <button onclick="setType('Job', this)" class="type-btn p-4 rounded-xl border border-white/10 text-white/40 text-[9px] font-black uppercase transition-all">Job</button>
-                            <button onclick="setType('Private', this)" class="type-btn p-4 rounded-xl border border-white/10 text-white/40 text-[9px] font-black uppercase transition-all">Private</button>
-                            <button onclick="setType('Personal', this)" class="type-btn p-4 rounded-xl border border-blue-500 text-white text-[9px] font-black uppercase transition-all">Personal</button>
-                            <button class="p-4 rounded-xl border border-white/5 text-white/10 text-[9px] font-black uppercase cursor-not-allowed"><i class="fas fa-lock mr-2"></i> Locked</button>
+
+                    <div class="space-y-8">
+                        <div>
+                            <label class="block text-blue-400 text-xs font-black uppercase tracking-widest mb-3">Project Image</label>
+                            <input type="file" id="imgInp" accept="image/*" class="hidden" onchange="previewImg(this)">
+                            <div onclick="document.getElementById('imgInp').click()" class="group relative h-52 w-full bg-white/5 border-2 border-dashed border-white/20 rounded-3xl flex items-center justify-center cursor-pointer hover:border-blue-500/60 transition-colors overflow-hidden">
+                                <img id="prev" class="absolute inset-0 w-full h-full object-cover hidden">
+                                <i id="imgIcon" class="fas fa-image text-white/20 text-5xl group-hover:scale-110 transition-transform"></i>
+                            </div>
                         </div>
-                        <input id="pUsers" type="number" value="5" class="w-full bg-white/5 border border-white/10 p-5 rounded-2xl text-white text-xs outline-none">
-                    </div>
-                    <div class="flex gap-4 pt-10">
-                        <button onclick="closeModal('rightModal')" class="flex-1 py-5 text-white/30 font-black text-[10px] uppercase">Cancel</button>
-                        <button id="finishBtn" onclick="finalizeProject('${name.replace(/'/g, "\\'")}', '${desc.replace(/'/g, "\\'")}')" class="flex-1 py-5 bg-green-600 rounded-2xl text-white font-black text-[10px] uppercase shadow-lg shadow-green-600/20 transition-all">Create Project</button>
+
+                        <div class="space-y-5">
+                            <input id="pLink" type="url" placeholder="Project Link[](https://...)" class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder-white/40 focus:border-blue-500 outline-none text-sm">
+                            <div class="grid grid-cols-2 gap-4">
+                                <button onclick="setType('Job', this)" class="type-btn py-4 rounded-2xl border border-white/10 text-white/50 text-xs font-black uppercase hover:border-white/30 transition">Job</button>
+                                <button onclick="setType('Private', this)" class="type-btn py-4 rounded-2xl border border-white/10 text-white/50 text-xs font-black uppercase hover:border-white/30 transition">Private</button>
+                                <button onclick="setType('Personal', this)" class="type-btn py-4 rounded-2xl border-2 border-blue-500 text-white text-xs font-black uppercase shadow-sm shadow-blue-600/30">Personal</button>
+                                <button disabled class="py-4 rounded-2xl border border-white/5 text-white/20 text-xs font-black uppercase cursor-not-allowed"><i class="fas fa-lock mr-2"></i>Locked</button>
+                            </div>
+                            <input id="pUsers" type="number" min="1" value="5" class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white focus:border-blue-500 outline-none text-sm">
+                        </div>
+
+                        <div class="flex gap-4 pt-8">
+                            <button onclick="closeModal('rightModal')" class="flex-1 py-5 bg-white/5 hover:bg-white/10 rounded-2xl text-white/60 font-black text-xs uppercase tracking-widest transition">Cancel</button>
+                            <button id="finishBtn" onclick="finalizeProject()" class="flex-1 py-5 bg-gradient-to-r from-green-600 to-green-500 hover:from-green-500 hover:to-green-400 rounded-2xl text-white font-black text-xs uppercase tracking-widest shadow-lg shadow-green-700/30 transition">Create Project</button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>`;
-        document.body.insertAdjacentHTML('beforeend', rightHtml);
-    }, 100);
+        </div>`);
+
+        // Set default active type visually
+        setType('Personal', document.querySelector('.type-btn.border-blue-500'));
+    }, 180);
 };
 
 // --- 5. Helpers ---
 window.previewImg = function(input) {
-    if (input.files && input.files[0]) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            const img = document.getElementById('prev');
+    if (!input.files?.[0]) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        const img = document.getElementById('prev');
+        const icon = document.getElementById('imgIcon');
+        if (img && icon) {
             img.src = e.target.result;
             img.classList.remove('hidden');
-            document.getElementById('imgIcon').classList.add('hidden');
-        };
-        reader.readAsDataURL(input.files[0]);
-    }
+            icon.classList.add('hidden');
+        }
+    };
+    reader.readAsDataURL(input.files[0]);
 };
 
-window.setType = function(t, btn) {
-    document.querySelectorAll('.type-btn').forEach(b => {
-        b.classList.remove('border-blue-500', 'text-white');
-        b.classList.add('border-white/10', 'text-white/40');
+window.setType = function(type, button) {
+    document.querySelectorAll('.type-btn').forEach(btn => {
+        btn.classList.remove('border-blue-500', 'text-white', 'shadow-sm', 'shadow-blue-600/30');
+        btn.classList.add('border-white/10', 'text-white/50');
     });
-    btn.classList.add('border-blue-500', 'text-white');
-    btn.classList.remove('border-white/10', 'text-white/40');
-    activeType = t;
+    button.classList.add('border-blue-500', 'text-white', 'shadow-sm', 'shadow-blue-600/30');
+    button.classList.remove('border-white/10', 'text-white/50');
+    activeType = type;
 };
 
-// --- 6. The Unified Render Function ---
+// --- 6. Render Projects (Dashboard + Settings) ---
 function renderProjects() {
     const grid = document.getElementById('projectContainerGrid');
     const settingsList = document.getElementById('settingsProjectList');
@@ -2767,85 +2816,111 @@ function renderProjects() {
     if (grid) grid.innerHTML = '';
     if (settingsList) settingsList.innerHTML = '';
 
-    // If no projects, you can show a placeholder if desired
+    if (projects.length === 0) {
+        const msg = '<div class="text-center py-16 text-white/30 text-sm">No projects yet. Create your first one!</div>';
+        if (grid) grid.innerHTML = msg;
+        if (settingsList) settingsList.innerHTML = msg;
+        return;
+    }
+
     projects.forEach(proj => {
         const isSuccess = proj.status === 'success';
-        
-        // Render to Dashboard Grid
+
+        // Dashboard card
         if (grid) {
             grid.insertAdjacentHTML('beforeend', `
-                <div class="group relative bg-white/5 border border-white/10 rounded-[2rem] overflow-hidden hover:border-blue-500/50 transition-all duration-500 animate-in fade-in zoom-in-95">
-                    <div class="h-40 w-full bg-black/20 relative">
-                        ${proj.img ? `<img src="${proj.img}" class="w-full h-full object-cover">` : `<div class="w-full h-full flex items-center justify-center"><i class="fas fa-project-diagram text-white/10 text-4xl"></i></div>`}
-                        <div class="absolute top-4 right-4 px-3 py-1 rounded-full bg-black/60 backdrop-blur-md border border-white/10">
-                            <span class="text-[8px] font-black uppercase tracking-widest ${isSuccess ? 'text-green-400' : 'text-red-400'}">${proj.status}</span>
-                        </div>
+            <div class="group bg-white/5 border border-white/10 rounded-3xl overflow-hidden hover:border-blue-500/50 transition-all duration-400">
+                <div class="relative h-44 bg-black/30">
+                    ${proj.img ? `<img src="${proj.img}" alt="${proj.name}" class="w-full h-full object-cover">` 
+                               : `<div class="w-full h-full flex items-center justify-center"><i class="fas fa-cube text-white/10 text-6xl"></i></div>`}
+                    <div class="absolute top-4 right-4 px-3 py-1 rounded-full bg-black/70 backdrop-blur-md border border-white/10 text-[10px] font-black uppercase tracking-wider ${isSuccess ? 'text-green-400' : 'text-red-400'}">
+                        ${proj.status}
                     </div>
-                    <div class="p-6">
-                        <h4 class="text-white font-black uppercase text-sm mb-1">${proj.name}</h4>
-                        <p class="text-white/40 text-[10px] line-clamp-2 mb-4">${proj.desc}</p>
-                        <div class="flex justify-between items-center">
-                            <span class="text-blue-500 text-[9px] font-black uppercase tracking-tighter italic">${proj.type}</span>
-                            <a href="${proj.link}" target="_blank" class="text-white/20 hover:text-white transition-colors"><i class="fas fa-external-link-alt text-xs"></i></a>
-                        </div>
+                </div>
+                <div class="p-6">
+                    <h4 class="font-black uppercase text-base mb-2">${proj.name}</h4>
+                    <p class="text-white/50 text-xs line-clamp-2 mb-4">${proj.desc || 'No description'}</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-blue-400 text-xs font-black uppercase tracking-wider">${proj.type}</span>
+                        ${proj.link && proj.link !== '#' ? `<a href="${proj.link}" target="_blank" class="text-white/40 hover:text-white"><i class="fas fa-external-link-alt"></i></a>` : ''}
                     </div>
-                </div>`);
+                </div>
+            </div>`);
         }
 
-        // Render to Settings Management List
+        // Settings list item
         if (settingsList) {
             settingsList.insertAdjacentHTML('beforeend', `
-                <div class="flex items-center justify-between p-4 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition-all animate-in slide-in-from-left">
-                    <div class="flex items-center gap-4">
-                        <div class="w-10 h-10 rounded-xl bg-blue-600/20 flex items-center justify-center border border-blue-500/30">
-                            <i class="fas fa-cube text-blue-400 text-sm"></i>
-                        </div>
-                        <div>
-                            <h4 class="text-white font-black text-[11px] uppercase">${proj.name}</h4>
-                            <p class="text-white/30 text-[9px] uppercase tracking-widest">${proj.type} • ${proj.users} Users</p>
-                        </div>
+            <div class="flex items-center justify-between p-5 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition-colors">
+                <div class="flex items-center gap-5">
+                    <div class="w-12 h-12 rounded-2xl bg-blue-600/20 flex items-center justify-center border border-blue-500/30">
+                        <i class="fas fa-cube text-blue-400"></i>
                     </div>
-                    <button onclick="deleteProject(${proj.id})" class="w-8 h-8 rounded-lg flex items-center justify-center text-white/20 hover:bg-red-500 hover:text-white transition-all">
-                        <i class="fas fa-trash-alt text-xs"></i>
-                    </button>
-                </div>`);
+                    <div>
+                        <h4 class="font-black text-sm uppercase">${proj.name}</h4>
+                        <p class="text-white/40 text-xs uppercase tracking-wider">${proj.type} • ${proj.users || 0} users</p>
+                    </div>
+                </div>
+                <button onclick="deleteProject(${proj.id})" class="w-10 h-10 rounded-xl flex items-center justify-center text-white/30 hover:bg-red-500/20 hover:text-red-400 transition">
+                    <i class="fas fa-trash-alt"></i>
+                </button>
+            </div>`);
         }
     });
 }
 
-// --- 7. Finalize & Delete ---
-window.finalizeProject = function(name, desc) {
-    const btn = document.getElementById('finishBtn');
-    const link = document.getElementById('pLink')?.value || "#";
-    const users = document.getElementById('pUsers')?.value || 0;
+// --- 7. Create & Delete ---
+window.finalizeProject = function() {
+    const finishBtn = document.getElementById('finishBtn');
+    if (!finishBtn) return;
+
+    const name = document.querySelector('#rightModal h3')?.textContent.trim() || "Untitled";
+    const desc = document.getElementById('initDesc')?.value?.trim() || "";
+    const link = document.getElementById('pLink')?.value?.trim() || "#";
+    const users = parseInt(document.getElementById('pUsers')?.value) || 0;
     const img = document.getElementById('prev')?.src || "";
 
-    btn.disabled = true;
-    btn.innerHTML = `<i class="fas fa-circle-notch fa-spin"></i>`;
-    
-    triggerNotification(`Deploying: ${name}`, 'pending');
+    finishBtn.disabled = true;
+    finishBtn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Creating...';
+
+    triggerNotification(`Creating ${name}...`, 'pending');
 
     setTimeout(() => {
-        const finalStatus = Math.random() > 0.1 ? 'success' : 'failed';
-        projects.push({ id: Date.now(), name, desc, link, users, img, type: activeType, status: finalStatus });
-        
-        saveAndSync(); // This saves to localStorage and renders the new UI
+        const status = Math.random() > 0.08 ? 'success' : 'failed'; // ~92% success rate
+
+        projects.push({
+            id: Date.now() + Math.random(),   // very unique id
+            name,
+            desc,
+            link,
+            users,
+            img,
+            type: activeType,
+            status,
+            createdAt: new Date().toISOString()
+        });
+
+        saveAndSync();
         closeModal('rightModal');
-        triggerNotification(`${name} DEPLOYED`, 'success');
-    }, 2000);
+        triggerNotification(`${name} ${status === 'success' ? 'created successfully' : 'creation failed'}`, status);
+    }, 1800);
 };
 
 window.deleteProject = function(id) {
+    if (!confirm("Delete this project? This cannot be undone.")) return;
+
     projects = projects.filter(p => p.id !== id);
     saveAndSync();
-    triggerNotification("Project Deleted", "failed");
+    triggerNotification("Project deleted", "failed");
 };
 
-// Initialize everything as soon as the page loads
+// ================================================
+//                  INITIALIZATION
+// ================================================
 document.addEventListener('DOMContentLoaded', () => {
-    saveAndSync();
+    loadProjects();
+    saveAndSync();      // initial render + counter update
 });
-
 
 
 ///// FOR THE NXXT AI ALONE
