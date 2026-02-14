@@ -2670,11 +2670,11 @@ document.addEventListener('visibilitychange', () => {
     }
 });
 
-// Notification
+// Notification - Centered Modal
 function triggerNotification(msg, type = 'pending') {
     notifySound.play().catch(() => {});
     const el = document.createElement('div');
-    el.className = `fixed inset-0 z-[5000] flex items-center justify-center bg-black/70 backdrop-blur-sm`;
+    el.className = `fixed inset-0 z-[5000] flex items-center justify-center bg-black/70 backdrop-blur-sm transition-opacity duration-300`;
     el.innerHTML = `
         <div class="bg-[#0a0f25] border border-white/10 px-10 py-8 rounded-3xl shadow-2xl flex flex-col items-center max-w-sm animate-[pop_0.3s]">
             <div class="w-16 h-16 rounded-2xl mb-5 flex items-center justify-center ${
@@ -2689,17 +2689,26 @@ function triggerNotification(msg, type = 'pending') {
     `;
     document.body.appendChild(el);
     setTimeout(() => {
-        el.firstElementChild.style.transform = 'scale(0.92)';
-        el.firstElementChild.style.opacity = '0';
+        el.style.opacity = '0';
         setTimeout(() => el.remove(), 400);
     }, 2200);
 }
 
-// Close modal
+// Close modal with Slide Out effect
 window.closeModal = function(id) {
     const m = document.getElementById(id);
     if (!m) return;
+    
+    const content = m.querySelector('div');
+    if (content) {
+        // Apply slide down/out animation
+        content.style.transform = 'translateY(100px)';
+        content.style.opacity = '0';
+        content.style.transition = 'all 0.3s ease-in';
+    }
+    
     m.style.opacity = '0';
+    m.style.transition = 'opacity 0.35s ease';
     setTimeout(() => m.remove(), 350);
 };
 
@@ -2720,7 +2729,7 @@ window.openProjectInitiator = function() {
     </div>`);
 };
 
-// 2. Second modal - centered with slide-up animation (advanced details)
+// 2. Second modal - centered with slide-up animation
 window.openProjectDetailsModal = function() {
     const name = document.getElementById('projName')?.value.trim() || 'Untitled';
     const desc = document.getElementById('projDesc')?.value.trim() || '';
@@ -2731,7 +2740,7 @@ window.openProjectDetailsModal = function() {
         <div id="newProjModal2" class="fixed inset-0 z-[1001] flex items-center justify-center bg-black/80 backdrop-blur-sm p-5">
             <div class="w-full max-w-lg bg-[#050b1d] border border-white/10 rounded-3xl p-10 max-h-[90vh] overflow-y-auto animate-[slideUp_0.45s]">
                 <div class="flex justify-between items-center mb-8">
-                    <h3 class="text-3xl font-black tracking-tight">${name}</h3>
+                    <h3 class="text-3xl font-black tracking-tight text-white">${name}</h3>
                     <button onclick="closeModal('newProjModal2')" class="text-3xl text-white/40 hover:text-white">×</button>
                 </div>
 
@@ -2746,7 +2755,7 @@ window.openProjectDetailsModal = function() {
                     </div>
 
                     <div class="space-y-5">
-                        <input id="projLink" type="url" placeholder="Project Link[](https://...)" class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder-white/40 focus:border-blue-500 outline-none text-sm">
+                        <input id="projLink" type="url" placeholder="Project Link (https://...)" class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder-white/40 focus:border-blue-500 outline-none text-sm">
                         <div class="grid grid-cols-2 gap-4">
                             <button onclick="setProjectType('Job', this)" class="type-btn py-4 rounded-2xl border border-white/10 text-white/50 text-xs font-black uppercase hover:border-white/30 transition">Job</button>
                             <button onclick="setProjectType('Private', this)" class="type-btn py-4 rounded-2xl border border-white/10 text-white/50 text-xs font-black uppercase hover:border-white/30 transition">Private</button>
@@ -2764,7 +2773,6 @@ window.openProjectDetailsModal = function() {
             </div>
         </div>`);
 
-        // Set default type
         setProjectType('Personal', document.querySelector('#newProjModal2 .type-btn.border-blue-500'));
     }, 180);
 };
@@ -2854,7 +2862,7 @@ window.confirmDelete = function(id) {
     triggerNotification('Project deleted', 'failed');
 };
 
-// Render projects (unchanged)
+// Render projects
 function renderProjects() {
     const grid = document.getElementById('projectContainerGrid');
     const list = document.getElementById('settingsProjectList');
@@ -2882,8 +2890,8 @@ function renderProjects() {
                     </div>
                 </div>
                 <div class="p-6">
-                    <h4 class="font-black uppercase text-base mb-2">${p.name}</h4>
-                    <p class="text-white/50 text-xs line-clamp-2 mb-4">${p.desc || 'No description'}</p>
+                    <h4 class="font-black uppercase text-base mb-2 text-white">${p.name}</h4>
+                    <p class="text-white/50 text-xs line-clamp-2 mb-4 font-medium">${p.desc || 'No description'}</p>
                     <div class="flex justify-between items-center">
                         <span class="text-blue-400 text-xs font-black uppercase tracking-wider">${p.type}</span>
                         ${p.link && p.link !== '#' ? `<a href="${p.link}" target="_blank" class="text-white/40 hover:text-white"><i class="fas fa-external-link-alt"></i></a>` : ''}
@@ -2900,7 +2908,7 @@ function renderProjects() {
                         <i class="fas fa-cube text-blue-400"></i>
                     </div>
                     <div>
-                        <h4 class="font-black text-sm uppercase">${p.name}</h4>
+                        <h4 class="font-black text-sm uppercase text-white">${p.name}</h4>
                         <p class="text-white/40 text-xs uppercase tracking-wider">${p.type} • ${p.users || 0} users</p>
                     </div>
                 </div>
@@ -2917,7 +2925,6 @@ document.addEventListener('DOMContentLoaded', () => {
     loadProjects();
     updateUI();
 });
-
 
 
 
