@@ -2624,22 +2624,22 @@ window.deleteNotif = function(id) {
 
 //////  FOR THE PROJECTS   
 // ================================================
-// Project Manager - FINAL FIXED VERSION (Centered Modals, No Scattering)
+// Project Manager - FINAL MATCHING YOUR SCREENSHOT STYLE
 // ================================================
 
 let projects = [];
 let activeType = 'Personal';
 const notifySound = new Audio('https://assets.mixkit.co/active_storage/sfx/2354/2354-preview.mp3');
 
-// ─── 1. Load & Save ────────────────────────────────────────
+// ─── 1. Persistence ─────────────────────────────────────────
 function loadProjects() {
     try {
         const saved = localStorage.getItem('app_projects');
         projects = saved ? JSON.parse(saved) : [];
-        projects = projects.filter(p => p && p.id && p.name); // clean invalid
+        projects = projects.filter(p => p && p.name);
         console.log(`[Projects] Loaded ${projects.length} projects`);
     } catch (err) {
-        console.error('[Projects] Load failed:', err);
+        console.error('[Projects] Load error:', err);
         projects = [];
         localStorage.removeItem('app_projects');
     }
@@ -2656,13 +2656,8 @@ function saveProjects() {
 
 // ─── 2. UI Update ──────────────────────────────────────────
 function updateUI() {
-    // Update counter if it exists
     const countEl = document.getElementById('projectCount');
-    if (countEl) {
-        countEl.textContent = projects.length;
-    }
-
-    // Render projects safely
+    if (countEl) countEl.textContent = projects.length;
     renderProjects();
 }
 
@@ -2674,7 +2669,7 @@ window.addEventListener('storage', (e) => {
     }
 });
 
-// Re-check when tab becomes visible
+// Refresh on tab focus
 document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible') {
         setTimeout(() => {
@@ -2687,11 +2682,10 @@ document.addEventListener('visibilitychange', () => {
 // ─── 3. Notification ───────────────────────────────────────
 function triggerNotification(msg, type = 'pending') {
     notifySound.play().catch(() => {});
-
     const alert = document.createElement('div');
-    alert.className = `fixed inset-0 z-[5000] flex items-center justify-center bg-black/70 backdrop-blur-sm pointer-events-none`;
+    alert.className = `fixed inset-0 z-[5000] flex items-center justify-center bg-black/70 backdrop-blur-sm`;
     alert.innerHTML = `
-        <div class="bg-[#0a0f25] border border-white/10 px-10 py-8 rounded-3xl shadow-2xl flex flex-col items-center text-center max-w-sm scale-95 animate-[pop_0.3s]">
+        <div class="bg-[#0a0f25] border border-white/10 px-10 py-8 rounded-3xl shadow-2xl flex flex-col items-center max-w-sm scale-95 animate-[pop_0.3s]">
             <div class="w-16 h-16 rounded-2xl mb-5 flex items-center justify-center ${
                 type === 'success' ? 'bg-green-500/20 text-green-400' :
                 type === 'failed' ? 'bg-red-500/20 text-red-400' :
@@ -2703,14 +2697,13 @@ function triggerNotification(msg, type = 'pending') {
         </div>
     `;
     document.body.appendChild(alert);
-
     setTimeout(() => {
         alert.style.opacity = '0';
         setTimeout(() => alert.remove(), 400);
     }, 2200);
 }
 
-// ─── 4. Modal Helpers ──────────────────────────────────────
+// ─── 4. Modals (Centered) ──────────────────────────────────
 window.closeModal = function(id) {
     const modal = document.getElementById(id);
     if (!modal) return;
@@ -2718,7 +2711,6 @@ window.closeModal = function(id) {
     setTimeout(() => modal.remove(), 300);
 };
 
-// First modal (centered)
 window.openProjectInitiator = function() {
     document.body.insertAdjacentHTML('beforeend', `
     <div id="newProjModal1" class="fixed inset-0 z-[1000] flex items-center justify-center bg-black/80 backdrop-blur-lg p-5">
@@ -2735,7 +2727,6 @@ window.openProjectInitiator = function() {
     </div>`);
 };
 
-// Second modal (centered, slide-up feel)
 window.openProjectDetailsModal = function() {
     const name = document.getElementById('projName')?.value.trim() || 'Untitled';
     const desc = document.getElementById('projDesc')?.value.trim() || '';
@@ -2744,13 +2735,12 @@ window.openProjectDetailsModal = function() {
     setTimeout(() => {
         document.body.insertAdjacentHTML('beforeend', `
         <div id="newProjModal2" class="fixed inset-0 z-[1001] flex items-center justify-center bg-black/80 backdrop-blur-sm p-5">
-            <div class="w-full max-w-lg bg-[#050b1d] border border-white/10 rounded-[3rem] p-10 max-h-[90vh] overflow-y-auto animate-in slide-up duration-400">
+            <div class="w-full max-w-lg bg-[#050b1d] border border-white/10 rounded-[3rem] p-10 max-h-[90vh] overflow-y-auto animate-in zoom-in-95">
                 <div class="flex justify-between items-center mb-10">
                     <h3 class="text-3xl font-black tracking-tight">${name}</h3>
                     <button onclick="closeModal('newProjModal2')" class="text-3xl text-white/40 hover:text-white">×</button>
                 </div>
                 <div class="space-y-8">
-                    <!-- Image -->
                     <div>
                         <label class="block text-blue-400 text-xs font-black uppercase tracking-widest mb-3">Project Image</label>
                         <input type="file" id="projImgInput" accept="image/*" class="hidden" onchange="previewProjectImg(this)">
@@ -2759,8 +2749,6 @@ window.openProjectDetailsModal = function() {
                             <i id="imgPlaceholderIcon" class="fas fa-image text-white/20 text-5xl group-hover:scale-110 transition-transform"></i>
                         </div>
                     </div>
-
-                    <!-- Inputs -->
                     <div class="space-y-5">
                         <input id="projLink" type="url" placeholder="Project Link[](https://...)" class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder-white/40 focus:border-blue-500 outline-none text-sm">
                         <div class="grid grid-cols-2 gap-4">
@@ -2771,7 +2759,6 @@ window.openProjectDetailsModal = function() {
                         </div>
                         <input id="projUsers" type="number" min="1" value="5" class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white focus:border-blue-500 outline-none text-sm">
                     </div>
-
                     <div class="flex gap-4 pt-8">
                         <button onclick="closeModal('newProjModal2')" class="flex-1 py-5 bg-white/5 hover:bg-white/10 rounded-2xl text-white/60 font-black text-xs uppercase tracking-widest transition">Cancel</button>
                         <button id="createProjBtn" onclick="createNewProject()" class="flex-1 py-5 bg-gradient-to-r from-green-600 to-green-500 hover:from-green-500 hover:to-green-400 rounded-2xl text-white font-black text-xs uppercase tracking-widest shadow-lg shadow-green-700/30 transition">Create Project</button>
@@ -2779,7 +2766,6 @@ window.openProjectDetailsModal = function() {
                 </div>
             </div>
         </div>`);
-
         setProjectType('Personal', document.querySelector('#newProjModal2 .type-btn.border-blue-500'));
     }, 180);
 };
@@ -2847,7 +2833,7 @@ window.createNewProject = function() {
     }, 1600);
 };
 
-// Delete with centered modal
+// Delete
 window.deleteProject = function(id) {
     const proj = projects.find(p => p.id === id);
     if (!proj) return;
@@ -2873,87 +2859,95 @@ window.confirmDelete = function(id) {
     triggerNotification('Project deleted', 'failed');
 };
 
-// ─── 5. Render Projects ────────────────────────────────────
+// ─── 5. Render Projects – Matches Your Screenshot Exactly ───
 function renderProjects() {
-    const grid = document.getElementById('projectContainerGrid');
-    const list = document.getElementById('settingsProjectList');
-
-    // Log for debug
-    console.log(`[renderProjects] Rendering ${projects.length} projects | Grid: ${!!grid} | List: ${!!list}`);
-
-    // Clear only if we are going to render something
-    if (grid) grid.innerHTML = '';
-    if (list) list.innerHTML = '';
-
-    // Empty state
-    if (projects.length === 0) {
-        const emptyHTML = `
-            <div class="col-span-full py-20 text-center text-white/40">
-                <i class="fas fa-folder-open text-6xl opacity-30 mb-6 block"></i>
-                <h3 class="text-xl font-black uppercase tracking-wider mb-3">No Projects Yet</h3>
-                <p class="text-sm opacity-70 mb-8">Create your first project to get started</p>
-                <button onclick="openProjectInitiator()" class="px-8 py-4 bg-blue-600 hover:bg-blue-500 rounded-2xl text-white font-bold text-sm uppercase tracking-wider shadow-lg shadow-blue-700/30 transition">
-                    New Project
-                </button>
-            </div>`;
-
-        if (grid) grid.innerHTML = emptyHTML;
-        if (list) list.innerHTML = emptyHTML;
+    const container = document.getElementById('projectContainerGrid');
+    if (!container) {
+        console.warn("[Projects] No #projectContainerGrid found – skipping render");
         return;
     }
 
-    // Render real projects
-    projects.forEach(proj => {
-        const isSuccess = proj.status === 'success';
+    container.innerHTML = ''; // clear once
 
-        // Grid card
-        if (grid) {
-            grid.insertAdjacentHTML('beforeend', `
-            <div class="group bg-white/5 border border-white/10 rounded-3xl overflow-hidden hover:border-blue-500/50 transition-all duration-400">
-                <div class="relative h-44 bg-black/30">
-                    ${proj.img ? `<img src="${proj.img}" alt="${proj.name}" class="w-full h-full object-cover">` 
-                               : `<div class="w-full h-full flex items-center justify-center"><i class="fas fa-cube text-white/10 text-6xl"></i></div>`}
-                    <div class="absolute top-4 right-4 px-3 py-1 rounded-full bg-black/70 backdrop-blur-md border border-white/10 text-[10px] font-black uppercase tracking-wider ${isSuccess ? 'text-green-400' : 'text-red-400'}">
-                        ${proj.status}
-                    </div>
-                </div>
-                <div class="p-6">
-                    <h4 class="font-black uppercase text-base mb-2">${proj.name}</h4>
-                    <p class="text-white/50 text-xs line-clamp-2 mb-4">${proj.desc || 'No description'}</p>
-                    <div class="flex justify-between items-center">
-                        <span class="text-blue-400 text-xs font-black uppercase tracking-wider">${proj.type}</span>
-                        ${proj.link && proj.link !== '#' ? `<a href="${proj.link}" target="_blank" class="text-white/40 hover:text-white"><i class="fas fa-external-link-alt"></i></a>` : ''}
-                    </div>
-                </div>
-            </div>`);
-        }
-
-        // Settings list item
-        if (list) {
-            list.insertAdjacentHTML('beforeend', `
-            <div class="flex items-center justify-between p-5 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition-colors">
-                <div class="flex items-center gap-5">
-                    <div class="w-12 h-12 rounded-2xl bg-blue-600/20 flex items-center justify-center border border-blue-500/30">
-                        <i class="fas fa-cube text-blue-400"></i>
-                    </div>
-                    <div>
-                        <h4 class="font-black text-sm uppercase">${proj.name}</h4>
-                        <p class="text-white/40 text-xs uppercase tracking-wider">${proj.type} • ${proj.users || 0} users</p>
-                    </div>
-                </div>
-                <button onclick="deleteProject(${proj.id})" class="w-10 h-10 rounded-xl flex items-center justify-center text-white/30 hover:bg-red-500/20 hover:text-red-400 transition">
-                    <i class="fas fa-trash-alt"></i>
+    if (projects.length === 0) {
+        container.innerHTML = `
+            <div class="col-span-full py-24 text-center text-white/50">
+                <i class="fas fa-folder-open text-6xl opacity-30 mb-6 block"></i>
+                <h3 class="text-xl font-black uppercase tracking-wider mb-3">No Projects Yet</h3>
+                <p class="text-sm opacity-70 mb-8">Create your first project to begin</p>
+                <button onclick="openProjectInitiator()" class="px-8 py-4 bg-blue-600 hover:bg-blue-500 rounded-2xl text-white font-bold text-sm uppercase tracking-wider shadow-lg transition">
+                    New Project
                 </button>
-            </div>`);
-        }
+            </div>`;
+        return;
+    }
+
+    projects.forEach(proj => {
+        const deployedAgo = getDeployedAgo(proj.createdAt || new Date().toISOString());
+        const tech = proj.type || 'Unknown';
+        const link = proj.link || '#';
+        const domain = link.replace(/^https?:\/\//, '').split('/')[0] || 'No link';
+
+        container.insertAdjacentHTML('beforeend', `
+            <div class="relative rounded-xl overflow-hidden bg-[#0f172a]/80 border border-white/5 hover:border-blue-500/30 transition-all duration-300 group">
+                <!-- Top badge -->
+                <div class="absolute top-3 left-3 px-3 py-1 rounded-md bg-red-500/20 text-red-400 text-xs font-medium flex items-center gap-1.5 backdrop-blur-sm">
+                    <span class="w-2 h-2 rounded-full bg-red-400 animate-pulse"></span>
+                    Deployed ${deployedAgo}
+                </div>
+
+                <!-- Dark grid background -->
+                <div class="h-40 bg-gradient-to-br from-[#0f172a] to-[#020617] relative">
+                    <div class="absolute inset-0 opacity-5 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <i class="fas fa-cube text-white/10 text-7xl group-hover:text-blue-500/30 transition-colors"></i>
+                    </div>
+                </div>
+
+                <!-- Bottom bar -->
+                <div class="p-4 bg-black/40 border-t border-white/5 flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-lg bg-blue-900/30 flex items-center justify-center text-blue-400 text-xl">
+                            <i class="fas fa-rocket"></i>
+                        </div>
+                        <div>
+                            <p class="text-white font-medium text-sm">${proj.name}</p>
+                            <a href="${link}" target="_blank" class="text-blue-400 hover:text-blue-300 text-xs truncate max-w-[180px] block">
+                                ${domain}
+                            </a>
+                        </div>
+                    </div>
+
+                    <span class="px-3 py-1 rounded-full text-xs font-medium bg-white/5 text-gray-300 border border-white/10">
+                        ${tech}
+                    </span>
+                </div>
+            </div>
+        `);
     });
+}
+
+// Helper: "Deployed X ago"
+function getDeployedAgo(isoDate) {
+    if (!isoDate) return 'just now';
+    const diffMs = Date.now() - new Date(isoDate).getTime();
+    const mins = Math.floor(diffMs / 60000);
+    const hours = Math.floor(mins / 60);
+    const days = Math.floor(hours / 24);
+    const months = Math.floor(days / 30);
+
+    if (months >= 1) return `${months}mths ago`;
+    if (days >= 1) return `${days}d ago`;
+    if (hours >= 1) return `${hours}h ago`;
+    if (mins >= 1) return `${mins}m ago`;
+    return 'just now';
 }
 
 // ─── Init ──────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
     loadProjects();
     updateUI();
-    console.log("[Projects] Initialized – count:", projects.length);
+    console.log("[Projects] Initialized – ready to render");
 });
 
 
