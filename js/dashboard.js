@@ -2624,80 +2624,42 @@ window.deleteNotif = function(id) {
 
 //////  FOR THE PROJECTS   
 // ================================================
-// Project Manager - PREMIUM UI REDESIGN
+// Project Manager - FULL WORKING REPAIR
 // ================================================
 
 let projects = [];
 let activeType = 'Personal';
 const notifySound = new Audio('https://assets.mixkit.co/active_storage/sfx/2354/2354-preview.mp3');
 
-// ─── 1. Persistence ─────────────────────────────────────────
+// ─── 1. Core Logic & Persistence ───────────────────────────
 function loadProjects() {
     try {
         const saved = localStorage.getItem('app_projects');
         projects = saved ? JSON.parse(saved) : [];
         projects = projects.filter(p => p && p.name);
     } catch (err) {
-        console.error('[Projects] Load error:', err);
+        console.error('Load error:', err);
         projects = [];
-        localStorage.removeItem('app_projects');
     }
 }
 
 function saveProjects() {
-    try {
-        localStorage.setItem('app_projects', JSON.stringify(projects));
-    } catch (err) {
-        console.warn('[Projects] Save failed:', err);
-    }
+    localStorage.setItem('app_projects', JSON.stringify(projects));
 }
 
-// ─── 2. UI Update ──────────────────────────────────────────
 function updateUI() {
     const countEl = document.getElementById('projectCount');
     if (countEl) countEl.textContent = projects.length;
     renderProjects();
 }
 
-window.addEventListener('storage', (e) => {
-    if (e.key === 'app_projects') {
-        loadProjects();
-        updateUI();
-    }
-});
-
-// ─── 3. Notification (Modal Center) ─────────────────────────
-function triggerNotification(msg, type = 'pending') {
-    notifySound.play().catch(() => {});
-    const alert = document.createElement('div');
-    alert.className = `fixed inset-0 z-[5000] flex items-center justify-center bg-black/60 backdrop-blur-md transition-all duration-500`;
-    alert.innerHTML = `
-        <div class="bg-[#0f172a] border border-white/10 px-12 py-10 rounded-[3rem] shadow-[0_0_50px_rgba(0,0,0,0.5)] flex flex-col items-center max-w-sm animate-in zoom-in-90 duration-300">
-            <div class="w-20 h-20 rounded-[2rem] mb-6 flex items-center justify-center ${
-                type === 'success' ? 'bg-emerald-500/10 text-emerald-400 shadow-[0_0_30px_rgba(52,211,153,0.1)]' :
-                type === 'failed' ? 'bg-rose-500/10 text-rose-400' :
-                'bg-blue-500/10 text-blue-400'
-            }">
-                <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'failed' ? 'fa-exclamation-triangle' : 'fa-sync fa-spin'} text-4xl"></i>
-            </div>
-            <p class="text-white text-xs font-black uppercase tracking-[0.3em] text-center leading-loose">${msg}</p>
-        </div>
-    `;
-    document.body.appendChild(alert);
-    setTimeout(() => {
-        alert.classList.add('opacity-0');
-        setTimeout(() => alert.remove(), 500);
-    }, 2000);
-}
-
-// ─── 4. Modals (Centered with Slide-Out) ───────────────────
+// ─── 2. Global Modal Actions ────────────────────────────────
 window.closeModal = function(id) {
     const modal = document.getElementById(id);
     if (!modal) return;
     
     const content = modal.querySelector('div');
     if (content) {
-        // High-end Slide Out Physics
         content.style.transform = 'translateY(80px) scale(0.9)';
         content.style.opacity = '0';
         content.style.transition = 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)';
@@ -2708,22 +2670,23 @@ window.closeModal = function(id) {
     setTimeout(() => modal.remove(), 400);
 };
 
+// ─── 3. Project Creation Flow ──────────────────────────────
 window.openProjectInitiator = function() {
     document.body.insertAdjacentHTML('beforeend', `
-    <div id="newProjModal1" class="fixed inset-0 z-[1000] flex items-center justify-center bg-black/80 backdrop-blur-xl p-5">
+    <div id="newProjModal1" class="fixed inset-0 z-[1000] flex items-center justify-center bg-black/80 backdrop-blur-xl p-5 transition-opacity duration-300">
         <div class="bg-[#0a0f1d] border border-white/10 w-full max-w-md rounded-[3.5rem] p-12 shadow-2xl animate-in fade-in zoom-in-95 duration-500">
             <div class="w-16 h-16 bg-blue-600/10 rounded-2xl flex items-center justify-center mx-auto mb-8">
                 <i class="fas fa-rocket text-blue-500 text-3xl"></i>
             </div>
             <h2 class="text-white font-black text-3xl tracking-tighter mb-2 text-center uppercase">Initialize</h2>
-            <p class="text-white/30 text-[10px] font-bold tracking-[0.2em] text-center uppercase mb-10">System Component Entry</p>
+            <p class="text-white/30 text-[10px] font-bold tracking-[0.2em] text-center uppercase mb-10">Step 1: Core Identity</p>
             
             <input id="projName" type="text" placeholder="PROJECT IDENTIFIER..." class="w-full bg-white/5 border border-white/5 rounded-2xl px-8 py-5 text-white placeholder-white/20 focus:border-blue-500/50 outline-none mb-4 text-[11px] font-black tracking-widest uppercase transition-all">
-            <textarea id="projDesc" placeholder="CORE MISSION OBJECTIVES..." rows="3" class="w-full bg-white/5 border border-white/5 rounded-2xl px-8 py-5 text-white placeholder-white/20 focus:border-blue-500/50 outline-none mb-10 text-[11px] font-black tracking-widest uppercase transition-all"></textarea>
+            <textarea id="projDesc" placeholder="MISSION OBJECTIVES..." rows="3" class="w-full bg-white/5 border border-white/5 rounded-2xl px-8 py-5 text-white placeholder-white/20 focus:border-blue-500/50 outline-none mb-10 text-[11px] font-black tracking-widest uppercase transition-all"></textarea>
             
             <div class="flex gap-4">
-                <button onclick="closeModal('newProjModal1')" class="flex-1 py-5 bg-white/5 hover:bg-white/10 rounded-2xl text-white/40 font-black text-[10px] uppercase tracking-widest transition-all">Abort</button>
-                <button onclick="openProjectDetailsModal()" class="flex-1 py-5 bg-blue-600 hover:bg-blue-500 rounded-2xl text-white font-black text-[10px] uppercase tracking-widest shadow-xl shadow-blue-600/20 transition-all">Proceed</button>
+                <button onclick="closeModal('newProjModal1')" class="flex-1 py-5 bg-white/5 rounded-2xl text-white/40 font-black text-[10px] uppercase tracking-widest hover:bg-white/10 transition-all">Abort</button>
+                <button onclick="openProjectDetailsModal()" class="flex-1 py-5 bg-blue-600 rounded-2xl text-white font-black text-[10px] uppercase tracking-widest shadow-xl shadow-blue-600/20 hover:bg-blue-500 transition-all">Next</button>
             </div>
         </div>
     </div>`);
@@ -2736,50 +2699,108 @@ window.openProjectDetailsModal = function() {
 
     setTimeout(() => {
         document.body.insertAdjacentHTML('beforeend', `
-        <div id="newProjModal2" class="fixed inset-0 z-[1001] flex items-center justify-center bg-black/80 backdrop-blur-md p-5">
+        <div id="newProjModal2" class="fixed inset-0 z-[1001] flex items-center justify-center bg-black/80 backdrop-blur-md p-5 transition-opacity duration-300">
             <div class="w-full max-w-lg bg-[#050b1d] border border-white/10 rounded-[3.5rem] p-12 max-h-[90vh] overflow-y-auto animate-in slide-in-from-bottom-10 duration-500">
-                <div class="flex justify-between items-center mb-12">
+                <h3 class="text-2xl font-black text-white uppercase mb-8">${name}</h3>
+                
+                <div class="space-y-8">
                     <div>
-                        <h3 class="text-2xl font-black tracking-tighter text-white uppercase">${name}</h3>
-                        <p class="text-blue-500 text-[9px] font-black tracking-[0.3em] uppercase mt-1">Configuration Layer</p>
-                    </div>
-                    <button onclick="closeModal('newProjModal2')" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white/20 hover:text-white transition-all">×</button>
-                </div>
-
-                <div class="space-y-10">
-                    <div>
-                        <label class="block text-white/30 text-[9px] font-black uppercase tracking-[0.2em] mb-4">Visual Interface</label>
+                        <label class="block text-white/30 text-[9px] font-black uppercase mb-4 tracking-widest">Interface Media</label>
                         <input type="file" id="projImgInput" accept="image/*" class="hidden" onchange="previewProjectImg(this)">
-                        <div onclick="document.getElementById('projImgInput').click()" class="group relative h-48 w-full bg-white/[0.03] border-2 border-dashed border-white/10 rounded-[2.5rem] flex items-center justify-center cursor-pointer hover:border-blue-500/40 transition-all overflow-hidden">
-                            <img id="projPreview" class="absolute inset-0 w-full h-full object-cover hidden">
-                            <div class="text-center group-hover:scale-110 transition-transform duration-500" id="imgPlaceholder">
-                                <i class="fas fa-plus text-white/10 text-3xl mb-3"></i>
-                                <p class="text-white/10 text-[9px] font-black tracking-widest uppercase">Upload Media</p>
-                            </div>
+                        <div onclick="document.getElementById('projImgInput').click()" class="h-44 w-full bg-white/[0.03] border-2 border-dashed border-white/10 rounded-[2rem] flex items-center justify-center cursor-pointer overflow-hidden">
+                            <img id="projPreview" class="w-full h-full object-cover hidden">
+                            <span id="imgPlc" class="text-white/10 text-[9px] font-black uppercase">Click to Upload</span>
                         </div>
                     </div>
 
-                    <div class="space-y-6">
-                        <input id="projLink" type="url" placeholder="EXTERNAL SOURCE LINK..." class="w-full bg-white/5 border border-white/5 rounded-2xl px-8 py-5 text-white placeholder-white/20 focus:border-blue-500/50 outline-none text-[11px] font-black tracking-widest">
-                        
-                        <div class="grid grid-cols-3 gap-3">
-                            <button onclick="setProjectType('Job', this)" class="type-btn py-4 rounded-xl border border-white/5 text-white/30 text-[9px] font-black uppercase tracking-widest transition-all">Job</button>
-                            <button onclick="setProjectType('Private', this)" class="type-btn py-4 rounded-xl border border-white/5 text-white/30 text-[9px] font-black uppercase tracking-widest transition-all">Private</button>
-                            <button onclick="setProjectType('Personal', this)" class="type-btn py-4 rounded-xl border-2 border-blue-500 bg-blue-500/5 text-white text-[9px] font-black uppercase tracking-widest shadow-lg shadow-blue-500/10">Personal</button>
-                        </div>
+                    <input id="projLink" type="url" placeholder="EXTERNAL SOURCE (HTTPS://...)" class="w-full bg-white/5 border border-white/5 rounded-2xl px-8 py-5 text-white placeholder-white/20 text-[11px] font-black tracking-widest uppercase outline-none focus:border-blue-500/50">
+                    
+                    <div class="grid grid-cols-3 gap-3">
+                        <button onclick="setProjectType('Job', this)" class="type-btn py-4 rounded-xl border border-white/5 text-white/30 text-[9px] font-black uppercase">Job</button>
+                        <button onclick="setProjectType('Private', this)" class="type-btn py-4 rounded-xl border border-white/5 text-white/30 text-[9px] font-black uppercase">Private</button>
+                        <button onclick="setProjectType('Personal', this)" class="type-btn py-4 rounded-xl border-2 border-blue-500 bg-blue-500/5 text-white text-[9px] font-black uppercase">Personal</button>
                     </div>
 
                     <div class="flex gap-4 pt-4">
-                        <button onclick="closeModal('newProjModal2')" class="flex-1 py-5 bg-white/5 rounded-2xl text-white/30 font-black text-[10px] uppercase tracking-widest transition-all">Cancel</button>
-                        <button id="createProjBtn" onclick="createNewProject('${name.replace(/'/g, "\\'")}', '${desc.replace(/'/g, "\\'")}')" class="flex-1 py-5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 rounded-2xl text-white font-black text-[10px] uppercase tracking-widest shadow-xl shadow-emerald-900/20 transition-all">Deploy System</button>
+                        <button onclick="closeModal('newProjModal2')" class="flex-1 py-5 bg-white/5 rounded-2xl text-white/30 font-black text-[10px] uppercase transition-all">Cancel</button>
+                        <button id="createProjBtn" onclick="createNewProject('${name.replace(/'/g, "\\'")}', '${desc.replace(/'/g, "\\'")}')" class="flex-1 py-5 bg-emerald-600 rounded-2xl text-white font-black text-[10px] uppercase shadow-xl transition-all hover:bg-emerald-500">Deploy</button>
                     </div>
                 </div>
             </div>
         </div>`);
-    }, 180);
+    }, 200);
 };
 
-// ─── 5. Render Logic with Luxury Empty State ───────────────
+window.previewProjectImg = function(input) {
+    if (input.files?.[0]) {
+        const reader = new FileReader();
+        reader.onload = e => {
+            document.getElementById('projPreview').src = e.target.result;
+            document.getElementById('projPreview').classList.remove('hidden');
+            document.getElementById('imgPlc').classList.add('hidden');
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+};
+
+window.setProjectType = function(type, button) {
+    document.querySelectorAll('.type-btn').forEach(btn => {
+        btn.className = "type-btn py-4 rounded-xl border border-white/5 text-white/30 text-[9px] font-black uppercase";
+    });
+    button.className = "type-btn py-4 rounded-xl border-2 border-blue-500 bg-blue-500/5 text-white text-[9px] font-black uppercase";
+    activeType = type;
+};
+
+window.createNewProject = function(name, desc) {
+    const link = document.getElementById('projLink')?.value || '#';
+    const img = document.getElementById('projPreview')?.src || '';
+    
+    const newProj = {
+        id: Date.now(),
+        name,
+        desc,
+        link,
+        img,
+        type: activeType,
+        status: Math.random() > 0.1 ? 'success' : 'failed',
+        createdAt: new Date().toISOString()
+    };
+
+    projects.push(newProj);
+    saveProjects();
+    updateUI();
+    closeModal('newProjModal2');
+    triggerNotification(`${name} INITIALIZED`, newProj.status);
+};
+
+window.deleteProject = function(id) {
+    projects = projects.filter(p => p.id !== id);
+    saveProjects();
+    updateUI();
+    triggerNotification('PROJECT DELETED', 'failed');
+};
+
+// ─── 4. Notifications (Modal Center) ────────────────────────
+function triggerNotification(msg, type) {
+    notifySound.play().catch(() => {});
+    const alert = document.createElement('div');
+    alert.className = `fixed inset-0 z-[5000] flex items-center justify-center bg-black/60 backdrop-blur-md transition-all duration-500`;
+    alert.innerHTML = `
+        <div class="bg-[#0f172a] border border-white/10 px-12 py-10 rounded-[3rem] shadow-2xl flex flex-col items-center animate-in zoom-in-90">
+            <div class="w-16 h-16 rounded-2xl mb-4 flex items-center justify-center bg-white/5 text-2xl ${type === 'success' ? 'text-emerald-400' : 'text-rose-400'}">
+                <i class="fas ${type === 'success' ? 'fa-check' : 'fa-times'}"></i>
+            </div>
+            <p class="text-white text-[10px] font-black uppercase tracking-[0.3em] text-center">${msg}</p>
+        </div>
+    `;
+    document.body.appendChild(alert);
+    setTimeout(() => {
+        alert.style.opacity = '0';
+        setTimeout(() => alert.remove(), 500);
+    }, 1800);
+}
+
+// ─── 5. Render Logic (The UI) ────────────────────────────────
 function renderProjects() {
     const container = document.getElementById('projectContainerGrid');
     if (!container) return;
@@ -2787,62 +2808,34 @@ function renderProjects() {
 
     if (projects.length === 0) {
         container.innerHTML = `
-            <div class="col-span-full py-32 flex flex-col items-center justify-center text-center animate-in fade-in duration-1000">
-                <div class="relative mb-10">
-                    <div class="absolute inset-0 bg-blue-500/20 blur-[100px] rounded-full"></div>
-                    <div class="w-32 h-32 rounded-[3rem] bg-white/[0.03] border border-white/10 flex items-center justify-center relative z-10">
-                        <i class="fas fa-ghost text-white/10 text-5xl"></i>
-                    </div>
-                    <div class="absolute -bottom-2 -right-2 w-10 h-10 bg-blue-600 rounded-2xl flex items-center justify-center shadow-lg animate-bounce">
-                        <i class="fas fa-plus text-white text-xs"></i>
-                    </div>
+            <div class="col-span-full py-32 text-center animate-in fade-in duration-700">
+                <div class="w-24 h-24 bg-white/5 border border-white/10 rounded-[2.5rem] flex items-center justify-center mx-auto mb-8">
+                    <i class="fas fa-folder-open text-white/10 text-3xl"></i>
                 </div>
-                <h3 class="text-white font-black text-xl uppercase tracking-[0.5em] mb-3">System Empty</h3>
-                <p class="text-white/20 text-[10px] font-bold uppercase tracking-[0.2em] mb-12 max-w-xs leading-relaxed">No active project threads found. Initialize the core to begin deployment.</p>
-                <button onclick="openProjectInitiator()" class="px-12 py-5 bg-white text-black font-black text-[10px] uppercase tracking-[0.3em] rounded-full hover:bg-blue-500 hover:text-white transition-all duration-500 shadow-2xl">
-                    Create First Project
-                </button>
+                <h3 class="text-white/60 font-black text-xs uppercase tracking-[0.4em] mb-10">Database Empty</h3>
+                <button onclick="openProjectInitiator()" class="px-10 py-4 bg-white text-black font-black text-[10px] uppercase tracking-widest rounded-full hover:bg-blue-500 hover:text-white transition-all">Initialize First Project</button>
             </div>`;
         return;
     }
 
-    projects.forEach(proj => {
-        const success = proj.status === 'success';
-        const deployedAgo = getDeployedAgo(proj.createdAt);
-        
+    projects.forEach(p => {
         container.insertAdjacentHTML('beforeend', `
-            <div class="group relative rounded-[2.5rem] bg-[#0f172a]/40 border border-white/5 hover:border-blue-500/30 transition-all duration-500 animate-in zoom-in-95">
-                <div class="relative h-48 m-3 rounded-[2rem] overflow-hidden bg-[#020617]">
-                    ${proj.img ? `<img src="${proj.img}" class="w-full h-full object-cover">` : 
-                    `<div class="w-full h-full flex items-center justify-center bg-[radial-gradient(circle_at_center,#1e293b_0%,#020617_100%)]">
-                        <i class="fas fa-atom text-white/5 text-6xl group-hover:rotate-180 transition-transform duration-1000"></i>
-                    </div>`}
-                    <div class="absolute top-4 left-4 px-4 py-2 rounded-xl bg-black/60 backdrop-blur-md border border-white/10 text-[9px] font-black uppercase tracking-widest ${success ? 'text-emerald-400' : 'text-rose-400'}">
-                        <span class="inline-block w-1.5 h-1.5 rounded-full mr-2 ${success ? 'bg-emerald-400 animate-pulse' : 'bg-rose-400'}"></span>
-                        ${proj.status}
+            <div class="bg-[#0f172a]/40 border border-white/5 rounded-[2.5rem] overflow-hidden group hover:border-blue-500/30 transition-all duration-500">
+                <div class="h-44 bg-black/40 relative">
+                    ${p.img ? `<img src="${p.img}" class="w-full h-full object-cover">` : `<div class="w-full h-full flex items-center justify-center text-white/5 text-5xl"><i class="fas fa-cube"></i></div>`}
+                    <div class="absolute top-4 right-4 px-3 py-1 bg-black/60 rounded-lg text-[8px] font-black uppercase tracking-widest ${p.status === 'success' ? 'text-emerald-400' : 'text-rose-400'}">
+                        ${p.status}
                     </div>
                 </div>
-                
-                <div class="p-8 pt-4">
+                <div class="p-8">
                     <div class="flex justify-between items-start mb-4">
-                        <div>
-                            <h4 class="text-white font-black text-lg tracking-tighter uppercase group-hover:text-blue-400 transition-colors">${proj.name}</h4>
-                            <p class="text-white/30 text-[9px] font-black tracking-widest uppercase mt-1">${proj.type} • ${deployedAgo}</p>
-                        </div>
-                        <button onclick="deleteProject(${proj.id})" class="text-white/10 hover:text-rose-500 transition-colors">
-                            <i class="fas fa-trash-alt text-xs"></i>
-                        </button>
+                        <h4 class="text-white font-black uppercase tracking-tighter">${p.name}</h4>
+                        <button onclick="deleteProject(${p.id})" class="text-white/10 hover:text-rose-500"><i class="fas fa-trash"></i></button>
                     </div>
-                    
-                    <p class="text-white/40 text-[11px] font-medium leading-relaxed mb-8 line-clamp-2 uppercase tracking-wide">${proj.desc || 'No mission briefing provided.'}</p>
-                    
-                    <div class="flex items-center justify-between">
-                        <div class="flex -space-x-2">
-                             ${[...Array(3)].map((_, i) => `<div class="w-7 h-7 rounded-full border-2 border-[#0f172a] bg-blue-500/20 flex items-center justify-center text-[8px] font-bold text-blue-400">U${i}</div>`).join('')}
-                        </div>
-                        <a href="${proj.link}" target="_blank" class="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-white/20 hover:bg-blue-600 hover:text-white transition-all">
-                            <i class="fas fa-arrow-right -rotate-45"></i>
-                        </a>
+                    <p class="text-white/30 text-[10px] uppercase font-bold mb-6 line-clamp-2">${p.desc || 'No mission briefing.'}</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-blue-500 text-[9px] font-black uppercase tracking-widest italic">${p.type}</span>
+                        <a href="${p.link}" target="_blank" class="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-white/20 hover:text-white transition-all"><i class="fas fa-external-link-alt text-[10px]"></i></a>
                     </div>
                 </div>
             </div>
@@ -2850,41 +2843,12 @@ function renderProjects() {
     });
 }
 
-// ─── Helpers ────────────────────────────────────────────────
-function getDeployedAgo(isoDate) {
-    if (!isoDate) return 'Live';
-    const diffMs = Date.now() - new Date(isoDate).getTime();
-    const mins = Math.floor(diffMs / 60000);
-    const hours = Math.floor(mins / 60);
-    if (hours >= 24) return Math.floor(hours/24) + 'D AGO';
-    if (hours >= 1) return hours + 'H AGO';
-    return mins + 'M AGO';
-}
-
-window.previewProjectImg = function(input) {
-    if (!input.files?.[0]) return;
-    const reader = new FileReader();
-    reader.onload = e => {
-        document.getElementById('projPreview').src = e.target.result;
-        document.getElementById('projPreview').classList.remove('hidden');
-        document.getElementById('imgPlaceholder').classList.add('hidden');
-    };
-    reader.readAsDataURL(input.files[0]);
-};
-
-window.setProjectType = function(type, button) {
-    document.querySelectorAll('#newProjModal2 .type-btn').forEach(btn => {
-        btn.className = "type-btn py-4 rounded-xl border border-white/5 text-white/30 text-[9px] font-black uppercase tracking-widest transition-all";
-    });
-    button.className = "type-btn py-4 rounded-xl border-2 border-blue-500 bg-blue-500/5 text-white text-[9px] font-black uppercase tracking-widest shadow-lg shadow-blue-500/10";
-    activeType = type;
-};
-
-// ─── Init ──────────────────────────────────────────────────
+// ─── 6. Bootstrap ───────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
     loadProjects();
     updateUI();
 });
+
 
 
 
