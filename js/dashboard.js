@@ -1402,6 +1402,8 @@ function updateSettingsTab(tabId) {
         </div>
     </div>
 `,
+      
+        
         'History': `
     <div class="space-y-8 animate-in">
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -3249,3 +3251,159 @@ const observer = new MutationObserver(() => {
     }
 });
 observer.observe(document.documentElement, { childList: true, subtree: true });
+
+
+
+
+
+///FOR THE LOGIN HISTORY/////
+// =============================================
+// Dashboard Access History - ONE ENTRY PER DAY
+// ONLY when user actually visits / loads the dashboard page
+// NOT automatically just because user is logged in elsewhere
+// =============================================
+
+const HISTORY_KEY = 'tlearnpro_dashboard_access_history';
+
+// Returns array of { date: "2025-02-14", time: "10:45 AM", timestamp: ISO string }
+function getDashboardHistory() {
+    try {
+        const raw = localStorage.getItem(HISTORY_KEY);
+        return raw ? JSON.parse(raw) : [];
+    } catch (err) {
+        console.warn("History load failed", err);
+        return [];
+    }
+}
+
+function saveDashboardHistory(historyArray) {
+    try {
+        localStorage.setItem(HISTORY_KEY, JSON.stringify(historyArray));
+    } catch (err) {
+        console.warn("History save failed", err);
+    }
+}
+
+// ────────────────────────────────────────────────
+// This function runs ONLY when dashboard is loaded / focused
+// It records ONLY if this day has no entry yet
+// ────────────────────────────────────────────────
+function recordDashboardVisitOncePerDay() {
+    const today = new Date().toISOString().split('T')[0]; // "2025-02-14"
+    const history = getDashboardHistory();
+
+    // Check if we already have an entry for today
+    const alreadyHasToday = history.some(entry => entry.date === today);
+
+    if (alreadyHasToday) {
+        console.log(`Dashboard access for ${today} already recorded earlier today`);
+        renderDashboardHistory(history);
+        return;
+    }
+
+    // This is the FIRST time today the dashboard was loaded → record it
+    const now = new Date();
+    const timeFormatted = now.toLocaleTimeString('en-US', {
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true
+    });
+
+    history.push({
+        date: today,
+        time: timeFormatted,
+        timestamp: now.toISOString()
+    });
+
+    saveDashboardHistory(history);
+    console.log(`New dashboard access recorded: ${today} at ${timeFormatted}`);
+
+    renderDashboardHistory(history);
+}
+
+// ────────────────────────────────────────────────
+// Replace placeholder with actual list when there is data
+// ────────────────────────────────────────────────
+function renderDashboardHistory(history) {
+    const container = document.querySelector('.space-y-8.animate-in');
+    if (!container) return;
+
+    if (history.length === 0) {
+        // Keep your original "No Session Records" placeholder
+        return;
+    }
+
+    // Sort newest first
+    history.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+    let html = `
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+                <h3 class="text-xl font-black text-white italic uppercase tracking-tighter">Login History</h3>
+                <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest mt-1">Monitor your account security and active sessions</p>
+            </div>
+            <div class="px-4 py-2 bg-blue-600/5 border border-blue-500/10 rounded-xl text-right">
+                <p class="text-[8px] font-black text-blue-500 uppercase tracking-widest">System Live Time</p>
+                <p id="liveHistoryClock" class="text-[10px] text-white font-black uppercase italic mt-1">Loading...</p>
+            </div>
+        </div>
+        <div class="space-y-4 mt-6">
+    `;
+
+    history.forEach(entry => {
+        html += `
+            <div class="flex items-center justify-between p-4 bg-white/5 border border-white/10 rounded-2xl">
+                <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 rounded-xl bg-green-500/10 flex items-center justify-center">
+                        <i class="fas fa-sign-in-alt text-green-400"></i>
+                    </div>
+                    <div>
+                        <p class="text-white font-medium">${entry.date}</p>
+                        <p class="text-[11px] text-gray-400">${entry.time}</p>
+                    </div>
+                </div>
+                <span class="text-[10px] px-3 py-1 bg-green-500/10 text-green-400 rounded-full font-medium">Recorded</span>
+            </div>
+        `;
+    });
+
+    html += '</div>';
+
+    // Keep your security note at the bottom
+    html += `
+        <div class="p-6 bg-[#030816] border border-white/5 rounded-2xl mt-8">
+            <div class="flex items-center gap-4 text-orange-500 mb-2">
+                <i class="fas fa-exclamation-triangle text-xs"></i>
+                <p class="text-[10px] font-black uppercase">Security Protocol</p>
+            </div>
+            <p class="text-[9px] text-gray-500 font-bold uppercase leading-relaxed">
+                T Learn Pro tracks IP addresses and device fingerprints to protect your Xt Pay wallet from unauthorized access.
+                If you see a login you don't recognize, terminate it immediately.
+            </p>
+        </div>
+    `;
+
+    container.innerHTML = html;
+}
+
+// ────────────────────────────────────────────────
+// Run when dashboard page is ready
+// ────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+    recordDashboardVisitOncePerDay();
+
+    // Optional live clock update
+    function updateClock() {
+        const clock = document.getElementById('liveHistoryClock');
+        if (clock) {
+            clock.textContent = new Date().toLocaleTimeString('en-US', {
+                hour12: true,
+                hour: 'numeric',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+        }
+    }
+    updateClock();
+    setInterval(updateClock, 1000);
+});
