@@ -1405,38 +1405,48 @@ function updateSettingsTab(tabId) {
       
         
         'History': `
-    <div class="space-y-8 animate-in">
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div>
-                <h3 class="text-xl font-black text-white italic uppercase tracking-tighter">Login History</h3>
-                <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest mt-1">Monitor your account security and active sessions</p>
-            </div>
-            <div class="px-4 py-2 bg-blue-600/5 border border-blue-500/10 rounded-xl text-right">
-                <p class="text-[8px] font-black text-blue-500 uppercase tracking-widest">System Live Time</p>
-                <p id="liveHistoryClock" class="text-[10px] text-white font-black uppercase italic mt-1">Loading...</p>
-            </div>
+   <div class="space-y-8 animate-in" id="historyContainer">
+    <!-- This will be replaced by JS when there are records -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+            <h3 class="text-xl font-black text-white italic uppercase tracking-tighter">Login History</h3>
+            <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest mt-1">Monitor your account security and active sessions</p>
         </div>
-        <div class="border-2 border-dashed border-white/5 rounded-[2rem] py-20 flex flex-col items-center justify-center text-center">
-            <div class="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center mb-6">
-                <i class="fas fa-shield-virus text-2xl text-gray-800"></i>
-            </div>
-            <h4 class="text-white font-black uppercase italic tracking-tighter text-lg">No Session Records</h4>
-            <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest mt-2 max-w-[280px] leading-relaxed">
-                Security logs are currently clear. Your login activity will appear here once the system validates your next session.
-            </p>
-        </div>
-        <div class="p-6 bg-[#030816] border border-white/5 rounded-2xl">
-            <div class="flex items-center gap-4 text-orange-500 mb-2">
-                <i class="fas fa-exclamation-triangle text-xs"></i>
-                <p class="text-[10px] font-black uppercase">Security Protocol</p>
-            </div>
-            <p class="text-[9px] text-gray-500 font-bold uppercase leading-relaxed">
-                T Learn Pro tracks IP addresses and device fingerprints to protect your Xt Pay wallet from unauthorized access.
-                If you see a login you don't recognize, terminate it immediately.
-            </p>
+        <div class="px-4 py-2 bg-blue-600/5 border border-blue-500/10 rounded-xl text-right">
+            <p class="text-[8px] font-black text-blue-500 uppercase tracking-widest">System Live Time</p>
+            <p id="liveHistoryClock" class="text-[10px] text-white font-black uppercase italic mt-1">Loading...</p>
         </div>
     </div>
+
+    <!-- Placeholder shown when no records -->
+    <div id="noRecordsPlaceholder" class="border-2 border-dashed border-white/5 rounded-[2rem] py-20 flex flex-col items-center justify-center text-center">
+        <div class="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center mb-6">
+            <i class="fas fa-shield-virus text-2xl text-gray-800"></i>
+        </div>
+        <h4 class="text-white font-black uppercase italic tracking-tighter text-lg">No Session Records</h4>
+        <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest mt-2 max-w-[280px] leading-relaxed">
+            Security logs are currently clear. Your login activity will appear here once you access the dashboard today.
+        </p>
+    </div>
+
+    <!-- History entries will be inserted here by JS when records exist -->
+    <div id="historyEntries" class="space-y-4 hidden"></div>
+
+    <!-- Security note always visible -->
+    <div class="p-6 bg-[#030816] border border-white/5 rounded-2xl">
+        <div class="flex items-center gap-4 text-orange-500 mb-2">
+            <i class="fas fa-exclamation-triangle text-xs"></i>
+            <p class="text-[10px] font-black uppercase">Security Protocol</p>
+        </div>
+        <p class="text-[9px] text-gray-500 font-bold uppercase leading-relaxed">
+            T Learn Pro tracks IP addresses and device fingerprints to protect your Xt Pay wallet from unauthorized access.
+            If you see a login you don't recognize, terminate it immediately.
+        </p>
+    </div>
+</div>
 `,
+
+        
         'Notif-Settings': `
     <div class="space-y-8 animate-in">
         <div>
