@@ -2610,89 +2610,73 @@ window.deleteNotif = function(id) {
 
 //////  FOR THE PROJECTS   
 // ================================================
-// Project Manager - Cleaned and Stable Version
+// Project Manager - All Modals Centered + Slide Effects
 // ================================================
-// This script handles project creation, persistence, rendering, and UI updates.
-// Projects are stored in localStorage for permanence across sessions.
-// All modals are now centered for better user experience.
-// Counter must update on every change/load/tab return.
 
-// --- 1. Global State ---
 let projects = [];
 let activeType = 'Personal';
 const notifySound = new Audio('https://assets.mixkit.co/active_storage/sfx/2354/2354-preview.mp3');
 
-// --- 2. Persistence Helpers ---
-// Load projects from localStorage with validation
+// Load from localStorage
 function loadProjects() {
     try {
         const saved = localStorage.getItem('app_projects');
         if (saved) {
             projects = JSON.parse(saved);
-            projects = projects.filter(p => p && p.id && p.name); // Remove invalid entries
+            projects = projects.filter(p => p && p.id && p.name);
         } else {
             projects = [];
         }
-        console.log('Loaded projects:', projects.length);
     } catch (err) {
-        console.error('localStorage load error:', err);
+        console.error('Load error:', err);
         projects = [];
         localStorage.removeItem('app_projects');
     }
 }
 
-// Save projects to localStorage
+// Save to localStorage
 function saveProjects() {
     try {
         localStorage.setItem('app_projects', JSON.stringify(projects));
-        console.log('Saved projects:', projects.length);
     } catch (err) {
-        console.warn('localStorage save failed:', err);
+        console.warn('Save failed:', err);
     }
 }
 
-// --- 3. UI Update Helper ---
-// Updates counter and renders projects (called on every change/load)
+// Update counter + render projects
 function updateUI() {
     const countEl = document.getElementById('projectCount');
     if (countEl) {
-        countEl.textContent = projects.length.toString(); // Ensure counter always updates
-        // Optional visual feedback on update
-        countEl.classList.add('scale-110', 'text-blue-400');
-        setTimeout(() => countEl.classList.remove('scale-110', 'text-blue-400'), 600);
-    } else {
-        console.warn('projectCount element not found');
+        countEl.textContent = projects.length;
     }
     renderProjects();
 }
 
-// --- 4. Sync Listeners ---
-// Sync from other tabs/windows
-window.addEventListener('storage', (event) => {
-    if (event.key === 'app_projects') {
+// Sync from other tabs
+window.addEventListener('storage', (e) => {
+    if (e.key === 'app_projects') {
         loadProjects();
         updateUI();
     }
 });
 
-// Reload on tab visibility change (ensures persistence after backgrounding)
+// Refresh on tab focus
 document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible') {
         setTimeout(() => {
             loadProjects();
             updateUI();
-            console.log('Tab visible → reloaded & rendered');
-        }, 150); // Delay for DOM stability
+        }, 150);
     }
 });
 
-// --- 5. Notification System ---
+// Notification
 function triggerNotification(msg, type = 'pending') {
     notifySound.play().catch(() => {});
-    const alert = document.createElement('div');
-    alert.className = `fixed inset-0 z-[5000] flex items-center justify-center bg-black/70 backdrop-blur-sm pointer-events-none`;
-    alert.innerHTML = `
-        <div class="bg-[#0a0f25] border border-white/10 px-10 py-8 rounded-3xl shadow-2xl flex flex-col items-center text-center max-w-sm transform scale-95 transition-all duration-300">
+    const el = document.createElement('div');
+    el.className = `fixed inset-0 z-[5000] flex items-center justify-center bg-black/70 backdrop-blur-sm`;
+    el.innerHTML = `
+        <div class="bg-[#0a0f25] border border-white/10 px-10 py-8 rounded-3xl shadow-2xl flex flex-col items-center max-w-sm animate-[pop_0.3s]">
             <div class="w-16 h-16 rounded-2xl mb-5 flex items-center justify-center ${
                 type === 'success' ? 'bg-green-500/20 text-green-400' :
                 type === 'failed'  ? 'bg-red-500/20 text-red-400' :
@@ -2700,94 +2684,98 @@ function triggerNotification(msg, type = 'pending') {
             }">
                 <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'failed' ? 'fa-exclamation-triangle' : 'fa-sync fa-spin'} text-3xl"></i>
             </div>
-            <p class="text-white text-sm font-black uppercase tracking-wider leading-snug">${msg}</p>
+            <p class="text-white text-sm font-black uppercase tracking-wider">${msg}</p>
         </div>
     `;
-    document.body.appendChild(alert);
+    document.body.appendChild(el);
     setTimeout(() => {
-        alert.firstElementChild.style.transform = 'scale(0.92)';
-        alert.firstElementChild.style.opacity = '0';
-        setTimeout(() => alert.remove(), 400);
+        el.firstElementChild.style.transform = 'scale(0.92)';
+        el.firstElementChild.style.opacity = '0';
+        setTimeout(() => el.remove(), 400);
     }, 2200);
 }
 
-// --- 6. Modal Helpers ---
-// Close any modal smoothly
-window.closeModal = function(modalId) {
-    const modal = document.getElementById(modalId);
-    if (!modal) return;
-    modal.style.transition = 'opacity 0.3s ease';
-    modal.style.opacity = '0';
-    setTimeout(() => modal.remove(), 350);
+// Close modal
+window.closeModal = function(id) {
+    const m = document.getElementById(id);
+    if (!m) return;
+    m.style.opacity = '0';
+    setTimeout(() => m.remove(), 350);
 };
 
-// Open initial centered modal for name and description
+// 1. First modal - centered (name + description)
 window.openProjectInitiator = function() {
     document.body.insertAdjacentHTML('beforeend', `
-    <div id="centerModal" class="fixed inset-0 z-[1000] flex items-center justify-center bg-black/80 backdrop-blur-lg p-5">
-        <div class="bg-[#0a0f1d] border border-white/10 w-full max-w-md rounded-3xl p-10 animate-[zoomIn_0.4s]">
+    <div id="newProjModal1" class="fixed inset-0 z-[1000] flex items-center justify-center bg-black/80 backdrop-blur-lg p-5">
+        <div class="bg-[#0a0f1d] border border-white/10 w-full max-w-md rounded-3xl p-10 animate-[slideUp_0.4s]">
             <i class="fas fa-rocket text-blue-500 text-4xl mb-6 block text-center"></i>
             <h2 class="text-white font-black text-3xl tracking-tight mb-6 text-center">New Project</h2>
-            <input id="initName" type="text" placeholder="Project Name" class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder-white/40 focus:border-blue-500 outline-none mb-5 text-sm">
-            <textarea id="initDesc" placeholder="Brief description..." rows="4" class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder-white/40 focus:border-blue-500 outline-none mb-8 text-sm"></textarea>
+            <input id="projName" type="text" placeholder="Project Name" class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder-white/40 focus:border-blue-500 outline-none mb-5 text-sm">
+            <textarea id="projDesc" placeholder="Brief description..." rows="4" class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder-white/40 focus:border-blue-500 outline-none mb-8 text-sm"></textarea>
             <div class="flex gap-4">
-                <button onclick="closeModal('centerModal')" class="flex-1 py-4 bg-white/5 hover:bg-white/10 rounded-2xl text-white/60 font-black text-xs uppercase tracking-widest transition">Cancel</button>
-                <button onclick="openAdvancedModal()" class="flex-1 py-4 bg-blue-600 hover:bg-blue-500 rounded-2xl text-white font-black text-xs uppercase tracking-widest shadow-lg shadow-blue-700/30 transition">Continue</button>
+                <button onclick="closeModal('newProjModal1')" class="flex-1 py-4 bg-white/5 hover:bg-white/10 rounded-2xl text-white/60 font-black text-xs uppercase tracking-widest transition">Cancel</button>
+                <button onclick="openProjectDetailsModal()" class="flex-1 py-4 bg-blue-600 hover:bg-blue-500 rounded-2xl text-white font-black text-xs uppercase tracking-widest shadow-lg shadow-blue-700/30 transition">Continue</button>
             </div>
         </div>
     </div>`);
 };
 
-// Open advanced centered modal for additional details (now centered instead of right-slide)
-window.openAdvancedModal = function() {
-    const name = (document.getElementById('initName')?.value || 'Untitled').trim();
-    const desc = (document.getElementById('initDesc')?.value || '').trim();
-    closeModal('centerModal');
+// 2. Second modal - centered with slide-up animation (advanced details)
+window.openProjectDetailsModal = function() {
+    const name = document.getElementById('projName')?.value.trim() || 'Untitled';
+    const desc = document.getElementById('projDesc')?.value.trim() || '';
+    closeModal('newProjModal1');
+
     setTimeout(() => {
         document.body.insertAdjacentHTML('beforeend', `
-        <div id="advancedModal" class="fixed inset-0 z-[1001] flex items-center justify-center bg-black/80 backdrop-blur-sm p-5">
-            <div class="w-full max-w-lg bg-[#050b1d] border border-white/10 rounded-3xl overflow-y-auto p-10 animate-[zoomIn_0.4s]">
-                <div class="flex justify-between items-center mb-10">
+        <div id="newProjModal2" class="fixed inset-0 z-[1001] flex items-center justify-center bg-black/80 backdrop-blur-sm p-5">
+            <div class="w-full max-w-lg bg-[#050b1d] border border-white/10 rounded-3xl p-10 max-h-[90vh] overflow-y-auto animate-[slideUp_0.45s]">
+                <div class="flex justify-between items-center mb-8">
                     <h3 class="text-3xl font-black tracking-tight">${name}</h3>
-                    <button onclick="closeModal('advancedModal')" class="text-2xl text-white/40 hover:text-white">×</button>
+                    <button onclick="closeModal('newProjModal2')" class="text-3xl text-white/40 hover:text-white">×</button>
                 </div>
+
                 <div class="space-y-8">
                     <div>
                         <label class="block text-blue-400 text-xs font-black uppercase tracking-widest mb-3">Project Image</label>
-                        <input type="file" id="imgInp" accept="image/*" class="hidden" onchange="previewImg(this)">
-                        <div onclick="document.getElementById('imgInp').click()" class="group relative h-52 w-full bg-white/5 border-2 border-dashed border-white/20 rounded-3xl flex items-center justify-center cursor-pointer hover:border-blue-500/60 transition-colors overflow-hidden">
-                            <img id="prev" class="absolute inset-0 w-full h-full object-cover hidden">
-                            <i id="imgIcon" class="fas fa-image text-white/20 text-5xl group-hover:scale-110 transition-transform"></i>
+                        <input type="file" id="projImgInput" accept="image/*" class="hidden" onchange="previewProjectImg(this)">
+                        <div onclick="document.getElementById('projImgInput').click()" class="group relative h-52 w-full bg-white/5 border-2 border-dashed border-white/20 rounded-3xl flex items-center justify-center cursor-pointer hover:border-blue-500/60 transition-colors overflow-hidden">
+                            <img id="projPreview" class="absolute inset-0 w-full h-full object-cover hidden">
+                            <i id="imgPlaceholderIcon" class="fas fa-image text-white/20 text-5xl group-hover:scale-110 transition-transform"></i>
                         </div>
                     </div>
+
                     <div class="space-y-5">
-                        <input id="pLink" type="url" placeholder="Project Link[](https://...)" class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder-white/40 focus:border-blue-500 outline-none text-sm">
+                        <input id="projLink" type="url" placeholder="Project Link[](https://...)" class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder-white/40 focus:border-blue-500 outline-none text-sm">
                         <div class="grid grid-cols-2 gap-4">
-                            <button onclick="setType('Job', this)" class="type-btn py-4 rounded-2xl border border-white/10 text-white/50 text-xs font-black uppercase hover:border-white/30 transition">Job</button>
-                            <button onclick="setType('Private', this)" class="type-btn py-4 rounded-2xl border border-white/10 text-white/50 text-xs font-black uppercase hover:border-white/30 transition">Private</button>
-                            <button onclick="setType('Personal', this)" class="type-btn py-4 rounded-2xl border-2 border-blue-500 text-white text-xs font-black uppercase shadow-sm shadow-blue-600/30">Personal</button>
+                            <button onclick="setProjectType('Job', this)" class="type-btn py-4 rounded-2xl border border-white/10 text-white/50 text-xs font-black uppercase hover:border-white/30 transition">Job</button>
+                            <button onclick="setProjectType('Private', this)" class="type-btn py-4 rounded-2xl border border-white/10 text-white/50 text-xs font-black uppercase hover:border-white/30 transition">Private</button>
+                            <button onclick="setProjectType('Personal', this)" class="type-btn py-4 rounded-2xl border-2 border-blue-500 text-white text-xs font-black uppercase shadow-sm shadow-blue-600/30">Personal</button>
                             <button disabled class="py-4 rounded-2xl border border-white/5 text-white/20 text-xs font-black uppercase cursor-not-allowed"><i class="fas fa-lock mr-2"></i>Locked</button>
                         </div>
-                        <input id="pUsers" type="number" min="1" value="5" class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white focus:border-blue-500 outline-none text-sm">
+                        <input id="projUsers" type="number" min="1" value="5" class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white focus:border-blue-500 outline-none text-sm">
                     </div>
+
                     <div class="flex gap-4 pt-8">
-                        <button onclick="closeModal('advancedModal')" class="flex-1 py-5 bg-white/5 hover:bg-white/10 rounded-2xl text-white/60 font-black text-xs uppercase tracking-widest transition">Cancel</button>
-                        <button id="finishBtn" onclick="finalizeProject()" class="flex-1 py-5 bg-gradient-to-r from-green-600 to-green-500 hover:from-green-500 hover:to-green-400 rounded-2xl text-white font-black text-xs uppercase tracking-widest shadow-lg shadow-green-700/30 transition">Create Project</button>
+                        <button onclick="closeModal('newProjModal2')" class="flex-1 py-5 bg-white/5 hover:bg-white/10 rounded-2xl text-white/60 font-black text-xs uppercase tracking-widest transition">Cancel</button>
+                        <button id="createProjBtn" onclick="createNewProject()" class="flex-1 py-5 bg-gradient-to-r from-green-600 to-green-500 hover:from-green-500 hover:to-green-400 rounded-2xl text-white font-black text-xs uppercase tracking-widest shadow-lg shadow-green-700/30 transition">Create Project</button>
                     </div>
                 </div>
             </div>
         </div>`);
-        setType('Personal', document.querySelector('.type-btn.border-blue-500'));
+
+        // Set default type
+        setProjectType('Personal', document.querySelector('#newProjModal2 .type-btn.border-blue-500'));
     }, 180);
 };
 
-// --- 7. Input Helpers ---
-window.previewImg = function(input) {
+// Helpers
+window.previewProjectImg = function(input) {
     if (!input.files?.[0]) return;
     const reader = new FileReader();
-    reader.onload = (e) => {
-        const img = document.getElementById('prev');
-        const icon = document.getElementById('imgIcon');
+    reader.onload = e => {
+        const img = document.getElementById('projPreview');
+        const icon = document.getElementById('imgPlaceholderIcon');
         if (img && icon) {
             img.src = e.target.result;
             img.classList.remove('hidden');
@@ -2797,63 +2785,126 @@ window.previewImg = function(input) {
     reader.readAsDataURL(input.files[0]);
 };
 
-window.setType = function(type, button) {
-    document.querySelectorAll('.type-btn').forEach(btn => {
-        btn.classList.remove('border-blue-500', 'text-white', 'shadow-sm', 'shadow-blue-600/30');
-        btn.classList.add('border-white/10', 'text-white/50');
+window.setProjectType = function(type, btn) {
+    document.querySelectorAll('#newProjModal2 .type-btn').forEach(b => {
+        b.classList.remove('border-blue-500', 'text-white', 'shadow-sm', 'shadow-blue-600/30');
+        b.classList.add('border-white/10', 'text-white/50');
     });
-    button.classList.add('border-blue-500', 'text-white', 'shadow-sm', 'shadow-blue-600/30');
-    button.classList.remove('border-white/10', 'text-white/50');
+    btn.classList.add('border-blue-500', 'text-white', 'shadow-sm', 'shadow-blue-600/30');
+    btn.classList.remove('border-white/10', 'text-white/50');
     activeType = type;
 };
 
-// --- 8. Render Projects ---
+// Create project
+window.createNewProject = function() {
+    const btn = document.getElementById('createProjBtn');
+    if (!btn) return;
+
+    const name = document.querySelector('#newProjModal2 h3')?.textContent.trim() || 'Untitled';
+    const desc = document.getElementById('projDesc')?.value?.trim() || '';
+    const link = document.getElementById('projLink')?.value?.trim() || '#';
+    const users = parseInt(document.getElementById('projUsers')?.value) || 0;
+    const img = document.getElementById('projPreview')?.src || '';
+
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Creating...';
+
+    triggerNotification(`Creating ${name}...`, 'pending');
+
+    setTimeout(() => {
+        const status = Math.random() > 0.08 ? 'success' : 'failed';
+        projects.push({
+            id: Date.now() + Math.random(),
+            name, desc, link, users, img,
+            type: activeType,
+            status,
+            createdAt: new Date().toISOString()
+        });
+
+        saveProjects();
+        updateUI();
+        closeModal('newProjModal2');
+        triggerNotification(`${name} ${status === 'success' ? 'created successfully' : 'creation failed'}`, status);
+    }, 1600);
+};
+
+// Delete with centered confirmation modal
+window.deleteProject = function(id) {
+    const proj = projects.find(p => p.id === id);
+    if (!proj) return;
+
+    document.body.insertAdjacentHTML('beforeend', `
+    <div id="deleteConfirmModal" class="fixed inset-0 z-[2000] flex items-center justify-center bg-black/80 backdrop-blur-lg p-5">
+        <div class="bg-[#0a0f1d] border border-white/10 w-full max-w-sm rounded-3xl p-10 animate-[slideUp_0.35s]">
+            <h3 class="text-2xl font-black text-center mb-6 text-red-400">Delete Project?</h3>
+            <p class="text-white/80 text-center mb-8">Are you sure you want to delete<br><strong>"${proj.name}"</strong>?<br>This cannot be undone.</p>
+            <div class="flex gap-4">
+                <button onclick="closeModal('deleteConfirmModal')" class="flex-1 py-4 bg-white/5 hover:bg-white/10 rounded-2xl text-white/70 font-black text-sm uppercase tracking-widest transition">Cancel</button>
+                <button onclick="confirmDelete(${id})" class="flex-1 py-4 bg-red-600 hover:bg-red-500 rounded-2xl text-white font-black text-sm uppercase tracking-widest shadow-lg shadow-red-700/30 transition">Delete</button>
+            </div>
+        </div>
+    </div>`);
+};
+
+window.confirmDelete = function(id) {
+    projects = projects.filter(p => p.id !== id);
+    saveProjects();
+    updateUI();
+    closeModal('deleteConfirmModal');
+    triggerNotification('Project deleted', 'failed');
+};
+
+// Render projects (unchanged)
 function renderProjects() {
     const grid = document.getElementById('projectContainerGrid');
-    const settingsList = document.getElementById('settingsProjectList');
+    const list = document.getElementById('settingsProjectList');
     if (grid) grid.innerHTML = '';
-    if (settingsList) settingsList.innerHTML = '';
+    if (list) list.innerHTML = '';
+
     if (projects.length === 0) {
-        const msg = '<div class="text-center py-16 text-white/30 text-sm">No projects yet. Create your first one!</div>';
-        if (grid) grid.innerHTML = msg;
-        if (settingsList) settingsList.innerHTML = msg;
+        const empty = '<div class="text-center py-16 text-white/30 text-sm">No projects yet. Create your first one!</div>';
+        if (grid) grid.innerHTML = empty;
+        if (list) list.innerHTML = empty;
         return;
     }
-    projects.forEach(proj => {
-        const isSuccess = proj.status === 'success';
+
+    projects.forEach(p => {
+        const success = p.status === 'success';
+
         if (grid) {
             grid.insertAdjacentHTML('beforeend', `
             <div class="group bg-white/5 border border-white/10 rounded-3xl overflow-hidden hover:border-blue-500/50 transition-all duration-400">
                 <div class="relative h-44 bg-black/30">
-                    ${proj.img ? `<img src="${proj.img}" alt="${proj.name}" class="w-full h-full object-cover">` 
-                               : `<div class="w-full h-full flex items-center justify-center"><i class="fas fa-cube text-white/10 text-6xl"></i></div>`}
-                    <div class="absolute top-4 right-4 px-3 py-1 rounded-full bg-black/70 backdrop-blur-md border border-white/10 text-[10px] font-black uppercase tracking-wider ${isSuccess ? 'text-green-400' : 'text-red-400'}">
-                        ${proj.status}
+                    ${p.img ? `<img src="${p.img}" alt="${p.name}" class="w-full h-full object-cover">` 
+                           : `<div class="w-full h-full flex items-center justify-center"><i class="fas fa-cube text-white/10 text-6xl"></i></div>`}
+                    <div class="absolute top-4 right-4 px-3 py-1 rounded-full bg-black/70 backdrop-blur-md border border-white/10 text-[10px] font-black uppercase tracking-wider ${success ? 'text-green-400' : 'text-red-400'}">
+                        ${p.status}
                     </div>
                 </div>
                 <div class="p-6">
-                    <h4 class="font-black uppercase text-base mb-2">${proj.name}</h4>
-                    <p class="text-white/50 text-xs line-clamp-2 mb-4">${proj.desc || 'No description'}</p>
+                    <h4 class="font-black uppercase text-base mb-2">${p.name}</h4>
+                    <p class="text-white/50 text-xs line-clamp-2 mb-4">${p.desc || 'No description'}</p>
                     <div class="flex justify-between items-center">
-                        <span class="text-blue-400 text-xs font-black uppercase tracking-wider">${proj.type}</span>
-                        ${proj.link && proj.link !== '#' ? `<a href="${proj.link}" target="_blank" class="text-white/40 hover:text-white"><i class="fas fa-external-link-alt"></i></a>` : ''}
+                        <span class="text-blue-400 text-xs font-black uppercase tracking-wider">${p.type}</span>
+                        ${p.link && p.link !== '#' ? `<a href="${p.link}" target="_blank" class="text-white/40 hover:text-white"><i class="fas fa-external-link-alt"></i></a>` : ''}
                     </div>
                 </div>
             </div>`);
         }
-        if (settingsList) {
-            settingsList.insertAdjacentHTML('beforeend', `
+
+        if (list) {
+            list.insertAdjacentHTML('beforeend', `
             <div class="flex items-center justify-between p-5 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition-colors">
                 <div class="flex items-center gap-5">
                     <div class="w-12 h-12 rounded-2xl bg-blue-600/20 flex items-center justify-center border border-blue-500/30">
                         <i class="fas fa-cube text-blue-400"></i>
                     </div>
                     <div>
-                        <h4 class="font-black text-sm uppercase">${proj.name}</h4>
-                        <p class="text-white/40 text-xs uppercase tracking-wider">${proj.type} • ${proj.users || 0} users</p>
+                        <h4 class="font-black text-sm uppercase">${p.name}</h4>
+                        <p class="text-white/40 text-xs uppercase tracking-wider">${p.type} • ${p.users || 0} users</p>
                     </div>
                 </div>
-                <button onclick="deleteProject(${proj.id})" class="w-10 h-10 rounded-xl flex items-center justify-center text-white/30 hover:bg-red-500/20 hover:text-red-400 transition">
+                <button onclick="deleteProject(${p.id})" class="w-10 h-10 rounded-xl flex items-center justify-center text-white/30 hover:bg-red-500/20 hover:text-red-400 transition">
                     <i class="fas fa-trash-alt"></i>
                 </button>
             </div>`);
@@ -2861,55 +2912,11 @@ function renderProjects() {
     });
 }
 
-// --- 9. Project Operations ---
-// Finalize and create project
-window.finalizeProject = function() {
-    const finishBtn = document.getElementById('finishBtn');
-    if (!finishBtn) return;
-    const name = document.querySelector('#advancedModal h3')?.textContent.trim() || 'Untitled';
-    const desc = document.getElementById('initDesc')?.value?.trim() || '';
-    const link = document.getElementById('pLink')?.value?.trim() || '#';
-    const users = parseInt(document.getElementById('pUsers')?.value) || 0;
-    const img = document.getElementById('prev')?.src || '';
-    finishBtn.disabled = true;
-    finishBtn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Creating...';
-    triggerNotification(`Creating ${name}...`, 'pending');
-    setTimeout(() => {
-        const status = Math.random() > 0.08 ? 'success' : 'failed';
-        projects.push({
-            id: Date.now() + Math.random(),
-            name,
-            desc,
-            link,
-            users,
-            img,
-            type: activeType,
-            status,
-            createdAt: new Date().toISOString()
-        });
-        saveProjects(); // Save immediately after creation
-        updateUI(); // Update counter and render
-        closeModal('advancedModal');
-        triggerNotification(`${name} ${status === 'success' ? 'created successfully' : 'creation failed'}`, status);
-    }, 1800);
-};
-
-// Delete project
-window.deleteProject = function(id) {
-    if (!confirm('Delete this project? This cannot be undone.')) return;
-    projects = projects.filter(p => p.id !== id);
-    saveProjects(); // Save after deletion
-    updateUI(); // Update counter and render
-    triggerNotification('Project deleted', 'failed');
-};
-
-// --- 10. Initialization ---
+// Init
 document.addEventListener('DOMContentLoaded', () => {
     loadProjects();
-    updateUI(); // Initial counter update and render
-    console.log('App started - projects loaded:', projects.length);
+    updateUI();
 });
-
 
 
 
