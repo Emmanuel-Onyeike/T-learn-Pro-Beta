@@ -2624,7 +2624,7 @@ window.deleteNotif = function(id) {
 
 //////  FOR THE PROJECTS   
 // ================================================
-// Project Manager - FINAL MATCHING YOUR SCREENSHOT STYLE
+// Project Manager - PREMIUM UI REDESIGN
 // ================================================
 
 let projects = [];
@@ -2637,7 +2637,6 @@ function loadProjects() {
         const saved = localStorage.getItem('app_projects');
         projects = saved ? JSON.parse(saved) : [];
         projects = projects.filter(p => p && p.name);
-        console.log(`[Projects] Loaded ${projects.length} projects`);
     } catch (err) {
         console.error('[Projects] Load error:', err);
         projects = [];
@@ -2648,7 +2647,6 @@ function loadProjects() {
 function saveProjects() {
     try {
         localStorage.setItem('app_projects', JSON.stringify(projects));
-        console.log(`[Projects] Saved ${projects.length} projects`);
     } catch (err) {
         console.warn('[Projects] Save failed:', err);
     }
@@ -2661,7 +2659,6 @@ function updateUI() {
     renderProjects();
 }
 
-// Sync from other tabs
 window.addEventListener('storage', (e) => {
     if (e.key === 'app_projects') {
         loadProjects();
@@ -2669,59 +2666,64 @@ window.addEventListener('storage', (e) => {
     }
 });
 
-// Refresh on tab focus
-document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'visible') {
-        setTimeout(() => {
-            loadProjects();
-            updateUI();
-        }, 150);
-    }
-});
-
-// ─── 3. Notification ───────────────────────────────────────
+// ─── 3. Notification (Modal Center) ─────────────────────────
 function triggerNotification(msg, type = 'pending') {
     notifySound.play().catch(() => {});
     const alert = document.createElement('div');
-    alert.className = `fixed inset-0 z-[5000] flex items-center justify-center bg-black/70 backdrop-blur-sm`;
+    alert.className = `fixed inset-0 z-[5000] flex items-center justify-center bg-black/60 backdrop-blur-md transition-all duration-500`;
     alert.innerHTML = `
-        <div class="bg-[#0a0f25] border border-white/10 px-10 py-8 rounded-3xl shadow-2xl flex flex-col items-center max-w-sm scale-95 animate-[pop_0.3s]">
-            <div class="w-16 h-16 rounded-2xl mb-5 flex items-center justify-center ${
-                type === 'success' ? 'bg-green-500/20 text-green-400' :
-                type === 'failed' ? 'bg-red-500/20 text-red-400' :
-                'bg-blue-500/20 text-blue-400'
+        <div class="bg-[#0f172a] border border-white/10 px-12 py-10 rounded-[3rem] shadow-[0_0_50px_rgba(0,0,0,0.5)] flex flex-col items-center max-w-sm animate-in zoom-in-90 duration-300">
+            <div class="w-20 h-20 rounded-[2rem] mb-6 flex items-center justify-center ${
+                type === 'success' ? 'bg-emerald-500/10 text-emerald-400 shadow-[0_0_30px_rgba(52,211,153,0.1)]' :
+                type === 'failed' ? 'bg-rose-500/10 text-rose-400' :
+                'bg-blue-500/10 text-blue-400'
             }">
-                <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'failed' ? 'fa-exclamation-triangle' : 'fa-sync fa-spin'} text-3xl"></i>
+                <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'failed' ? 'fa-exclamation-triangle' : 'fa-sync fa-spin'} text-4xl"></i>
             </div>
-            <p class="text-white text-sm font-bold uppercase tracking-wider">${msg}</p>
+            <p class="text-white text-xs font-black uppercase tracking-[0.3em] text-center leading-loose">${msg}</p>
         </div>
     `;
     document.body.appendChild(alert);
     setTimeout(() => {
-        alert.style.opacity = '0';
-        setTimeout(() => alert.remove(), 400);
-    }, 2200);
+        alert.classList.add('opacity-0');
+        setTimeout(() => alert.remove(), 500);
+    }, 2000);
 }
 
-// ─── 4. Modals (Centered) ──────────────────────────────────
+// ─── 4. Modals (Centered with Slide-Out) ───────────────────
 window.closeModal = function(id) {
     const modal = document.getElementById(id);
     if (!modal) return;
+    
+    const content = modal.querySelector('div');
+    if (content) {
+        // High-end Slide Out Physics
+        content.style.transform = 'translateY(80px) scale(0.9)';
+        content.style.opacity = '0';
+        content.style.transition = 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)';
+    }
+    
     modal.style.opacity = '0';
-    setTimeout(() => modal.remove(), 300);
+    modal.style.transition = 'opacity 0.4s ease';
+    setTimeout(() => modal.remove(), 400);
 };
 
 window.openProjectInitiator = function() {
     document.body.insertAdjacentHTML('beforeend', `
-    <div id="newProjModal1" class="fixed inset-0 z-[1000] flex items-center justify-center bg-black/80 backdrop-blur-lg p-5">
-        <div class="bg-[#0a0f1d] border border-white/10 w-full max-w-md rounded-[3rem] p-10 animate-in zoom-in-95">
-            <i class="fas fa-rocket text-blue-500 text-4xl mb-6 block text-center"></i>
-            <h2 class="text-white font-black text-3xl tracking-tight mb-6 text-center">New Project</h2>
-            <input id="projName" type="text" placeholder="Project Name" class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder-white/40 focus:border-blue-500 outline-none mb-5 text-sm">
-            <textarea id="projDesc" placeholder="Brief description..." rows="4" class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder-white/40 focus:border-blue-500 outline-none mb-8 text-sm"></textarea>
+    <div id="newProjModal1" class="fixed inset-0 z-[1000] flex items-center justify-center bg-black/80 backdrop-blur-xl p-5">
+        <div class="bg-[#0a0f1d] border border-white/10 w-full max-w-md rounded-[3.5rem] p-12 shadow-2xl animate-in fade-in zoom-in-95 duration-500">
+            <div class="w-16 h-16 bg-blue-600/10 rounded-2xl flex items-center justify-center mx-auto mb-8">
+                <i class="fas fa-rocket text-blue-500 text-3xl"></i>
+            </div>
+            <h2 class="text-white font-black text-3xl tracking-tighter mb-2 text-center uppercase">Initialize</h2>
+            <p class="text-white/30 text-[10px] font-bold tracking-[0.2em] text-center uppercase mb-10">System Component Entry</p>
+            
+            <input id="projName" type="text" placeholder="PROJECT IDENTIFIER..." class="w-full bg-white/5 border border-white/5 rounded-2xl px-8 py-5 text-white placeholder-white/20 focus:border-blue-500/50 outline-none mb-4 text-[11px] font-black tracking-widest uppercase transition-all">
+            <textarea id="projDesc" placeholder="CORE MISSION OBJECTIVES..." rows="3" class="w-full bg-white/5 border border-white/5 rounded-2xl px-8 py-5 text-white placeholder-white/20 focus:border-blue-500/50 outline-none mb-10 text-[11px] font-black tracking-widest uppercase transition-all"></textarea>
+            
             <div class="flex gap-4">
-                <button onclick="closeModal('newProjModal1')" class="flex-1 py-4 bg-white/5 hover:bg-white/10 rounded-2xl text-white/60 font-black text-xs uppercase tracking-widest transition">Cancel</button>
-                <button onclick="openProjectDetailsModal()" class="flex-1 py-4 bg-blue-600 hover:bg-blue-500 rounded-2xl text-white font-black text-xs uppercase tracking-widest shadow-lg shadow-blue-700/30 transition">Continue</button>
+                <button onclick="closeModal('newProjModal1')" class="flex-1 py-5 bg-white/5 hover:bg-white/10 rounded-2xl text-white/40 font-black text-[10px] uppercase tracking-widest transition-all">Abort</button>
+                <button onclick="openProjectDetailsModal()" class="flex-1 py-5 bg-blue-600 hover:bg-blue-500 rounded-2xl text-white font-black text-[10px] uppercase tracking-widest shadow-xl shadow-blue-600/20 transition-all">Proceed</button>
             </div>
         </div>
     </div>`);
@@ -2734,220 +2736,154 @@ window.openProjectDetailsModal = function() {
 
     setTimeout(() => {
         document.body.insertAdjacentHTML('beforeend', `
-        <div id="newProjModal2" class="fixed inset-0 z-[1001] flex items-center justify-center bg-black/80 backdrop-blur-sm p-5">
-            <div class="w-full max-w-lg bg-[#050b1d] border border-white/10 rounded-[3rem] p-10 max-h-[90vh] overflow-y-auto animate-in zoom-in-95">
-                <div class="flex justify-between items-center mb-10">
-                    <h3 class="text-3xl font-black tracking-tight">${name}</h3>
-                    <button onclick="closeModal('newProjModal2')" class="text-3xl text-white/40 hover:text-white">×</button>
-                </div>
-                <div class="space-y-8">
+        <div id="newProjModal2" class="fixed inset-0 z-[1001] flex items-center justify-center bg-black/80 backdrop-blur-md p-5">
+            <div class="w-full max-w-lg bg-[#050b1d] border border-white/10 rounded-[3.5rem] p-12 max-h-[90vh] overflow-y-auto animate-in slide-in-from-bottom-10 duration-500">
+                <div class="flex justify-between items-center mb-12">
                     <div>
-                        <label class="block text-blue-400 text-xs font-black uppercase tracking-widest mb-3">Project Image</label>
+                        <h3 class="text-2xl font-black tracking-tighter text-white uppercase">${name}</h3>
+                        <p class="text-blue-500 text-[9px] font-black tracking-[0.3em] uppercase mt-1">Configuration Layer</p>
+                    </div>
+                    <button onclick="closeModal('newProjModal2')" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white/20 hover:text-white transition-all">×</button>
+                </div>
+
+                <div class="space-y-10">
+                    <div>
+                        <label class="block text-white/30 text-[9px] font-black uppercase tracking-[0.2em] mb-4">Visual Interface</label>
                         <input type="file" id="projImgInput" accept="image/*" class="hidden" onchange="previewProjectImg(this)">
-                        <div onclick="document.getElementById('projImgInput').click()" class="group relative h-52 w-full bg-white/5 border-2 border-dashed border-white/20 rounded-3xl flex items-center justify-center cursor-pointer hover:border-blue-500/60 transition-colors overflow-hidden">
+                        <div onclick="document.getElementById('projImgInput').click()" class="group relative h-48 w-full bg-white/[0.03] border-2 border-dashed border-white/10 rounded-[2.5rem] flex items-center justify-center cursor-pointer hover:border-blue-500/40 transition-all overflow-hidden">
                             <img id="projPreview" class="absolute inset-0 w-full h-full object-cover hidden">
-                            <i id="imgPlaceholderIcon" class="fas fa-image text-white/20 text-5xl group-hover:scale-110 transition-transform"></i>
+                            <div class="text-center group-hover:scale-110 transition-transform duration-500" id="imgPlaceholder">
+                                <i class="fas fa-plus text-white/10 text-3xl mb-3"></i>
+                                <p class="text-white/10 text-[9px] font-black tracking-widest uppercase">Upload Media</p>
+                            </div>
                         </div>
                     </div>
-                    <div class="space-y-5">
-                        <input id="projLink" type="url" placeholder="Project Link[](https://...)" class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder-white/40 focus:border-blue-500 outline-none text-sm">
-                        <div class="grid grid-cols-2 gap-4">
-                            <button onclick="setProjectType('Job', this)" class="type-btn py-4 rounded-2xl border border-white/10 text-white/50 text-xs font-black uppercase hover:border-white/30 transition">Job</button>
-                            <button onclick="setProjectType('Private', this)" class="type-btn py-4 rounded-2xl border border-white/10 text-white/50 text-xs font-black uppercase hover:border-white/30 transition">Private</button>
-                            <button onclick="setProjectType('Personal', this)" class="type-btn py-4 rounded-2xl border-2 border-blue-500 text-white text-xs font-black uppercase shadow-sm shadow-blue-600/30">Personal</button>
-                            <button disabled class="py-4 rounded-2xl border border-white/5 text-white/20 text-xs font-black uppercase cursor-not-allowed"><i class="fas fa-lock mr-2"></i>Locked</button>
+
+                    <div class="space-y-6">
+                        <input id="projLink" type="url" placeholder="EXTERNAL SOURCE LINK..." class="w-full bg-white/5 border border-white/5 rounded-2xl px-8 py-5 text-white placeholder-white/20 focus:border-blue-500/50 outline-none text-[11px] font-black tracking-widest">
+                        
+                        <div class="grid grid-cols-3 gap-3">
+                            <button onclick="setProjectType('Job', this)" class="type-btn py-4 rounded-xl border border-white/5 text-white/30 text-[9px] font-black uppercase tracking-widest transition-all">Job</button>
+                            <button onclick="setProjectType('Private', this)" class="type-btn py-4 rounded-xl border border-white/5 text-white/30 text-[9px] font-black uppercase tracking-widest transition-all">Private</button>
+                            <button onclick="setProjectType('Personal', this)" class="type-btn py-4 rounded-xl border-2 border-blue-500 bg-blue-500/5 text-white text-[9px] font-black uppercase tracking-widest shadow-lg shadow-blue-500/10">Personal</button>
                         </div>
-                        <input id="projUsers" type="number" min="1" value="5" class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white focus:border-blue-500 outline-none text-sm">
                     </div>
-                    <div class="flex gap-4 pt-8">
-                        <button onclick="closeModal('newProjModal2')" class="flex-1 py-5 bg-white/5 hover:bg-white/10 rounded-2xl text-white/60 font-black text-xs uppercase tracking-widest transition">Cancel</button>
-                        <button id="createProjBtn" onclick="createNewProject()" class="flex-1 py-5 bg-gradient-to-r from-green-600 to-green-500 hover:from-green-500 hover:to-green-400 rounded-2xl text-white font-black text-xs uppercase tracking-widest shadow-lg shadow-green-700/30 transition">Create Project</button>
+
+                    <div class="flex gap-4 pt-4">
+                        <button onclick="closeModal('newProjModal2')" class="flex-1 py-5 bg-white/5 rounded-2xl text-white/30 font-black text-[10px] uppercase tracking-widest transition-all">Cancel</button>
+                        <button id="createProjBtn" onclick="createNewProject('${name.replace(/'/g, "\\'")}', '${desc.replace(/'/g, "\\'")}')" class="flex-1 py-5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 rounded-2xl text-white font-black text-[10px] uppercase tracking-widest shadow-xl shadow-emerald-900/20 transition-all">Deploy System</button>
                     </div>
                 </div>
             </div>
         </div>`);
-        setProjectType('Personal', document.querySelector('#newProjModal2 .type-btn.border-blue-500'));
     }, 180);
 };
 
-// Helpers
-window.previewProjectImg = function(input) {
-    if (!input.files?.[0]) return;
-    const reader = new FileReader();
-    reader.onload = e => {
-        const img = document.getElementById('projPreview');
-        const icon = document.getElementById('imgPlaceholderIcon');
-        if (img && icon) {
-            img.src = e.target.result;
-            img.classList.remove('hidden');
-            icon.classList.add('hidden');
-        }
-    };
-    reader.readAsDataURL(input.files[0]);
-};
-
-window.setProjectType = function(type, button) {
-    document.querySelectorAll('#newProjModal2 .type-btn').forEach(btn => {
-        btn.classList.remove('border-blue-500', 'text-white', 'shadow-sm', 'shadow-blue-600/30');
-        btn.classList.add('border-white/10', 'text-white/50');
-    });
-    button.classList.add('border-blue-500', 'text-white', 'shadow-sm', 'shadow-blue-600/30');
-    button.classList.remove('border-white/10', 'text-white/50');
-    activeType = type;
-};
-
-// Create project
-window.createNewProject = function() {
-    const btn = document.getElementById('createProjBtn');
-    if (!btn) return;
-
-    const name = document.querySelector('#newProjModal2 h3')?.textContent.trim() || 'Untitled';
-    const desc = document.getElementById('projDesc')?.value?.trim() || '';
-    const link = document.getElementById('projLink')?.value?.trim() || '#';
-    const users = parseInt(document.getElementById('projUsers')?.value) || 0;
-    const img = document.getElementById('projPreview')?.src || '';
-
-    btn.disabled = true;
-    btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Creating...';
-
-    triggerNotification(`Creating ${name}...`, 'pending');
-
-    setTimeout(() => {
-        const status = Math.random() > 0.08 ? 'success' : 'failed';
-        projects.push({
-            id: Date.now() + Math.random(),
-            name,
-            desc,
-            link,
-            users,
-            img,
-            type: activeType,
-            status,
-            createdAt: new Date().toISOString()
-        });
-
-        saveProjects();
-        updateUI();
-        closeModal('newProjModal2');
-        triggerNotification(`${name} ${status === 'success' ? 'created successfully' : 'creation failed'}`, status);
-    }, 1600);
-};
-
-// Delete
-window.deleteProject = function(id) {
-    const proj = projects.find(p => p.id === id);
-    if (!proj) return;
-
-    document.body.insertAdjacentHTML('beforeend', `
-    <div id="deleteConfirmModal" class="fixed inset-0 z-[2000] flex items-center justify-center bg-black/80 backdrop-blur-lg p-5">
-        <div class="bg-[#0a0f1d] border border-white/10 w-full max-w-sm rounded-[3rem] p-10 animate-in zoom-in-95">
-            <h3 class="text-2xl font-black text-center mb-6 text-red-400">Delete Project?</h3>
-            <p class="text-white/80 text-center mb-8">Are you sure you want to delete<br><strong>"${proj.name}"</strong>?<br>This cannot be undone.</p>
-            <div class="flex gap-4">
-                <button onclick="closeModal('deleteConfirmModal')" class="flex-1 py-4 bg-white/5 hover:bg-white/10 rounded-2xl text-white/70 font-black text-sm uppercase tracking-widest transition">Cancel</button>
-                <button onclick="confirmDelete(${id})" class="flex-1 py-4 bg-red-600 hover:bg-red-500 rounded-2xl text-white font-black text-sm uppercase tracking-widest shadow-lg shadow-red-700/30 transition">Delete</button>
-            </div>
-        </div>
-    </div>`);
-};
-
-window.confirmDelete = function(id) {
-    projects = projects.filter(p => p.id !== id);
-    saveProjects();
-    updateUI();
-    closeModal('deleteConfirmModal');
-    triggerNotification('Project deleted', 'failed');
-};
-
-// ─── 5. Render Projects – Matches Your Screenshot Exactly ───
+// ─── 5. Render Logic with Luxury Empty State ───────────────
 function renderProjects() {
     const container = document.getElementById('projectContainerGrid');
-    if (!container) {
-        console.warn("[Projects] No #projectContainerGrid found – skipping render");
-        return;
-    }
-
-    container.innerHTML = ''; // clear once
+    if (!container) return;
+    container.innerHTML = '';
 
     if (projects.length === 0) {
         container.innerHTML = `
-            <div class="col-span-full py-24 text-center text-white/50">
-                <i class="fas fa-folder-open text-6xl opacity-30 mb-6 block"></i>
-                <h3 class="text-xl font-black uppercase tracking-wider mb-3">No Projects Yet</h3>
-                <p class="text-sm opacity-70 mb-8">Create your first project to begin</p>
-                <button onclick="openProjectInitiator()" class="px-8 py-4 bg-blue-600 hover:bg-blue-500 rounded-2xl text-white font-bold text-sm uppercase tracking-wider shadow-lg transition">
-                    New Project
+            <div class="col-span-full py-32 flex flex-col items-center justify-center text-center animate-in fade-in duration-1000">
+                <div class="relative mb-10">
+                    <div class="absolute inset-0 bg-blue-500/20 blur-[100px] rounded-full"></div>
+                    <div class="w-32 h-32 rounded-[3rem] bg-white/[0.03] border border-white/10 flex items-center justify-center relative z-10">
+                        <i class="fas fa-ghost text-white/10 text-5xl"></i>
+                    </div>
+                    <div class="absolute -bottom-2 -right-2 w-10 h-10 bg-blue-600 rounded-2xl flex items-center justify-center shadow-lg animate-bounce">
+                        <i class="fas fa-plus text-white text-xs"></i>
+                    </div>
+                </div>
+                <h3 class="text-white font-black text-xl uppercase tracking-[0.5em] mb-3">System Empty</h3>
+                <p class="text-white/20 text-[10px] font-bold uppercase tracking-[0.2em] mb-12 max-w-xs leading-relaxed">No active project threads found. Initialize the core to begin deployment.</p>
+                <button onclick="openProjectInitiator()" class="px-12 py-5 bg-white text-black font-black text-[10px] uppercase tracking-[0.3em] rounded-full hover:bg-blue-500 hover:text-white transition-all duration-500 shadow-2xl">
+                    Create First Project
                 </button>
             </div>`;
         return;
     }
 
     projects.forEach(proj => {
-        const deployedAgo = getDeployedAgo(proj.createdAt || new Date().toISOString());
-        const tech = proj.type || 'Unknown';
-        const link = proj.link || '#';
-        const domain = link.replace(/^https?:\/\//, '').split('/')[0] || 'No link';
-
+        const success = proj.status === 'success';
+        const deployedAgo = getDeployedAgo(proj.createdAt);
+        
         container.insertAdjacentHTML('beforeend', `
-            <div class="relative rounded-xl overflow-hidden bg-[#0f172a]/80 border border-white/5 hover:border-blue-500/30 transition-all duration-300 group">
-                <!-- Top badge -->
-                <div class="absolute top-3 left-3 px-3 py-1 rounded-md bg-red-500/20 text-red-400 text-xs font-medium flex items-center gap-1.5 backdrop-blur-sm">
-                    <span class="w-2 h-2 rounded-full bg-red-400 animate-pulse"></span>
-                    Deployed ${deployedAgo}
-                </div>
-
-                <!-- Dark grid background -->
-                <div class="h-40 bg-gradient-to-br from-[#0f172a] to-[#020617] relative">
-                    <div class="absolute inset-0 opacity-5 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
-                    <div class="absolute inset-0 flex items-center justify-center">
-                        <i class="fas fa-cube text-white/10 text-7xl group-hover:text-blue-500/30 transition-colors"></i>
+            <div class="group relative rounded-[2.5rem] bg-[#0f172a]/40 border border-white/5 hover:border-blue-500/30 transition-all duration-500 animate-in zoom-in-95">
+                <div class="relative h-48 m-3 rounded-[2rem] overflow-hidden bg-[#020617]">
+                    ${proj.img ? `<img src="${proj.img}" class="w-full h-full object-cover">` : 
+                    `<div class="w-full h-full flex items-center justify-center bg-[radial-gradient(circle_at_center,#1e293b_0%,#020617_100%)]">
+                        <i class="fas fa-atom text-white/5 text-6xl group-hover:rotate-180 transition-transform duration-1000"></i>
+                    </div>`}
+                    <div class="absolute top-4 left-4 px-4 py-2 rounded-xl bg-black/60 backdrop-blur-md border border-white/10 text-[9px] font-black uppercase tracking-widest ${success ? 'text-emerald-400' : 'text-rose-400'}">
+                        <span class="inline-block w-1.5 h-1.5 rounded-full mr-2 ${success ? 'bg-emerald-400 animate-pulse' : 'bg-rose-400'}"></span>
+                        ${proj.status}
                     </div>
                 </div>
-
-                <!-- Bottom bar -->
-                <div class="p-4 bg-black/40 border-t border-white/5 flex items-center justify-between">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-lg bg-blue-900/30 flex items-center justify-center text-blue-400 text-xl">
-                            <i class="fas fa-rocket"></i>
-                        </div>
+                
+                <div class="p-8 pt-4">
+                    <div class="flex justify-between items-start mb-4">
                         <div>
-                            <p class="text-white font-medium text-sm">${proj.name}</p>
-                            <a href="${link}" target="_blank" class="text-blue-400 hover:text-blue-300 text-xs truncate max-w-[180px] block">
-                                ${domain}
-                            </a>
+                            <h4 class="text-white font-black text-lg tracking-tighter uppercase group-hover:text-blue-400 transition-colors">${proj.name}</h4>
+                            <p class="text-white/30 text-[9px] font-black tracking-widest uppercase mt-1">${proj.type} • ${deployedAgo}</p>
                         </div>
+                        <button onclick="deleteProject(${proj.id})" class="text-white/10 hover:text-rose-500 transition-colors">
+                            <i class="fas fa-trash-alt text-xs"></i>
+                        </button>
                     </div>
-
-                    <span class="px-3 py-1 rounded-full text-xs font-medium bg-white/5 text-gray-300 border border-white/10">
-                        ${tech}
-                    </span>
+                    
+                    <p class="text-white/40 text-[11px] font-medium leading-relaxed mb-8 line-clamp-2 uppercase tracking-wide">${proj.desc || 'No mission briefing provided.'}</p>
+                    
+                    <div class="flex items-center justify-between">
+                        <div class="flex -space-x-2">
+                             ${[...Array(3)].map((_, i) => `<div class="w-7 h-7 rounded-full border-2 border-[#0f172a] bg-blue-500/20 flex items-center justify-center text-[8px] font-bold text-blue-400">U${i}</div>`).join('')}
+                        </div>
+                        <a href="${proj.link}" target="_blank" class="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-white/20 hover:bg-blue-600 hover:text-white transition-all">
+                            <i class="fas fa-arrow-right -rotate-45"></i>
+                        </a>
+                    </div>
                 </div>
             </div>
         `);
     });
 }
 
-// Helper: "Deployed X ago"
+// ─── Helpers ────────────────────────────────────────────────
 function getDeployedAgo(isoDate) {
-    if (!isoDate) return 'just now';
+    if (!isoDate) return 'Live';
     const diffMs = Date.now() - new Date(isoDate).getTime();
     const mins = Math.floor(diffMs / 60000);
     const hours = Math.floor(mins / 60);
-    const days = Math.floor(hours / 24);
-    const months = Math.floor(days / 30);
-
-    if (months >= 1) return `${months}mths ago`;
-    if (days >= 1) return `${days}d ago`;
-    if (hours >= 1) return `${hours}h ago`;
-    if (mins >= 1) return `${mins}m ago`;
-    return 'just now';
+    if (hours >= 24) return Math.floor(hours/24) + 'D AGO';
+    if (hours >= 1) return hours + 'H AGO';
+    return mins + 'M AGO';
 }
+
+window.previewProjectImg = function(input) {
+    if (!input.files?.[0]) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+        document.getElementById('projPreview').src = e.target.result;
+        document.getElementById('projPreview').classList.remove('hidden');
+        document.getElementById('imgPlaceholder').classList.add('hidden');
+    };
+    reader.readAsDataURL(input.files[0]);
+};
+
+window.setProjectType = function(type, button) {
+    document.querySelectorAll('#newProjModal2 .type-btn').forEach(btn => {
+        btn.className = "type-btn py-4 rounded-xl border border-white/5 text-white/30 text-[9px] font-black uppercase tracking-widest transition-all";
+    });
+    button.className = "type-btn py-4 rounded-xl border-2 border-blue-500 bg-blue-500/5 text-white text-[9px] font-black uppercase tracking-widest shadow-lg shadow-blue-500/10";
+    activeType = type;
+};
 
 // ─── Init ──────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
     loadProjects();
     updateUI();
-    console.log("[Projects] Initialized – ready to render");
 });
 
 
