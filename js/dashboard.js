@@ -70,37 +70,42 @@ const views = {
         </div>
     </div>
 
-    <div class="group relative overflow-hidden rounded-[3rem] border border-white/5 bg-[#050b1d] p-8 transition-all duration-700 hover:border-emerald-500/20">
-        <div class="flex justify-between items-center mb-10">
-            <div>
-                <h3 class="text-2xl font-black text-white italic uppercase tracking-tighter">System Core <span class="text-emerald-500">.</span></h3>
-                <div class="flex items-center gap-2 mt-2">
-                    <span class="relative flex h-2 w-2">
-                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                        <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                    </span>
-                    <p class="text-[10px] text-gray-400 font-bold uppercase tracking-[0.3em]">Live Order Stream</p>
-                </div>
-            </div>
-            
-            <div class="flex gap-1.5 items-end h-8">
-                <div class="w-1 bg-emerald-500/40 h-3 rounded-full animate-[bounce_1s_infinite]"></div>
-                <div class="w-1 bg-emerald-500 h-6 rounded-full animate-[bounce_1.2s_infinite]"></div>
-                <div class="w-1 bg-emerald-500/60 h-4 rounded-full animate-[bounce_0.8s_infinite]"></div>
+  <div class="group relative overflow-hidden rounded-[3rem] border border-white/5 bg-[#050b1d] p-8 transition-all duration-700 hover:border-emerald-500/20">
+    <div class="flex justify-between items-center mb-10">
+        <div>
+            <h3 class="text-2xl font-black text-white italic uppercase tracking-tighter">System Core <span class="text-emerald-500">.</span></h3>
+            <div class="flex items-center gap-2 mt-2">
+                <span class="relative flex h-2 w-2">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                </span>
+                <p class="text-[10px] text-gray-400 font-bold uppercase tracking-[0.3em]">Live Project Stream</p>
             </div>
         </div>
-        
-        <div class="relative w-full h-[320px] rounded-3xl bg-black/40 border border-white/5 backdrop-blur-sm overflow-hidden">
-            <div class="absolute inset-0 flex flex-col items-center justify-center z-10">
-                <div class="w-20 h-20 mb-4 rounded-full bg-emerald-500/5 flex items-center justify-center border border-emerald-500/10 group-hover:border-emerald-500/30 transition-all duration-1000">
-                    <i class="fas fa-satellite-dish text-emerald-500/20 group-hover:text-emerald-500 group-hover:animate-pulse"></i>
-                </div>
-                <span class="text-[10px] font-black text-emerald-500/40 uppercase tracking-[0.4em]">Awaiting Uplink...</span>
-            </div>
-            
-            <canvas id="orderStatusChart" class="relative z-0"></canvas>
+       
+        <div class="flex gap-1.5 items-end h-8">
+            <div class="w-1 bg-emerald-500/40 h-3 rounded-full animate-[bounce_1s_infinite]"></div>
+            <div class="w-1 bg-emerald-500 h-6 rounded-full animate-[bounce_1.2s_infinite]"></div>
+            <div class="w-1 bg-emerald-500/60 h-4 rounded-full animate-[bounce_0.8s_infinite]"></div>
         </div>
     </div>
+   
+    <div class="relative w-full h-[320px] rounded-3xl bg-black/40 border border-white/5 backdrop-blur-sm overflow-hidden">
+        <!-- Live stream content -->
+        <div id="liveProjectStream" class="absolute inset-0 p-6 overflow-y-auto space-y-4 z-10 scrollbar-thin scrollbar-thumb-emerald-500/30 scrollbar-track-transparent">
+            <!-- Projects will be dynamically inserted here -->
+        </div>
+
+        <!-- Fallback when no projects -->
+        <div id="streamEmpty" class="absolute inset-0 flex flex-col items-center justify-center z-10 text-center">
+            <div class="w-20 h-20 mb-4 rounded-full bg-emerald-500/5 flex items-center justify-center border border-emerald-500/10 group-hover:border-emerald-500/30 transition-all duration-1000">
+                <i class="fas fa-satellite-dish text-emerald-500/20 group-hover:text-emerald-500 group-hover:animate-pulse"></i>
+            </div>
+            <span class="text-[10px] font-black text-emerald-500/40 uppercase tracking-[0.4em]">Awaiting First Project...</span>
+            <p class="text-[9px] text-gray-500 mt-2 max-w-xs">Your deployed projects will appear here in real-time.</p>
+        </div>
+    </div>
+</div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <div class="group relative overflow-hidden rounded-[2.5rem] border border-white/10 bg-[#050b1d] p-7 transition-all duration-500 hover:border-indigo-500/40">
@@ -2624,7 +2629,7 @@ window.deleteNotif = function(id) {
 
 //////  FOR THE PROJECTS   
 // ================================================
-// Project Manager - FINAL MATCHING YOUR SCREENSHOT STYLE
+// Project Manager - Updated to Sync with System Core Card
 // ================================================
 
 let projects = [];
@@ -2658,7 +2663,9 @@ function saveProjects() {
 function updateUI() {
     const countEl = document.getElementById('projectCount');
     if (countEl) countEl.textContent = projects.length;
+
     renderProjects();
+    renderProjectsInCoreStream(); // NEW: render in the System Core card
 }
 
 // Sync from other tabs
@@ -2703,7 +2710,7 @@ function triggerNotification(msg, type = 'pending') {
     }, 2200);
 }
 
-// ─── 4. Modals (Centered) ──────────────────────────────────
+// ─── 4. Modals (unchanged – centered) ──────────────────────
 window.closeModal = function(id) {
     const modal = document.getElementById(id);
     if (!modal) return;
@@ -2770,7 +2777,7 @@ window.openProjectDetailsModal = function() {
     }, 180);
 };
 
-// Helpers
+// Helpers (unchanged)
 window.previewProjectImg = function(input) {
     if (!input.files?.[0]) return;
     const reader = new FileReader();
@@ -2796,7 +2803,7 @@ window.setProjectType = function(type, button) {
     activeType = type;
 };
 
-// Create project
+// Create project (unchanged)
 window.createNewProject = function() {
     const btn = document.getElementById('createProjBtn');
     if (!btn) return;
@@ -2833,7 +2840,7 @@ window.createNewProject = function() {
     }, 1600);
 };
 
-// Delete
+// Delete (unchanged)
 window.deleteProject = function(id) {
     const proj = projects.find(p => p.id === id);
     if (!proj) return;
@@ -2859,18 +2866,18 @@ window.confirmDelete = function(id) {
     triggerNotification('Project deleted', 'failed');
 };
 
-// ─── 5. Render Projects – Matches Your Screenshot Exactly ───
+// ─── 5. Render Projects – Now also in System Core card ───
 function renderProjects() {
-    const container = document.getElementById('projectContainerGrid');
-    if (!container) {
-        console.warn("[Projects] No #projectContainerGrid found – skipping render");
+    const grid = document.getElementById('projectContainerGrid');
+    if (!grid) {
+        console.warn("[Projects] No main grid container – skipping");
         return;
     }
 
-    container.innerHTML = ''; // clear once
+    grid.innerHTML = '';
 
     if (projects.length === 0) {
-        container.innerHTML = `
+        grid.innerHTML = `
             <div class="col-span-full py-24 text-center text-white/50">
                 <i class="fas fa-folder-open text-6xl opacity-30 mb-6 block"></i>
                 <h3 class="text-xl font-black uppercase tracking-wider mb-3">No Projects Yet</h3>
@@ -2888,23 +2895,18 @@ function renderProjects() {
         const link = proj.link || '#';
         const domain = link.replace(/^https?:\/\//, '').split('/')[0] || 'No link';
 
-        container.insertAdjacentHTML('beforeend', `
+        grid.insertAdjacentHTML('beforeend', `
             <div class="relative rounded-xl overflow-hidden bg-[#0f172a]/80 border border-white/5 hover:border-blue-500/30 transition-all duration-300 group">
-                <!-- Top badge -->
                 <div class="absolute top-3 left-3 px-3 py-1 rounded-md bg-red-500/20 text-red-400 text-xs font-medium flex items-center gap-1.5 backdrop-blur-sm">
                     <span class="w-2 h-2 rounded-full bg-red-400 animate-pulse"></span>
                     Deployed ${deployedAgo}
                 </div>
-
-                <!-- Dark grid background -->
                 <div class="h-40 bg-gradient-to-br from-[#0f172a] to-[#020617] relative">
                     <div class="absolute inset-0 opacity-5 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
                     <div class="absolute inset-0 flex items-center justify-center">
                         <i class="fas fa-cube text-white/10 text-7xl group-hover:text-blue-500/30 transition-colors"></i>
                     </div>
                 </div>
-
-                <!-- Bottom bar -->
                 <div class="p-4 bg-black/40 border-t border-white/5 flex items-center justify-between">
                     <div class="flex items-center gap-3">
                         <div class="w-10 h-10 rounded-lg bg-blue-900/30 flex items-center justify-center text-blue-400 text-xl">
@@ -2917,7 +2919,6 @@ function renderProjects() {
                             </a>
                         </div>
                     </div>
-
                     <span class="px-3 py-1 rounded-full text-xs font-medium bg-white/5 text-gray-300 border border-white/10">
                         ${tech}
                     </span>
@@ -2927,7 +2928,45 @@ function renderProjects() {
     });
 }
 
-// Helper: "Deployed X ago"
+// NEW: Render small project previews inside the "Live Order Stream" canvas area
+function renderProjectsInCoreStream() {
+    const canvas = document.getElementById('orderStatusChart');
+    if (!canvas) return;
+
+    // Clear previous content if any
+    canvas.innerHTML = '';
+
+    if (projects.length === 0) {
+        canvas.innerHTML = `
+            <div class="absolute inset-0 flex flex-col items-center justify-center z-10">
+                <div class="w-16 h-16 mb-4 rounded-full bg-emerald-500/5 flex items-center justify-center border border-emerald-500/10">
+                    <i class="fas fa-satellite-dish text-emerald-500/20"></i>
+                </div>
+                <span class="text-[10px] font-black text-emerald-500/40 uppercase tracking-[0.4em]">No active projects</span>
+            </div>`;
+        return;
+    }
+
+    // Simple list of active projects as stream preview
+    let html = '<div class="absolute inset-0 p-6 overflow-y-auto z-10">';
+    projects.forEach(proj => {
+        html += `
+            <div class="flex items-center gap-3 py-2 border-b border-emerald-500/10">
+                <div class="w-8 h-8 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-400">
+                    <i class="fas fa-rocket text-sm"></i>
+                </div>
+                <div class="flex-1">
+                    <p class="text-white text-sm font-medium">${proj.name}</p>
+                    <p class="text-[10px] text-emerald-400/70">${proj.type} • ${getDeployedAgo(proj.createdAt)}</p>
+                </div>
+            </div>`;
+    });
+    html += '</div>';
+
+    canvas.innerHTML = html;
+}
+
+// Helper: Deployed time
 function getDeployedAgo(isoDate) {
     if (!isoDate) return 'just now';
     const diffMs = Date.now() - new Date(isoDate).getTime();
@@ -2947,7 +2986,7 @@ function getDeployedAgo(isoDate) {
 document.addEventListener('DOMContentLoaded', () => {
     loadProjects();
     updateUI();
-    console.log("[Projects] Initialized – ready to render");
+    console.log("[Projects] Initialized – count:", projects.length);
 });
 
 
