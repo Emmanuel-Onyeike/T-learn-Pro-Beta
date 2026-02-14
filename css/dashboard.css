@@ -482,3 +482,8 @@ body.agent-bridge-active #jivo-iframe-container {
     pointer-events: auto !important;
     transform: translateY(0) !important;
 }
+/* Add to your stylesheet if you want real slide-up animation */
+@keyframes slideUp {
+  from { transform: translateY(40px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
