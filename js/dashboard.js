@@ -2624,19 +2624,72 @@ function saveAndSync() {
     renderProjects();
 }
 
-// --- 2. The Unified Render Function ---
+// --- 2. Notification System (Centered Modal Alert) ---
+function triggerNotification(msg, type = 'pending') {
+    notifySound.play().catch(() => {}); 
+    
+    // Create Centered Alert Modal
+    const alertModal = document.createElement('div');
+    alertModal.className = `fixed inset-0 z-[5000] flex items-center justify-center bg-black/60 backdrop-blur-sm animate-in fade-in duration-300`;
+    alertModal.id = "activeAlert";
+    
+    alertModal.innerHTML = `
+        <div class="bg-[#0a0f25] border border-white/10 p-8 rounded-[2.5rem] shadow-2xl flex flex-col items-center text-center max-w-xs animate-in zoom-in-95 duration-300">
+            <div class="w-14 h-14 rounded-2xl mb-5 flex items-center justify-center ${
+                type === 'success' ? 'bg-green-500/20 text-green-500' : 
+                type === 'failed' ? 'bg-red-500/20 text-red-500' : 
+                'bg-blue-500/20 text-blue-500'
+            }">
+                <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'failed' ? 'fa-exclamation-triangle' : 'fa-sync fa-spin'} text-2xl"></i>
+            </div>
+            <p class="text-white text-[11px] font-black uppercase tracking-[0.2em] leading-relaxed">${msg}</p>
+        </div>
+    `;
+
+    document.body.appendChild(alertModal);
+
+    // Auto-remove after 2.5 seconds
+    setTimeout(() => {
+        alertModal.classList.replace('fade-in', 'fade-out');
+        alertModal.classList.add('opacity-0');
+        setTimeout(() => alertModal.remove(), 300);
+    }, 2500);
+}
+
+// --- 3. Modal Logic (With Smooth Exit) ---
+window.closeModal = function(modalId) {
+    const modal = document.getElementById(modalId);
+    if (!modal) return;
+
+    // Trigger exit animations
+    modal.classList.add('opacity-0');
+    const inner = modal.querySelector('.animate-in');
+    
+    if (inner) {
+        // If it was a slide-in, change to slide-out. If zoom, change to zoom-out.
+        if (inner.classList.contains('slide-in-from-right')) {
+            inner.classList.replace('slide-in-from-right', 'slide-out-to-right');
+        } else {
+            inner.classList.add('zoom-out-95');
+        }
+    }
+
+    // Wait for animation duration (300ms) before removing
+    setTimeout(() => modal.remove(), 300);
+};
+
+// --- 4. The Unified Render Function ---
 function renderProjects() {
     const grid = document.getElementById('projectContainerGrid');
     const settingsList = document.getElementById('settingsProjectList');
 
-    // Clear existing content
     if (grid) grid.innerHTML = '';
     if (settingsList) settingsList.innerHTML = '';
 
     projects.forEach(proj => {
         const isSuccess = proj.status === 'success';
         
-        // A. Render to Main Dashboard Grid
+        // A. Dashboard Grid
         if (grid) {
             grid.insertAdjacentHTML('beforeend', `
                 <div class="group relative bg-white/5 border border-white/10 rounded-[2rem] overflow-hidden hover:border-blue-500/50 transition-all duration-500">
@@ -2658,7 +2711,7 @@ function renderProjects() {
             `);
         }
 
-        // B. Render to Settings Management List
+        // B. Settings List
         if (settingsList) {
             settingsList.insertAdjacentHTML('beforeend', `
                 <div class="flex items-center justify-between p-4 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition-all">
@@ -2680,45 +2733,48 @@ function renderProjects() {
     });
 }
 
-// --- 3. Finalize & Delete Logic ---
+// --- 5. Action Logic ---
 window.finalizeProject = function(name, desc) {
     const btn = document.getElementById('finishBtn');
-    const link = document.getElementById('pLink').value || "#";
-    const users = document.getElementById('pUsers').value || 0;
-    const img = document.getElementById('prev').src;
+    const link = document.getElementById('pLink')?.value || "#";
+    const users = document.getElementById('pUsers')?.value || 0;
+    const img = document.getElementById('prev')?.src || "";
 
     btn.disabled = true;
     btn.innerHTML = `<i class="fas fa-circle-notch fa-spin"></i>`;
     
-    triggerNotification(`Deploying ${name}...`, 'pending');
+    triggerNotification(`Initializing: ${name}`, 'pending');
 
     setTimeout(() => {
-        const finalStatus = Math.random() > 0.1 ? 'success' : 'failed'; // 90% success rate
+        const finalStatus = Math.random() > 0.1 ? 'success' : 'failed';
         
         const newProj = {
             id: Date.now(),
             name, desc, link, users, img,
-            type: activeType,
+            type: typeof activeType !== 'undefined' ? activeType : 'Personal',
             status: finalStatus
         };
 
         projects.push(newProj);
         saveAndSync();
+        
         closeModal('rightModal');
-        triggerNotification(`${name} DEPLOYED`, 'success');
+        triggerNotification(`${name} Deployment ${finalStatus.toUpperCase()}`, finalStatus);
     }, 2000);
 };
 
 window.deleteProject = function(id) {
     projects = projects.filter(p => p.id !== id);
     saveAndSync();
-    triggerNotification("Project Removed", "failed");
+    triggerNotification("Project Deleted", "failed");
 };
 
-// Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
     saveAndSync(); 
 });
+
+
+
 
 ///// FOR THE NXXT AI ALONE
 // --- CONFIGURATION & MOCK DATA ---
