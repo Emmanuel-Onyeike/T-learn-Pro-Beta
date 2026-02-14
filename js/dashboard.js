@@ -2629,7 +2629,8 @@ window.deleteNotif = function(id) {
 
 //////  FOR THE PROJECTS   
 // ================================================
-// Project Manager - Updated to Sync with System Core Card
+// Project Manager - FINAL PERFECT VERSION
+// Projects appear immediately in main grid + Live Stream card
 // ================================================
 
 let projects = [];
@@ -2659,13 +2660,13 @@ function saveProjects() {
     }
 }
 
-// ─── 2. UI Update ──────────────────────────────────────────
+// ─── 2. UI Update - Calls both renders ──────────────────────
 function updateUI() {
     const countEl = document.getElementById('projectCount');
     if (countEl) countEl.textContent = projects.length;
 
-    renderProjects();
-    renderProjectsInCoreStream(); // NEW: render in the System Core card
+    renderProjects();               // main grid
+    renderProjectsInLiveStream();   // system core live stream
 }
 
 // Sync from other tabs
@@ -2676,7 +2677,7 @@ window.addEventListener('storage', (e) => {
     }
 });
 
-// Refresh on tab focus
+// Re-check on tab focus
 document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible') {
         setTimeout(() => {
@@ -2710,7 +2711,7 @@ function triggerNotification(msg, type = 'pending') {
     }, 2200);
 }
 
-// ─── 4. Modals (unchanged – centered) ──────────────────────
+// ─── 4. Modals (Centered) ──────────────────────────────────
 window.closeModal = function(id) {
     const modal = document.getElementById(id);
     if (!modal) return;
@@ -2777,7 +2778,7 @@ window.openProjectDetailsModal = function() {
     }, 180);
 };
 
-// Helpers (unchanged)
+// Helpers
 window.previewProjectImg = function(input) {
     if (!input.files?.[0]) return;
     const reader = new FileReader();
@@ -2803,7 +2804,7 @@ window.setProjectType = function(type, button) {
     activeType = type;
 };
 
-// Create project (unchanged)
+// Create project
 window.createNewProject = function() {
     const btn = document.getElementById('createProjBtn');
     if (!btn) return;
@@ -2840,7 +2841,7 @@ window.createNewProject = function() {
     }, 1600);
 };
 
-// Delete (unchanged)
+// Delete
 window.deleteProject = function(id) {
     const proj = projects.find(p => p.id === id);
     if (!proj) return;
@@ -2866,13 +2867,10 @@ window.confirmDelete = function(id) {
     triggerNotification('Project deleted', 'failed');
 };
 
-// ─── 5. Render Projects – Now also in System Core card ───
+// ─── 5. Main Project Render (grid) ──────────────────────────
 function renderProjects() {
     const grid = document.getElementById('projectContainerGrid');
-    if (!grid) {
-        console.warn("[Projects] No main grid container – skipping");
-        return;
-    }
+    if (!grid) return;
 
     grid.innerHTML = '';
 
@@ -2928,45 +2926,54 @@ function renderProjects() {
     });
 }
 
-// NEW: Render small project previews inside the "Live Order Stream" canvas area
-function renderProjectsInCoreStream() {
-    const canvas = document.getElementById('orderStatusChart');
-    if (!canvas) return;
+// ─── 6. Live Project Stream Render (inside #orderStatusChart) ───
+function renderProjectsInLiveStream() {
+    const stream = document.getElementById('liveProjectStream');
+    const empty = document.getElementById('streamEmpty');
 
-    // Clear previous content if any
-    canvas.innerHTML = '';
-
-    if (projects.length === 0) {
-        canvas.innerHTML = `
-            <div class="absolute inset-0 flex flex-col items-center justify-center z-10">
-                <div class="w-16 h-16 mb-4 rounded-full bg-emerald-500/5 flex items-center justify-center border border-emerald-500/10">
-                    <i class="fas fa-satellite-dish text-emerald-500/20"></i>
-                </div>
-                <span class="text-[10px] font-black text-emerald-500/40 uppercase tracking-[0.4em]">No active projects</span>
-            </div>`;
+    if (!stream || !empty) {
+        console.log("[LiveStream] Not on this tab yet - skipping");
         return;
     }
 
-    // Simple list of active projects as stream preview
-    let html = '<div class="absolute inset-0 p-6 overflow-y-auto z-10">';
-    projects.forEach(proj => {
-        html += `
-            <div class="flex items-center gap-3 py-2 border-b border-emerald-500/10">
-                <div class="w-8 h-8 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-400">
-                    <i class="fas fa-rocket text-sm"></i>
-                </div>
-                <div class="flex-1">
-                    <p class="text-white text-sm font-medium">${proj.name}</p>
-                    <p class="text-[10px] text-emerald-400/70">${proj.type} • ${getDeployedAgo(proj.createdAt)}</p>
-                </div>
-            </div>`;
-    });
-    html += '</div>';
+    stream.innerHTML = '';
 
-    canvas.innerHTML = html;
+    if (projects.length === 0) {
+        empty.style.display = 'flex';
+        stream.style.display = 'none';
+        return;
+    }
+
+    empty.style.display = 'none';
+    stream.style.display = 'block';
+
+    // Newest first
+    const sorted = [...projects].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+    sorted.forEach(proj => {
+        const ago = getDeployedAgo(proj.createdAt);
+        const statusColor = proj.status === 'success' ? 'emerald' : 'red';
+        const statusText = proj.status === 'success' ? 'Active' : 'Failed';
+
+        stream.insertAdjacentHTML('beforeend', `
+            <div class="flex items-center gap-4 p-4 bg-black/30 rounded-2xl border border-${statusColor}-500/10 hover:border-${statusColor}-500/30 transition-all animate-fade-in">
+                <div class="w-10 h-10 rounded-lg bg-${statusColor}-500/10 flex items-center justify-center">
+                    <i class="fas fa-rocket text-${statusColor}-400"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <p class="text-white font-medium text-sm truncate">${proj.name}</p>
+                    <p class="text-[10px] text-gray-400 truncate">${proj.link?.replace(/^https?:\/\//, '') || 'No link'}</p>
+                </div>
+                <div class="text-right">
+                    <span class="text-[10px] text-${statusColor}-400 font-medium">${statusText}</span>
+                    <p class="text-[9px] text-gray-500">${ago}</p>
+                </div>
+            </div>
+        `);
+    });
 }
 
-// Helper: Deployed time
+// ─── Helper: Deployed Ago ───────────────────────────────────
 function getDeployedAgo(isoDate) {
     if (!isoDate) return 'just now';
     const diffMs = Date.now() - new Date(isoDate).getTime();
@@ -2988,7 +2995,6 @@ document.addEventListener('DOMContentLoaded', () => {
     updateUI();
     console.log("[Projects] Initialized – count:", projects.length);
 });
-
 
 
 
