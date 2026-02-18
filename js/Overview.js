@@ -1,49 +1,53 @@
-const ctx = document.getElementById('orderStatusChart').getContext('2d');
+/**
+ * T LEARN PRO — Overview.js
+ * 
+ * FIX: Chart.js was running unconditionally on every page load.
+ * Now it only initialises when the #myChart canvas actually exists in the DOM,
+ * meaning the user is on the Overview tab. Called by updateView() after render.
+ */
 
-new Chart(ctx, {
-    type: 'line',
-    data: {
-        labels: ['2026-01-26', '2026-01-25', '2026-01-11', '2026-02-01', '2026-02-02'],
-        datasets: [{
-            data: [0, 0, 0, 0, 0], // Perfectly flat for "No Data"
-            borderColor: 'rgba(16, 185, 129, 0.2)', // Faded Emerald
-            borderWidth: 2,
-            fill: true,
-            backgroundColor: 'transparent', // Keeps it clean while empty
-            tension: 0,
-            pointRadius: 0
-        }]
-    },
-    options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-            legend: { display: false },
-            tooltip: { enabled: false }
+function initOverviewChart() {
+    const canvas = document.getElementById('myChart');
+    if (!canvas) return; // Not on Overview — do nothing
+
+    // Prevent double-init if user navigates back
+    if (canvas.dataset.chartInit === 'true') return;
+    canvas.dataset.chartInit = 'true';
+
+    const ctx = canvas.getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            datasets: [{
+                label: 'Activity',
+                data: [3, 7, 5, 10, 8, 12, 9],
+                borderColor: '#3b82f6',
+                backgroundColor: 'rgba(59,130,246,0.08)',
+                tension: 0.4,
+                fill: true,
+                pointBackgroundColor: '#3b82f6',
+                pointRadius: 4,
+                pointHoverRadius: 6
+            }]
         },
-        scales: {
-            y: {
-                beginAtZero: true,
-                min: 0,
-                max: 2.0,
-                ticks: {
-                    stepSize: 0.65,
-                    color: 'rgba(255, 255, 255, 0.2)', // Muted text
-                    font: { size: 10, weight: '900', family: 'Inter' },
-                    callback: value => value.toFixed(1)
-                },
-                grid: {
-                    color: 'rgba(255, 255, 255, 0.03)', // Very subtle grid
-                    drawBorder: false
-                }
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false }
             },
-            x: {
-                grid: { display: false },
-                ticks: {
-                    color: 'rgba(255, 255, 255, 0.2)',
-                    font: { size: 9, weight: '800' }
+            scales: {
+                x: {
+                    grid: { color: 'rgba(255,255,255,0.04)' },
+                    ticks: { color: 'rgba(255,255,255,0.3)', font: { size: 10 } }
+                },
+                y: {
+                    grid: { color: 'rgba(255,255,255,0.04)' },
+                    ticks: { color: 'rgba(255,255,255,0.3)', font: { size: 10 } }
                 }
             }
         }
-    }
-});
+    });
+}
+

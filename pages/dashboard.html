@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard | T Learn Pro</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- LOCAL TAILWIND (was CDN — removed network roundtrip + render-blocking) -->
+    <script src="../js/tailwind.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
@@ -295,11 +296,38 @@
     </nav>
 </div>
 
-<script src="../js/dashboard.js"></script>
-<script src="../js/Overview.js"></script>
-<script src="../js/auth.js"></script>
-<script src="../js/projects.js"></script>
-<script src="../js/history.js"></script>
+<!-- ── VIEWS (HTML templates, must load before dashboard.js) ── -->
+<script src="../js/views/overview.js" defer></script>
+<script src="../js/views/lessons.js" defer></script>
+<script src="../js/views/projects-view.js" defer></script>
+<script src="../js/views/leaderboard.js" defer></script>
+<script src="../js/views/collaboration.js" defer></script>
+<script src="../js/views/team.js" defer></script>
+<script src="../js/views/inbox.js" defer></script>
+<script src="../js/views/nxxtai.js" defer></script>
+<script src="../js/views/nxxtlab.js" defer></script>
+<script src="../js/views/sidehustlehub.js" defer></script>
+<script src="../js/views/notifications.js" defer></script>
+<script src="../js/views/xtpay.js" defer></script>
+<script src="../js/views/pricing.js" defer></script>
+<script src="../js/views/settings.js" defer></script>
+
+<!-- ── DATA ── -->
+<script src="../js/curriculum.js" defer></script>
+
+<!-- ── LOGIC MODULES ── -->
+<script src="../js/modules/ui.js" defer></script>
+<script src="../js/modules/settings.js" defer></script>
+<script src="../js/modules/lms.js" defer></script>
+<script src="../js/modules/proj.js" defer></script>
+<script src="../js/modules/nxxtai.js" defer></script>
+
+<!-- ── CORE (router + ActivityEngine — loads last, kicks off the app) ── -->
+<script src="../js/dashboard.js" defer></script>
+<script src="../js/Overview.js" defer></script>
+<script src="../js/auth.js" defer></script>
+<script src="../js/projects.js" defer></script>
+<script src="../js/history.js" defer></script>
 <script src="//code.jivosite.com/widget/7O7rWauHwt" async></script>
 
 <script>
@@ -330,3 +358,4 @@ observer.observe(document.body, { childList: true, subtree: true });
 </script>
 </body>
 </html>
+
