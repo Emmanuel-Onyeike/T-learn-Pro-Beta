@@ -46,126 +46,18 @@ function loadToggleStates() {
         }
     });
 }
-/**
- * SAVE PROFILE — name change wired to Supabase
- */
+//// for the sync function
 async function saveProfile() {
-    const client = await getSupabaseClient();
-    const { data: { user }, error: authErr } = await client.auth.getUser();
-
-    if (authErr || !user) {
-        alert('Session expired. Please log in again.');
-        window.location.href = 'login.html';
-        return;
-    }
-
-    const nameInput  = document.getElementById('editFullName');
-    const bioInput   = document.getElementById('editBio');
-    const saveBtn    = document.querySelector('[onclick="saveProfile()"]');
-
-    if (!nameInput) return;
-
-    const newName = nameInput.value.trim();
-    const newBio  = bioInput ? bioInput.value.trim() : '';
-
-    if (!newName) {
-        alert('Name cannot be empty.');
-        return;
-    }
-
-    if (saveBtn) { saveBtn.innerText = 'SAVING...'; saveBtn.disabled = true; }
-
-    try {
-        // Handle optional avatar upload
-        let avatarUrl = localStorage.getItem('tlp_user_img') || 'Logo.webp';
-        const bufferedImg = localStorage.getItem('temp_img_buffer');
-
-        if (bufferedImg && bufferedImg.startsWith('data:image')) {
-            const fileExt = bufferedImg.split(';')[0].split('/')[1] || 'png';
-            const fileName = `${user.id}.${fileExt}`;
-            const blob = await (await fetch(bufferedImg)).blob();
-            const { error: uploadError } = await client.storage
-                .from('avatars')
-                .upload(fileName, blob, { upsert: true });
-            if (!uploadError) {
-                const { data: urlData } = client.storage.from('avatars').getPublicUrl(fileName);
-                avatarUrl = urlData.publicUrl;
-                localStorage.removeItem('temp_img_buffer');
-            }
-        }
-
-        // Update Supabase user metadata
-        const { error: updateError } = await client.auth.updateUser({
-            data: { full_name: newName, bio: newBio, avatar_url: avatarUrl }
-        });
-
-        if (updateError) throw updateError;
-
-        // Sync localStorage
-        localStorage.setItem('tlp_user_name', newName);
-        localStorage.setItem('tlp_user_img',  avatarUrl);
-        localStorage.setItem('tlp_user_bio',  newBio);
-
-        // Update UI immediately — no page reload needed
-        document.querySelectorAll('[data-user-name]').forEach(el => el.textContent = newName);
-        document.querySelectorAll('[data-user-img]').forEach(img => { img.src = avatarUrl; });
-
-        // Record in login history
-        if (typeof recordHistoryEvent === 'function') recordHistoryEvent('name_changed');
-
-        if (saveBtn) { saveBtn.innerText = '✓ SAVED'; }
-        setTimeout(() => {
-            if (saveBtn) { saveBtn.innerText = 'Save Profile'; saveBtn.disabled = false; }
-        }, 2000);
-
-    } catch (err) {
-        console.error('[Profile] Save error:', err);
-        alert('Save failed: ' + err.message);
-        if (saveBtn) { saveBtn.innerText = 'Save Profile'; saveBtn.disabled = false; }
-    }
-}
-
-/**
- * UPDATE PASSWORD — wired to Supabase
- * Called by the Update Security button in Settings > Security tab
- */
-async function updatePassword() {
-    const currentInput = document.getElementById('currentPassword');
-    const newInput     = document.getElementById('newPassword');
-    const btn          = document.getElementById('updatePasswordBtn');
-
-    if (!newInput) return;
-
-    const newPassword = newInput.value.trim();
-
-    if (!newPassword || newPassword.length < 8) {
-        showModalAlert('Password must be at least 8 characters.');
-        return;
-    }
-
-    if (btn) { btn.innerText = 'UPDATING...'; btn.disabled = true; }
-
-    try {
-        const client = await getSupabaseClient();
-        const { error } = await client.auth.updateUser({ password: newPassword });
-
-        if (error) throw error;
-
-        if (currentInput) currentInput.value = '';
-        if (newInput) newInput.value = '';
-
-        // Record in login history
-        if (typeof recordHistoryEvent === 'function') recordHistoryEvent('password_changed');
-
-        if (btn) { btn.innerText = '✓ PASSWORD UPDATED'; }
-        setTimeout(() => {
-            if (btn) { btn.innerText = 'Update Security'; btn.disabled = false; }
-        }, 2500);
-
-    } catch (err) {
-        console.error('[Password] Update error:', err);
-        showModalAlert('Failed: ' + err.message);
-        if (btn) { btn.innerText = 'Update Security'; btn.disabled = false; }
+    const client = await getClient();
+    const fullName = document.getElementById('editFullName').value.trim();
+    const { error } = await client.auth.updateUser({
+        data: { full_name: fullName }
+    });
+    if (error) {
+        alert('Update failed: ' + error.message);
+    } else {
+        alert('Profile saved!');
+        loadProfileData(); // refresh display
     }
 }
 

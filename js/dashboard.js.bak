@@ -43,11 +43,7 @@ function updateView(viewName) {
     setTimeout(() => {
         title.innerText = viewName;
 
-        // FIX: Views with live data must never be served from cache
-        const NO_CACHE = ['Projects', 'Overview', 'Notifications', 'Settings'];
-        const useCache = !NO_CACHE.includes(viewName);
-
-        if (useCache && _viewCache[viewName]) {
+        if (_viewCache[viewName]) {
             container.innerHTML = _viewCache[viewName];
         } else {
             container.innerHTML = views[viewName] || `
@@ -57,7 +53,7 @@ function updateView(viewName) {
                     <p class="text-gray-500 text-[10px] font-black uppercase tracking-widest mt-2">Under Development</p>
                 </div>
             `;
-            if (useCache) _viewCache[viewName] = container.innerHTML;
+            _viewCache[viewName] = container.innerHTML;
         }
 
         container.style.opacity   = '1';
@@ -82,20 +78,9 @@ function updateView(viewName) {
             });
         }
 
-        // FIX: Projects — always reload from localStorage and re-render on every visit
-        if (viewName === 'Projects') {
-            requestAnimationFrame(() => {
-                loadProjects();
-                updateUI();
-            });
-        }
-
-        // FIX: Settings — re-render project list when Settings tab opens
-        if (viewName === 'Settings') {
-            requestAnimationFrame(() => {
-                updateSettingsTab('Profile');
-                syncProfileUI();
-            });
+        // Notifications can't be cached — always re-render (live data)
+        if (viewName === 'Notifications') {
+            delete _viewCache['Notifications'];
         }
 
         // Xt Pay build stream — lazy start

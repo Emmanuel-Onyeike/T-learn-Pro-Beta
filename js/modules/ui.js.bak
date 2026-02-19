@@ -119,18 +119,18 @@ function updateSettingsTab(tabId) {
                 <div class="grid grid-cols-1 gap-6">
                     <div class="space-y-2">
                         <label class="text-[9px] font-black text-gray-500 uppercase ml-2">Current Password</label>
-                        <input type="password" id="currentPassword" placeholder="••••••••••••" class="settings-input">
+                        <input type="password" placeholder="••••••••••••" class="settings-input">
                     </div>
                     <div class="space-y-2">
                         <label class="text-[9px] font-black text-gray-500 uppercase ml-2">New Password</label>
-                        <input type="password" id="newPassword" placeholder="Enter new password (min 8 chars)" class="settings-input">
+                        <input type="password" placeholder="Enter new password" class="settings-input">
                     </div>
                 </div>
                 <div class="p-4 bg-orange-500/5 border border-orange-500/10 rounded-2xl flex items-start gap-4">
                     <i class="fas fa-shield-alt text-orange-500 mt-1"></i>
                     <p class="text-[10px] text-gray-400 font-bold leading-relaxed uppercase">Pro Tip: Use a password with at least 12 characters and a mix of symbols to secure your Account.</p>
                 </div>
-                <button id="updatePasswordBtn" onclick="updatePassword()" class="w-full md:w-auto px-12 py-4 bg-blue-600 border border-blue-500/30 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-blue-700 transition-all">Update Security</button>
+                <button class="w-full md:w-auto px-12 py-4 bg-white/5 border border-white/10 rounded-2xl text-[10px] font-black uppercase tracking-widest">Update Security</button>
             </div>`,
         
 'Projects': `
@@ -279,29 +279,9 @@ function updateSettingsTab(tabId) {
 `
     };
     container.innerHTML = tabs[tabName] || `<div class="py-20 text-center text-gray-500 font-black uppercase text-[10px] tracking-[0.2em] italic">${tabName} module is under construction</div>`;
-
     // FIXED: Load toggle states when opening Notif-Settings
     if (tabName === 'Notif-Settings') {
         setTimeout(loadToggleStates, 50);
-    }
-
-    // FIX: Render projects list when opening Settings > Projects tab
-    if (tabName === 'Projects') {
-        setTimeout(renderSettingsProjects, 50);
-    }
-
-    // FIX: Re-render history when opening History tab
-    if (tabName === 'History') {
-        setTimeout(() => {
-            if (typeof refreshHistory === 'function') refreshHistory();
-        }, 50);
-    }
-
-    // FIX: Sync profile data when opening Profile tab
-    if (tabName === 'Profile') {
-        setTimeout(() => {
-            if (typeof syncProfileUI === 'function') syncProfileUI();
-        }, 50);
     }
 }
 //// for the login history
