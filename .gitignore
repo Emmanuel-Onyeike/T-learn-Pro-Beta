@@ -37,3 +37,5 @@ build/
 
 # Config backups
 config.backup.js
+install_*.sh
+**/*.bak
