@@ -15,12 +15,8 @@
 
 const CONFIG = {
     // Your Supabase project URL
-    SUPABASE_URL: 'https://mddlkobjiquicopymipy.supabase.co',
-
-    // Your Supabase ANON key (public-safe)
-    // Replace this with your actual anon key from Supabase dashboard
-    // It should start with "eyJ..." and be much longer
-    SUPABASE_ANON_KEY: 'sb_publishable_w5jI7FaNhpSCsT1GBHEmIw_Wmekf2dH',
+    SUPABASE_URL: 'https://ntvcaqybiptuoyossdlz.supabase.co',
+    SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im50dmNhcXliaXB0dW95b3NzZGx6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY0MjA2OTUsImV4cCI6MjA3MTk5NjY5NX0.AI3iNiW7rNre2g7pFrBNtZ0TNPmKy3uN7VTrxqZIYRI',
     // App configuration
     APP: {
         NAME: 'T Learn Pro',

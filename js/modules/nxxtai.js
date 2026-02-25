@@ -302,13 +302,13 @@ function sendChatMessage() {
 }
 
 // 4. Mutation Observer to keep Gerald hidden
-const observer = new MutationObserver(() => {
+const jivoObserver = new MutationObserver(() => {
     const jivo = document.querySelector('.jivo-iframe-container');
     if (jivo && !document.body.classList.contains('agent-bridge-active')) {
         jivo.style.setAttribute('style', 'display:none !important');
     }
 });
-observer.observe(document.documentElement, { childList: true, subtree: true });
+jivoObserver.observe(document.documentElement, { childList: true, subtree: true });
 
 
 

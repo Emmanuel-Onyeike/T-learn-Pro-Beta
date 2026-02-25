@@ -51,7 +51,7 @@ function loadToggleStates() {
  */
 async function saveProfile() {
     const client = await getSupabaseClient();
-    const { data: { user }, error: authErr } = await client.auth.getUser();
+    const user = await window.AuthState.getUser(); const authErr = user ? null : new Error('Not authenticated');
 
     if (authErr || !user) {
         alert('Session expired. Please log in again.');
@@ -172,7 +172,7 @@ async function updatePassword() {
 // FIXED: Update user name after login (from auth.js)
 async function updateUserDisplay() {
     const client = await window.supabaseLoader.load();
-    const { data: { user } } = await client.auth.getUser();
+    const user = await window.AuthState.getUser();
 
     if (user) {
         const fullName = user.user_metadata?.full_name || user.email.split('@')[0];
@@ -228,7 +228,7 @@ function triggerImageUpload() {
  */
 async function syncProfileUI() {
     const client = await getSupabaseClient();
-    const { data: { user } } = await client.auth.getUser();
+    const user = await window.AuthState.getUser();
 
     let savedName = "New User";
     let savedImg = "Logo.webp";
@@ -270,7 +270,7 @@ async function syncProfileUI() {
 async function saveProfile() {
     // FORCE REFRESH SESSION
     const client = await getSupabaseClient();
-    const { data: { user }, error: refreshError } = await client.auth.getUser();
+    const user = await window.AuthState.getUser(); const refreshError = user ? null : new Error('Not authenticated');
     if (refreshError || !user) {
         alert("Session expired. Please log in again.");
         window.location.href = 'login.html';
@@ -464,6 +464,5 @@ function closePaymentModal() {
 // ─────────────────────────────────────────────────────────────────────────────
 // curriculumData lives in js/curriculum.js — loaded before dashboard.js
 // ─────────────────────────────────────────────────────────────────────────────
-
 
 

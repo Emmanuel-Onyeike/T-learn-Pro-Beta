@@ -5,7 +5,7 @@ views['Overview'] = `
 <div class="space-y-8 animate-in fade-in duration-700">
 
     <!-- ── ROW 1: Top 3 stats — Projects, Semester, Level ── -->
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
 
         <div class="group relative overflow-hidden rounded-[2.5rem] border border-white/10 bg-gradient-to-br from-[#0a0f25] to-[#050b1d] p-7 transition-all duration-500 hover:border-blue-500/50 hover:shadow-[0_0_30px_-10px_rgba(59,130,246,0.3)]">
             <div class="relative z-10 flex items-center gap-5">
@@ -48,7 +48,7 @@ views['Overview'] = `
     </div>
 
     <!-- ── ROW 2: XT Points + Streak + Rank ── -->
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
 
         <!-- XT Points — big hero card -->
         <div class="group relative overflow-hidden rounded-[2.5rem] border border-yellow-500/20 bg-gradient-to-br from-yellow-500/5 to-[#050b1d] p-7 transition-all duration-500 hover:border-yellow-500/50 hover:shadow-[0_0_30px_-10px_rgba(234,179,8,0.25)]">
@@ -129,7 +129,7 @@ views['Overview'] = `
                 <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-[#4ade80] inline-block"></span>High</span>
             </div>
         </div>
-        <div class="relative w-full h-[200px] bg-black/40 rounded-[2rem] border border-white/5 shadow-inner overflow-hidden">
+        <div class="relative w-full h-[140px] sm:h-[200px] bg-black/40 rounded-[2rem] border border-white/5 shadow-inner overflow-hidden">
             <canvas id="nebula" class="w-full h-full"></canvas>
         </div>
     </div>
@@ -153,7 +153,7 @@ views['Overview'] = `
                 <div class="w-1 bg-emerald-500/60 h-4 rounded-full animate-[bounce_0.8s_infinite]"></div>
             </div>
         </div>
-        <div class="relative w-full h-[280px] rounded-3xl bg-black/40 border border-white/5 backdrop-blur-sm overflow-hidden">
+        <div class="relative w-full h-[220px] sm:h-[280px] rounded-3xl bg-black/40 border border-white/5 backdrop-blur-sm overflow-hidden">
             <div id="liveProjectStream" class="absolute inset-0 p-6 overflow-y-auto space-y-4 z-10"></div>
             <div id="streamEmpty" class="absolute inset-0 flex flex-col items-center justify-center z-10 text-center">
                 <div class="w-20 h-20 mb-4 rounded-full bg-emerald-500/5 flex items-center justify-center border border-emerald-500/10 group-hover:border-emerald-500/30 transition-all duration-1000">
@@ -166,7 +166,7 @@ views['Overview'] = `
     </div>
 
     <!-- ── ROW 5: Bottom stats — Collab, Deployed, Gigs ── -->
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
 
         <div class="group relative overflow-hidden rounded-[2.5rem] border border-white/10 bg-[#050b1d] p-7 transition-all duration-500 hover:border-indigo-500/40">
             <div class="relative z-10 flex items-center gap-5">

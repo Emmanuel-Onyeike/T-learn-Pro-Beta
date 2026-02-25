@@ -10,10 +10,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
     <link rel="stylesheet" href="../css/dashboard.css">
-    <link rel="icon" type="image/png" href="../assets/Logo.webp" />
+    <link rel="icon" type="image/webp" href="../assets/Logo.webp" />
 
     <script src="../js/config.js"></script>
     <script src="../js/supabase-loader.js"></script>
+    <script src="../js/auth-state.js"></script>
     <script src="../js/messages.js"></script>
     <script src="../js/utilities.js"></script>
 <script>
@@ -331,7 +332,6 @@
 
 <!-- ── CORE (router + ActivityEngine — loads last, kicks off the app) ── -->
 <script src="../js/dashboard.js" defer></script>
-<script src="../js/Overview.js" defer></script>
 <script src="../js/auth.js" defer></script>
 <script src="../js/projects.js" defer></script>
 <script src="../js/history.js" defer></script>
@@ -365,5 +365,4 @@ observer.observe(document.body, { childList: true, subtree: true });
 </script>
 </body>
 </html>
-
 

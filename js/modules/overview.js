@@ -17,7 +17,7 @@ async function getSupabaseClient() {
 async function loadOverviewStats() {
     try {
         const client = await getSupabaseClient();
-        const { data: { user } } = await client.auth.getUser();
+        const user = await window.AuthState.getUser();
         if (!user) return;
 
         // Get profile data
@@ -69,7 +69,7 @@ async function loadOverviewStats() {
             setEl('dash-xp-val',    cached.xt_points);
             setEl('streakCount',    cached.streak);
             setEl('dash-level-val', cached.level);
-            setEl('semesterVal',    String(cached.semester).padStart(3, '0'));
+            setEl('semesterVal',    String(cached.semester ?? 1).padStart(3, '0'));
             setEl('rankVal',        `#${cached.rank}`);
         }
     }
@@ -92,7 +92,7 @@ async function awardXP(eventType) {
 
     try {
         const client = await getSupabaseClient();
-        const { data: { user } } = await client.auth.getUser();
+        const user = await window.AuthState.getUser();
         if (!user) return;
 
         // Log xp event
@@ -150,7 +150,7 @@ function startHourlyXPTimer() {
 async function recordDailyLogin() {
     try {
         const client = await getSupabaseClient();
-        const { data: { user } } = await client.auth.getUser();
+        const user = await window.AuthState.getUser();
         if (!user) return;
 
         const today = new Date().toISOString().split('T')[0];
@@ -376,7 +376,7 @@ async function loadActivityData() {
 
     try {
         const client = await getSupabaseClient();
-        const { data: { user } } = await client.auth.getUser();
+        const user = await window.AuthState.getUser();
         if (!user) return local;
 
         // Get last 52 weeks from Supabase
@@ -408,7 +408,7 @@ async function loadActivityData() {
 async function syncActivityToSupabase() {
     try {
         const client = await getSupabaseClient();
-        const { data: { user } } = await client.auth.getUser();
+        const user = await window.AuthState.getUser();
         if (!user) return;
 
         const local = JSON.parse(localStorage.getItem('user_node_activity') || '{}');
@@ -459,7 +459,7 @@ async function initOverview() {
         setEl('dash-xp-val',    cached.xt_points);
         setEl('streakCount',    cached.streak);
         setEl('dash-level-val', cached.level);
-        setEl('semesterVal',    String(cached.semester).padStart(3, '0'));
+        setEl('semesterVal',    String(cached.semester ?? 1).padStart(3, '0'));
         setEl('rankVal',        `#${cached.rank || 0}`);
     }
 
@@ -523,5 +523,4 @@ function updateOverviewUI(profile, rank) {
         else                  rankMsg.textContent = `Earn XP to climb the leaderboard`;
     }
 }
-
 
