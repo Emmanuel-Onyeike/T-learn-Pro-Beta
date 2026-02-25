@@ -316,7 +316,6 @@
 <script src="../js/curriculum.js" defer></script>
 
 <!-- ── LOGIC MODULES ── -->
-<script src="../js/modules/overview.js" defer></script>
 <script src="../js/modules/ui.js" defer></script>
 <script src="../js/modules/settings.js" defer></script>
 <script src="../js/modules/lms.js" defer></script>

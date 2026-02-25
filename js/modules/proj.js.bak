@@ -352,6 +352,51 @@ function getDeployedAgo(isoDate) {
     return 'just now';
 }
 
+// ─── 7. Settings Project List ──────────────────────────────
+// Called by updateSettingsTab('Projects') after the HTML is set
+function renderSettingsProjects() {
+    const list = document.getElementById('settingsProjectList');
+    if (!list) return;
+
+    loadProjects(); // ensure fresh data
+
+    if (projects.length === 0) {
+        list.innerHTML = `
+            <div class="py-16 text-center border-2 border-dashed border-white/5 rounded-3xl">
+                <i class="fas fa-folder-open text-5xl text-white/10 mb-4 block"></i>
+                <p class="text-[10px] font-black text-white/20 uppercase tracking-widest">No projects yet</p>
+            </div>`;
+        return;
+    }
+
+    list.innerHTML = projects.map((proj, i) => `
+        <div class="flex items-center justify-between p-5 bg-white/5 border border-white/10 rounded-2xl hover:border-white/20 transition-all">
+            <div class="flex items-center gap-4">
+                <div class="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center">
+                    <i class="fas fa-rocket text-blue-400 text-sm"></i>
+                </div>
+                <div>
+                    <p class="text-white font-black text-sm">${proj.name}</p>
+                    <p class="text-[10px] text-gray-500 font-bold uppercase">${proj.type || 'Unknown'} · ${getDeployedAgo(proj.createdAt)}</p>
+                </div>
+            </div>
+            <button onclick="deleteProjectFromSettings(${i})"
+                class="w-9 h-9 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 flex items-center justify-center hover:bg-red-500/20 transition-all">
+                <i class="fas fa-trash text-xs"></i>
+            </button>
+        </div>
+    `).join('');
+}
+
+// Delete from settings panel and refresh both views
+window.deleteProjectFromSettings = function(index) {
+    if (!confirm('Remove this project?')) return;
+    projects.splice(index, 1);
+    saveProjects();
+    renderSettingsProjects();
+    updateUI(); // keep project count and grid in sync
+};
+
 // ─── Init ──────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
     loadProjects();

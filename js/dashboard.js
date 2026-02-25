@@ -67,11 +67,10 @@ function updateView(viewName) {
             item.classList.toggle('active', item.innerText.includes(viewName));
         });
 
-        // FIX: lazy-init Overview chart — only when actually on Overview
+        // Overview — full engine init (stats, nebula, streak, XP)
         if (viewName === 'Overview') {
             requestAnimationFrame(() => {
-                if (typeof initOverviewChart === 'function') initOverviewChart();
-                loadProjectStatsIntoOverview();
+                if (typeof initOverview === 'function') initOverview();
             });
         }
 
