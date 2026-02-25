@@ -201,6 +201,8 @@ window.createNewProject = function() {
         updateUI();
         closeModal('newProjModal2');
         triggerNotification(`${name} ${status === 'success' ? 'created successfully' : 'creation failed'}`, status);
+        // Award XP for adding a project
+        if (status === 'success' && typeof awardXP === 'function') awardXP('add_project');
     }, 1600);
 };
 

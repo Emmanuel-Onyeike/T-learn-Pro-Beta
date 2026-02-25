@@ -25,8 +25,10 @@ ActivityEngine.track();
 // ─────────────────────────────────────────────────────────────────────────────
 // VIEWS — populated by js/views/*.js files loaded before this script
 // Each view file does: views['Name'] = `...html...`;
+// window.views is declared early in dashboard.html so view files can populate
+// it before this script runs. We just reference it here, not redeclare it.
 // ─────────────────────────────────────────────────────────────────────────────
-const views = {};
+const views = window.views;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // ROUTER — FIX: view cache so HTML is only built once per visit
@@ -112,10 +114,15 @@ function updateView(viewName) {
 // renderTab was called in Notifications view but never defined — now aliased
 const renderTab = updateView;
 
-// Initial Setup
-const d = new Date();
-document.getElementById('currentDate').innerText = d.toLocaleDateString('en-US', {
-    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+// Initial Setup — wait for all defer scripts to finish before rendering
+window.addEventListener('DOMContentLoaded', () => {
+    const d = new Date();
+    const dateEl = document.getElementById('currentDate');
+    if (dateEl) dateEl.innerText = d.toLocaleDateString('en-US', {
+        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+    });
+    // Small delay so all defer view scripts have populated the views object
+    setTimeout(() => updateView('Overview'), 50);
 });
-updateView('Overview');
+
 

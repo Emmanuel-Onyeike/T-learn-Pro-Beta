@@ -185,6 +185,8 @@ function setupExamLogic() {
     window.onblur = function() {
         if (isExamActive) {
             autoSubmitExam("TAB_VIOLATION");
+        // Award XP for passing exam (checked in autoSubmitExam result)
+        if (typeof awardXP === "function" && window._lastExamPassed) awardXP("pass_exam");
         }
     };
 

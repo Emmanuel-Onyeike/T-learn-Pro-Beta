@@ -171,7 +171,7 @@ async function updatePassword() {
 
 // FIXED: Update user name after login (from auth.js)
 async function updateUserDisplay() {
-    const client = await loadSupabase();
+    const client = await window.supabaseLoader.load();
     const { data: { user } } = await client.auth.getUser();
 
     if (user) {
@@ -464,5 +464,6 @@ function closePaymentModal() {
 // ─────────────────────────────────────────────────────────────────────────────
 // curriculumData lives in js/curriculum.js — loaded before dashboard.js
 // ─────────────────────────────────────────────────────────────────────────────
+
 
 

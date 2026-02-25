@@ -16,6 +16,12 @@
     <script src="../js/supabase-loader.js"></script>
     <script src="../js/messages.js"></script>
     <script src="../js/utilities.js"></script>
+<script>
+    // Declare views object early so all defer view scripts can populate it
+    // dashboard.js declares `const views = {}` but runs after views/*.js
+    // This guard ensures views exists before any view file runs
+    window.views = window.views || {};
+</script>
 
     <style>
         /* Unified Animations */
@@ -359,4 +365,5 @@ observer.observe(document.body, { childList: true, subtree: true });
 </script>
 </body>
 </html>
+
 

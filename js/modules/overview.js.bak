@@ -524,4 +524,3 @@ function updateOverviewUI(profile, rank) {
     }
 }
 
-

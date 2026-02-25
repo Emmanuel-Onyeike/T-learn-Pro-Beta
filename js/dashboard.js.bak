@@ -67,11 +67,10 @@ function updateView(viewName) {
             item.classList.toggle('active', item.innerText.includes(viewName));
         });
 
-        // FIX: lazy-init Overview chart — only when actually on Overview
+        // Overview — full engine init (stats, nebula, streak, XP)
         if (viewName === 'Overview') {
             requestAnimationFrame(() => {
-                if (typeof initOverviewChart === 'function') initOverviewChart();
-                loadProjectStatsIntoOverview();
+                if (typeof initOverview === 'function') initOverview();
             });
         }
 
@@ -113,10 +112,14 @@ function updateView(viewName) {
 // renderTab was called in Notifications view but never defined — now aliased
 const renderTab = updateView;
 
-// Initial Setup
-const d = new Date();
-document.getElementById('currentDate').innerText = d.toLocaleDateString('en-US', {
-    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+// Initial Setup — wait for all defer scripts to finish before rendering
+window.addEventListener('DOMContentLoaded', () => {
+    const d = new Date();
+    const dateEl = document.getElementById('currentDate');
+    if (dateEl) dateEl.innerText = d.toLocaleDateString('en-US', {
+        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+    });
+    // Small delay so all defer view scripts have populated the views object
+    setTimeout(() => updateView('Overview'), 50);
 });
-updateView('Overview');
 
