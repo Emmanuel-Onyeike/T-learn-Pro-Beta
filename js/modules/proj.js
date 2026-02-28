@@ -103,43 +103,81 @@ window.openProjectDetailsModal = function() {
     const desc = document.getElementById('projDesc')?.value.trim() || '';
     closeModal('newProjModal1');
 
-    setTimeout(() => {
-        document.body.insertAdjacentHTML('beforeend', `
-        <div id="newProjModal2" class="fixed inset-0 z-[1001] flex items-center justify-center bg-black/80 backdrop-blur-sm p-5">
-            <div class="w-full max-w-lg bg-[#050b1d] border border-white/10 rounded-[3rem] p-10 max-h-[90vh] overflow-y-auto animate-in zoom-in-95">
-                <div class="flex justify-between items-center mb-10">
-                    <h3 class="text-3xl font-black tracking-tight">${name}</h3>
-                    <button onclick="closeModal('newProjModal2')" class="text-3xl text-white/40 hover:text-white">×</button>
+ setTimeout(() => {
+    document.body.insertAdjacentHTML('beforeend', `
+    <div id="newProjModal2" class="fixed inset-0 z-[1001] flex items-center justify-center bg-black/85 backdrop-blur-md p-5 transition-all">
+        <div class="w-full max-w-lg bg-[#050b1d] border border-white/10 rounded-[2.5rem] p-10 max-h-[90vh] overflow-y-auto animate-in zoom-in-95 duration-300 shadow-2xl">
+            
+            <div class="flex justify-between items-center mb-8">
+                <div>
+                    <h3 class="text-3xl font-black tracking-tight text-white">${name}</h3>
+                    <p class="text-white/40 text-[10px] uppercase tracking-[0.2em] mt-1 font-bold">Project Configuration</p>
                 </div>
-                <div class="space-y-8">
-                    <div>
-                        <label class="block text-blue-400 text-xs font-black uppercase tracking-widest mb-3">Project Image</label>
-                        <input type="file" id="projImgInput" accept="image/*" class="hidden" onchange="previewProjectImg(this)">
-                        <div onclick="document.getElementById('projImgInput').click()" class="group relative h-52 w-full bg-white/5 border-2 border-dashed border-white/20 rounded-3xl flex items-center justify-center cursor-pointer hover:border-blue-500/60 transition-colors overflow-hidden">
-                            <img id="projPreview" class="absolute inset-0 w-full h-full object-cover hidden">
-                            <i id="imgPlaceholderIcon" class="fas fa-image text-white/20 text-5xl group-hover:scale-110 transition-transform"></i>
+                <button onclick="closeModal('newProjModal2')" class="h-10 w-10 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 text-white/40 hover:text-white transition-all text-2xl">×</button>
+            </div>
+
+            <div class="space-y-8">
+                <div>
+                    <label class="block text-blue-400 text-[10px] font-black uppercase tracking-[0.15em] mb-3">Project Banner</label>
+                    <input type="file" id="projImgInput" accept="image/*" class="hidden" onchange="previewProjectImg(this)">
+                    <div onclick="document.getElementById('projImgInput').click()" class="group relative h-48 w-full bg-white/5 border-2 border-dashed border-white/10 rounded-[2rem] flex items-center justify-center cursor-pointer hover:border-blue-500/40 hover:bg-blue-500/5 transition-all overflow-hidden">
+                        <img id="projPreview" class="absolute inset-0 w-full h-full object-cover hidden">
+                        <div class="text-center group-hover:scale-105 transition-transform">
+                            <i id="imgPlaceholderIcon" class="fas fa-cloud-upload-alt text-white/20 text-4xl mb-2"></i>
+                            <p class="text-white/20 text-[10px] font-bold uppercase tracking-wider">Click to upload</p>
                         </div>
                     </div>
-                    <div class="space-y-5">
-                        <input id="projLink" type="url" placeholder="Project Link[](https://...)" class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder-white/40 focus:border-blue-500 outline-none text-sm">
-                        <div class="grid grid-cols-2 gap-4">
-                            <button onclick="setProjectType('Job', this)" class="type-btn py-4 rounded-2xl border border-white/10 text-white/50 text-xs font-black uppercase hover:border-white/30 transition">Job</button>
-                            <button onclick="setProjectType('Private', this)" class="type-btn py-4 rounded-2xl border border-white/10 text-white/50 text-xs font-black uppercase hover:border-white/30 transition">Private</button>
-                            <button onclick="setProjectType('Personal', this)" class="type-btn py-4 rounded-2xl border-2 border-blue-500 text-white text-xs font-black uppercase shadow-sm shadow-blue-600/30">Personal</button>
-                            <button disabled class="py-4 rounded-2xl border border-white/5 text-white/20 text-xs font-black uppercase cursor-not-allowed"><i class="fas fa-lock mr-2"></i>Locked</button>
+                </div>
+
+                <div class="space-y-6">
+                    <div class="relative group">
+                        <label class="block text-white/40 text-[10px] font-black uppercase tracking-widest mb-2 ml-1">Access URL</label>
+                        <div class="relative flex items-center">
+                            <input id="projLink" type="url" placeholder="https://project-link.com" class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder-white/20 focus:border-blue-500/50 focus:bg-blue-500/5 outline-none text-sm transition-all pr-14">
+                            <button onclick="navigator.clipboard.writeText(document.getElementById('projLink').value)" class="absolute right-2 p-3 text-white/30 hover:text-blue-400 transition-colors" title="Copy Link">
+                                <i class="far fa-copy"></i>
+                            </button>
                         </div>
-                        <input id="projUsers" type="number" min="1" value="5" class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white focus:border-blue-500 outline-none text-sm">
                     </div>
-                    <div class="flex gap-4 pt-8">
-                        <button onclick="closeModal('newProjModal2')" class="flex-1 py-5 bg-white/5 hover:bg-white/10 rounded-2xl text-white/60 font-black text-xs uppercase tracking-widest transition">Cancel</button>
-                        <button id="createProjBtn" onclick="createNewProject()" class="flex-1 py-5 bg-gradient-to-r from-green-600 to-green-500 hover:from-green-500 hover:to-green-400 rounded-2xl text-white font-black text-xs uppercase tracking-widest shadow-lg shadow-green-700/30 transition">Create Project</button>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <button onclick="setProjectType('Job', this)" class="type-btn py-4 rounded-2xl border border-white/5 bg-white/[0.02] text-white/40 text-[10px] font-black uppercase tracking-tighter hover:border-white/20 transition-all">Job</button>
+                        <button onclick="setProjectType('Private', this)" class="type-btn py-4 rounded-2xl border border-white/5 bg-white/[0.02] text-white/40 text-[10px] font-black uppercase tracking-tighter hover:border-white/20 transition-all">Private</button>
+                        <button onclick="setProjectType('Personal', this)" class="type-btn py-4 rounded-2xl border-2 border-blue-500/80 bg-blue-500/10 text-blue-200 text-[10px] font-black uppercase tracking-tighter shadow-[0_0_20px_rgba(59,130,246,0.2)]">Personal</button>
+                        <button disabled class="py-4 rounded-2xl border border-white/5 bg-black/20 text-white/10 text-[10px] font-black uppercase cursor-not-allowed flex items-center justify-center gap-2">
+                            <i class="fas fa-lock text-[8px]"></i> Enterprise
+                        </button>
                     </div>
+
+                    <div class="bg-white/[0.03] border border-white/10 rounded-[1.5rem] p-5">
+                        <div class="flex justify-between items-center mb-4">
+                            <label class="text-white/60 text-[10px] font-black uppercase tracking-widest">Max Collaborators</label>
+                            <span class="bg-blue-500/20 text-blue-400 text-[9px] px-2 py-1 rounded-md font-bold uppercase">Free Tier</span>
+                        </div>
+                        <div class="relative">
+                            <input id="projUsers" type="number" min="1" max="5" value="5" readonly class="w-full bg-black/20 border border-white/5 rounded-xl px-5 py-3 text-white/50 font-mono text-sm outline-none cursor-not-allowed">
+                            <div class="mt-4 flex items-start gap-3 bg-red-500/5 border border-red-500/20 rounded-xl p-3">
+                                <i class="fas fa-info-circle text-red-500 mt-0.5 text-xs"></i>
+                                <p class="text-[10px] leading-relaxed text-red-400/80 font-medium">
+                                    Only <span class="text-red-400 font-black">5 users</span> allowed in the Free Limit. <br/>
+                                    <span class="text-white hover:text-blue-400 cursor-pointer underline decoration-dotted transition-colors">Upgrade to Pro</span> to add more seats.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex gap-4 pt-4">
+                    <button onclick="closeModal('newProjModal2')" class="flex-1 py-5 bg-white/5 hover:bg-white/10 rounded-2xl text-white/40 font-black text-[10px] uppercase tracking-[0.2em] transition-all">Cancel</button>
+                    <button id="createProjBtn" onclick="createNewProject()" class="flex-[1.5] py-5 bg-gradient-to-r from-green-600 to-green-500 hover:from-green-500 hover:to-green-400 rounded-2xl text-white font-black text-[10px] uppercase tracking-[0.2em] shadow-lg shadow-green-900/20 active:scale-[0.98] transition-all">Create Project</button>
                 </div>
             </div>
-        </div>`);
-        setProjectType('Personal', document.querySelector('#newProjModal2 .type-btn.border-blue-500'));
-    }, 180);
-};
+        </div>
+    </div>`);
+    
+    // Acknowledging your helper call
+    setProjectType('Personal', document.querySelector('#newProjModal2 .type-btn.border-blue-500\\/80'));
+}, 180);
 
 // Helpers
 window.previewProjectImg = function(input) {
