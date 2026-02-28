@@ -102,8 +102,7 @@ window.openProjectDetailsModal = function() {
     const name = document.getElementById('projName')?.value.trim() || 'Untitled';
     const desc = document.getElementById('projDesc')?.value.trim() || '';
     closeModal('newProjModal1');
-
- setTimeout(() => {
+setTimeout(() => {
     document.body.insertAdjacentHTML('beforeend', `
     <div id="newProjModal2" class="fixed inset-0 z-[1001] flex items-center justify-center bg-black/85 backdrop-blur-md p-5 transition-all">
         <div class="w-full max-w-lg bg-[#050b1d] border border-white/10 rounded-[2.5rem] p-10 max-h-[90vh] overflow-y-auto animate-in zoom-in-95 duration-300 shadow-2xl">
@@ -178,7 +177,7 @@ window.openProjectDetailsModal = function() {
     // Acknowledging your helper call
     setProjectType('Personal', document.querySelector('#newProjModal2 .type-btn.border-blue-500\\/80'));
 }, 180);
-
+};  
 // Helpers
 window.previewProjectImg = function(input) {
     if (!input.files?.[0]) return;
