@@ -139,10 +139,10 @@ setTimeout(() => {
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-2 gap-3">
-                        <button onclick="setProjectType('Job', this)" class="type-btn py-4 rounded-2xl border border-white/5 bg-white/[0.02] text-white/40 text-[10px] font-black uppercase tracking-tighter hover:border-white/20 transition-all">Job</button>
-                        <button onclick="setProjectType('Private', this)" class="type-btn py-4 rounded-2xl border border-white/5 bg-white/[0.02] text-white/40 text-[10px] font-black uppercase tracking-tighter hover:border-white/20 transition-all">Private</button>
-                        <button onclick="setProjectType('Personal', this)" class="type-btn py-4 rounded-2xl border-2 border-blue-500/80 bg-blue-500/10 text-blue-200 text-[10px] font-black uppercase tracking-tighter shadow-[0_0_20px_rgba(59,130,246,0.2)]">Personal</button>
+                   <div class="grid grid-cols-2 gap-3">
+                        <button onclick="updateTypeSelection(this); setProjectType('Job', this)" class="type-btn py-4 rounded-2xl border border-white/5 bg-white/[0.02] text-white/40 text-[10px] font-black uppercase tracking-tighter hover:border-white/20 transition-all">Job</button>
+                        <button onclick="updateTypeSelection(this); setProjectType('Private', this)" class="type-btn py-4 rounded-2xl border border-white/5 bg-white/[0.02] text-white/40 text-[10px] font-black uppercase tracking-tighter hover:border-white/20 transition-all">Private</button>
+                        <button onclick="updateTypeSelection(this); setProjectType('Personal', this)" class="type-btn py-4 rounded-2xl border border-white/5 bg-white/[0.02] text-white/40 text-[10px] font-black uppercase tracking-tighter hover:border-white/20 transition-all">Personal</button>
                         <button disabled class="py-4 rounded-2xl border border-white/5 bg-black/20 text-white/10 text-[10px] font-black uppercase cursor-not-allowed flex items-center justify-center gap-2">
                             <i class="fas fa-lock text-[8px]"></i> Enterprise
                         </button>
@@ -174,8 +174,12 @@ setTimeout(() => {
         </div>
     </div>`);
     
-    // Acknowledging your helper call
-    setProjectType('Personal', document.querySelector('#newProjModal2 .type-btn.border-blue-500\\/80'));
+   window.updateTypeSelection = function(el) {
+        document.querySelectorAll('.type-btn').forEach(btn => {
+            btn.className = "type-btn py-4 rounded-2xl border border-white/5 bg-white/[0.02] text-white/40 text-[10px] font-black uppercase tracking-tighter hover:border-white/20 transition-all";
+        });
+        el.className = "type-btn py-4 rounded-2xl border-2 border-blue-500/80 bg-blue-500/10 text-blue-200 text-[10px] font-black uppercase tracking-tighter shadow-[0_0_20px_rgba(59,130,246,0.2)]";
+    };
 }, 180);
 };  
 // Helpers
