@@ -415,23 +415,51 @@ function renderSettingsProjects() {
         return;
     }
 
-    list.innerHTML = projects.map((proj, i) => `
-        <div class="flex items-center justify-between p-5 bg-white/5 border border-white/10 rounded-2xl hover:border-white/20 transition-all">
-            <div class="flex items-center gap-4">
-                <div class="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center">
-                    <i class="fas fa-rocket text-blue-400 text-sm"></i>
+list.innerHTML = projects.map((proj, i) => {
+    const type = proj.type || 'Personal';
+    // Dynamic icon based on selection
+    const typeIcon = type === 'Job' ? 'fa-briefcase' : type === 'Private' ? 'fa-lock' : 'fa-user';
+    const link = proj.link || '#';
+
+    return `
+        <div class="group flex items-center justify-between p-4 bg-[#0a0f1d] border border-white/5 rounded-[1.5rem] hover:border-blue-500/30 transition-all duration-300">
+            <div class="flex items-center gap-4 min-w-0">
+                <div class="relative shrink-0">
+                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-600/20 to-violet-600/20 border border-white/10 flex items-center justify-center overflow-hidden">
+                        ${proj.img ? 
+                            `<img src="${proj.img}" class="w-full h-full object-cover">` : 
+                            `<i class="fas fa-rocket text-blue-400"></i>`
+                        }
+                    </div>
+                    <div class="absolute -bottom-1 -right-1 w-5 h-5 bg-[#0a0f1d] border border-white/10 rounded-full flex items-center justify-center">
+                        <i class="fas ${typeIcon} text-[8px] text-orange-500"></i>
+                    </div>
                 </div>
-                <div>
-                    <p class="text-white font-black text-sm">${proj.name}</p>
-                    <p class="text-[10px] text-gray-500 font-bold uppercase">${proj.type || 'Unknown'} · ${getDeployedAgo(proj.createdAt)}</p>
+
+                <div class="flex flex-col min-w-0">
+                    <div class="flex items-center gap-2">
+                        <p class="text-white font-black text-sm truncate tracking-tight">${proj.name}</p>
+                        <span class="text-[8px] px-2 py-0.5 bg-white/5 border border-white/10 rounded-md text-white/40 uppercase font-bold tracking-widest">${type}</span>
+                    </div>
+                    <p class="text-[10px] text-gray-500 font-medium truncate mt-0.5">
+                        <span class="text-blue-400/60 font-bold">LIVE:</span> ${link.replace(/^https?:\/\//, '')}
+                    </p>
                 </div>
             </div>
-            <button onclick="deleteProjectFromSettings(${i})"
-                class="w-9 h-9 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 flex items-center justify-center hover:bg-red-500/20 transition-all">
-                <i class="fas fa-trash text-xs"></i>
-            </button>
+
+            <div class="flex items-center gap-2 ml-4">
+                <a href="${link}" target="_blank" 
+                   class="w-10 h-10 rounded-xl bg-white/5 border border-white/5 text-white/40 flex items-center justify-center hover:bg-blue-600/20 hover:text-blue-400 hover:border-blue-500/30 transition-all">
+                    <i class="fas fa-external-link-alt text-xs"></i>
+                </a>
+                <button onclick="deleteProjectFromSettings(${i})"
+                        class="w-10 h-10 rounded-xl bg-red-500/5 border border-red-500/10 text-red-500/40 flex items-center justify-center hover:bg-red-500/20 hover:text-red-400 hover:border-red-500/30 transition-all">
+                    <i class="fas fa-trash-alt text-xs"></i>
+                </button>
+            </div>
         </div>
-    `).join('');
+    `;
+}).join('');
 }
 
 window.deleteProjectFromSettings = function(index) {
