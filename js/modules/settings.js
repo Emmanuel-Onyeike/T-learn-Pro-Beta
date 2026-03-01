@@ -381,7 +381,7 @@ function togglePricing() {
     }
 }
 
-// Paystack Payment Logic
+// --- PAYSTACK ENGINE (Updated with your credentials) ---
 function payWithPaystack(plan) {
     let amount = 0;
     if (plan.toLowerCase().includes('student')) {
@@ -391,18 +391,26 @@ function payWithPaystack(plan) {
     }
 
     const handler = PaystackPop.setup({
-        key: 'pk_live_2aeacf09484dd75cf6e2f61fa160c61096ff1c79', // Replace with your Public Key
-        email: 'technxxtsup@gmail.com', // Replace with your dynamic user email
+        key: 'pk_live_2aeacf09484dd75cf6e2f61fa160c61096ff1c79',
+        email: 'technxxtsup@gmail.com',
         amount: amount,
         currency: "NGN",
         ref: 'REF_' + Math.floor((Math.random() * 1000000000) + 1),
+        metadata: {
+            custom_fields: [
+                {
+                    display_name: "Plan Type",
+                    variable_name: "plan_type",
+                    value: plan + (isYearly ? " Yearly" : " Monthly")
+                }
+            ]
+        },
         callback: function(response) {
-            alert('Payment complete! Reference: ' + response.reference);
-            // Add your logic to upgrade user account here
-            location.reload();
+            triggerNotification(`Payment Successful! Ref: ${response.reference}`, 'success');
+            setTimeout(() => location.reload(), 2000);
         },
         onClose: function() {
-            console.log('Window closed.');
+            triggerNotification("Payment Cancelled", 'failed');
         }
     });
     handler.openIframe();
@@ -416,7 +424,6 @@ function showPricingAlert(plan) {
     const modal = document.createElement('div');
     modal.className = "fixed inset-0 z-[1000000] flex items-center justify-center p-6 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300";
     
-    // Calculate display price for the modal
     const displayPrice = plan.toLowerCase().includes('student') 
         ? (isYearly ? '₦74,400' : '₦8,000') 
         : (isYearly ? '₦142,800' : '₦16,000');
@@ -425,16 +432,16 @@ function showPricingAlert(plan) {
             <div id="price-modal-card" class="bg-[#050b1d] border border-blue-500/20 w-full max-w-sm rounded-[3rem] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300 transition-transform">
                 <div class="p-10 text-center">
                     <div class="w-20 h-20 bg-blue-500/10 rounded-3xl flex items-center justify-center mx-auto mb-6 border border-blue-500/20 rotate-12">
-                        <i class="fas fa-credit-card text-blue-500 text-3xl animate-pulse"></i>
+                        <i class="fas fa-shield-check text-blue-500 text-3xl animate-pulse"></i>
                     </div>
                     <h3 class="text-white font-black uppercase italic text-2xl tracking-tighter mb-2">${plan} Access</h3>
-                    <p class="text-white text-lg font-bold mb-2">${displayPrice}</p>
-                    <p class="text-blue-400/50 text-[11px] font-bold uppercase tracking-[0.2em] leading-relaxed">
-                        Secure checkout via Paystack integration.
+                    <p class="text-blue-400 font-black text-xl mb-4">${displayPrice}</p>
+                    <p class="text-white/40 text-[11px] font-bold uppercase tracking-[0.2em] leading-relaxed">
+                        Secure checkout via Paystack.
                     </p>
                 </div>
                 <div class="p-8 bg-blue-500/5 border-t border-blue-500/10 flex flex-col gap-3">
-                    <button id="pay-now-btn" class="w-full py-5 bg-blue-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-white hover:text-black transition-all">
+                    <button id="pay-now-btn" class="w-full py-5 bg-blue-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-green-500 transition-all">
                         Pay Now
                     </button>
                     <button id="close-price-modal" class="w-full py-3 text-white/30 text-[9px] font-bold uppercase tracking-widest hover:text-white transition-all">
@@ -445,12 +452,10 @@ function showPricingAlert(plan) {
 
     document.body.appendChild(modal);
 
-    // Pay Button Logic
     document.getElementById('pay-now-btn').onclick = () => {
         payWithPaystack(plan);
     };
 
-    // Close Button Logic
     document.getElementById('close-price-modal').onclick = () => {
         const card = document.getElementById('price-modal-card');
         if(card) card.style.transform = 'scale(0.9)';
@@ -460,13 +465,20 @@ function showPricingAlert(plan) {
     };
 }
 
-//// for the pricing modal
+//// for the pricing modal (Slide-out)
 function openPaymentModal(planName) {
     const modal = document.getElementById('payment-modal');
     const title = document.getElementById('active-plan-title');
     const root = document.querySelector('section');
+    const payBtn = document.getElementById('confirm-payment-btn');
 
     if(title) title.innerText = planName;
+    
+    // Attach Paystack trigger to the slide-out button
+    if(payBtn) {
+        payBtn.onclick = () => payWithPaystack(planName);
+    }
+
     if(modal) modal.classList.remove('translate-x-full');
     if(root) root.style.filter = 'blur(10px)';
 }
