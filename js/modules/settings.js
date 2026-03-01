@@ -381,33 +381,76 @@ function togglePricing() {
     }
 }
 
+// Paystack Payment Logic
+function payWithPaystack(plan) {
+    let amount = 0;
+    if (plan.toLowerCase().includes('student')) {
+        amount = isYearly ? 74400 * 100 : 8000 * 100;
+    } else {
+        amount = isYearly ? 142800 * 100 : 16000 * 100;
+    }
+
+    const handler = PaystackPop.setup({
+        key: 'pk_live_2aeacf09484dd75cf6e2f61fa160c61096ff1c79', // Replace with your Public Key
+        email: 'technxxtsup@gmail.com', // Replace with your dynamic user email
+        amount: amount,
+        currency: "NGN",
+        ref: 'REF_' + Math.floor((Math.random() * 1000000000) + 1),
+        callback: function(response) {
+            alert('Payment complete! Reference: ' + response.reference);
+            // Add your logic to upgrade user account here
+            location.reload();
+        },
+        onClose: function() {
+            console.log('Window closed.');
+        }
+    });
+    handler.openIframe();
+}
+
 // Centered Modal for Pricing Actions
 function showPricingAlert(plan) {
-    const root = document.querySelector('section'); // Targets the pricing section
+    const root = document.querySelector('section'); 
     if(root) root.style.filter = 'blur(15px)';
 
     const modal = document.createElement('div');
     modal.className = "fixed inset-0 z-[1000000] flex items-center justify-center p-6 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300";
+    
+    // Calculate display price for the modal
+    const displayPrice = plan.toLowerCase().includes('student') 
+        ? (isYearly ? '₦74,400' : '₦8,000') 
+        : (isYearly ? '₦142,800' : '₦16,000');
+
     modal.innerHTML = `
             <div id="price-modal-card" class="bg-[#050b1d] border border-blue-500/20 w-full max-w-sm rounded-[3rem] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300 transition-transform">
                 <div class="p-10 text-center">
                     <div class="w-20 h-20 bg-blue-500/10 rounded-3xl flex items-center justify-center mx-auto mb-6 border border-blue-500/20 rotate-12">
-                        <i class="fas fa-shield-alt text-blue-500 text-3xl animate-pulse"></i>
+                        <i class="fas fa-credit-card text-blue-500 text-3xl animate-pulse"></i>
                     </div>
-                    <h3 class="text-white font-black uppercase italic text-2xl tracking-tighter mb-2">\${plan} Access</h3>
+                    <h3 class="text-white font-black uppercase italic text-2xl tracking-tighter mb-2">${plan} Access</h3>
+                    <p class="text-white text-lg font-bold mb-2">${displayPrice}</p>
                     <p class="text-blue-400/50 text-[11px] font-bold uppercase tracking-[0.2em] leading-relaxed">
-                        Payment gateway integration is currently in sandbox mode. 
+                        Secure checkout via Paystack integration.
                     </p>
                 </div>
-                <div class="p-8 bg-blue-500/5 border-t border-blue-500/10">
-                    <button id="close-price-modal" class="w-full py-5 bg-blue-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-white hover:text-black transition-all">
-                        Return to Hub
+                <div class="p-8 bg-blue-500/5 border-t border-blue-500/10 flex flex-col gap-3">
+                    <button id="pay-now-btn" class="w-full py-5 bg-blue-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-white hover:text-black transition-all">
+                        Pay Now
+                    </button>
+                    <button id="close-price-modal" class="w-full py-3 text-white/30 text-[9px] font-bold uppercase tracking-widest hover:text-white transition-all">
+                        Cancel
                     </button>
                 </div>
             </div>`;
 
     document.body.appendChild(modal);
 
+    // Pay Button Logic
+    document.getElementById('pay-now-btn').onclick = () => {
+        payWithPaystack(plan);
+    };
+
+    // Close Button Logic
     document.getElementById('close-price-modal').onclick = () => {
         const card = document.getElementById('price-modal-card');
         if(card) card.style.transform = 'scale(0.9)';
@@ -416,9 +459,6 @@ function showPricingAlert(plan) {
         setTimeout(() => modal.remove(), 300);
     };
 }
-
-
-
 
 //// for the pricing modal
 function openPaymentModal(planName) {
@@ -438,7 +478,6 @@ function closePaymentModal() {
     if(modal) modal.classList.add('translate-x-full');
     if(root) root.style.filter = 'none';
 }
-
 
 
 ///// for the logout/////////
