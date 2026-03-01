@@ -349,7 +349,9 @@ document.addEventListener('DOMContentLoaded', syncProfileUI);
 
 
 //// for the pricing 
+//// for the pricing 
 let isYearly = false;
+
 function togglePricing() {
     isYearly = !isYearly;
     const ball = document.getElementById('toggleBall');
@@ -381,9 +383,10 @@ function togglePricing() {
     }
 }
 
-// --- PAYSTACK ENGINE (Updated with your credentials) ---
+// --- PAYSTACK ENGINE ---
 function payWithPaystack(plan) {
     let amount = 0;
+    // Calculate amount in Kobo (NGN * 100)
     if (plan.toLowerCase().includes('student')) {
         amount = isYearly ? 74400 * 100 : 8000 * 100;
     } else {
@@ -395,22 +398,23 @@ function payWithPaystack(plan) {
         email: 'technxxtsup@gmail.com',
         amount: amount,
         currency: "NGN",
-        ref: 'REF_' + Math.floor((Math.random() * 1000000000) + 1),
+        ref: 'TRX_' + Math.floor((Math.random() * 1000000000) + 1),
         metadata: {
             custom_fields: [
                 {
-                    display_name: "Plan Type",
-                    variable_name: "plan_type",
-                    value: plan + (isYearly ? " Yearly" : " Monthly")
+                    display_name: "Plan",
+                    variable_name: "plan",
+                    value: plan + (isYearly ? " (Yearly)" : " (Monthly)")
                 }
             ]
         },
         callback: function(response) {
-            triggerNotification(`Payment Successful! Ref: ${response.reference}`, 'success');
-            setTimeout(() => location.reload(), 2000);
+            // SUCCESSFUL PAYMENT
+            alert('Success! Transaction Ref: ' + response.reference);
+            location.reload(); 
         },
         onClose: function() {
-            triggerNotification("Payment Cancelled", 'failed');
+            console.log('Payment window closed.');
         }
     });
     handler.openIframe();
@@ -424,7 +428,7 @@ function showPricingAlert(plan) {
     const modal = document.createElement('div');
     modal.className = "fixed inset-0 z-[1000000] flex items-center justify-center p-6 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300";
     
-    const displayPrice = plan.toLowerCase().includes('student') 
+    const priceDisplay = plan.toLowerCase().includes('student') 
         ? (isYearly ? '₦74,400' : '₦8,000') 
         : (isYearly ? '₦142,800' : '₦16,000');
 
@@ -432,16 +436,16 @@ function showPricingAlert(plan) {
             <div id="price-modal-card" class="bg-[#050b1d] border border-blue-500/20 w-full max-w-sm rounded-[3rem] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300 transition-transform">
                 <div class="p-10 text-center">
                     <div class="w-20 h-20 bg-blue-500/10 rounded-3xl flex items-center justify-center mx-auto mb-6 border border-blue-500/20 rotate-12">
-                        <i class="fas fa-shield-check text-blue-500 text-3xl animate-pulse"></i>
+                        <i class="fas fa-credit-card text-blue-500 text-3xl animate-pulse"></i>
                     </div>
                     <h3 class="text-white font-black uppercase italic text-2xl tracking-tighter mb-2">${plan} Access</h3>
-                    <p class="text-blue-400 font-black text-xl mb-4">${displayPrice}</p>
+                    <p class="text-blue-400 font-black text-xl mb-4">${priceDisplay}</p>
                     <p class="text-white/40 text-[11px] font-bold uppercase tracking-[0.2em] leading-relaxed">
-                        Secure checkout via Paystack.
+                        Secure checkout powered by Paystack.
                     </p>
                 </div>
                 <div class="p-8 bg-blue-500/5 border-t border-blue-500/10 flex flex-col gap-3">
-                    <button id="pay-now-btn" class="w-full py-5 bg-blue-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-green-500 transition-all">
+                    <button id="pay-now-btn" class="w-full py-5 bg-blue-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-white hover:text-black transition-all">
                         Pay Now
                     </button>
                     <button id="close-price-modal" class="w-full py-3 text-white/30 text-[9px] font-bold uppercase tracking-widest hover:text-white transition-all">
@@ -470,17 +474,19 @@ function openPaymentModal(planName) {
     const modal = document.getElementById('payment-modal');
     const title = document.getElementById('active-plan-title');
     const root = document.querySelector('section');
+    
+    // Wire up the button inside your slide-out HTML
     const payBtn = document.getElementById('confirm-payment-btn');
 
     if(title) title.innerText = planName;
-    
-    // Attach Paystack trigger to the slide-out button
-    if(payBtn) {
-        payBtn.onclick = () => payWithPaystack(planName);
-    }
-
     if(modal) modal.classList.remove('translate-x-full');
     if(root) root.style.filter = 'blur(10px)';
+
+    if(payBtn) {
+        payBtn.onclick = () => {
+            payWithPaystack(planName);
+        };
+    }
 }
 
 function closePaymentModal() {
@@ -490,6 +496,8 @@ function closePaymentModal() {
     if(modal) modal.classList.add('translate-x-full');
     if(root) root.style.filter = 'none';
 }
+
+
 
 
 ///// for the logout/////////
