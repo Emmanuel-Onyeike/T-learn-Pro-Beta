@@ -348,10 +348,16 @@ document.addEventListener('DOMContentLoaded', syncProfileUI);
 
 
 
-//// for the pricing 
-//// for the pricing 
+/**
+ * SYSTEM INITIALIZATION: PRICING & PAYMENT GATEWAY
+ * ------------------------------------------------
+ * Email: technxxtsup@gmail.com
+ * Key: pk_live_2aeacf09484dd75cf6e2f61fa160c61096ff1c79
+ */
+
 let isYearly = false;
 
+// 1. PRICING TOGGLE: Switches UI display and price calculations
 function togglePricing() {
     isYearly = !isYearly;
     const ball = document.getElementById('toggleBall');
@@ -383,13 +389,16 @@ function togglePricing() {
     }
 }
 
-// --- PAYSTACK ENGINE ---
+// 2. CORE PAYSTACK ENGINE: Handles the actual transaction
 function payWithPaystack(plan) {
     let amount = 0;
-    // Calculate amount in Kobo (NGN * 100)
+    
+    // Logic for Price Calculation (includes ₦500 Test Price for Student Monthly)
     if (plan.toLowerCase().includes('student')) {
-        amount = isYearly ? 74400 * 100 : 8000 * 100;
+        // Test Price: 500 | Regular: 74,400
+        amount = isYearly ? 74400 * 100 : 500 * 100; 
     } else {
+        // Pro Pricing
         amount = isYearly ? 142800 * 100 : 16000 * 100;
     }
 
@@ -402,34 +411,38 @@ function payWithPaystack(plan) {
         metadata: {
             custom_fields: [
                 {
-                    display_name: "Plan",
-                    variable_name: "plan",
+                    display_name: "Subscription Plan",
+                    variable_name: "plan_type",
                     value: plan + (isYearly ? " (Yearly)" : " (Monthly)")
                 }
             ]
         },
         callback: function(response) {
-            // SUCCESSFUL PAYMENT
-            alert('Success! Transaction Ref: ' + response.reference);
+            // Store payment proof locally
+            localStorage.setItem('payment_reference', response.reference);
+            localStorage.setItem('active_plan', plan);
+            
+            alert('PROTOCOL SECURED: Payment successful. Ref: ' + response.reference);
             location.reload(); 
         },
         onClose: function() {
-            console.log('Payment window closed.');
+            console.warn('USER_SIGNAL: Payment window terminated by user.');
         }
     });
     handler.openIframe();
 }
 
-// Centered Modal for Pricing Actions
+// 3. CENTERED MODAL: UI Alert for selecting a plan (Centered in Modal)
 function showPricingAlert(plan) {
     const root = document.querySelector('section'); 
     if(root) root.style.filter = 'blur(15px)';
 
     const modal = document.createElement('div');
+    // Centered modal styling
     modal.className = "fixed inset-0 z-[1000000] flex items-center justify-center p-6 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300";
     
     const priceDisplay = plan.toLowerCase().includes('student') 
-        ? (isYearly ? '₦74,400' : '₦8,000') 
+        ? (isYearly ? '₦74,400' : '₦500 (TEST)') 
         : (isYearly ? '₦142,800' : '₦16,000');
 
     modal.innerHTML = `
@@ -441,7 +454,7 @@ function showPricingAlert(plan) {
                     <h3 class="text-white font-black uppercase italic text-2xl tracking-tighter mb-2">${plan} Access</h3>
                     <p class="text-blue-400 font-black text-xl mb-4">${priceDisplay}</p>
                     <p class="text-white/40 text-[11px] font-bold uppercase tracking-[0.2em] leading-relaxed">
-                        Secure checkout powered by Paystack.
+                        Secure end-to-end encrypted transaction via Paystack.
                     </p>
                 </div>
                 <div class="p-8 bg-blue-500/5 border-t border-blue-500/10 flex flex-col gap-3">
@@ -469,19 +482,18 @@ function showPricingAlert(plan) {
     };
 }
 
-//// for the pricing modal (Slide-out)
+// 4. SLIDE-OUT MODAL LOGIC: For the sidebar Payment Gateway
 function openPaymentModal(planName) {
     const modal = document.getElementById('payment-modal');
     const title = document.getElementById('active-plan-title');
     const root = document.querySelector('section');
-    
-    // Wire up the button inside your slide-out HTML
     const payBtn = document.getElementById('confirm-payment-btn');
 
     if(title) title.innerText = planName;
     if(modal) modal.classList.remove('translate-x-full');
     if(root) root.style.filter = 'blur(10px)';
 
+    // Attach Paystack engine to the slide-out button
     if(payBtn) {
         payBtn.onclick = () => {
             payWithPaystack(planName);
@@ -496,8 +508,6 @@ function closePaymentModal() {
     if(modal) modal.classList.add('translate-x-full');
     if(root) root.style.filter = 'none';
 }
-
-
 
 
 ///// for the logout/////////
