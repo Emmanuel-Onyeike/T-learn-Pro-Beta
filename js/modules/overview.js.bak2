@@ -27,36 +27,7 @@ async function loadOverviewStats() {
             .eq('id', user.id)
             .maybeSingle();
 
-        // Profile row missing — auto-create for existing users
-        if (!error && !profile) {
-            console.log('[Overview] No profile row — creating default...');
-            const { data: created } = await client
-                .from('profiles')
-                .insert({
-                    id: user.id,
-                    full_name: user.user_metadata?.full_name || user.email?.split('@')[0] || 'Student',
-                    level: 100,
-                    semester: 1,
-                    xt_points: 10,
-                    streak: 0,
-                    avatar_url: user.user_metadata?.avatar_url || '',
-                    role: 'student'
-                })
-                .select()
-                .maybeSingle();
-            if (created) {
-                console.log('[Overview] Profile created successfully');
-                // Re-run with new profile
-                setEl('dash-xp-val',    10);
-                setEl('streakCount',    0);
-                setEl('dash-level-val', 100);
-                setEl('semesterVal',    '001');
-                setEl('rankVal',        '#—');
-            }
-            return;
-        }
-
-        if (error) {
+        if (error || !profile) {
             console.warn('[Overview] Profile load failed:', error?.message);
             return;
         }

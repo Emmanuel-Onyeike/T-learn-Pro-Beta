@@ -46,40 +46,6 @@ function loadToggleStates() {
         }
     });
 }
-
-/**
- * GALLERY SYSTEM — Camera icon click handler
- */
-function triggerImageUpload() {
-    let imgInput = document.getElementById('hiddenGalleryInput');
-    if (!imgInput) {
-        imgInput = document.createElement('input');
-        imgInput.type = 'file';
-        imgInput.accept = 'image/*';
-        imgInput.id = 'hiddenGalleryInput';
-        imgInput.style.display = 'none';
-        document.body.appendChild(imgInput);
-
-        imgInput.onchange = async (e) => {
-            const file = e.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                const base64Image = event.target.result;
-                document.querySelectorAll('[data-user-img]').forEach(img => {
-                    img.src = base64Image;
-                    img.classList.remove('hidden');
-                    img.parentElement.querySelector('#defaultUserIcon')?.classList.add('hidden');
-                });
-                localStorage.setItem('temp_img_buffer', base64Image);
-            };
-            reader.readAsDataURL(file);
-        };
-    }
-    imgInput.click();
-}
-window.triggerImageUpload = triggerImageUpload;
-
 /**
  * 2. UI SYNC (Loads from Supabase → Shows on Dashboard)
  */
@@ -88,12 +54,12 @@ async function syncProfileUI() {
     const user = await window.AuthState.getUser();
 
     let savedName = "New User";
-    let savedImg = "../assets/Logo.webp";
+    let savedImg = "Logo.webp";
     let savedBio = "";
 
     if (user) {
         savedName = user.user_metadata?.full_name || user.email.split('@')[0];
-        savedImg = user.user_metadata?.avatar_url || "../assets/Logo.webp";
+        savedImg = user.user_metadata?.avatar_url || "Logo.webp";
         savedBio = user.user_metadata?.bio || "";
     }
 
@@ -103,7 +69,7 @@ async function syncProfileUI() {
     // Update all image places
     document.querySelectorAll('[data-user-img]').forEach(img => {
         img.src = savedImg;
-        if (savedImg !== "../assets/Logo.webp") {
+        if (savedImg !== "Logo.webp") {
             img.classList.remove('hidden');
             img.parentElement.querySelector('#defaultUserIcon')?.classList.add('hidden');
         }
@@ -154,7 +120,7 @@ async function saveProfile() {
     saveBtn.disabled = true;
 
     try {
-        let avatarUrl = localStorage.getItem('tlp_user_img') || "../assets/Logo.webp";
+        let avatarUrl = localStorage.getItem('tlp_user_img') || "Logo.webp";
 
         if (bufferedImg && bufferedImg.startsWith('data:image')) {
             const fileExt = bufferedImg.split(';')[0].split('/')[1] || 'png';
