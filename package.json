@@ -1,0 +1,9 @@
+{
+  "name": "t-learn-pro",
+  "version": "4.0.2",
+  "description": "T Learn Pro - Educational Platform",
+  "scripts": {
+    "build": "node build.js",
+    "dev": "npx serve ."
+  }
+}
