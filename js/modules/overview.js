@@ -25,7 +25,7 @@ async function loadOverviewStats() {
             .from('profiles')
             .select('xt_points, streak, level, semester')
             .eq('id', user.id)
-            .single();
+            .maybeSingle();
 
         if (error || !profile) {
             console.warn('[Overview] Profile load failed:', error?.message);
@@ -37,7 +37,7 @@ async function loadOverviewStats() {
             .from('leaderboard')
             .select('rank')
             .eq('id', user.id)
-            .single();
+            .maybeSingle();
 
         const rank = rankData?.rank || 0;
 
@@ -107,7 +107,7 @@ async function awardXP(eventType) {
             .from('profiles')
             .select('xt_points')
             .eq('id', user.id)
-            .single();
+            .maybeSingle();
 
         const newPoints = (profile?.xt_points || 0) + points;
 
@@ -191,7 +191,7 @@ async function updateStreak(userId, today, lastLogin) {
             .from('profiles')
             .select('streak')
             .eq('id', userId)
-            .single();
+            .maybeSingle();
 
         let currentStreak = profile?.streak || 0;
         let newStreak = 1;
@@ -237,7 +237,7 @@ async function checkLeaderboardBonus(userId, currentPoints) {
             .from('leaderboard')
             .select('rank')
             .eq('id', userId)
-            .single();
+            .maybeSingle();
 
         const rank = rankData?.rank;
         if (!rank) return;

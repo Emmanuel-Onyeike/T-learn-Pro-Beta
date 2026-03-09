@@ -17,7 +17,7 @@ async function getSupabaseClient() {
 async function loadOverviewStats() {
     try {
         const client = await getSupabaseClient();
-        const { data: { user } } = await client.auth.getUser();
+        const user = await window.AuthState.getUser();
         if (!user) return;
 
         // Get profile data
@@ -25,7 +25,7 @@ async function loadOverviewStats() {
             .from('profiles')
             .select('xt_points, streak, level, semester')
             .eq('id', user.id)
-            .single();
+            .maybeSingle();
 
         if (error || !profile) {
             console.warn('[Overview] Profile load failed:', error?.message);
@@ -37,7 +37,7 @@ async function loadOverviewStats() {
             .from('leaderboard')
             .select('rank')
             .eq('id', user.id)
-            .single();
+            .maybeSingle();
 
         const rank = rankData?.rank || 0;
 
@@ -92,7 +92,7 @@ async function awardXP(eventType) {
 
     try {
         const client = await getSupabaseClient();
-        const { data: { user } } = await client.auth.getUser();
+        const user = await window.AuthState.getUser();
         if (!user) return;
 
         // Log xp event
@@ -107,7 +107,7 @@ async function awardXP(eventType) {
             .from('profiles')
             .select('xt_points')
             .eq('id', user.id)
-            .single();
+            .maybeSingle();
 
         const newPoints = (profile?.xt_points || 0) + points;
 
@@ -150,7 +150,7 @@ function startHourlyXPTimer() {
 async function recordDailyLogin() {
     try {
         const client = await getSupabaseClient();
-        const { data: { user } } = await client.auth.getUser();
+        const user = await window.AuthState.getUser();
         if (!user) return;
 
         const today = new Date().toISOString().split('T')[0];
@@ -191,7 +191,7 @@ async function updateStreak(userId, today, lastLogin) {
             .from('profiles')
             .select('streak')
             .eq('id', userId)
-            .single();
+            .maybeSingle();
 
         let currentStreak = profile?.streak || 0;
         let newStreak = 1;
@@ -237,7 +237,7 @@ async function checkLeaderboardBonus(userId, currentPoints) {
             .from('leaderboard')
             .select('rank')
             .eq('id', userId)
-            .single();
+            .maybeSingle();
 
         const rank = rankData?.rank;
         if (!rank) return;
@@ -376,7 +376,7 @@ async function loadActivityData() {
 
     try {
         const client = await getSupabaseClient();
-        const { data: { user } } = await client.auth.getUser();
+        const user = await window.AuthState.getUser();
         if (!user) return local;
 
         // Get last 52 weeks from Supabase
@@ -408,7 +408,7 @@ async function loadActivityData() {
 async function syncActivityToSupabase() {
     try {
         const client = await getSupabaseClient();
-        const { data: { user } } = await client.auth.getUser();
+        const user = await window.AuthState.getUser();
         if (!user) return;
 
         const local = JSON.parse(localStorage.getItem('user_node_activity') || '{}');
