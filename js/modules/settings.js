@@ -79,7 +79,6 @@ function triggerImageUpload() {
     imgInput.click();
 }
 window.triggerImageUpload = triggerImageUpload;
-
 /**
  * 2. UI SYNC (Loads from Supabase → Shows on Dashboard)
  */
@@ -87,8 +86,7 @@ async function syncProfileUI() {
     const client = await window.supabaseLoader.load();
     const user = await window.AuthState.getUser();
 
-    // FIXED: Use root-relative paths (/assets/...) instead of relative (../assets/...)
-    // This prevents 404s when navigating between different page depths.
+    // FIX 1: Use absolute root paths (/assets/) to prevent Vercel 404s
     let savedName = "New User";
     let savedImg = "/assets/Logo.webp"; 
     let savedBio = "";
@@ -99,30 +97,25 @@ async function syncProfileUI() {
         savedBio = user.user_metadata?.bio || "";
     }
 
-    // Update all name places
     document.querySelectorAll('[data-user-name]').forEach(el => el.textContent = savedName);
 
-    // Update all image places
     document.querySelectorAll('[data-user-img]').forEach(img => {
         img.src = savedImg;
-        // Logic to hide default icons if a real PFP exists
-        if (savedImg && !savedImg.includes("Logo.webp")) {
+        // FIX 2: Correctly check against the path to show/hide icons
+        if (savedImg !== "/assets/Logo.webp") {
             img.classList.remove('hidden');
             img.parentElement.querySelector('#defaultUserIcon')?.classList.add('hidden');
         } else {
-            // If it IS the logo, ensure default icon logic is handled
-            img.classList.add('hidden'); // or handle as per your CSS
+            img.classList.add('hidden');
             img.parentElement.querySelector('#defaultUserIcon')?.classList.remove('hidden');
         }
     });
 
-    // Fill inputs
     const nameInput = document.getElementById('editFullName');
     const bioInput = document.getElementById('editBio');
     if (nameInput) nameInput.value = (savedName === "New User") ? "" : savedName;
     if (bioInput) bioInput.value = savedBio;
 
-    // Fallback localStorage
     localStorage.setItem('tlp_user_name', savedName);
     localStorage.setItem('tlp_user_img', savedImg);
     localStorage.setItem('tlp_user_bio', savedBio);
@@ -133,7 +126,7 @@ async function syncProfileUI() {
  */
 async function saveProfile(event) {
     const client = await window.supabaseLoader.load();
-    const user = await window.AuthState.getUser();
+    const user = await window.AuthState.getUser(); 
     
     if (!user) {
         alert("Session expired. Please log in again.");
@@ -143,9 +136,11 @@ async function saveProfile(event) {
 
     const nameInput = document.getElementById('editFullName');
     const bioInput = document.getElementById('editBio');
-    const saveBtn = event?.currentTarget || document.querySelector('.save-btn'); // Fallback if event is missing
+    
+    // FIX 3: Safety check for the button to prevent "innerText of null"
+    const saveBtn = (event && event.currentTarget) ? event.currentTarget : document.querySelector('button[onclick*="saveProfile"]');
 
-    if (!nameInput) return;
+    if (!saveBtn || !nameInput) return;
 
     const newName = nameInput.value.trim();
     const newBio = bioInput ? bioInput.value.trim() : "";
@@ -164,30 +159,26 @@ async function saveProfile(event) {
         let avatarUrl = localStorage.getItem('tlp_user_img') || "/assets/Logo.webp";
 
         if (bufferedImg && bufferedImg.startsWith('data:image')) {
-            // FIXED: Proper Blob conversion and MIME type detection
             const response = await fetch(bufferedImg);
             const blob = await response.blob();
             
             const fileExt = blob.type.split('/')[1] || 'png';
             const fileName = `${user.id}.${fileExt}`;
 
-            // FIXED: Added contentType and simplified error handling
+            // FIX 4: Added contentType so Supabase storage accepts the blob (fixes 400 error)
             const { error: uploadError } = await client.storage
                 .from('avatars')
                 .upload(fileName, blob, { 
-                    contentType: blob.type, 
+                    contentType: blob.type,
                     upsert: true 
                 });
 
             if (uploadError) throw uploadError;
 
-            // Get the clean Public URL
-            const { data: urlData } = client.storage.from('avatars').getPublicUrl(fileName);
-            avatarUrl = urlData.publicUrl;
+            avatarUrl = client.storage.from('avatars').getPublicUrl(fileName).data.publicUrl;
         }
 
-        // Sync to Auth Metadata
-        const { error: updateError } = await client.auth.updateUser({
+        const { error } = await client.auth.updateUser({
             data: {
                 full_name: newName,
                 bio: newBio,
@@ -195,9 +186,8 @@ async function saveProfile(event) {
             }
         });
 
-        if (updateError) throw updateError;
+        if (error) throw error;
 
-        // Success Cleanup
         localStorage.setItem('tlp_user_name', newName);
         localStorage.setItem('tlp_user_bio', newBio);
         localStorage.setItem('tlp_user_img', avatarUrl);
@@ -207,14 +197,14 @@ async function saveProfile(event) {
         alert("SUCCESS: Profile synced across all devices!");
 
     } catch (err) {
-        // This will trigger your centered modal alert
         alert("SYNC ERROR: " + err.message);
     } finally {
-        saveBtn.innerText = originalText;
-        saveBtn.disabled = false;
+        if (saveBtn) {
+            saveBtn.innerText = originalText;
+            saveBtn.disabled = false;
+        }
     }
 }
-
 
 
 /**
