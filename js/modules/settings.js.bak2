@@ -53,35 +53,33 @@ async function syncProfileUI() {
     const client = await window.supabaseLoader.load();
     const user = await window.AuthState.getUser();
 
+    // FIX: Use an absolute path for the logo to avoid 404s on subpages
     let savedName = "New User";
-    let savedImg = "Logo.webp";
+    let savedImg = "/Logo.webp"; 
     let savedBio = "";
 
     if (user) {
         savedName = user.user_metadata?.full_name || user.email.split('@')[0];
-        savedImg = user.user_metadata?.avatar_url || "Logo.webp";
+        savedImg = user.user_metadata?.avatar_url || "/Logo.webp";
         savedBio = user.user_metadata?.bio || "";
     }
 
-    // Update all name places
     document.querySelectorAll('[data-user-name]').forEach(el => el.textContent = savedName);
 
-    // Update all image places
     document.querySelectorAll('[data-user-img]').forEach(img => {
         img.src = savedImg;
-        if (savedImg !== "Logo.webp") {
+        // Check against both versions just in case
+        if (savedImg !== "/Logo.webp" && savedImg !== "Logo.webp") {
             img.classList.remove('hidden');
             img.parentElement.querySelector('#defaultUserIcon')?.classList.add('hidden');
         }
     });
 
-    // Fill inputs
     const nameInput = document.getElementById('editFullName');
     const bioInput = document.getElementById('editBio');
     if (nameInput) nameInput.value = (savedName === "New User") ? "" : savedName;
     if (bioInput) bioInput.value = savedBio;
 
-    // Fallback localStorage (for offline)
     localStorage.setItem('tlp_user_name', savedName);
     localStorage.setItem('tlp_user_img', savedImg);
     localStorage.setItem('tlp_user_bio', savedBio);
@@ -91,10 +89,10 @@ async function syncProfileUI() {
  * 3. SAVE PROFILE (Uploads Image + Syncs to Supabase)
  */
 async function saveProfile() {
-    // FORCE REFRESH SESSION
     const client = await window.supabaseLoader.load();
-    const user = await window.AuthState.getUser(); const refreshError = user ? null : new Error('Not authenticated');
-    if (refreshError || !user) {
+    const user = await window.AuthState.getUser();
+    
+    if (!user) {
         alert("Session expired. Please log in again.");
         window.location.href = 'login.html';
         return;
@@ -102,7 +100,7 @@ async function saveProfile() {
 
     const nameInput = document.getElementById('editFullName');
     const bioInput = document.getElementById('editBio');
-    const saveBtn = event.currentTarget;
+    const saveBtn = document.getElementById('saveProfileBtn') || event.currentTarget;
 
     if (!nameInput) return;
 
@@ -120,20 +118,28 @@ async function saveProfile() {
     saveBtn.disabled = true;
 
     try {
-        let avatarUrl = localStorage.getItem('tlp_user_img') || "Logo.webp";
+        let avatarUrl = localStorage.getItem('tlp_user_img') || "/Logo.webp";
 
         if (bufferedImg && bufferedImg.startsWith('data:image')) {
-            const fileExt = bufferedImg.split(';')[0].split('/')[1] || 'png';
+            // FIX: Improved Blob handling to prevent 400 Bad Request
+            const response = await fetch(bufferedImg);
+            const blob = await response.blob();
+            
+            const fileExt = blob.type.split('/')[1] || 'png';
             const fileName = `${user.id}.${fileExt}`;
-            const blob = await (await fetch(bufferedImg)).blob();
 
+            // We use 'upsert: true' to overwrite old PFPs
             const { error: uploadError } = await client.storage
                 .from('avatars')
-                .upload(fileName, blob, { upsert: true });
+                .upload(fileName, blob, { 
+                    contentType: blob.type, // Explicitly set content type
+                    upsert: true 
+                });
 
-            if (uploadError && uploadError.statusCode !== 409) throw uploadError;
+            if (uploadError) throw uploadError;
 
-            avatarUrl = client.storage.from('avatars').getPublicUrl(fileName).data.publicUrl;
+            const { data } = client.storage.from('avatars').getPublicUrl(fileName);
+            avatarUrl = data.publicUrl;
         }
 
         const { error } = await client.auth.updateUser({
@@ -161,13 +167,6 @@ async function saveProfile() {
         saveBtn.disabled = false;
     }
 }
-
-// Run on page load
-document.addEventListener('DOMContentLoaded', syncProfileUI);
-// Event Listeners
-
-
-
 
 
 
