@@ -82,11 +82,14 @@ window.triggerImageUpload = triggerImageUpload;
 /**
  * 2. UI SYNC (Loads from Supabase → Shows on Dashboard)
  */
+/**
+ * 2. UI SYNC (Loads from Supabase → Shows on Dashboard)
+ */
 async function syncProfileUI() {
     const client = await window.supabaseLoader.load();
     const user = await window.AuthState.getUser();
 
-    // FIX 1: Use absolute root paths (/assets/) to prevent Vercel 404s
+    // FIXED: Using absolute root path to avoid the /pages/ folder 404
     let savedName = "New User";
     let savedImg = "/assets/Logo.webp"; 
     let savedBio = "";
@@ -101,7 +104,7 @@ async function syncProfileUI() {
 
     document.querySelectorAll('[data-user-img]').forEach(img => {
         img.src = savedImg;
-        // FIX 2: Correctly check against the path to show/hide icons
+        // Logic to toggle between PFP and Default Icon
         if (savedImg !== "/assets/Logo.webp") {
             img.classList.remove('hidden');
             img.parentElement.querySelector('#defaultUserIcon')?.classList.add('hidden');
@@ -137,7 +140,7 @@ async function saveProfile(event) {
     const nameInput = document.getElementById('editFullName');
     const bioInput = document.getElementById('editBio');
     
-    // FIX 3: Safety check for the button to prevent "innerText of null"
+    // Hardened button selection
     const saveBtn = (event && event.currentTarget) ? event.currentTarget : document.querySelector('button[onclick*="saveProfile"]');
 
     if (!saveBtn || !nameInput) return;
@@ -162,23 +165,26 @@ async function saveProfile(event) {
             const response = await fetch(bufferedImg);
             const blob = await response.blob();
             
-            const fileExt = blob.type.split('/')[1] || 'png';
+            // Detect extension from blob type or fallback to jpeg
+            const fileExt = blob.type.split('/')[1] || 'jpeg';
             const fileName = `${user.id}.${fileExt}`;
 
-            // FIX 4: Added contentType so Supabase storage accepts the blob (fixes 400 error)
+            // FORCED FIX: Explicitly setting contentType to stop 400 Bad Request
             const { error: uploadError } = await client.storage
                 .from('avatars')
                 .upload(fileName, blob, { 
-                    contentType: blob.type,
+                    contentType: blob.type || 'image/jpeg', 
                     upsert: true 
                 });
 
             if (uploadError) throw uploadError;
 
-            avatarUrl = client.storage.from('avatars').getPublicUrl(fileName).data.publicUrl;
+            const { data } = client.storage.from('avatars').getPublicUrl(fileName);
+            avatarUrl = data.publicUrl;
         }
 
-        const { error } = await client.auth.updateUser({
+        // Update the Auth user metadata
+        const { error: updateError } = await client.auth.updateUser({
             data: {
                 full_name: newName,
                 bio: newBio,
@@ -186,14 +192,17 @@ async function saveProfile(event) {
             }
         });
 
-        if (error) throw error;
+        if (updateError) throw updateError;
 
+        // Update Local State
         localStorage.setItem('tlp_user_name', newName);
         localStorage.setItem('tlp_user_bio', newBio);
         localStorage.setItem('tlp_user_img', avatarUrl);
         localStorage.removeItem('temp_img_buffer');
 
         await syncProfileUI();
+        
+        // This will appear in your centered modal
         alert("SUCCESS: Profile synced across all devices!");
 
     } catch (err) {
@@ -205,8 +214,6 @@ async function saveProfile(event) {
         }
     }
 }
-
-
 /**
  * SYSTEM INITIALIZATION: PRICING & PAYMENT GATEWAY
  * ------------------------------------------------
