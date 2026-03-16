@@ -47,126 +47,126 @@ function loadToggleStates() {
     });
 }
 /**
- * 2. UI SYNC (Loads from Supabase → Shows on Dashboard)
- */
+ * 2. UI SYNC (Loads from Supabase → Shows on Dashboard)
+ */
 async function syncProfileUI() {
-    const client = await window.supabaseLoader.load();
-    const user = await window.AuthState.getUser();
+    const client = await window.supabaseLoader.load();
+    const user = await window.AuthState.getUser();
 
-    // FIX: Use an absolute path for the logo to avoid 404s on subpages
-    let savedName = "New User";
-    let savedImg = "/Logo.webp"; 
-    let savedBio = "";
+    let savedName = "New User";
+    let savedImg = "Logo.webp";
+    let savedBio = "";
 
-    if (user) {
-        savedName = user.user_metadata?.full_name || user.email.split('@')[0];
-        savedImg = user.user_metadata?.avatar_url || "/Logo.webp";
-        savedBio = user.user_metadata?.bio || "";
-    }
+    if (user) {
+        savedName = user.user_metadata?.full_name || user.email.split('@')[0];
+        savedImg = user.user_metadata?.avatar_url || "Logo.webp";
+        savedBio = user.user_metadata?.bio || "";
+    }
 
-    document.querySelectorAll('[data-user-name]').forEach(el => el.textContent = savedName);
+    // Update all name places
+    document.querySelectorAll('[data-user-name]').forEach(el => el.textContent = savedName);
 
-    document.querySelectorAll('[data-user-img]').forEach(img => {
-        img.src = savedImg;
-        // Check against both versions just in case
-        if (savedImg !== "/Logo.webp" && savedImg !== "Logo.webp") {
-            img.classList.remove('hidden');
-            img.parentElement.querySelector('#defaultUserIcon')?.classList.add('hidden');
-        }
-    });
+    // Update all image places
+    document.querySelectorAll('[data-user-img]').forEach(img => {
+        img.src = savedImg;
+        if (savedImg !== "Logo.webp") {
+            img.classList.remove('hidden');
+            img.parentElement.querySelector('#defaultUserIcon')?.classList.add('hidden');
+        }
+    });
 
-    const nameInput = document.getElementById('editFullName');
-    const bioInput = document.getElementById('editBio');
-    if (nameInput) nameInput.value = (savedName === "New User") ? "" : savedName;
-    if (bioInput) bioInput.value = savedBio;
+    // Fill inputs
+    const nameInput = document.getElementById('editFullName');
+    const bioInput = document.getElementById('editBio');
+    if (nameInput) nameInput.value = (savedName === "New User") ? "" : savedName;
+    if (bioInput) bioInput.value = savedBio;
 
-    localStorage.setItem('tlp_user_name', savedName);
-    localStorage.setItem('tlp_user_img', savedImg);
-    localStorage.setItem('tlp_user_bio', savedBio);
+    // Fallback localStorage (for offline)
+    localStorage.setItem('tlp_user_name', savedName);
+    localStorage.setItem('tlp_user_img', savedImg);
+    localStorage.setItem('tlp_user_bio', savedBio);
 }
 
 /**
- * 3. SAVE PROFILE (Uploads Image + Syncs to Supabase)
- */
+ * 3. SAVE PROFILE (Uploads Image + Syncs to Supabase)
+ */
 async function saveProfile() {
-    const client = await window.supabaseLoader.load();
-    const user = await window.AuthState.getUser();
-    
-    if (!user) {
-        alert("Session expired. Please log in again.");
-        window.location.href = 'login.html';
-        return;
-    }
+    // FORCE REFRESH SESSION
+    const client = await window.supabaseLoader.load();
+    const user = await window.AuthState.getUser(); const refreshError = user ? null : new Error('Not authenticated');
+    if (refreshError || !user) {
+        alert("Session expired. Please log in again.");
+        window.location.href = 'login.html';
+        return;
+    }
 
-    const nameInput = document.getElementById('editFullName');
-    const bioInput = document.getElementById('editBio');
-    const saveBtn = document.getElementById('saveProfileBtn') || event.currentTarget;
+    const nameInput = document.getElementById('editFullName');
+    const bioInput = document.getElementById('editBio');
+    const saveBtn = event.currentTarget;
 
-    if (!nameInput) return;
+    if (!nameInput) return;
 
-    const newName = nameInput.value.trim();
-    const newBio = bioInput ? bioInput.value.trim() : "";
-    const bufferedImg = localStorage.getItem('temp_img_buffer');
+    const newName = nameInput.value.trim();
+    const newBio = bioInput ? bioInput.value.trim() : "";
+    const bufferedImg = localStorage.getItem('temp_img_buffer');
 
-    if (!newName) {
-        alert("DATA ERROR: A name is required.");
-        return;
-    }
+    if (!newName) {
+        alert("DATA ERROR: A name is required.");
+        return;
+    }
 
-    const originalText = saveBtn.innerText;
-    saveBtn.innerText = "SYNCING...";
-    saveBtn.disabled = true;
+    const originalText = saveBtn.innerText;
+    saveBtn.innerText = "SYNCING...";
+    saveBtn.disabled = true;
 
-    try {
-        let avatarUrl = localStorage.getItem('tlp_user_img') || "/Logo.webp";
+    try {
+        let avatarUrl = localStorage.getItem('tlp_user_img') || "Logo.webp";
 
-        if (bufferedImg && bufferedImg.startsWith('data:image')) {
-            // FIX: Improved Blob handling to prevent 400 Bad Request
-            const response = await fetch(bufferedImg);
-            const blob = await response.blob();
-            
-            const fileExt = blob.type.split('/')[1] || 'png';
-            const fileName = `${user.id}.${fileExt}`;
+        if (bufferedImg && bufferedImg.startsWith('data:image')) {
+            const fileExt = bufferedImg.split(';')[0].split('/')[1] || 'png';
+            const fileName = `${user.id}.${fileExt}`;
+            const blob = await (await fetch(bufferedImg)).blob();
 
-            // We use 'upsert: true' to overwrite old PFPs
-            const { error: uploadError } = await client.storage
-                .from('avatars')
-                .upload(fileName, blob, { 
-                    contentType: blob.type, // Explicitly set content type
-                    upsert: true 
-                });
+            const { error: uploadError } = await client.storage
+                .from('avatars')
+                .upload(fileName, blob, { upsert: true });
 
-            if (uploadError) throw uploadError;
+            if (uploadError && uploadError.statusCode !== 409) throw uploadError;
 
-            const { data } = client.storage.from('avatars').getPublicUrl(fileName);
-            avatarUrl = data.publicUrl;
-        }
+            avatarUrl = client.storage.from('avatars').getPublicUrl(fileName).data.publicUrl;
+        }
 
-        const { error } = await client.auth.updateUser({
-            data: {
-                full_name: newName,
-                bio: newBio,
-                avatar_url: avatarUrl
-            }
-        });
+        const { error } = await client.auth.updateUser({
+            data: {
+                full_name: newName,
+                bio: newBio,
+                avatar_url: avatarUrl
+            }
+        });
 
-        if (error) throw error;
+        if (error) throw error;
 
-        localStorage.setItem('tlp_user_name', newName);
-        localStorage.setItem('tlp_user_bio', newBio);
-        localStorage.setItem('tlp_user_img', avatarUrl);
-        localStorage.removeItem('temp_img_buffer');
+        localStorage.setItem('tlp_user_name', newName);
+        localStorage.setItem('tlp_user_bio', newBio);
+        localStorage.setItem('tlp_user_img', avatarUrl);
+        localStorage.removeItem('temp_img_buffer');
 
-        await syncProfileUI();
-        alert("SUCCESS: Profile synced across all devices!");
+        await syncProfileUI();
+        alert("SUCCESS: Profile synced across all devices!");
 
-    } catch (err) {
-        alert("SYNC ERROR: " + err.message);
-    } finally {
-        saveBtn.innerText = originalText;
-        saveBtn.disabled = false;
-    }
+    } catch (err) {
+        alert("SYNC ERROR: " + err.message);
+    } finally {
+        saveBtn.innerText = originalText;
+        saveBtn.disabled = false;
+    }
 }
+
+// Run on page load
+document.addEventListener('DOMContentLoaded', syncProfileUI);
+// Event Listeners
+
+
 
 
 
