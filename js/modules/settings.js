@@ -162,25 +162,28 @@ async function saveProfile(event) {
         let avatarUrl = localStorage.getItem('tlp_user_img') || "/assets/Logo.webp";
 
         if (bufferedImg && bufferedImg.startsWith('data:image')) {
-            const response = await fetch(bufferedImg);
-            const blob = await response.blob();
-            
-            // Detect extension from blob type or fallback to jpeg
-            const fileExt = blob.type.split('/')[1] || 'jpeg';
-            const fileName = `${user.id}.${fileExt}`;
-
-            // FORCED FIX: Explicitly setting contentType to stop 400 Bad Request
-            const { error: uploadError } = await client.storage
-                .from('avatars')
-                .upload(fileName, blob, { 
-                    contentType: blob.type || 'image/jpeg', 
-                    upsert: true 
-                });
-
-            if (uploadError) throw uploadError;
-
-            const { data } = client.storage.from('avatars').getPublicUrl(fileName);
-            avatarUrl = data.publicUrl;
+            try {
+                const response = await fetch(bufferedImg);
+                const blob = await response.blob();
+                const fileExt = blob.type.split('/')[1] || 'jpeg';
+                const fileName = `${user.id}.${fileExt}`;
+                const { error: uploadError } = await client.storage
+                    .from('avatars')
+                    .upload(fileName, blob, {
+                        contentType: blob.type || 'image/jpeg',
+                        upsert: true
+                    });
+                if (uploadError) {
+                    console.warn('[Profile] Avatar upload failed:', uploadError.message);
+                    // Don't throw — continue saving name/bio without new avatar
+                } else {
+                    const { data } = client.storage.from('avatars').getPublicUrl(fileName);
+                    avatarUrl = data.publicUrl;
+                }
+            } catch(avatarErr) {
+                console.warn('[Profile] Avatar upload error:', avatarErr.message);
+                // Non-fatal — continue with existing avatar
+            }
         }
 
         // Update the Auth user metadata
@@ -193,6 +196,15 @@ async function saveProfile(event) {
         });
 
         if (updateError) throw updateError;
+
+        // Also upsert profiles table to keep it in sync
+        try {
+            await client.from('profiles').upsert({
+                id: user.id,
+                full_name: newName,
+                avatar_url: avatarUrl
+            }, { onConflict: 'id' });
+        } catch(pe) { console.warn('[Profile] Profiles upsert failed:', pe.message); }
 
         // Update Local State
         localStorage.setItem('tlp_user_name', newName);

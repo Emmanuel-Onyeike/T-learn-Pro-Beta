@@ -46,6 +46,18 @@ function switchLessonSubTab(tab) {
 function renderCourses(el) {
     if (!window.curriculumData) {
         el.innerHTML = `<p class="text-white/40 text-center py-20 text-sm">Loading curriculum...</p>`;
+        // Retry up to 10 times every 300ms waiting for curriculumData to load
+        let attempts = 0;
+        const retry = setInterval(() => {
+            attempts++;
+            if (window.curriculumData) {
+                clearInterval(retry);
+                renderCourses(el);
+            } else if (attempts >= 10) {
+                clearInterval(retry);
+                el.innerHTML = `<p class="text-red-400 text-center py-20 text-sm">Failed to load curriculum. Please refresh the page.</p>`;
+            }
+        }, 300);
         return;
     }
     el.innerHTML = `
