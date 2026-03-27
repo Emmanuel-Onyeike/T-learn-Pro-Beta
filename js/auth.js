@@ -227,16 +227,10 @@ let Auth = {
                 }
                 Utils.button.reset(btn, originalText);
             } else {
-                // Create profile row immediately on register
-                try {
-                    await this.client.from('profiles').insert({
-                        id: data.user.id, full_name: fullName,
-                        level: 100, semester: 1, xt_points: 10,
-                        streak: 0, role: 'student', avatar_url: ''
-                    });
-                    console.log('[Auth] Profile created on register');
-                } catch(pe) { console.warn('[Auth] Profile insert failed:', pe.message); }
-
+                // Profile row will be auto-created on first login via overview.js
+                // Don't insert here — it fails if email confirmation is required
+                // and data.user.id may not be confirmed yet
+                console.log('[Auth] Registration successful for:', data.user?.email);
                 Modal.show(MESSAGES.AUTH.REGISTER_SUCCESS.title, MESSAGES.AUTH.REGISTER_SUCCESS.message, false);
                 setTimeout(() => { Utils.url.redirect('./login.html'); }, 3000);
             }
