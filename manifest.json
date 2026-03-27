@@ -1,0 +1,15 @@
+{
+    "name": "T-Learn Pro",
+    "short_name": "T-Learn",
+    "description": "Your coding education platform",
+    "start_url": "/pages/login.html",
+    "display": "standalone",
+    "background_color": "#020617",
+    "theme_color": "#2563eb",
+    "orientation": "portrait-primary",
+    "icons": [
+        { "src": "/assets/Logo.webp", "sizes": "192x192", "type": "image/webp" },
+        { "src": "/assets/Logo.webp", "sizes": "512x512", "type": "image/webp" }
+    ],
+    "categories": ["education", "productivity"]
+}

@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="mobile-web-app-capable" content="yes">
     <title>Dashboard | T Learn Pro</title>
     <!-- LOCAL TAILWIND (was CDN — removed network roundtrip + render-blocking) -->
     <script src="../js/tailwind.js"></script>
@@ -59,6 +60,12 @@
         .no-scrollbar::-webkit-scrollbar { display: none; }
         * { -webkit-tap-highlight-color: transparent; }
     </style>
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="../manifest.json">
+    <meta name="theme-color" content="#2563eb">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 </head>
 <body class="bg-[#020617] text-gray-200 font-sans">
 
@@ -168,7 +175,7 @@
     </div>
 </aside>
 
-<main class="lg:ml-72 p-6 md:p-12 pb-32 lg:pb-12 min-h-screen">
+<main class="lg:ml-72 p-4 sm:p-6 md:p-10 pb-28 lg:pb-10 min-h-screen">
     <header class="mb-12 flex justify-between items-end">
         <div>
             <span id="greetingText" class="text-[10px] font-black text-blue-500 uppercase tracking-[0.3em] mb-2 block">Initializing...</span>
@@ -374,6 +381,17 @@ function enforceJamesUplink() {
 const observer = new MutationObserver(enforceJamesUplink);
 observer.observe(document.body, { childList: true, subtree: true });
 </script>
+
+    <!-- Service Worker Registration -->
+    <script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('../sw.js')
+                .then(reg => console.log('[SW] Registered:', reg.scope))
+                .catch(err => console.warn('[SW] Registration failed:', err));
+        });
+    }
+    </script>
 </body>
 </html>
 
