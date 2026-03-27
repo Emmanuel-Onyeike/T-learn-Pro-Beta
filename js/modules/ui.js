@@ -82,7 +82,7 @@ function updateSettingsTab(tabId) {
         <div class="flex items-center gap-6 mb-8">
             <div class="relative">
                 <div class="w-24 h-24 rounded-3xl bg-blue-600/20 border-2 border-blue-500/20 flex items-center justify-center overflow-hidden">
-                    <img src="Logo.webp" data-user-img class="w-full h-full object-cover hidden">
+                    <img src="../assets/Logo.webp" data-user-img class="w-full h-full object-cover hidden">
                     <i id="defaultUserIcon" class="fas fa-user text-5xl text-blue-500/50"></i>
                 </div>
                 <div onclick="triggerImageUpload()" class="absolute -bottom-2 -right-2 bg-blue-600 w-8 h-8 rounded-xl flex items-center justify-center border-4 border-[#020617] cursor-pointer hover:bg-blue-500 transition-all">

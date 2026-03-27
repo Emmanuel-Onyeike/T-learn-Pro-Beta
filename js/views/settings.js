@@ -16,7 +16,7 @@ views['Settings'] = `
             <div class="space-y-8">
                 <div class="flex items-center gap-6">
                     <div class="w-20 h-20 rounded-3xl bg-blue-600/20 border border-blue-500/20 flex items-center justify-center relative overflow-hidden">
-                        <img src="Logo.webp" data-user-img class="w-full h-full object-cover">
+                        <img src="../assets/Logo.webp" data-user-img class="w-full h-full object-cover">
                         <button onclick="updateSettingsTab('Profile')" class="absolute -bottom-2 -right-2 w-8 h-8 bg-blue-600 rounded-xl flex items-center justify-center text-[10px] border-4 border-[#020617] hover:bg-blue-500 transition-colors">
                             <i class="fas fa-camera"></i>
                         </button>

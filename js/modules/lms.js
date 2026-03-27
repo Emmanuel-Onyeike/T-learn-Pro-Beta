@@ -8,8 +8,9 @@ function setLEl(id, val)      { const el = document.getElementById(id); if (el) 
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
 function initLMS() {
-    const app = document.getElementById('lesson-app-root');
-    if (app) app.innerHTML = '';
+    // lesson-sub-content is the root in the lessons view
+    const app = document.getElementById('lesson-app-root') || document.getElementById('lesson-sub-content');
+    if (app && app.id === 'lesson-app-root') app.innerHTML = '';
     syncLessonsHeader();
     switchLessonSubTab('Courses');
 }
@@ -419,4 +420,5 @@ async function renderAnalytics(el) {
 
 // ── EXPOSE ─────────────────────────────────────────────────────────────────────
 window.initLMS            = initLMS;
+window.syncLessonsHeader  = syncLessonsHeader;
 window.switchLessonSubTab = switchLessonSubTab;
