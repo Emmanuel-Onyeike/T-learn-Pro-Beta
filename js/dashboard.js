@@ -3,7 +3,7 @@ const ActivityEngine = {
         const today = new Date().toISOString().split('T')[0];
         setInterval(() => {
             let log = JSON.parse(localStorage.getItem('user_node_activity') || '{}');
-            log[today] = (log[today] || 0) + 1; // Tracks seconds
+            log[today] = (log[today] || 0) + 60; // 60 seconds per minute tick
             localStorage.setItem('user_node_activity', JSON.stringify(log));
         }, 60000); // FIX: was 1000ms (every second) — now 60000ms (every minute)
     },
@@ -46,7 +46,7 @@ function updateView(viewName) {
         title.innerText = viewName;
 
         // FIX: Views with live data must never be served from cache
-        const NO_CACHE = ['Projects', 'Overview', 'Notifications', 'Settings'];
+        const NO_CACHE = ['Projects', 'Overview', 'Notifications', 'Settings', 'Lessons', 'Leaderboard'];
         const useCache = !NO_CACHE.includes(viewName);
 
         if (useCache && _viewCache[viewName]) {
@@ -83,19 +83,25 @@ function updateView(viewName) {
             });
         }
 
-        // FIX: Projects — always reload from localStorage and re-render on every visit
-        if (viewName === 'Projects') {
-            requestAnimationFrame(() => {
-                loadProjects();
-                updateUI();
-            });
-        }
-
         // FIX: Settings — re-render project list when Settings tab opens
         if (viewName === 'Settings') {
             requestAnimationFrame(() => {
                 updateSettingsTab('Profile');
                 syncProfileUI();
+            });
+        }
+
+        // Leaderboard — load live data
+        if (viewName === 'Leaderboard') {
+            requestAnimationFrame(() => {
+                if (typeof initLeaderboard === 'function') initLeaderboard();
+            });
+        }
+
+        // Lessons — sync level/semester header
+        if (viewName === 'Lessons') {
+            requestAnimationFrame(() => {
+                if (typeof syncLessonsHeader === 'function') syncLessonsHeader();
             });
         }
 

@@ -553,3 +553,81 @@ function updateOverviewUI(profile, rank) {
     }
 }
 
+
+// ── LEADERBOARD ENGINE ────────────────────────────────────────────────────────
+async function initLeaderboard() {
+    const loading = document.getElementById('leaderboard-loading');
+    const top5    = document.getElementById('leaderboard-top5');
+    const rest    = document.getElementById('leaderboard-rest');
+    if (!top5 || !rest) return;
+
+    try {
+        const client = await getSupabaseClient();
+        const user   = await window.AuthState.getUser();
+
+        const { data: rows } = await client
+            .from('profiles')
+            .select('id, full_name, xt_points, level, semester, avatar_url')
+            .order('xt_points', { ascending: false })
+            .limit(20);
+
+        if (loading) loading.style.display = 'none';
+        if (!rows?.length) {
+            top5.innerHTML = '<p class="text-white/30 text-center col-span-5 text-xs py-10">No rankings yet.</p>';
+            return;
+        }
+
+        const myId = user?.id;
+
+        top5.innerHTML = rows.slice(0,5).map((u, i) => {
+            const rank  = i + 1;
+            const rc    = rank===1?'text-yellow-400':rank===2?'text-slate-300':rank===3?'text-amber-600':'text-white/40';
+            const isMe  = u.id === myId;
+            return `
+            <div class="relative group ${isMe?'ring-2 ring-blue-500 rounded-[2rem]':''}">
+                <div class="absolute -top-3 -left-3 w-8 h-8 rounded-xl bg-[#0a0f25] border border-white/10 flex items-center justify-center z-10 shadow-xl">
+                    <span class="text-[10px] font-black ${rc}">${rank}</span>
+                </div>
+                <div class="bg-white/5 border border-white/10 rounded-[2rem] p-6 flex flex-col items-center text-center transition-all group-hover:bg-white/[0.08] group-hover:border-blue-500/30 group-hover:-translate-y-1">
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500/20 to-purple-500/20 border border-white/5 mb-3 flex items-center justify-center overflow-hidden">
+                        ${u.avatar_url?`<img src="${u.avatar_url}" class="w-full h-full object-cover">`:`<i class="fas fa-user text-white/20 text-lg"></i>`}
+                    </div>
+                    <p class="text-white font-black text-xs truncate w-full">${u.full_name||'Student'}</p>
+                    <p class="text-blue-400/60 text-[9px] font-bold mt-1">${u.xt_points||0} XP</p>
+                    ${isMe?'<span class="text-[8px] text-blue-400 font-black mt-1">YOU</span>':''}
+                </div>
+            </div>`;
+        }).join('');
+
+        if (rows.length > 5) {
+            rest.innerHTML = `
+                <div class="flex justify-between px-8 text-[9px] font-black text-white/20 uppercase tracking-widest mb-2">
+                    <span>Participant</span><span>XP</span><span>Rank</span>
+                </div>
+                <div class="space-y-2">
+                ${rows.slice(5).map((u, i) => {
+                    const rank = i + 6;
+                    const isMe = u.id === myId;
+                    return `
+                    <div class="flex items-center justify-between p-4 px-8 rounded-2xl transition-all
+                        ${isMe?'bg-blue-500/10 border border-blue-500/20':'bg-white/[0.02] border border-white/5 hover:bg-white/5 hover:border-white/10'}">
+                        <div class="flex items-center gap-4">
+                            <div class="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center overflow-hidden">
+                                ${u.avatar_url?`<img src="${u.avatar_url}" class="w-full h-full object-cover">`:`<i class="fas fa-user text-[10px] text-white/20"></i>`}
+                            </div>
+                            <div>
+                                <p class="text-white font-bold text-xs">${u.full_name||'Student'} ${isMe?'<span class="text-blue-400 text-[8px]">(you)</span>':''}</p>
+                                <p class="text-white/30 text-[9px]">Lv ${u.level||100} · Sem ${String(u.semester||1).padStart(3,'0')}</p>
+                            </div>
+                        </div>
+                        <span class="text-blue-400/60 font-bold text-xs">${u.xt_points||0} XP</span>
+                        <span class="text-white/30 font-black text-xs italic">#${rank}</span>
+                    </div>`;
+                }).join('')}
+                </div>`;
+        }
+    } catch(err) {
+        if (loading) loading.innerHTML = `<p class="text-red-400 text-sm text-center">${err.message}</p>`;
+    }
+}
+window.initLeaderboard = initLeaderboard;

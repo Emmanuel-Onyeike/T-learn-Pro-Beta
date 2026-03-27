@@ -227,17 +227,18 @@ let Auth = {
                 }
                 Utils.button.reset(btn, originalText);
             } else {
-                // Success - show message and redirect
-                Modal.show(
-                    MESSAGES.AUTH.REGISTER_SUCCESS.title,
-                    MESSAGES.AUTH.REGISTER_SUCCESS.message,
-                    false
-                );
+                // Create profile row immediately on register
+                try {
+                    await this.client.from('profiles').insert({
+                        id: data.user.id, full_name: fullName,
+                        level: 100, semester: 1, xt_points: 10,
+                        streak: 0, role: 'student', avatar_url: ''
+                    });
+                    console.log('[Auth] Profile created on register');
+                } catch(pe) { console.warn('[Auth] Profile insert failed:', pe.message); }
 
-                // Redirect to login after 3 seconds
-                setTimeout(() => {
-                    Utils.url.redirect('./login.html');
-                }, 3000);
+                Modal.show(MESSAGES.AUTH.REGISTER_SUCCESS.title, MESSAGES.AUTH.REGISTER_SUCCESS.message, false);
+                setTimeout(() => { Utils.url.redirect('./login.html'); }, 3000);
             }
         } catch (error) {
             console.error('Registration error:', error);
