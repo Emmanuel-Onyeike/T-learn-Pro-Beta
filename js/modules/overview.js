@@ -570,7 +570,6 @@ async function initLeaderboard() {
     const divider = document.getElementById('lb-divider');
     const list    = document.getElementById('lb-list');
     const youEl   = document.getElementById('lb-you');
-
     if (!podium) return;
 
     try {
@@ -578,142 +577,142 @@ async function initLeaderboard() {
         const user   = await window.AuthState.getUser();
         const myId   = user?.id;
 
-        // ── Fetch top 20 by XP ──────────────────────────────────────────────
-        const { data: top20 } = await client
+        // Fetch ALL users ordered by XP — use profiles directly (not leaderboard view)
+        const { data: allUsers } = await client
             .from('profiles')
             .select('id, full_name, xt_points, level, semester, avatar_url')
             .order('xt_points', { ascending: false })
-            .limit(20);
+            .limit(100);
 
         if (loading) loading.style.display = 'none';
-        if (!top20?.length) {
+
+        if (!allUsers?.length) {
             podium.innerHTML = '<p class="text-white/30 text-center text-xs py-10">No rankings yet.</p>';
             podium.classList.remove('hidden');
             return;
         }
 
-        // ── Check if current user is in top 20 ──────────────────────────────
-        const myIndexInTop20 = top20.findIndex(u => u.id === myId);
-        const iAmInTop20     = myIndexInTop20 !== -1;
+        // Assign ranks based on sorted order
+        const ranked = allUsers.map((u, i) => ({ ...u, rank: i + 1 }));
+        const myEntry = ranked.find(u => u.id === myId);
+        const myRank  = myEntry?.rank || null;
+        const iAmInTopList = myRank !== null && myRank <= 20;
 
-        // ── If user not in top 20, fetch their real rank separately ─────────
-        let myProfile = null;
-        let myRealRank = null;
+        // ── PODIUM — Top 3 (classic podium: 2nd left, 1st center, 3rd right) ──
+        const top3 = ranked.slice(0, 3);
+        // Reorder for podium: [2nd, 1st, 3rd]
+        const podiumOrder = top3.length === 1
+            ? [null, top3[0], null]
+            : top3.length === 2
+            ? [top3[1], top3[0], null]
+            : [top3[1], top3[0], top3[2]];
 
-        if (!iAmInTop20 && myId) {
-            const { data: me } = await client
-                .from('profiles')
-                .select('id, full_name, xt_points, level, semester, avatar_url')
-                .eq('id', myId)
-                .maybeSingle();
-
-            myProfile = me;
-
-            if (me) {
-                const { count } = await client
-                    .from('profiles')
-                    .select('id', { count: 'exact', head: true })
-                    .gt('xt_points', me.xt_points ?? 0);
-                myRealRank = (count ?? 0) + 1;
-            }
-        }
-
-        // ── PODIUM — Top 3 ───────────────────────────────────────────────────
-        const top3 = top20.slice(0, 3);
-        const medals = ['🥇', '🥈', '🥉'];
-        const podiumColors = [
-            { ring: 'ring-yellow-400', bg: 'bg-yellow-400/10', text: 'text-yellow-400', border: 'border-yellow-400/30' },
-            { ring: 'ring-slate-300',  bg: 'bg-slate-300/10',  text: 'text-slate-300',  border: 'border-slate-300/30'  },
-            { ring: 'ring-amber-600',  bg: 'bg-amber-600/10',  text: 'text-amber-600',  border: 'border-amber-600/30'  },
+        const podiumConfig = [
+            { medal: '🥈', color: 'from-slate-400/20 to-slate-600/10', border: 'border-slate-400/30',
+              text: 'text-slate-300', height: 'h-24', rank: 2 },
+            { medal: '🥇', color: 'from-yellow-400/20 to-yellow-600/10', border: 'border-yellow-400/40',
+              text: 'text-yellow-400', height: 'h-32', rank: 1 },
+            { medal: '🥉', color: 'from-amber-600/20 to-amber-800/10', border: 'border-amber-600/30',
+              text: 'text-amber-500', height: 'h-20', rank: 3 },
         ];
 
         podium.innerHTML = `
-            <div class="grid grid-cols-3 gap-3 sm:gap-4">
-                ${top3.map((u, i) => {
-                    const col  = podiumColors[i];
+            <div class="flex items-end justify-center gap-3 pt-4 pb-2">
+                ${podiumOrder.map((u, i) => {
+                    const cfg = podiumConfig[i];
+                    if (!u) return `<div class="flex-1 max-w-[140px]"></div>`;
                     const isMe = u.id === myId;
-                    const size = i === 0 ? 'py-8' : 'py-6';
                     return `
-                    <div class="relative flex flex-col items-center ${size} px-3 rounded-[2rem] border ${col.border} ${col.bg}
-                        ${isMe ? 'ring-2 ring-blue-500' : ''}">
-                        <span class="text-2xl mb-2">${medals[i]}</span>
-                        <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl border-2 ${col.border} overflow-hidden flex items-center justify-center bg-white/5 mb-3">
-                            ${u.avatar_url
-                                ? `<img src="${u.avatar_url}" class="w-full h-full object-cover">`
-                                : `<i class="fas fa-user ${col.text} text-lg"></i>`}
+                    <div class="flex-1 max-w-[160px] flex flex-col items-center">
+                        <!-- Avatar + name above podium block -->
+                        <div class="flex flex-col items-center mb-2 ${i === 1 ? 'scale-110' : ''}">
+                            <span class="text-xl mb-1">${cfg.medal}</span>
+                            <div class="w-14 h-14 rounded-2xl border-2 ${cfg.border} overflow-hidden
+                                flex items-center justify-center bg-white/5
+                                ${isMe ? 'ring-2 ring-blue-500 ring-offset-2 ring-offset-[#050b1d]' : ''}">
+                                ${u.avatar_url
+                                    ? `<img src="${u.avatar_url}" class="w-full h-full object-cover">`
+                                    : `<i class="fas fa-user ${cfg.text} text-xl"></i>`}
+                            </div>
+                            <p class="text-white font-black text-[10px] uppercase mt-2 text-center truncate w-full px-1">
+                                ${u.full_name?.split(' ')[0] || 'Student'}
+                                ${isMe ? '<br><span class="text-blue-400 text-[8px]">You</span>' : ''}
+                            </p>
+                            <p class="${cfg.text} font-black text-[9px] mt-0.5">${(u.xt_points||0).toLocaleString()} XP</p>
                         </div>
-                        <p class="text-white font-black text-[11px] uppercase truncate w-full text-center">
-                            ${u.full_name || 'Student'}
-                        </p>
-                        <p class="${col.text} font-black text-[10px] mt-1">${(u.xt_points || 0).toLocaleString()} XP</p>
-                        ${isMe ? '<span class="text-[8px] text-blue-400 font-black mt-1 uppercase tracking-widest">You</span>' : ''}
+                        <!-- Podium block -->
+                        <div class="w-full ${cfg.height} rounded-t-2xl bg-gradient-to-b ${cfg.color}
+                            border-t-2 border-l border-r ${cfg.border} flex items-start justify-center pt-2">
+                            <span class="${cfg.text} font-black text-lg">#${cfg.rank}</span>
+                        </div>
                     </div>`;
                 }).join('')}
             </div>`;
         podium.classList.remove('hidden');
 
         // ── LIST — Ranks 4 to 20 ─────────────────────────────────────────────
-        const rest = top20.slice(3);
+        const rest = ranked.slice(3, 20);
         if (rest.length) {
             divider.classList.remove('hidden');
-            list.innerHTML = rest.map((u, i) => {
-                const rank = i + 4;
+            list.innerHTML = rest.map(u => {
                 const isMe = u.id === myId;
                 return `
-                <div class="flex items-center justify-between px-5 py-4 rounded-2xl border transition-all
+                <div class="flex items-center justify-between px-4 py-3 rounded-2xl border transition-all
                     ${isMe
-                        ? 'bg-blue-500/10 border-blue-500/30 ring-1 ring-blue-500/20'
+                        ? 'bg-blue-500/10 border-blue-500/30'
                         : 'bg-white/[0.02] border-white/5 hover:bg-white/5 hover:border-white/10'}">
-                    <div class="flex items-center gap-4">
-                        <span class="text-white/30 font-black text-sm w-6 text-center">#${rank}</span>
-                        <div class="w-9 h-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center overflow-hidden">
+                    <div class="flex items-center gap-3">
+                        <span class="text-white/40 font-black text-xs w-7 text-center">#${u.rank}</span>
+                        <div class="w-8 h-8 rounded-xl bg-white/5 border border-white/10
+                            flex items-center justify-center overflow-hidden">
                             ${u.avatar_url
                                 ? `<img src="${u.avatar_url}" class="w-full h-full object-cover">`
-                                : `<i class="fas fa-user text-white/20 text-xs"></i>`}
+                                : `<i class="fas fa-user text-white/20 text-[10px]"></i>`}
                         </div>
                         <div>
                             <p class="text-white font-bold text-xs">
                                 ${u.full_name || 'Student'}
                                 ${isMe ? '<span class="text-blue-400 text-[9px] ml-1">(You)</span>' : ''}
                             </p>
-                            <p class="text-white/30 text-[9px]">Lv ${u.level || 100} · Sem ${String(u.semester || 1).padStart(3,'0')}</p>
+                            <p class="text-white/20 text-[9px]">Lv ${u.level||100} · ${(u.xt_points||0).toLocaleString()} XP</p>
                         </div>
                     </div>
-                    <span class="text-blue-400/70 font-black text-xs">${(u.xt_points || 0).toLocaleString()} XP</span>
+                    <span class="text-blue-400/60 font-black text-[10px]">${(u.xt_points||0).toLocaleString()} XP</span>
                 </div>`;
             }).join('');
             list.classList.remove('hidden');
         }
 
-        // ── YOUR CARD — shown only if you're outside top 20 ─────────────────
-        if (!iAmInTop20 && myProfile && myRealRank) {
+        // ── YOUR CARD — pinned at bottom if outside top 20 ───────────────────
+        if (myEntry && !iAmInTopList) {
             youEl.innerHTML = `
-                <div class="mt-2">
-                    <div class="flex items-center gap-3 mb-3">
+                <div class="space-y-3">
+                    <div class="flex items-center gap-3">
                         <div class="flex-1 h-px bg-white/5"></div>
                         <span class="text-white/20 text-[9px] font-black uppercase tracking-widest">Your Position</span>
                         <div class="flex-1 h-px bg-white/5"></div>
                     </div>
-                    <div class="flex items-center justify-between px-5 py-4 rounded-2xl border
-                        bg-blue-500/10 border-blue-500/30 ring-1 ring-blue-500/20">
-                        <div class="flex items-center gap-4">
-                            <span class="text-blue-400 font-black text-sm w-8 text-center">#${myRealRank}</span>
-                            <div class="w-9 h-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center overflow-hidden">
-                                ${myProfile.avatar_url
-                                    ? `<img src="${myProfile.avatar_url}" class="w-full h-full object-cover">`
-                                    : `<i class="fas fa-user text-white/20 text-xs"></i>`}
+                    <div class="flex items-center justify-between px-4 py-3 rounded-2xl
+                        bg-blue-500/10 border border-blue-500/30 ring-1 ring-blue-500/10">
+                        <div class="flex items-center gap-3">
+                            <span class="text-blue-400 font-black text-sm w-7 text-center">#${myRank}</span>
+                            <div class="w-8 h-8 rounded-xl bg-white/5 border border-blue-500/20
+                                flex items-center justify-center overflow-hidden">
+                                ${myEntry.avatar_url
+                                    ? `<img src="${myEntry.avatar_url}" class="w-full h-full object-cover">`
+                                    : `<i class="fas fa-user text-blue-400/40 text-[10px]"></i>`}
                             </div>
                             <div>
                                 <p class="text-white font-bold text-xs">
-                                    ${myProfile.full_name || 'You'}
+                                    ${myEntry.full_name || 'You'}
                                     <span class="text-blue-400 text-[9px] ml-1">(You)</span>
                                 </p>
-                                <p class="text-white/30 text-[9px]">Lv ${myProfile.level || 100} · Sem ${String(myProfile.semester || 1).padStart(3,'0')}</p>
+                                <p class="text-white/20 text-[9px]">Lv ${myEntry.level||100} · Sem ${String(myEntry.semester||1).padStart(3,'0')}</p>
                             </div>
                         </div>
                         <div class="text-right">
-                            <p class="text-blue-400 font-black text-xs">${(myProfile.xt_points || 0).toLocaleString()} XP</p>
-                            <p class="text-white/20 text-[9px] mt-0.5">Earn more XP to climb</p>
+                            <p class="text-blue-400 font-black text-[11px]">${(myEntry.xt_points||0).toLocaleString()} XP</p>
+                            <p class="text-white/20 text-[9px]">Earn XP to climb ↑</p>
                         </div>
                     </div>
                 </div>`;
