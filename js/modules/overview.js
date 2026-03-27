@@ -563,81 +563,167 @@ function updateOverviewUI(profile, rank) {
     }
 }
 
-
 // ── LEADERBOARD ENGINE ────────────────────────────────────────────────────────
 async function initLeaderboard() {
-    const loading = document.getElementById('leaderboard-loading');
-    const top5    = document.getElementById('leaderboard-top5');
-    const rest    = document.getElementById('leaderboard-rest');
-    if (!top5 || !rest) return;
+    const loading = document.getElementById('lb-loading');
+    const podium  = document.getElementById('lb-podium');
+    const divider = document.getElementById('lb-divider');
+    const list    = document.getElementById('lb-list');
+    const youEl   = document.getElementById('lb-you');
+
+    if (!podium) return;
 
     try {
         const client = await getSupabaseClient();
         const user   = await window.AuthState.getUser();
+        const myId   = user?.id;
 
-        const { data: rows } = await client
+        // ── Fetch top 20 by XP ──────────────────────────────────────────────
+        const { data: top20 } = await client
             .from('profiles')
             .select('id, full_name, xt_points, level, semester, avatar_url')
             .order('xt_points', { ascending: false })
             .limit(20);
 
         if (loading) loading.style.display = 'none';
-        if (!rows?.length) {
-            top5.innerHTML = '<p class="text-white/30 text-center col-span-5 text-xs py-10">No rankings yet.</p>';
+        if (!top20?.length) {
+            podium.innerHTML = '<p class="text-white/30 text-center text-xs py-10">No rankings yet.</p>';
+            podium.classList.remove('hidden');
             return;
         }
 
-        const myId = user?.id;
+        // ── Check if current user is in top 20 ──────────────────────────────
+        const myIndexInTop20 = top20.findIndex(u => u.id === myId);
+        const iAmInTop20     = myIndexInTop20 !== -1;
 
-        top5.innerHTML = rows.slice(0,5).map((u, i) => {
-            const rank  = i + 1;
-            const rc    = rank===1?'text-yellow-400':rank===2?'text-slate-300':rank===3?'text-amber-600':'text-white/40';
-            const isMe  = u.id === myId;
-            return `
-            <div class="relative group ${isMe?'ring-2 ring-blue-500 rounded-[2rem]':''}">
-                <div class="absolute -top-3 -left-3 w-8 h-8 rounded-xl bg-[#0a0f25] border border-white/10 flex items-center justify-center z-10 shadow-xl">
-                    <span class="text-[10px] font-black ${rc}">${rank}</span>
-                </div>
-                <div class="bg-white/5 border border-white/10 rounded-[2rem] p-6 flex flex-col items-center text-center transition-all group-hover:bg-white/[0.08] group-hover:border-blue-500/30 group-hover:-translate-y-1">
-                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500/20 to-purple-500/20 border border-white/5 mb-3 flex items-center justify-center overflow-hidden">
-                        ${u.avatar_url?`<img src="${u.avatar_url}" class="w-full h-full object-cover">`:`<i class="fas fa-user text-white/20 text-lg"></i>`}
-                    </div>
-                    <p class="text-white font-black text-xs truncate w-full">${u.full_name||'Student'}</p>
-                    <p class="text-blue-400/60 text-[9px] font-bold mt-1">${u.xt_points||0} XP</p>
-                    ${isMe?'<span class="text-[8px] text-blue-400 font-black mt-1">YOU</span>':''}
-                </div>
-            </div>`;
-        }).join('');
+        // ── If user not in top 20, fetch their real rank separately ─────────
+        let myProfile = null;
+        let myRealRank = null;
 
-        if (rows.length > 5) {
-            rest.innerHTML = `
-                <div class="flex justify-between px-8 text-[9px] font-black text-white/20 uppercase tracking-widest mb-2">
-                    <span>Participant</span><span>XP</span><span>Rank</span>
-                </div>
-                <div class="space-y-2">
-                ${rows.slice(5).map((u, i) => {
-                    const rank = i + 6;
+        if (!iAmInTop20 && myId) {
+            const { data: me } = await client
+                .from('profiles')
+                .select('id, full_name, xt_points, level, semester, avatar_url')
+                .eq('id', myId)
+                .maybeSingle();
+
+            myProfile = me;
+
+            if (me) {
+                const { count } = await client
+                    .from('profiles')
+                    .select('id', { count: 'exact', head: true })
+                    .gt('xt_points', me.xt_points ?? 0);
+                myRealRank = (count ?? 0) + 1;
+            }
+        }
+
+        // ── PODIUM — Top 3 ───────────────────────────────────────────────────
+        const top3 = top20.slice(0, 3);
+        const medals = ['🥇', '🥈', '🥉'];
+        const podiumColors = [
+            { ring: 'ring-yellow-400', bg: 'bg-yellow-400/10', text: 'text-yellow-400', border: 'border-yellow-400/30' },
+            { ring: 'ring-slate-300',  bg: 'bg-slate-300/10',  text: 'text-slate-300',  border: 'border-slate-300/30'  },
+            { ring: 'ring-amber-600',  bg: 'bg-amber-600/10',  text: 'text-amber-600',  border: 'border-amber-600/30'  },
+        ];
+
+        podium.innerHTML = `
+            <div class="grid grid-cols-3 gap-3 sm:gap-4">
+                ${top3.map((u, i) => {
+                    const col  = podiumColors[i];
                     const isMe = u.id === myId;
+                    const size = i === 0 ? 'py-8' : 'py-6';
                     return `
-                    <div class="flex items-center justify-between p-4 px-8 rounded-2xl transition-all
-                        ${isMe?'bg-blue-500/10 border border-blue-500/20':'bg-white/[0.02] border border-white/5 hover:bg-white/5 hover:border-white/10'}">
-                        <div class="flex items-center gap-4">
-                            <div class="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center overflow-hidden">
-                                ${u.avatar_url?`<img src="${u.avatar_url}" class="w-full h-full object-cover">`:`<i class="fas fa-user text-[10px] text-white/20"></i>`}
-                            </div>
-                            <div>
-                                <p class="text-white font-bold text-xs">${u.full_name||'Student'} ${isMe?'<span class="text-blue-400 text-[8px]">(you)</span>':''}</p>
-                                <p class="text-white/30 text-[9px]">Lv ${u.level||100} · Sem ${String(u.semester||1).padStart(3,'0')}</p>
-                            </div>
+                    <div class="relative flex flex-col items-center ${size} px-3 rounded-[2rem] border ${col.border} ${col.bg}
+                        ${isMe ? 'ring-2 ring-blue-500' : ''}">
+                        <span class="text-2xl mb-2">${medals[i]}</span>
+                        <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl border-2 ${col.border} overflow-hidden flex items-center justify-center bg-white/5 mb-3">
+                            ${u.avatar_url
+                                ? `<img src="${u.avatar_url}" class="w-full h-full object-cover">`
+                                : `<i class="fas fa-user ${col.text} text-lg"></i>`}
                         </div>
-                        <span class="text-blue-400/60 font-bold text-xs">${u.xt_points||0} XP</span>
-                        <span class="text-white/30 font-black text-xs italic">#${rank}</span>
+                        <p class="text-white font-black text-[11px] uppercase truncate w-full text-center">
+                            ${u.full_name || 'Student'}
+                        </p>
+                        <p class="${col.text} font-black text-[10px] mt-1">${(u.xt_points || 0).toLocaleString()} XP</p>
+                        ${isMe ? '<span class="text-[8px] text-blue-400 font-black mt-1 uppercase tracking-widest">You</span>' : ''}
                     </div>`;
                 }).join('')}
+            </div>`;
+        podium.classList.remove('hidden');
+
+        // ── LIST — Ranks 4 to 20 ─────────────────────────────────────────────
+        const rest = top20.slice(3);
+        if (rest.length) {
+            divider.classList.remove('hidden');
+            list.innerHTML = rest.map((u, i) => {
+                const rank = i + 4;
+                const isMe = u.id === myId;
+                return `
+                <div class="flex items-center justify-between px-5 py-4 rounded-2xl border transition-all
+                    ${isMe
+                        ? 'bg-blue-500/10 border-blue-500/30 ring-1 ring-blue-500/20'
+                        : 'bg-white/[0.02] border-white/5 hover:bg-white/5 hover:border-white/10'}">
+                    <div class="flex items-center gap-4">
+                        <span class="text-white/30 font-black text-sm w-6 text-center">#${rank}</span>
+                        <div class="w-9 h-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center overflow-hidden">
+                            ${u.avatar_url
+                                ? `<img src="${u.avatar_url}" class="w-full h-full object-cover">`
+                                : `<i class="fas fa-user text-white/20 text-xs"></i>`}
+                        </div>
+                        <div>
+                            <p class="text-white font-bold text-xs">
+                                ${u.full_name || 'Student'}
+                                ${isMe ? '<span class="text-blue-400 text-[9px] ml-1">(You)</span>' : ''}
+                            </p>
+                            <p class="text-white/30 text-[9px]">Lv ${u.level || 100} · Sem ${String(u.semester || 1).padStart(3,'0')}</p>
+                        </div>
+                    </div>
+                    <span class="text-blue-400/70 font-black text-xs">${(u.xt_points || 0).toLocaleString()} XP</span>
                 </div>`;
+            }).join('');
+            list.classList.remove('hidden');
         }
+
+        // ── YOUR CARD — shown only if you're outside top 20 ─────────────────
+        if (!iAmInTop20 && myProfile && myRealRank) {
+            youEl.innerHTML = `
+                <div class="mt-2">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="flex-1 h-px bg-white/5"></div>
+                        <span class="text-white/20 text-[9px] font-black uppercase tracking-widest">Your Position</span>
+                        <div class="flex-1 h-px bg-white/5"></div>
+                    </div>
+                    <div class="flex items-center justify-between px-5 py-4 rounded-2xl border
+                        bg-blue-500/10 border-blue-500/30 ring-1 ring-blue-500/20">
+                        <div class="flex items-center gap-4">
+                            <span class="text-blue-400 font-black text-sm w-8 text-center">#${myRealRank}</span>
+                            <div class="w-9 h-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center overflow-hidden">
+                                ${myProfile.avatar_url
+                                    ? `<img src="${myProfile.avatar_url}" class="w-full h-full object-cover">`
+                                    : `<i class="fas fa-user text-white/20 text-xs"></i>`}
+                            </div>
+                            <div>
+                                <p class="text-white font-bold text-xs">
+                                    ${myProfile.full_name || 'You'}
+                                    <span class="text-blue-400 text-[9px] ml-1">(You)</span>
+                                </p>
+                                <p class="text-white/30 text-[9px]">Lv ${myProfile.level || 100} · Sem ${String(myProfile.semester || 1).padStart(3,'0')}</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-blue-400 font-black text-xs">${(myProfile.xt_points || 0).toLocaleString()} XP</p>
+                            <p class="text-white/20 text-[9px] mt-0.5">Earn more XP to climb</p>
+                        </div>
+                    </div>
+                </div>`;
+            youEl.classList.remove('hidden');
+        }
+
     } catch(err) {
-        if (loading) loading.innerHTML = `<p class="text-red-400 text-sm text-center">${err.message}</p>`;
+        if (loading) loading.innerHTML = `<p class="text-red-400 text-center text-sm py-10">${err.message}</p>`;
+        console.error('[Leaderboard]', err);
     }
 }
+
 window.initLeaderboard = initLeaderboard;
