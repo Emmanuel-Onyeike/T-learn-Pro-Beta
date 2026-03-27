@@ -61,14 +61,13 @@ async function loadOverviewStats() {
             return;
         }
 
-        // Get user's rank from leaderboard view
-        const { data: rankData } = await client
-            .from('leaderboard')
-            .select('rank')
-            .eq('id', user.id)
-            .maybeSingle();
+        // Calculate real rank: count users with MORE xt_points than current user
+        const { count: higherCount } = await client
+            .from('profiles')
+            .select('id', { count: 'exact', head: true })
+            .gt('xt_points', profile.xt_points ?? 0);
 
-        const rank = rankData?.rank || 0;
+        const rank = (higherCount ?? 0) + 1; // rank = users ahead + 1
 
         // Update all stat cards
         setEl('dash-xp-val',    profile.xt_points ?? 0);
@@ -262,13 +261,19 @@ async function updateStreak(userId, today, lastLogin) {
 async function checkLeaderboardBonus(userId, currentPoints) {
     try {
         const client = await getSupabaseClient();
-        const { data: rankData } = await client
-            .from('leaderboard')
-            .select('rank')
+        // Get current user xt_points first
+        const { data: myProfile } = await client
+            .from('profiles')
+            .select('xt_points')
             .eq('id', userId)
             .maybeSingle();
 
-        const rank = rankData?.rank;
+        const { count: higherCount } = await client
+            .from('profiles')
+            .select('id', { count: 'exact', head: true })
+            .gt('xt_points', myProfile?.xt_points ?? 0);
+
+        const rank = (higherCount ?? 0) + 1;
         if (!rank) return;
 
         const bonusKey = `tlp_bonus_${new Date().toISOString().split('T')[0]}`;
@@ -310,10 +315,15 @@ async function drawActivityNebula() {
     if (!canvas) return;
 
     const ctx    = canvas.getContext('2d');
+    const dpr    = window.devicePixelRatio || 1;
     const W      = canvas.offsetWidth;
     const H      = canvas.offsetHeight;
-    canvas.width  = W;
-    canvas.height = H;
+    // Scale canvas for retina/high-DPI screens
+    canvas.width  = W * dpr;
+    canvas.height = H * dpr;
+    canvas.style.width  = W + 'px';
+    canvas.style.height = H + 'px';
+    ctx.scale(dpr, dpr);
 
     const WEEKS   = 52;
     const DAYS    = 7;
