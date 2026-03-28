@@ -106,12 +106,12 @@ async function loadOverviewStats() {
 // ─── 2. XT POINTS EARN ENGINE ────────────────────────────────────────────────
 // Call awardXP(eventType) from anywhere in the app to give points
 const XP_TABLE = {
-    register:         10,
-    daily_login:       5,
-    complete_lesson:  10,
-    pass_exam:        30,
-    add_project:      30,
-    hourly_active:    20,
+    register:          1,
+    daily_login:       1,
+    complete_lesson:   2,
+    pass_exam:         5,
+    add_project:       3,
+    hourly_active:     1,
 };
 
 async function awardXP(eventType) {
@@ -489,7 +489,13 @@ function setEl(id, value) {
 }
 
 // ─── 8. MAIN INIT — called by updateView('Overview') ────────────────────────
+let _overviewInitialized = false;
+
 async function initOverview() {
+    // Prevent re-running XP/streak logic every tab switch
+    // Only re-draw the canvas and refresh stats
+    const firstRun = !_overviewInitialized;
+    _overviewInitialized = true;
     console.log('[Overview] Initialising...');
 
     // Load instant cached values first (no flicker)
@@ -505,18 +511,18 @@ async function initOverview() {
     // Load project stats (instant, from localStorage)
     loadProjectStatsIntoOverview();
 
-    // Run async tasks in parallel
+    // Always refresh stats and nebula
     await Promise.all([
-        loadOverviewStats(),      // fresh data from Supabase
-        recordDailyLogin(),       // streak + login XP
-        drawActivityNebula(),     // canvas grid
+        loadOverviewStats(),
+        drawActivityNebula(),
     ]);
 
-    // Start hourly XP timer
-    startHourlyXPTimer();
-
-    // Sync activity to Supabase every 5 minutes
-    setInterval(syncActivityToSupabase, 5 * 60 * 1000);
+    // Only run XP/streak/timers on FIRST load, not every tab switch
+    if (firstRun) {
+        await recordDailyLogin();
+        startHourlyXPTimer();
+        setInterval(syncActivityToSupabase, 5 * 60 * 1000);
+    }
 
     console.log('[Overview] Init complete');
 }
