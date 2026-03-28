@@ -38,10 +38,14 @@ const STATIC_ASSETS = [
 // Install — cache all static assets
 self.addEventListener('install', event => {
     event.waitUntil(
-        caches.open(CACHE_NAME)
-            .then(cache => cache.addAll(STATIC_ASSETS.map(url => new Request(url, { cache: 'reload' }))))
-            .then(() => self.skipWaiting())
-            .catch(err => console.warn('[SW] Cache install partial fail:', err))
+        caches.open(CACHE_NAME).then(cache => {
+            // Cache each asset individually — skip failures silently
+            const cachePromises = STATIC_ASSETS.map(url =>
+                cache.add(new Request(url, { cache: 'reload' }))
+                    .catch(err => console.warn('[SW] Skipping:', url, err.message))
+            );
+            return Promise.all(cachePromises);
+        }).then(() => self.skipWaiting())
     );
 });
 
