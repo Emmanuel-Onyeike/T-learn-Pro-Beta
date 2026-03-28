@@ -41,11 +41,11 @@ views['Lessons'] = `
     <div id="lesson-sub-content" class="min-h-[400px] transition-all duration-500"></div>
 </div>
 <div id="global-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-2 sm:p-4 bg-black/95 backdrop-blur-xl">
-    <div class="absolute inset-0" onclick="closeModal()"></div>
+    <div class="absolute inset-0" onclick="closeLMSModal()"></div>
     <div id="modal-container" class="bg-[#0a1128] border border-white/10 w-full max-w-lg rounded-[2.5rem] shadow-2xl relative z-10 max-h-[90vh] flex flex-col overflow-hidden">
         <div class="p-6 border-b border-white/5 flex justify-between items-center bg-white/[0.02]">
             <h2 id="modal-title" class="text-white font-black uppercase tracking-widest italic text-sm">Course Details</h2>
-            <button onclick="closeModal()" class="w-10 h-10 rounded-full bg-white/5 text-gray-400 hover:text-white flex items-center justify-center transition-all">
+            <button onclick="closeLMSModal()" class="w-10 h-10 rounded-full bg-white/5 text-gray-400 hover:text-white flex items-center justify-center transition-all">
                 <i class="fas fa-times text-xs"></i>
             </button>
         </div>

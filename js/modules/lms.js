@@ -121,10 +121,12 @@ window.markTopicDone = function(courseName, idx) {
     renderCourses(document.getElementById('lesson-sub-content'));
 };
 
-window.closeModal = function() {
+window.closeLMSModal = function() {
     const modal = document.getElementById('global-modal');
     if (modal) modal.classList.add('hidden');
 };
+// Keep backward compat
+window.closeModal = window.closeLMSModal;
 
 // ── EXAM ──────────────────────────────────────────────────────────────────────
 let _examState = { active:false, questions:[], answers:{}, timerRef:null, courseKey:'HTML' };
@@ -179,6 +181,28 @@ window.startExam = async function() {
     const generated = document.getElementById('generatedCodeDisplay')?.value;
     if (!input || input !== generated) { alert('Invalid token. Generate a token first then enter it.'); return; }
     if (_examState.active) { alert('Exam already in progress.'); return; }
+
+    // Check: user must complete at least 50% of topics in selected course
+    const courseKey = document.getElementById('examCourse')?.value || 'HTML';
+    const totalTopics = window.curriculumData?.[courseKey]?.topics?.length || 0;
+    const completedTopics = JSON.parse(localStorage.getItem(`tlp_completed_${courseKey}`) || '[]').length;
+    const completionPct = totalTopics ? Math.round((completedTopics / totalTopics) * 100) : 0;
+
+    if (completionPct < 50) {
+        const content = document.getElementById('examContent');
+        if (content) content.innerHTML = `
+            <div class="p-6 bg-yellow-500/10 border border-yellow-500/20 rounded-2xl text-center space-y-3">
+                <i class="fas fa-lock text-yellow-400 text-3xl"></i>
+                <p class="text-yellow-400 font-black uppercase text-sm">Exam Locked</p>
+                <p class="text-white/60 text-xs">Complete at least 50% of ${courseKey} topics before taking the exam.</p>
+                <p class="text-white/40 text-[10px]">${completedTopics}/${totalTopics} topics done (${completionPct}% — need 50%)</p>
+                <button onclick="switchLessonSubTab('Courses')" 
+                    class="mt-2 px-6 py-3 bg-blue-600 text-white rounded-xl font-black text-[10px] uppercase hover:bg-blue-500 transition-all">
+                    Go Study →
+                </button>
+            </div>`;
+        return;
+    }
 
     _examState.courseKey = document.getElementById('examCourse')?.value || 'HTML';
     const content = document.getElementById('examContent');
@@ -361,10 +385,15 @@ async function renderResults(el) {
 }
 
 function resolveStatus(r) {
+    if (!r) return 'pending';
     if (r.status === 'passed' || r.status === 'failed') return r.status;
-    return Date.now() >= new Date(r.promote_at).getTime()
-        ? (r.score >= 60 ? 'passed' : 'failed')
-        : 'pending';
+    if (!r.promote_at) return r.score >= 60 ? 'passed' : 'failed';
+    const now = Date.now();
+    const promoteAt = new Date(r.promote_at).getTime();
+    if (now >= promoteAt) {
+        return r.score >= 60 ? 'passed' : 'failed';
+    }
+    return 'pending'; // Still within 24hr window
 }
 
 async function processPromotions(client, user, results) {
