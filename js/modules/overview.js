@@ -106,17 +106,23 @@ async function loadOverviewStats() {
 // ─── 2. XT POINTS EARN ENGINE ────────────────────────────────────────────────
 // Call awardXP(eventType) from anywhere in the app to give points
 const XP_TABLE = {
-    register:          1,
-    daily_login:       1,
-    complete_lesson:   2,
-    pass_exam:         5,
+    register:          5,   // new user bonus
+    daily_login:       5,   // login each day
+    complete_lesson:  10,   // per course opened (HTML/CSS/JS/Python)
+    pass_exam:       100,   // pass exam
+    fail_exam:       -25,   // fail exam (deduct)
+    write_exam:       25,   // just for taking the exam
     add_project:       3,
-    hourly_active:     1,
+    hourly_active:     0,   // disabled — was inflating too fast
+    rank_up:           1,   // rank improvement
+    promoted:        200,   // semester promotion
+    streak_bonus:      5,   // streak milestone
 };
 
 async function awardXP(eventType) {
     const points = XP_TABLE[eventType];
-    if (!points) return console.warn('[XP] Unknown event:', eventType);
+    if (points === undefined) return console.warn('[XP] Unknown event:', eventType);
+    if (points === 0) return; // disabled events
 
     try {
         const client = await getSupabaseClient();
@@ -137,7 +143,7 @@ async function awardXP(eventType) {
             .eq('id', user.id)
             .maybeSingle();
 
-        const newPoints = (profile?.xt_points || 0) + points;
+        const newPoints = Math.max(0, (profile?.xt_points || 0) + points);
 
         await client
             .from('profiles')
@@ -541,7 +547,7 @@ function updateOverviewUI(profile, rank) {
     const local     = JSON.parse(localStorage.getItem('user_node_activity') || '{}');
     const today     = new Date().toISOString().split('T')[0];
     const seconds   = local[today] || 0;
-    const pct       = Math.min(Math.round((seconds / 3600) * 100), 100);
+    const pct       = Math.min(Math.round((seconds / 28800) * 100), 100); // 8hrs = 100%
     const bar       = document.getElementById('dailyBar');
     const pctEl     = document.getElementById('dailyPct');
     if (bar)   bar.style.width = pct + '%';

@@ -1,11 +1,13 @@
 const ActivityEngine = {
     track() {
-        const today = new Date().toISOString().split('T')[0];
         setInterval(() => {
+            // Only count if tab is actually visible and user is active
+            if (document.visibilityState !== 'visible') return;
+            const today = new Date().toISOString().split('T')[0];
             let log = JSON.parse(localStorage.getItem('user_node_activity') || '{}');
-            log[today] = (log[today] || 0) + 60; // 60 seconds per minute tick
+            log[today] = (log[today] || 0) + 60; // +60 seconds per visible minute
             localStorage.setItem('user_node_activity', JSON.stringify(log));
-        }, 60000); // FIX: was 1000ms (every second) — now 60000ms (every minute)
+        }, 60000);
     },
 
     // Decides box thickness based on time spent
