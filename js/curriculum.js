@@ -144,551 +144,71 @@ const curriculumData = {
       { title: 'Fetch API & Working with APIs', theory: 'fetch() makes HTTP requests and returns a Promise. Always check res.ok — a 404 still resolves the Promise. JSON.stringify() serializes the request body. Set Content-Type header for POST requests. Use AbortController to cancel requests. Handle both network errors (fetch rejects) and HTTP errors (check res.ok) separately.', challenge: 'Build a function that fetches paginated data, handles errors, and supports request cancellation.', snippet: `// GET request\nasync function getUser(id) {\n  const res = await fetch(\`https://api.example.com/users/\${id}\`);\n  if (!res.ok) throw new Error(\`User not found: \${res.status}\`);\n  return res.json();\n}\n\n// POST request\nasync function createPost(data) {\n  const res = await fetch("/api/posts", {\n    method: "POST",\n    headers: { "Content-Type": "application/json" },\n    body: JSON.stringify(data)\n  });\n  if (!res.ok) {\n    const error = await res.json();\n    throw new Error(error.message);\n  }\n  return res.json();\n}\n\n// Cancellable request\nconst controller = new AbortController();\n\nfetch("/api/slow-endpoint", { signal: controller.signal })\n  .then(r => r.json())\n  .catch(e => {\n    if (e.name === "AbortError") return; // cancelled\n    throw e;\n  });\n\n// Cancel after 5 seconds\nsetTimeout(() => controller.abort(), 5000);` },
 
       { title: 'Local Storage & Browser APIs', theory: 'localStorage stores data persistently (survives tab/browser close). sessionStorage clears when tab closes. Both only store strings — use JSON.stringify/parse for objects. Useful browser APIs: Clipboard API (copy/paste), Geolocation API, Notification API, IntersectionObserver (lazy loading), Web Workers (background threads).', challenge: 'Build a persistent theme switcher (light/dark) that saves preference in localStorage and applies on page load.', snippet: `// localStorage\nlocalStorage.setItem("user", JSON.stringify({ name: "Alice" }));\nconst user = JSON.parse(localStorage.getItem("user") ?? "{}");\nlocalStorage.removeItem("user");\nlocalStorage.clear();\n\n// Session storage (clears on tab close)\nsessionStorage.setItem("draft", formData);\n\n// Theme switcher\nconst savedTheme = localStorage.getItem("theme") ?? "dark";\ndocument.documentElement.dataset.theme = savedTheme;\n\nfunction toggleTheme() {\n  const current = document.documentElement.dataset.theme;\n  const next = current === "dark" ? "light" : "dark";\n  document.documentElement.dataset.theme = next;\n  localStorage.setItem("theme", next);\n}\n\n// Clipboard API\nasync function copyToClipboard(text) {\n  await navigator.clipboard.writeText(text);\n  showToast("Copied!");\n}\n\n// IntersectionObserver (lazy loading)\nconst observer = new IntersectionObserver(entries => {\n  entries.forEach(entry => {\n    if (entry.isIntersecting) {\n      entry.target.src = entry.target.dataset.src;\n      observer.unobserve(entry.target);\n    }\n  });\n});\ndocument.querySelectorAll("img[data-src]").forEach(img => observer.observe(img));` },
+
+      { title: 'Template Literals & String Methods', theory: 'Template literals use backticks for multi-line strings and embed expressions with ${}. Key string methods: includes(), startsWith(), endsWith(), padStart(), padEnd(), repeat(), trimStart(), trimEnd(), replaceAll(). F-string equivalent in JS.', challenge: 'Build an HTML card generator using template literals. Format a price using padStart to align digits.', snippet: 'const name = "Alice", score = 95;\n// Template literal\nconst msg = `Hello ${name}, you scored ${score}%`;\n// Multi-line\nconst html = `\n  <div class="card">\n    <h2>${name}</h2>\n  </div>`;\n// String methods\n"hello".includes("ell");      // true\n"hi".padStart(5, "*");        // "***hi"\n"ha".repeat(3);               // "hahaha"\n"  trim  ".trimStart();       // "trim  "\n"a-b-a".replaceAll("a","x");  // "x-b-x"' },
+
+      { title: 'Error Types & Debugging', theory: 'JavaScript error types: TypeError (wrong type), ReferenceError (undefined var), SyntaxError (bad code), RangeError (out of range). The Error object has message and stack. Custom errors extend Error. Debug with console.table(), console.group(), console.time(), and the browser DevTools debugger.', challenge: 'Create custom error classes for ValidationError, NetworkError, and AuthError. Write a function that throws the right error type.', snippet: 'try {\n  null.property;       // TypeError\n  undeclaredVar;       // ReferenceError\n  new Array(-1);       // RangeError\n} catch (err) {\n  console.log(err.name);    // "TypeError"\n  console.log(err.message);\n  console.log(err.stack);\n}\n\n// Custom error\nclass ValidationError extends Error {\n  constructor(field, message) {\n    super(message);\n    this.name = "ValidationError";\n    this.field = field;\n  }\n}\n\n// Debug tools\nconsole.table(users);\nconsole.time("render");\nrenderPage();\nconsole.timeEnd("render");' },
+
+      { title: 'ES Modules: import & export', theory: 'ES Modules split code into files. Named exports: export const/function. Default export: one per file. Import named: import { name } from "./file.js". Import default: import name from "./file.js". Import all: import * as ns. Dynamic import() returns a Promise for code splitting and lazy loading.', challenge: 'Split a utils.js file into math.js, string.js, and date.js modules. Use both named and default exports.', snippet: '// math.js\nexport const add = (a, b) => a + b;\nexport const mul = (a, b) => a * b;\nexport default function clamp(v, min, max) {\n  return Math.min(Math.max(v, min), max);\n}\n\n// main.js\nimport clamp, { add, mul } from "./math.js";\nimport * as Math2 from "./math.js";\n\n// Dynamic import (lazy)\nbutton.addEventListener("click", async () => {\n  const { renderChart } = await import("./charts.js");\n  renderChart(data);\n});' },
+
+      { title: 'Regular Expressions', theory: 'Regular expressions match patterns in strings. Create with /pattern/flags. Flags: g (global), i (case-insensitive). Methods: test() checks match, match() returns matches, replace() replaces. Patterns: \\d (digit), \\w (word char), \\s (whitespace), + (1+), * (0+), ? (optional), ^ (start), $ (end).', challenge: 'Write regex to validate an email, extract all phone numbers from text, and check password strength.', snippet: '// Test\n/^\\d+$/.test("123");      // true\n/^\\d+$/.test("12a");      // false\n\n// Email\nconst email = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;\nemail.test("alice@example.com"); // true\n\n// Extract all matches\nconst text = "Call 080-1234-5678 or 090-8765";\nconst phones = text.match(/\\d{3}-\\d{4}/g);\n\n// Replace\n"Hello World".replace(/world/i, "JS");\n\n// Groups\nconst [, y, m, d] = "2026-03-29".match(/(\\d{4})-(\\d{2})-(\\d{2})/);\n\n// Password strength\n/^(?=.*[A-Za-z])(?=.*\\d).{8,}$/.test("pass123!");' },
+
+      { title: 'OOP Classes & Inheritance', theory: 'ES6 Classes provide clean OOP syntax. Constructor runs on creation. Private fields use #. Static methods belong to the class not instances. Getters/setters use get/set keywords. extends creates child classes. super() calls parent constructor. instanceof checks type.', challenge: 'Build a BankAccount class with private balance, deposit/withdraw with validation, and a transaction history.', snippet: 'class Animal {\n  #name;\n  constructor(name, sound) {\n    this.#name = name;\n    this.sound = sound;\n  }\n  get name() { return this.#name; }\n  speak() { return `${this.#name}: ${this.sound}`; }\n  static create(n, s) { return new Animal(n, s); }\n}\n\nclass Dog extends Animal {\n  #tricks = [];\n  constructor(name) { super(name, "Woof"); }\n  learn(trick) { this.#tricks.push(trick); return this; }\n  perform() { return this.#tricks.join(", "); }\n}\n\nconst dog = new Dog("Max");\ndog.learn("sit").learn("stay");\nconsole.log(dog.speak());    // Max: Woof\nconsole.log(dog instanceof Animal); // true' },
+
+      { title: 'Iterators & Generators', theory: 'Iterators implement next() returning {value, done}. Objects with [Symbol.iterator] are iterable. Generators (function*) produce values lazily using yield — they pause and resume. Great for infinite sequences and lazy data streams. yield* delegates to another generator.', challenge: 'Write a generator for infinite Fibonacci numbers. Write a custom iterable range class.', snippet: '// Custom iterable\nconst range = {\n  from: 1, to: 5,\n  [Symbol.iterator]() {\n    let current = this.from;\n    return {\n      next: () => current <= this.to\n        ? { value: current++, done: false }\n        : { value: undefined, done: true }\n    };\n  }\n};\nconsole.log([...range]); // [1,2,3,4,5]\n\n// Generator\nfunction* fibonacci() {\n  let [a, b] = [0, 1];\n  while (true) {\n    yield a;\n    [a, b] = [b, a + b];\n  }\n}\n\nconst fib = fibonacci();\nfib.next().value; // 0\nfib.next().value; // 1\nfib.next().value; // 1' },
+
+      { title: 'Performance & Debounce', theory: 'Write performant JS: batch DOM reads before writes to avoid layout thrashing, use requestAnimationFrame for animations, debounce event handlers that fire too often (scroll, resize, input). Debounce delays execution until the user stops. Throttle limits to once per interval. Measure with performance.now().', challenge: 'Implement debounce from scratch. Apply it to a search input that calls an API. Also implement throttle.', snippet: '// Debounce: waits until user stops\nfunction debounce(fn, delay) {\n  let timer;\n  return function(...args) {\n    clearTimeout(timer);\n    timer = setTimeout(() => fn.apply(this, args), delay);\n  };\n}\n\n// Throttle: max once per interval\nfunction throttle(fn, limit) {\n  let last = 0;\n  return function(...args) {\n    const now = Date.now();\n    if (now - last >= limit) {\n      last = now;\n      return fn.apply(this, args);\n    }\n  };\n}\n\n// Usage\nconst search = debounce(query => fetchResults(query), 300);\ninput.addEventListener("input", e => search(e.target.value));\n\nconst onScroll = throttle(() => updateNav(), 100);\nwindow.addEventListener("scroll", onScroll);' },
+
+      { title: 'TypeScript Basics', theory: 'TypeScript adds static types to JavaScript catching bugs at compile time. Basic types: string, number, boolean, null, undefined, any, void. Interfaces define object shapes. Union types (string | number). Optional properties with ?. Generics make reusable typed code. TypeScript compiles to plain JavaScript.', challenge: 'Convert a user management module to TypeScript — add interfaces, type a function, use generics, and create a type guard.', snippet: '// Types\nlet name: string = "Alice";\nlet age: number = 25;\n\n// Interface\ninterface User {\n  id: number;\n  name: string;\n  email: string;\n  role?: "student" | "admin"; // optional union\n}\n\n// Typed function\nfunction greet(user: User): string {\n  return `Hello, ${user.name}`;\n}\n\n// Generic\nfunction first<T>(arr: T[]): T | undefined {\n  return arr[0];\n}\nfirst<number>([1, 2, 3]);  // number\nfirst<string>(["a", "b"]); // string\n\n// Type guard\nfunction isUser(obj: unknown): obj is User {\n  return typeof obj === "object" && obj !== null && "name" in obj;\n}' },
+
+      { title: 'Web APIs: Clipboard & Notifications', theory: 'Browser Web APIs add powerful features. Clipboard API reads/writes clipboard content. Notifications API shows OS-level notifications (requires permission). IntersectionObserver triggers callbacks when elements enter viewport — perfect for lazy loading and scroll animations. ResizeObserver watches element size changes.', challenge: 'Build a copy-to-clipboard button with fallback, and a notification button that requests permission then shows a notification.', snippet: '// Clipboard API\nasync function copyText(text) {\n  try {\n    await navigator.clipboard.writeText(text);\n    showToast("Copied!");\n  } catch {\n    // Fallback\n    const el = document.createElement("textarea");\n    el.value = text;\n    document.body.appendChild(el);\n    el.select();\n    document.execCommand("copy");\n    el.remove();\n  }\n}\n\n// Notifications\nasync function notify(title, body) {\n  const perm = await Notification.requestPermission();\n  if (perm === "granted") {\n    new Notification(title, { body, icon: "/logo.png" });\n  }\n}\n\n// IntersectionObserver\nconst observer = new IntersectionObserver(entries => {\n  entries.forEach(e => {\n    if (e.isIntersecting) {\n      e.target.classList.add("visible");\n      observer.unobserve(e.target);\n    }\n  });\n}, { threshold: 0.1 });\n\ndocument.querySelectorAll(".card").forEach(el => observer.observe(el));' },
     ]
-
-      { title: 'Template Literals & String Methods', theory: 'Template literals use backticks and support multi-line strings, embedded expressions with ${}, and tagged templates. Essential string methods: includes(), startsWith(), endsWith(), padStart(), padEnd(), repeat(), trimStart(), trimEnd(), replaceAll(). String.raw preserves backslashes.', challenge: 'Build a function that generates an HTML card template using template literals and formats a price with padStart.', snippet: `// Template literals
-const name = "Alice", score = 95;
-const card = \`
-  <div class="card">
-    <h2>\${name}</h2>
-    <p>Score: \${score >= 60 ? "Pass" : "Fail"}</p>
-    <p>Grade: \${score}%</p>
-  </div>
-\`;
-
-// Multi-line string
-const sql = \`
-  SELECT * FROM users
-  WHERE score > \${score}
-  ORDER BY name
-\`;
-
-// String methods
-"hello world".includes("world");   // true
-"hello".startsWith("hel");         // true
-"hello".padStart(10, "*");         // "*****hello"
-"ha".repeat(3);                    // "hahaha"
-"  trim  ".trimStart();            // "trim  "
-"a-b-a".replaceAll("a", "x");      // "x-b-x"` },
-
-      { title: 'Error Types & Debugging', theory: 'JavaScript has built-in error types: Error (generic), TypeError (wrong type), ReferenceError (undefined variable), SyntaxError (bad code), RangeError (out of range), URIError. The Error object has message and stack properties. Custom errors extend Error. Use browser DevTools debugger, console.table(), console.group(), performance.now() for debugging.', challenge: 'Create custom error classes for a form validator: ValidationError, NetworkError, AuthError — each with helpful messages.', snippet: `// Built-in errors
-try {
-  null.property;          // TypeError
-  undeclaredVar;          // ReferenceError
-  new Array(-1);          // RangeError
-} catch (err) {
-  console.log(err.name);    // "TypeError"
-  console.log(err.message); // "Cannot read..."
-  console.log(err.stack);   // Full call stack
-}
-
-// Custom error classes
-class ValidationError extends Error {
-  constructor(field, message) {
-    super(message);
-    this.name = "ValidationError";
-    this.field = field;
-  }
-}
-
-class NetworkError extends Error {
-  constructor(statusCode, message) {
-    super(message);
-    this.name = "NetworkError";
-    this.statusCode = statusCode;
-  }
-}
-
-// Debugging tools
-console.table(users);          // tabular display
-console.group("API Call");
-console.log("Request sent");
-console.groupEnd();
-const t0 = performance.now();
-// ...code...
-console.log(performance.now() - t0, "ms");` },
-
-      { title: 'Modules: import & export', theory: 'ES Modules split code into separate files. Named exports: export const/function/class. Default export: one per file, export default. Import named: import { name } from "./file.js". Import default: import name from "./file.js". Import all: import * as ns from "./file.js". Dynamic import: import("./file.js") returns a Promise — use for code splitting.', challenge: 'Split a utility file into separate modules: math.js, string.js, date.js and import them into main.js using both named and default exports.', snippet: `// math.js — named exports
-export const add  = (a, b) => a + b;
-export const mul  = (a, b) => a * b;
-export function clamp(val, min, max) {
-  return Math.min(Math.max(val, min), max);
-}
-
-// user.js — default export
-export default class User {
-  constructor(name) { this.name = name; }
-}
-
-// main.js — importing
-import User from "./user.js";
-import { add, mul, clamp } from "./math.js";
-import * as MathUtils from "./math.js";
-
-// Re-export
-export { add } from "./math.js";
-
-// Dynamic import (lazy loading)
-button.addEventListener("click", async () => {
-  const { renderChart } = await import("./charts.js");
-  renderChart(data);
-});` },
-
-      { title: 'Regular Expressions', theory: 'Regular expressions (regex) match patterns in strings. Create with /pattern/flags or new RegExp(). Flags: g (global), i (case-insensitive), m (multiline). Methods: test() checks match, match() returns matches, replace() replaces, split() splits. Key patterns: \d (digit), \w (word char), \s (whitespace), . (any char), * (0+), + (1+), ? (0-1), ^ (start), $ (end).', challenge: 'Write regex patterns to: validate email, extract phone numbers, validate password strength, and find all URLs in text.', snippet: `// Test a pattern
-/^\d+$/.test("123");      // true (only digits)
-/^\d+$/.test("12a");      // false
-
-// Email validation
-const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-emailRegex.test("alice@example.com"); // true
-
-// Extract matches
-const text = "Call 080-1234-5678 or 090-8765-4321";
-const phones = text.match(/\d{3}-\d{4}-\d{4}/g);
-// ["080-1234-5678", "090-8765-4321"]
-
-// Replace
-"Hello World".replace(/world/i, "JavaScript");
-// "Hello JavaScript"
-
-// Groups
-const date = "2026-03-29";
-const [, year, month, day] = date.match(/(\d{4})-(\d{2})-(\d{2})/);
-
-// Password: min 8 chars, letter + number
-const strongPassword = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!]{8,}$/;` },
-
-      { title: 'Web APIs: Geolocation, Notifications & Clipboard', theory: 'Browser Web APIs provide powerful features beyond DOM manipulation. Geolocation API gets user location (requires permission). Notifications API shows OS notifications. Clipboard API reads/writes clipboard. IntersectionObserver triggers when elements enter viewport. ResizeObserver watches element size changes. All require user permission and use Promises.', challenge: 'Build a "copy code" button using Clipboard API with a fallback, and a "notify me" button using the Notifications API.', snippet: `// Clipboard API
-async function copyToClipboard(text) {
-  try {
-    await navigator.clipboard.writeText(text);
-    showToast("Copied!");
-  } catch {
-    // Fallback for older browsers
-    const el = document.createElement("textarea");
-    el.value = text;
-    document.body.appendChild(el);
-    el.select();
-    document.execCommand("copy");
-    el.remove();
-  }
-}
-
-// Notifications API
-async function requestNotification() {
-  const permission = await Notification.requestPermission();
-  if (permission === "granted") {
-    new Notification("T-Learn Pro", {
-      body: "Your exam result is ready!",
-      icon: "/assets/Logo.webp"
-    });
-  }
-}
-
-// IntersectionObserver
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add("visible");
-      observer.unobserve(entry.target); // stop after first trigger
-    }
-  });
-}, { threshold: 0.1 });
-
-document.querySelectorAll(".card").forEach(el => observer.observe(el));` },
-
-      { title: 'Object-Oriented JavaScript: Classes', theory: 'ES6 Classes provide cleaner OOP syntax. class keyword, constructor, methods, static methods (class.method, not instance.method), private fields (#), getters/setters, extends for inheritance, super() calls parent constructor. instanceof checks type. Classes are syntactic sugar over prototypes — good to understand both.', challenge: 'Build a BankAccount class with private balance, deposit/withdraw methods, transaction history, and overdraft protection.', snippet: `class Animal {
-  #name; // private field
-
-  constructor(name, sound) {
-    this.#name = name;
-    this.sound = sound;
-  }
-
-  get name() { return this.#name; }  // getter
-
-  speak() {
-    return \`\${this.#name} says \${this.sound}\`;
-  }
-
-  static create(name, sound) {        // static method
-    return new Animal(name, sound);
-  }
-}
-
-// Inheritance
-class Dog extends Animal {
-  #tricks = [];
-
-  constructor(name) {
-    super(name, "Woof");              // call parent
-  }
-
-  learn(trick) {
-    this.#tricks.push(trick);
-    return this;                      // method chaining
-  }
-
-  perform() {
-    return this.#tricks.join(", ");
-  }
-}
-
-const dog = new Dog("Max");
-dog.learn("sit").learn("stay").learn("fetch");
-console.log(dog.speak());     // Max says Woof
-console.log(dog.perform());   // sit, stay, fetch
-console.log(dog instanceof Animal); // true` },
-
-      { title: 'Iterators, Generators & Symbols', theory: 'Iterators implement the iterator protocol: objects with a next() method returning {value, done}. Any object with [Symbol.iterator] is iterable (arrays, strings, Maps, Sets). Generators (function*) produce values lazily with yield. They pause execution and resume on .next(). Useful for infinite sequences, lazy evaluation, and async control flow.', challenge: 'Write a generator that yields Fibonacci numbers indefinitely, and a custom iterable class for a range.', snippet: `// Iterator protocol
-const range = {
-  from: 1, to: 5,
-  [Symbol.iterator]() {
-    let current = this.from;
-    const last = this.to;
-    return {
-      next() {
-        return current <= last
-          ? { value: current++, done: false }
-          : { value: undefined, done: true };
-      }
-    };
-  }
-};
-console.log([...range]); // [1, 2, 3, 4, 5]
-
-// Generator function
-function* fibonacci() {
-  let [a, b] = [0, 1];
-  while (true) {
-    yield a;
-    [a, b] = [b, a + b];
-  }
-}
-
-const fib = fibonacci();
-console.log(fib.next().value); // 0
-console.log(fib.next().value); // 1
-console.log(fib.next().value); // 1
-console.log(fib.next().value); // 2
-
-// Take first n values
-function take(gen, n) {
-  return Array.from({ length: n }, () => gen.next().value);
-}
-console.log(take(fibonacci(), 8)); // [0,1,1,2,3,5,8,13]` },
-
-      { title: 'Performance & Best Practices', theory: 'Write performant JS: avoid layout thrashing (batch DOM reads then writes), use requestAnimationFrame for animations, debounce scroll/resize handlers, prefer CSS transitions over JS animations, use Web Workers for CPU-heavy tasks, lazy load non-critical code, avoid memory leaks (remove event listeners, clear intervals). Measure with performance.mark() and Chrome DevTools.', challenge: 'Implement a debounce function from scratch and use it to optimise a search input that fires API calls.', snippet: `// Debounce: wait until user stops typing
-function debounce(fn, delay) {
-  let timer;
-  return function(...args) {
-    clearTimeout(timer);
-    timer = setTimeout(() => fn.apply(this, args), delay);
-  };
-}
-
-// Throttle: at most once per interval
-function throttle(fn, limit) {
-  let lastCall = 0;
-  return function(...args) {
-    const now = Date.now();
-    if (now - lastCall >= limit) {
-      lastCall = now;
-      return fn.apply(this, args);
-    }
-  };
-}
-
-// Usage
-const search = debounce(async (query) => {
-  const results = await fetchSearch(query);
-  renderResults(results);
-}, 300); // wait 300ms after last keystroke
-
-input.addEventListener("input", e => search(e.target.value));
-
-// Avoid layout thrashing
-// BAD: alternates read/write
-elements.forEach(el => el.style.width = el.offsetWidth + 10 + "px");
-
-// GOOD: batch reads, then batch writes
-const widths = elements.map(el => el.offsetWidth);
-elements.forEach((el, i) => el.style.width = widths[i] + 10 + "px");` },
-
-      { title: 'TypeScript Basics', theory: 'TypeScript adds static types to JavaScript. Types catch bugs at compile time, not runtime. Basic types: string, number, boolean, null, undefined, any, unknown, never, void. Interfaces define object shapes. Type aliases with type keyword. Union types (string | number), intersection types (&). Generics make reusable typed components. TypeScript compiles to JavaScript.', challenge: 'Convert a JavaScript user management module to TypeScript with interfaces, type guards, and generics.', snippet: `// Basic types
-let name: string = "Alice";
-let age: number = 25;
-let active: boolean = true;
-
-// Interface
-interface User {
-  id: number;
-  name: string;
-  email: string;
-  role?: "student" | "admin"; // optional, union type
-}
-
-// Type alias
-type Score = number;
-type Grade = "A" | "B" | "C" | "D" | "F";
-
-// Function types
-function greet(user: User): string {
-  return \`Hello, \${user.name}\`;
-}
-
-// Generics
-function getFirst<T>(arr: T[]): T | undefined {
-  return arr[0];
-}
-getFirst<number>([1, 2, 3]);    // number
-getFirst<string>(["a", "b"]);   // string
-
-// Type guard
-function isUser(obj: unknown): obj is User {
-  return typeof obj === "object" && obj !== null && "name" in obj;
-}
-
-// Readonly and Partial
-type ReadonlyUser = Readonly<User>;
-type PartialUser  = Partial<User>;  // all fields optional` },
-    ]
-  },
   },
 
   Python: {
     icon: 'fa-python',
     topics: [
-      { title: 'What is Python', theory: 'Python is a high-level, readable programming language created by Guido van Rossum in 1991. Used for web development, data science, AI/ML, automation, and scripting. Python uses significant indentation (4 spaces) instead of curly braces. The Python philosophy (import this) values readability and simplicity.', challenge: 'Install Python, run your first script from the terminal, and experiment with the interactive REPL.', snippet: `# Your first Python script\nprint("Hello, T-Learn Pro!")\n\n# Python REPL (run python in terminal)\n# >>> 2 + 2\n# 4\n# >>> "hello".upper()\n# 'HELLO'\n\n# Python philosophy\nimport this  # prints The Zen of Python\n\n# Check version\nimport sys\nprint(sys.version)\n\n# Indentation matters!\nif True:\n    print("This is indented — part of the if block")\n    if True:\n        print("Double indented")\nprint("Back to no indentation")` },
+      { title: 'What is Python', theory: 'Python is a high-level, readable programming language created by Guido van Rossum in 1991. Used for web development, data science, AI/ML, automation, and scripting. Python uses significant indentation (4 spaces) instead of curly braces. The Python philosophy (import this) values readability and simplicity.', challenge: 'Install Python, run your first script from the terminal, and experiment with the interactive REPL.', snippet: '# Your first Python script\nprint("Hello, T-Learn Pro!")\n\n# Python REPL (run python in terminal)\n# >>> 2 + 2\n# 4\n# >>> "hello".upper()\n# \'HELLO\'\n\n# Python philosophy\nimport this  # prints The Zen of Python\n\n# Check version\nimport sys\nprint(sys.version)\n\n# Indentation matters!\nif True:\n    print("This is indented — part of the if block")\n    if True:\n        print("Double indented")\nprint("Back to no indentation")' },
 
-      { title: 'Variables & Data Types', theory: 'Python is dynamically typed — no type declarations. Types: int, float, complex, str (immutable), bool (True/False — capitalised), bytes, None. type() returns the type. isinstance() checks type. Python integers have unlimited precision. Underscores in numbers improve readability: 1_000_000.', challenge: 'Create variables of every basic type, use type() to verify them, and write a type checker function.', snippet: `# Basic types\nage      = 25            # int\nprice    = 9.99          # float\nbig      = 1_000_000     # int (readable with underscores)\ncomplex_num = 2 + 3j    # complex\nname     = "Alice"       # str\nactive   = True          # bool (capital T/F!)\nnothing  = None          # NoneType\n\n# Type checking\nprint(type(age))        # <class 'int'>\nprint(isinstance(age, int))   # True\nprint(isinstance(age, (int, float)))  # True (check multiple)\n\n# Type conversion\nprint(int("42"))     # 42\nprint(float("3.14")) # 3.14\nprint(str(100))      # "100"\nprint(bool(0))       # False\nprint(bool(""))      # False\nprint(bool(" "))     # True (non-empty string!)` },
+      { title: 'Variables & Data Types', theory: 'Python is dynamically typed — no type declarations. Types: int, float, complex, str (immutable), bool (True/False — capitalised), bytes, None. type() returns the type. isinstance() checks type. Python integers have unlimited precision. Underscores in numbers improve readability: 1_000_000.', challenge: 'Create variables of every basic type, use type() to verify them, and write a type checker function.', snippet: '# Basic types\nage      = 25            # int\nprice    = 9.99          # float\nbig      = 1_000_000     # int (readable with underscores)\ncomplex_num = 2 + 3j    # complex\nname     = "Alice"       # str\nactive   = True          # bool (capital T/F!)\nnothing  = None          # NoneType\n\n# Type checking\nprint(type(age))        # <class \'int\'>\nprint(isinstance(age, int))   # True\nprint(isinstance(age, (int, float)))  # True (check multiple)\n\n# Type conversion\nprint(int("42"))     # 42\nprint(float("3.14")) # 3.14\nprint(str(100))      # "100"\nprint(bool(0))       # False\nprint(bool(""))      # False\nprint(bool(" "))     # True (non-empty string!)' },
 
-      { title: 'If/Else Statements', theory: 'Python uses if, elif, and else. Indentation defines blocks — no curly braces or semicolons. Falsy values: 0, 0.0, "", [], {}, None, False. Truthy: everything else. The walrus operator := assigns and tests in one step. Python has no switch/case before 3.10 — use if/elif chains or dicts.', challenge: 'Write a grade calculator that handles all edge cases and uses walrus operator for input validation.', snippet: `score = 85\n\n# Basic if/elif/else\nif score >= 90:\n    grade = "A"\nelif score >= 80:\n    grade = "B"\nelif score >= 70:\n    grade = "C"\nelif score >= 60:\n    grade = "D"\nelse:\n    grade = "F"\nprint(f"Grade: {grade}")\n\n# Ternary (conditional expression)\nresult = "Pass" if score >= 60 else "Fail"\n\n# Chained comparisons (Python feature)\nif 0 <= score <= 100:\n    print("Valid score")\n\n# Match statement (Python 3.10+)\nmatch status_code:\n    case 200: print("OK")\n    case 404: print("Not Found")\n    case 500: print("Server Error")\n    case _:   print("Unknown")  # default` },
+      { title: 'If/Else Statements', theory: 'Python uses if, elif, and else. Indentation defines blocks — no curly braces or semicolons. Falsy values: 0, 0.0, "", [], {}, None, False. Truthy: everything else. The walrus operator := assigns and tests in one step. Python has no switch/case before 3.10 — use if/elif chains or dicts.', challenge: 'Write a grade calculator that handles all edge cases and uses walrus operator for input validation.', snippet: 'score = 85\n\n# Basic if/elif/else\nif score >= 90:\n    grade = "A"\nelif score >= 80:\n    grade = "B"\nelif score >= 70:\n    grade = "C"\nelif score >= 60:\n    grade = "D"\nelse:\n    grade = "F"\nprint(f"Grade: {grade}")\n\n# Ternary (conditional expression)\nresult = "Pass" if score >= 60 else "Fail"\n\n# Chained comparisons (Python feature)\nif 0 <= score <= 100:\n    print("Valid score")\n\n# Match statement (Python 3.10+)\nmatch status_code:\n    case 200: print("OK")\n    case 404: print("Not Found")\n    case 500: print("Server Error")\n    case _:   print("Unknown")  # default' },
 
-      { title: 'Loops', theory: 'for loops iterate over any iterable (list, string, range, dict, file). range(start, stop, step) generates numbers. while loops run while a condition is true. break exits the loop. continue skips to next iteration. else on a loop runs when loop completes normally (not via break) — rarely used but useful.', challenge: 'FizzBuzz: print 1-100, replace multiples of 3 with Fizz, 5 with Buzz, both with FizzBuzz.', snippet: `# for with range\nfor i in range(5):       # 0, 1, 2, 3, 4\nfor i in range(1, 6):    # 1, 2, 3, 4, 5\nfor i in range(0, 10, 2): # 0, 2, 4, 6, 8\nfor i in range(5, 0, -1): # 5, 4, 3, 2, 1 (countdown)\n\n# Iterate with index\nfruits = ["apple", "banana", "mango"]\nfor i, fruit in enumerate(fruits):\n    print(f"{i}: {fruit}")\n\n# Iterate two lists together\nnames  = ["Alice", "Bob"]\nscores = [92, 78]\nfor name, score in zip(names, scores):\n    print(f"{name}: {score}")\n\n# While loop\ncount = 0\nwhile count < 5:\n    print(count)\n    count += 1\n\n# FizzBuzz\nfor n in range(1, 101):\n    if n % 15 == 0: print("FizzBuzz")\n    elif n % 3 == 0: print("Fizz")\n    elif n % 5 == 0: print("Buzz")\n    else: print(n)` },
+      { title: 'Loops', theory: 'for loops iterate over any iterable (list, string, range, dict, file). range(start, stop, step) generates numbers. while loops run while a condition is true. break exits the loop. continue skips to next iteration. else on a loop runs when loop completes normally (not via break) — rarely used but useful.', challenge: 'FizzBuzz: print 1-100, replace multiples of 3 with Fizz, 5 with Buzz, both with FizzBuzz.', snippet: '# for with range\nfor i in range(5):       # 0, 1, 2, 3, 4\nfor i in range(1, 6):    # 1, 2, 3, 4, 5\nfor i in range(0, 10, 2): # 0, 2, 4, 6, 8\nfor i in range(5, 0, -1): # 5, 4, 3, 2, 1 (countdown)\n\n# Iterate with index\nfruits = ["apple", "banana", "mango"]\nfor i, fruit in enumerate(fruits):\n    print(f"{i}: {fruit}")\n\n# Iterate two lists together\nnames  = ["Alice", "Bob"]\nscores = [92, 78]\nfor name, score in zip(names, scores):\n    print(f"{name}: {score}")\n\n# While loop\ncount = 0\nwhile count < 5:\n    print(count)\n    count += 1\n\n# FizzBuzz\nfor n in range(1, 101):\n    if n % 15 == 0: print("FizzBuzz")\n    elif n % 3 == 0: print("Fizz")\n    elif n % 5 == 0: print("Buzz")\n    else: print(n)' },
 
-      { title: 'Functions', theory: 'def defines a function. Parameters can have defaults. *args collects extra positional arguments as a tuple. **kwargs collects extra keyword arguments as a dict. Functions return None by default. Docstrings (triple-quoted strings) document functions. Functions are first-class objects — they can be passed as arguments.', challenge: 'Write a decorator function that logs how long any function takes to execute.', snippet: `# Basic function\ndef greet(name, greeting="Hello"):\n    """Return a greeting string.\n    \n    Args:\n        name: The person's name\n        greeting: The greeting word (default: Hello)\n    """\n    return f"{greeting}, {name}!"\n\nprint(greet("Alice"))           # Hello, Alice!\nprint(greet("Bob", "Hi"))       # Hi, Bob!\nprint(greet(greeting="Hey", name="Carol"))  # Hey, Carol!\n\n# *args: variable positional arguments\ndef add(*numbers):\n    return sum(numbers)\nprint(add(1, 2, 3, 4, 5))  # 15\n\n# **kwargs: variable keyword arguments\ndef create_user(**fields):\n    return fields\nprint(create_user(name="Alice", role="admin", score=95))\n\n# Lambda (anonymous function)\nsquare = lambda x: x ** 2\nsorted_students = sorted(students, key=lambda s: s["score"], reverse=True)` },
+      { title: 'Functions', theory: 'def defines a function. Parameters can have defaults. *args collects extra positional arguments as a tuple. **kwargs collects extra keyword arguments as a dict. Functions return None by default. Docstrings (triple-quoted strings) document functions. Functions are first-class objects — they can be passed as arguments.', challenge: 'Write a decorator function that logs how long any function takes to execute.', snippet: '# Basic function\ndef greet(name, greeting="Hello"):\n    """Return a greeting string.\n    \n    Args:\n        name: The person\'s name\n        greeting: The greeting word (default: Hello)\n    """\n    return f"{greeting}, {name}!"\n\nprint(greet("Alice"))           # Hello, Alice!\nprint(greet("Bob", "Hi"))       # Hi, Bob!\nprint(greet(greeting="Hey", name="Carol"))  # Hey, Carol!\n\n# *args: variable positional arguments\ndef add(*numbers):\n    return sum(numbers)\nprint(add(1, 2, 3, 4, 5))  # 15\n\n# **kwargs: variable keyword arguments\ndef create_user(**fields):\n    return fields\nprint(create_user(name="Alice", role="admin", score=95))\n\n# Lambda (anonymous function)\nsquare = lambda x: x ** 2\nsorted_students = sorted(students, key=lambda s: s["score"], reverse=True)' },
 
-      { title: 'Lists', theory: 'Lists are ordered, mutable sequences. Create with [] or list(). Access by index (0-based, negative from end). Slicing: list[start:end:step]. Mutating methods: append(), extend(), insert(), remove(), pop(), sort(), reverse(). Non-mutating: sorted(), reversed(). List comprehensions create lists concisely.', challenge: 'Given a list of numbers, use list operations to: filter evens, square them, sort descending, then get the top 3.', snippet: `fruits = ["apple", "banana", "mango", "orange"]\n\n# Access\nprint(fruits[0])    # "apple"\nprint(fruits[-1])   # "orange" (last item)\nprint(fruits[1:3])  # ["banana", "mango"] (slicing)\nprint(fruits[::-1]) # reversed copy\n\n# Mutating\nfruits.append("kiwi")          # add to end\nfruits.insert(1, "avocado")    # insert at index\nfruits.remove("banana")        # remove by value\npopped = fruits.pop()          # remove and return last\nfruits.sort()                  # sort in place\n\n# Non-mutating\nsorted_fruits = sorted(fruits, reverse=True)\n\n# List comprehension\nsquares   = [x**2 for x in range(10)]\nevens     = [x for x in range(20) if x % 2 == 0]\nprocessed = [s.upper() for s in fruits if len(s) > 4]\n\n# Unpacking\nfirst, *middle, last = fruits\nprint(first, last, middle)` },
+      { title: 'Lists', theory: 'Lists are ordered, mutable sequences. Create with [] or list(). Access by index (0-based, negative from end). Slicing: list[start:end:step]. Mutating methods: append(), extend(), insert(), remove(), pop(), sort(), reverse(). Non-mutating: sorted(), reversed(). List comprehensions create lists concisely.', challenge: 'Given a list of numbers, use list operations to: filter evens, square them, sort descending, then get the top 3.', snippet: 'fruits = ["apple", "banana", "mango", "orange"]\n\n# Access\nprint(fruits[0])    # "apple"\nprint(fruits[-1])   # "orange" (last item)\nprint(fruits[1:3])  # ["banana", "mango"] (slicing)\nprint(fruits[::-1]) # reversed copy\n\n# Mutating\nfruits.append("kiwi")          # add to end\nfruits.insert(1, "avocado")    # insert at index\nfruits.remove("banana")        # remove by value\npopped = fruits.pop()          # remove and return last\nfruits.sort()                  # sort in place\n\n# Non-mutating\nsorted_fruits = sorted(fruits, reverse=True)\n\n# List comprehension\nsquares   = [x**2 for x in range(10)]\nevens     = [x for x in range(20) if x % 2 == 0]\nprocessed = [s.upper() for s in fruits if len(s) > 4]\n\n# Unpacking\nfirst, *middle, last = fruits\nprint(first, last, middle)' },
 
-      { title: 'Tuples, Sets & Dictionaries', theory: 'Tuples are immutable sequences — use for fixed data (coordinates, RGB values, database rows). Sets are unordered collections with no duplicates — O(1) membership testing, useful for removing duplicates and set operations. Dictionaries store key-value pairs — keys must be hashable (immutable). All three support comprehensions.', challenge: 'Use all three structures appropriately: store a colour as RGB tuple, remove duplicates with a set, count word frequency with a dict.', snippet: `# Tuples (immutable)\npoint = (10, 20)\nx, y = point  # unpacking\nrgb = (255, 128, 0)\nt = (1,)  # single-element tuple (note the comma)\n\n# Sets\nunique = {1, 2, 2, 3, 3, 3}  # {1, 2, 3}\nunique.add(4)\nunique.discard(1)  # remove (no error if missing)\n\n# Set operations\na, b = {1, 2, 3}, {2, 3, 4}\nprint(a | b)  # union: {1, 2, 3, 4}\nprint(a & b)  # intersection: {2, 3}\nprint(a - b)  # difference: {1}\nprint(a ^ b)  # symmetric diff: {1, 4}\n\n# Dictionary\nstudent = {"name": "Alice", "score": 95, "active": True}\n\n# Access\nprint(student["name"])          # KeyError if missing\nprint(student.get("age", 18))   # safe: returns default\n\n# Mutate\nstudent["score"] = 98\nstudent.update({"grade": "A", "rank": 1})\ndel student["active"]\n\n# Iterate\nfor key, value in student.items(): print(f"{key}: {value}")\n\n# Dict comprehension\nword_count = {word: len(word) for word in ["hello", "world"]}` },
+      { title: 'Tuples, Sets & Dictionaries', theory: 'Tuples are immutable sequences — use for fixed data (coordinates, RGB values, database rows). Sets are unordered collections with no duplicates — O(1) membership testing, useful for removing duplicates and set operations. Dictionaries store key-value pairs — keys must be hashable (immutable). All three support comprehensions.', challenge: 'Use all three structures appropriately: store a colour as RGB tuple, remove duplicates with a set, count word frequency with a dict.', snippet: '# Tuples (immutable)\npoint = (10, 20)\nx, y = point  # unpacking\nrgb = (255, 128, 0)\nt = (1,)  # single-element tuple (note the comma)\n\n# Sets\nunique = {1, 2, 2, 3, 3, 3}  # {1, 2, 3}\nunique.add(4)\nunique.discard(1)  # remove (no error if missing)\n\n# Set operations\na, b = {1, 2, 3}, {2, 3, 4}\nprint(a | b)  # union: {1, 2, 3, 4}\nprint(a & b)  # intersection: {2, 3}\nprint(a - b)  # difference: {1}\nprint(a ^ b)  # symmetric diff: {1, 4}\n\n# Dictionary\nstudent = {"name": "Alice", "score": 95, "active": True}\n\n# Access\nprint(student["name"])          # KeyError if missing\nprint(student.get("age", 18))   # safe: returns default\n\n# Mutate\nstudent["score"] = 98\nstudent.update({"grade": "A", "rank": 1})\ndel student["active"]\n\n# Iterate\nfor key, value in student.items(): print(f"{key}: {value}")\n\n# Dict comprehension\nword_count = {word: len(word) for word in ["hello", "world"]}' },
 
-      { title: 'String Methods & F-Strings', theory: 'Strings are immutable in Python. All string methods return new strings. Key methods: strip/lstrip/rstrip, upper/lower/title/capitalize, split/join, replace, find/index, startswith/endswith, format. F-strings (f"") are the modern way to format strings — support expressions and method calls inside {}.', challenge: 'Write a function that sanitises user input: strip whitespace, normalise to title case, validate length, and format into a template.', snippet: `# String methods\ntext = "  Hello, World!  "\nprint(text.strip())             # "Hello, World!"\nprint(text.lower())             # "  hello, world!  "\nprint(text.upper())             # "  HELLO, WORLD!  "\nprint(text.replace("World", "Python"))\nprint(text.split(","))          # ["  Hello", " World!  "]\nprint("-".join(["a", "b", "c"])) # "a-b-c"\nprint(text.startswith("  Hello")) # True\nprint(text.count("l"))          # 3\nprint("  ".strip())             # ""\n\n# F-strings (most powerful)\nname, score, rank = "Alice", 95.5, 1\nprint(f"{name} scored {score:.1f}% — Rank #{rank}")\nprint(f"{'Name':<10} {'Score':>6}")  # alignment\nprint(f"{score:.2f}")   # 2 decimal places\nprint(f"{1_000_000:,}") # 1,000,000 (thousand separator)\nprint(f"{score!r}")     # repr()\n\n# Multiline f-string\nreport = f"""\nStudent Report\nName:  {name}\nScore: {score}%\nGrade: {"A" if score >= 90 else "B"}\n"""` },
+      { title: 'String Methods & F-Strings', theory: 'Strings are immutable in Python. All string methods return new strings. Key methods: strip/lstrip/rstrip, upper/lower/title/capitalize, split/join, replace, find/index, startswith/endswith, format. F-strings (f"") are the modern way to format strings — support expressions and method calls inside {}.', challenge: 'Write a function that sanitises user input: strip whitespace, normalise to title case, validate length, and format into a template.', snippet: '# String methods\ntext = "  Hello, World!  "\nprint(text.strip())             # "Hello, World!"\nprint(text.lower())             # "  hello, world!  "\nprint(text.upper())             # "  HELLO, WORLD!  "\nprint(text.replace("World", "Python"))\nprint(text.split(","))          # ["  Hello", " World!  "]\nprint("-".join(["a", "b", "c"])) # "a-b-c"\nprint(text.startswith("  Hello")) # True\nprint(text.count("l"))          # 3\nprint("  ".strip())             # ""\n\n# F-strings (most powerful)\nname, score, rank = "Alice", 95.5, 1\nprint(f"{name} scored {score:.1f}% — Rank #{rank}")\nprint(f"{\'Name\':<10} {\'Score\':>6}")  # alignment\nprint(f"{score:.2f}")   # 2 decimal places\nprint(f"{1_000_000:,}") # 1,000,000 (thousand separator)\nprint(f"{score!r}")     # repr()\n\n# Multiline f-string\nreport = f"""\nStudent Report\nName:  {name}\nScore: {score}%\nGrade: {"A" if score >= 90 else "B"}\n"""' },
 
-      { title: 'File Handling', theory: 'open() opens files. Always use the with statement — it automatically closes the file even if an error occurs. Modes: r (read), w (write, creates/overwrites), a (append), r+ (read+write), b (binary). readline() reads one line. readlines() returns all lines as a list. The csv and json modules handle structured data.', challenge: 'Write a script that reads a CSV of students, calculates averages, and writes a summary report to a new file.', snippet: `# Read entire file\nwith open("data.txt", "r", encoding="utf-8") as f:\n    content = f.read()       # entire file as string\n    \nwith open("data.txt", "r") as f:\n    lines = f.readlines()    # list of lines\n\nwith open("data.txt", "r") as f:\n    for line in f:           # memory-efficient line-by-line\n        print(line.strip())\n\n# Write\nwith open("output.txt", "w") as f:\n    f.write("Hello\\n")\n    f.writelines(["Line 1\\n", "Line 2\\n"])\n\n# Append\nwith open("log.txt", "a") as f:\n    f.write(f"[{datetime.now()}] Event occurred\\n")\n\n# JSON\nimport json\nwith open("data.json", "r") as f:\n    data = json.load(f)\nwith open("output.json", "w") as f:\n    json.dump(data, f, indent=2)\n\n# CSV\nimport csv\nwith open("students.csv") as f:\n    reader = csv.DictReader(f)\n    for row in reader:\n        print(row["name"], row["score"])` },
+      { title: 'File Handling', theory: 'open() opens files. Always use the with statement — it automatically closes the file even if an error occurs. Modes: r (read), w (write, creates/overwrites), a (append), r+ (read+write), b (binary). readline() reads one line. readlines() returns all lines as a list. The csv and json modules handle structured data.', challenge: 'Write a script that reads a CSV of students, calculates averages, and writes a summary report to a new file.', snippet: '# Read entire file\nwith open("data.txt", "r", encoding="utf-8") as f:\n    content = f.read()       # entire file as string\n    \nwith open("data.txt", "r") as f:\n    lines = f.readlines()    # list of lines\n\nwith open("data.txt", "r") as f:\n    for line in f:           # memory-efficient line-by-line\n        print(line.strip())\n\n# Write\nwith open("output.txt", "w") as f:\n    f.write("Hello\\n")\n    f.writelines(["Line 1\\n", "Line 2\\n"])\n\n# Append\nwith open("log.txt", "a") as f:\n    f.write(f"[{datetime.now()}] Event occurred\\n")\n\n# JSON\nimport json\nwith open("data.json", "r") as f:\n    data = json.load(f)\nwith open("output.json", "w") as f:\n    json.dump(data, f, indent=2)\n\n# CSV\nimport csv\nwith open("students.csv") as f:\n    reader = csv.DictReader(f)\n    for row in reader:\n        print(row["name"], row["score"])' },
 
-      { title: 'Error Handling', theory: 'try/except catches exceptions. Use specific exception types rather than bare except. except can catch multiple exceptions. else runs only if no exception occurred. finally always runs (cleanup). raise creates exceptions. Custom exceptions inherit from Exception. Use context managers for resources.', challenge: 'Write a robust file reader that handles: file not found, permission error, encoding error, and invalid JSON.', snippet: `# Basic try/except\ntry:\n    result = 10 / 0\nexcept ZeroDivisionError as e:\n    print(f"Math error: {e}")\nexcept (TypeError, ValueError) as e:\n    print(f"Type/value error: {e}")\nexcept Exception as e:\n    print(f"Unexpected error: {e}")\n    raise  # re-raise if you can't handle it\nelse:\n    print("No error occurred!")\nfinally:\n    print("This always runs — cleanup here")\n\n# Custom exception\nclass InsufficientXPError(Exception):\n    def __init__(self, required, current):\n        self.required = required\n        self.current = current\n        super().__init__(f"Need {required} XP but only have {current}")\n\ndef unlock_feature(user_xp, required_xp):\n    if user_xp < required_xp:\n        raise InsufficientXPError(required_xp, user_xp)\n    return True\n\ntry:\n    unlock_feature(50, 100)\nexcept InsufficientXPError as e:\n    print(e)  # Need 100 XP but only have 50` },
+      { title: 'Error Handling', theory: 'try/except catches exceptions. Use specific exception types rather than bare except. except can catch multiple exceptions. else runs only if no exception occurred. finally always runs (cleanup). raise creates exceptions. Custom exceptions inherit from Exception. Use context managers for resources.', challenge: 'Write a robust file reader that handles: file not found, permission error, encoding error, and invalid JSON.', snippet: '# Basic try/except\ntry:\n    result = 10 / 0\nexcept ZeroDivisionError as e:\n    print(f"Math error: {e}")\nexcept (TypeError, ValueError) as e:\n    print(f"Type/value error: {e}")\nexcept Exception as e:\n    print(f"Unexpected error: {e}")\n    raise  # re-raise if you can\'t handle it\nelse:\n    print("No error occurred!")\nfinally:\n    print("This always runs — cleanup here")\n\n# Custom exception\nclass InsufficientXPError(Exception):\n    def __init__(self, required, current):\n        self.required = required\n        self.current = current\n        super().__init__(f"Need {required} XP but only have {current}")\n\ndef unlock_feature(user_xp, required_xp):\n    if user_xp < required_xp:\n        raise InsufficientXPError(required_xp, user_xp)\n    return True\n\ntry:\n    unlock_feature(50, 100)\nexcept InsufficientXPError as e:\n    print(e)  # Need 100 XP but only have 50' },
 
-      { title: 'Classes & Object-Oriented Programming', theory: 'Classes are blueprints for objects. __init__ is the constructor — called when creating an instance. self refers to the instance. Instance attributes (self.x) belong to each object. Class attributes belong to all instances. __str__ defines the string representation. @property creates computed attributes. __repr__ is the developer representation.', challenge: 'Build a Student class with grade calculation, a class method for creating from a dict, and a property for letter grade.', snippet: `class Student:\n    # Class attribute (shared by all instances)\n    school = "T-Learn Pro"\n    \n    def __init__(self, name: str, scores: list[int]):\n        # Instance attributes\n        self.name = name\n        self.scores = scores\n    \n    @property\n    def average(self) -> float:\n        return sum(self.scores) / len(self.scores) if self.scores else 0\n    \n    @property\n    def letter_grade(self) -> str:\n        avg = self.average\n        if avg >= 90: return "A"\n        if avg >= 80: return "B"\n        if avg >= 70: return "C"\n        if avg >= 60: return "D"\n        return "F"\n    \n    @classmethod\n    def from_dict(cls, data: dict) -> "Student":\n        return cls(data["name"], data["scores"])\n    \n    def __str__(self) -> str:\n        return f"{self.name} ({self.letter_grade}: {self.average:.1f}%)\n    \n    def __repr__(self) -> str:\n        return f"Student(name={self.name!r}, scores={self.scores!r})"\n\nalice = Student("Alice", [92, 85, 97])\nprint(alice.average)      # 91.33\nprint(alice.letter_grade) # A\nprint(alice)              # Alice (A: 91.3%)` },
+      { title: 'Classes & Object-Oriented Programming', theory: 'Classes are blueprints for objects. __init__ is the constructor — called when creating an instance. self refers to the instance. Instance attributes (self.x) belong to each object. Class attributes belong to all instances. __str__ defines the string representation. @property creates computed attributes. __repr__ is the developer representation.', challenge: 'Build a Student class with grade calculation, a class method for creating from a dict, and a property for letter grade.', snippet: 'class Student:\n    # Class attribute (shared by all instances)\n    school = "T-Learn Pro"\n    \n    def __init__(self, name: str, scores: list[int]):\n        # Instance attributes\n        self.name = name\n        self.scores = scores\n    \n    @property\n    def average(self) -> float:\n        return sum(self.scores) / len(self.scores) if self.scores else 0\n    \n    @property\n    def letter_grade(self) -> str:\n        avg = self.average\n        if avg >= 90: return "A"\n        if avg >= 80: return "B"\n        if avg >= 70: return "C"\n        if avg >= 60: return "D"\n        return "F"\n    \n    @classmethod\n    def from_dict(cls, data: dict) -> "Student":\n        return cls(data["name"], data["scores"])\n    \n    def __str__(self) -> str:\n        return f"{self.name} ({self.letter_grade}: {self.average:.1f}%)\n    \n    def __repr__(self) -> str:\n        return f"Student(name={self.name!r}, scores={self.scores!r})"\n\nalice = Student("Alice", [92, 85, 97])\nprint(alice.average)      # 91.33\nprint(alice.letter_grade) # A\nprint(alice)              # Alice (A: 91.3%)' },
 
-      { title: 'Inheritance', theory: 'Inheritance lets a child class extend a parent class. The child inherits all methods and attributes. super() calls the parent class method. Method overriding replaces a parent method in the child. Multiple inheritance is possible but can be complex (Method Resolution Order — MRO). Abstract base classes enforce interfaces.', challenge: 'Create an Animal base class with sound() and move() methods, then create Dog and Bird subclasses that override them.', snippet: `class Person:\n    def __init__(self, name: str, email: str):\n        self.name = name\n        self.email = email\n    \n    def greet(self) -> str:\n        return f"Hi, I'm {self.name}"\n\nclass Student(Person):\n    def __init__(self, name: str, email: str, level: int):\n        super().__init__(name, email)  # call parent __init__\n        self.level = level\n        self.completed_courses = []\n    \n    def greet(self) -> str:  # override\n        return f"{super().greet()}, Level {self.level} student"\n    \n    def complete_course(self, course: str) -> None:\n        self.completed_courses.append(course)\n\nclass Instructor(Person):\n    def __init__(self, name: str, email: str, subject: str):\n        super().__init__(name, email)\n        self.subject = subject\n    \n    def greet(self) -> str:\n        return f"{super().greet()}, {self.subject} instructor"\n\nalice = Student("Alice", "alice@tlearn.pro", 100)\nprint(alice.greet())     # Hi, I'm Alice, Level 100 student\nprint(isinstance(alice, Person))  # True\nprint(isinstance(alice, Student)) # True` },
+      { title: 'Inheritance', theory: 'Inheritance lets a child class extend a parent class. The child inherits all methods and attributes. super() calls the parent class method. Method overriding replaces a parent method in the child. Multiple inheritance is possible but can be complex (Method Resolution Order — MRO). Abstract base classes enforce interfaces.', challenge: 'Create an Animal base class with sound() and move() methods, then create Dog and Bird subclasses that override them.', snippet: 'class Person:\n    def __init__(self, name: str, email: str):\n        self.name = name\n        self.email = email\n    \n    def greet(self) -> str:\n        return f"Hi, I\'m {self.name}"\n\nclass Student(Person):\n    def __init__(self, name: str, email: str, level: int):\n        super().__init__(name, email)  # call parent __init__\n        self.level = level\n        self.completed_courses = []\n    \n    def greet(self) -> str:  # override\n        return f"{super().greet()}, Level {self.level} student"\n    \n    def complete_course(self, course: str) -> None:\n        self.completed_courses.append(course)\n\nclass Instructor(Person):\n    def __init__(self, name: str, email: str, subject: str):\n        super().__init__(name, email)\n        self.subject = subject\n    \n    def greet(self) -> str:\n        return f"{super().greet()}, {self.subject} instructor"\n\nalice = Student("Alice", "alice@tlearn.pro", 100)\nprint(alice.greet())     # Hi, I\'m Alice, Level 100 student\nprint(isinstance(alice, Person))  # True\nprint(isinstance(alice, Student)) # True' },
 
-      { title: 'Modules & Standard Library', theory: 'import loads modules. from x import y imports specific names. Python stdlib modules: os (file system), sys (runtime), pathlib (modern file paths), json, csv, datetime, math, random, re (regex), collections (Counter, defaultdict, deque), itertools, functools. Third-party packages install via pip.', challenge: 'Write a script using os, datetime, json, and random to generate a daily study schedule and save it to a file.', snippet: `import os\nimport sys\nimport json\nimport random\nfrom datetime import datetime, timedelta\nfrom pathlib import Path\nfrom collections import Counter, defaultdict\n\n# os module\nprint(os.getcwd())           # current directory\nprint(os.listdir("."))       # list files\nos.makedirs("data", exist_ok=True)\n\n# pathlib (modern path handling)\ndata_dir = Path("data")\nconfig = data_dir / "config.json"\nif config.exists():\n    with config.open() as f:\n        settings = json.load(f)\n\n# datetime\nnow = datetime.now()\nprint(now.strftime("%Y-%m-%d %H:%M"))\ntomorrow = now + timedelta(days=1)\n\n# random\nrandom.choice(["HTML", "CSS", "Python"])  # random pick\nrandom.randint(1, 100)                    # random int\nrandom.shuffle(my_list)                   # in-place shuffle\n\n# Counter\nwords = "the quick brown fox jumps over the lazy dog".split()\ncount = Counter(words)\nprint(count.most_common(3))  # 3 most frequent\n\n# defaultdict\ngrades = defaultdict(list)\ngrades["A"].append("Alice")\ngrades["B"].append("Bob")` },
+      { title: 'Modules & Standard Library', theory: 'import loads modules. from x import y imports specific names. Python stdlib modules: os (file system), sys (runtime), pathlib (modern file paths), json, csv, datetime, math, random, re (regex), collections (Counter, defaultdict, deque), itertools, functools. Third-party packages install via pip.', challenge: 'Write a script using os, datetime, json, and random to generate a daily study schedule and save it to a file.', snippet: 'import os\nimport sys\nimport json\nimport random\nfrom datetime import datetime, timedelta\nfrom pathlib import Path\nfrom collections import Counter, defaultdict\n\n# os module\nprint(os.getcwd())           # current directory\nprint(os.listdir("."))       # list files\nos.makedirs("data", exist_ok=True)\n\n# pathlib (modern path handling)\ndata_dir = Path("data")\nconfig = data_dir / "config.json"\nif config.exists():\n    with config.open() as f:\n        settings = json.load(f)\n\n# datetime\nnow = datetime.now()\nprint(now.strftime("%Y-%m-%d %H:%M"))\ntomorrow = now + timedelta(days=1)\n\n# random\nrandom.choice(["HTML", "CSS", "Python"])  # random pick\nrandom.randint(1, 100)                    # random int\nrandom.shuffle(my_list)                   # in-place shuffle\n\n# Counter\nwords = "the quick brown fox jumps over the lazy dog".split()\ncount = Counter(words)\nprint(count.most_common(3))  # 3 most frequent\n\n# defaultdict\ngrades = defaultdict(list)\ngrades["A"].append("Alice")\ngrades["B"].append("Bob")' },
 
-      { title: 'Working with APIs using requests', theory: 'The requests library simplifies HTTP calls. requests.get() fetches data. .json() parses JSON response. .status_code checks the result. .raise_for_status() throws on 4xx/5xx. For POST, pass json= parameter. Add headers= dict for API keys. Use sessions for multiple requests to the same host. Always handle timeouts.', challenge: 'Build a weather fetcher that calls a public API, formats the response, handles errors, and saves results to JSON.', snippet: `import requests\nimport json\n\ndef fetch_user(user_id: int) -> dict:\n    """Fetch a user from JSONPlaceholder API."""\n    try:\n        res = requests.get(\n            f"https://jsonplaceholder.typicode.com/users/{user_id}",\n            timeout=10  # seconds — always set a timeout!\n        )\n        res.raise_for_status()  # raises on 4xx/5xx\n        return res.json()\n    except requests.exceptions.Timeout:\n        raise TimeoutError("Request took too long")\n    except requests.exceptions.HTTPError as e:\n        raise ValueError(f"API error: {e.response.status_code}")\n    except requests.exceptions.ConnectionError:\n        raise ConnectionError("No internet connection")\n\n# POST with JSON body and headers\ndef create_post(title: str, body: str, user_id: int) -> dict:\n    res = requests.post(\n        "https://jsonplaceholder.typicode.com/posts",\n        json={"title": title, "body": body, "userId": user_id},\n        headers={"Authorization": "Bearer YOUR_TOKEN"},\n        timeout=10\n    )\n    res.raise_for_status()\n    return res.json()\n\n# Session for multiple requests\nwith requests.Session() as session:\n    session.headers.update({"Authorization": "Bearer TOKEN"})\n    users = session.get("/api/users").json()\n    posts = session.get("/api/posts").json()` },
+      { title: 'Working with APIs using requests', theory: 'The requests library simplifies HTTP calls. requests.get() fetches data. .json() parses JSON response. .status_code checks the result. .raise_for_status() throws on 4xx/5xx. For POST, pass json= parameter. Add headers= dict for API keys. Use sessions for multiple requests to the same host. Always handle timeouts.', challenge: 'Build a weather fetcher that calls a public API, formats the response, handles errors, and saves results to JSON.', snippet: 'import requests\nimport json\n\ndef fetch_user(user_id: int) -> dict:\n    """Fetch a user from JSONPlaceholder API."""\n    try:\n        res = requests.get(\n            f"https://jsonplaceholder.typicode.com/users/{user_id}",\n            timeout=10  # seconds — always set a timeout!\n        )\n        res.raise_for_status()  # raises on 4xx/5xx\n        return res.json()\n    except requests.exceptions.Timeout:\n        raise TimeoutError("Request took too long")\n    except requests.exceptions.HTTPError as e:\n        raise ValueError(f"API error: {e.response.status_code}")\n    except requests.exceptions.ConnectionError:\n        raise ConnectionError("No internet connection")\n\n# POST with JSON body and headers\ndef create_post(title: str, body: str, user_id: int) -> dict:\n    res = requests.post(\n        "https://jsonplaceholder.typicode.com/posts",\n        json={"title": title, "body": body, "userId": user_id},\n        headers={"Authorization": "Bearer YOUR_TOKEN"},\n        timeout=10\n    )\n    res.raise_for_status()\n    return res.json()\n\n# Session for multiple requests\nwith requests.Session() as session:\n    session.headers.update({"Authorization": "Bearer TOKEN"})\n    users = session.get("/api/users").json()\n    posts = session.get("/api/posts").json()' },
 
-      { title: 'OOP Projects: Calculator & To-Do App', theory: 'Putting it all together: classes, file I/O, error handling, and clean code. A Calculator class with history. A persistent To-Do list saved to JSON. These projects combine everything from the course. Focus on clean interfaces, proper error handling, and data persistence.', challenge: 'Build a command-line To-Do app that persists tasks to JSON, supports add/complete/delete/list operations, and handles all edge cases.', snippet: `import json\nfrom pathlib import Path\nfrom datetime import datetime\n\nclass TodoApp:\n    def __init__(self, filepath: str = "todos.json"):\n        self.path = Path(filepath)\n        self.todos = self._load()\n    \n    def _load(self) -> list:\n        if self.path.exists():\n            with self.path.open() as f:\n                return json.load(f)\n        return []\n    \n    def _save(self) -> None:\n        with self.path.open("w") as f:\n            json.dump(self.todos, f, indent=2)\n    \n    def add(self, title: str) -> dict:\n        todo = {\n            "id": len(self.todos) + 1,\n            "title": title,\n            "done": False,\n            "created": datetime.now().isoformat()\n        }\n        self.todos.append(todo)\n        self._save()\n        return todo\n    \n    def complete(self, todo_id: int) -> bool:\n        for todo in self.todos:\n            if todo["id"] == todo_id:\n                todo["done"] = True\n                self._save()\n                return True\n        return False\n    \n    def pending(self) -> list:\n        return [t for t in self.todos if not t["done"]]\n\n# Usage\napp = TodoApp()\napp.add("Complete HTML course")\napp.add("Take JavaScript exam")\napp.complete(1)\nprint(f"{len(app.pending())} tasks remaining")` },
+      { title: 'OOP Projects: Calculator & To-Do App', theory: 'Putting it all together: classes, file I/O, error handling, and clean code. A Calculator class with history. A persistent To-Do list saved to JSON. These projects combine everything from the course. Focus on clean interfaces, proper error handling, and data persistence.', challenge: 'Build a command-line To-Do app that persists tasks to JSON, supports add/complete/delete/list operations, and handles all edge cases.', snippet: 'import json\nfrom pathlib import Path\nfrom datetime import datetime\n\nclass TodoApp:\n    def __init__(self, filepath: str = "todos.json"):\n        self.path = Path(filepath)\n        self.todos = self._load()\n    \n    def _load(self) -> list:\n        if self.path.exists():\n            with self.path.open() as f:\n                return json.load(f)\n        return []\n    \n    def _save(self) -> None:\n        with self.path.open("w") as f:\n            json.dump(self.todos, f, indent=2)\n    \n    def add(self, title: str) -> dict:\n        todo = {\n            "id": len(self.todos) + 1,\n            "title": title,\n            "done": False,\n            "created": datetime.now().isoformat()\n        }\n        self.todos.append(todo)\n        self._save()\n        return todo\n    \n    def complete(self, todo_id: int) -> bool:\n        for todo in self.todos:\n            if todo["id"] == todo_id:\n                todo["done"] = True\n                self._save()\n                return True\n        return False\n    \n    def pending(self) -> list:\n        return [t for t in self.todos if not t["done"]]\n\n# Usage\napp = TodoApp()\napp.add("Complete HTML course")\napp.add("Take JavaScript exam")\napp.complete(1)\nprint(f"{len(app.pending())} tasks remaining")' },
+      { title: 'Virtual Environments & pip', theory: 'Virtual environments isolate project dependencies so different projects can use different package versions. venv creates them. Activate on Mac/Linux: source venv/bin/activate. On Windows: venv\\Scripts\\activate. pip installs packages from PyPI. requirements.txt pins versions. pip freeze captures the current environment.', challenge: 'Create a virtual environment, install requests and pytest, freeze requirements.txt, then recreate from it.', snippet: '# Create\npython -m venv venv\n\n# Activate (Mac/Linux)\nsource venv/bin/activate\n\n# Activate (Windows)\nvenv\\Scripts\\activate\n\n# Install\npip install requests pandas\npip install requests==2.28.0\n\n# Save dependencies\npip freeze > requirements.txt\n\n# Install from file\npip install -r requirements.txt\n\n# Deactivate\ndeactivate\n\n# requirements.txt:\n# requests==2.28.2\n# pandas==2.0.1' },
+
+      { title: 'Decorators', theory: 'Decorators are functions that wrap other functions to add behaviour without modifying the original. Built-in: @property, @staticmethod, @classmethod. Write custom decorators using functools.wraps to preserve metadata. Widely used in Flask and FastAPI for routing (@app.route).', challenge: 'Write a @timer decorator, a @retry decorator that retries on failure, and apply both to a function.', snippet: 'import functools, time\n\ndef timer(func):\n    @functools.wraps(func)\n    def wrapper(*args, **kwargs):\n        start = time.perf_counter()\n        result = func(*args, **kwargs)\n        print(f"{func.__name__}: {time.perf_counter()-start:.4f}s")\n        return result\n    return wrapper\n\ndef retry(times=3):\n    def decorator(func):\n        @functools.wraps(func)\n        def wrapper(*args, **kwargs):\n            for attempt in range(times):\n                try:\n                    return func(*args, **kwargs)\n                except Exception as e:\n                    if attempt == times-1: raise\n                    print(f"Retry {attempt+1}: {e}")\n        return wrapper\n    return decorator\n\n@timer\n@retry(times=3)\ndef fetch_data(url):\n    import requests\n    return requests.get(url).json()' },
+
+      { title: 'Context Managers', theory: 'Context managers handle setup and teardown using the with statement. They guarantee cleanup even if exceptions occur. Built-in: open(), threading.Lock(). Create custom ones with __enter__/__exit__ or @contextmanager from contextlib. Essential for database connections, file handling, and temporary state changes.', challenge: 'Write a context manager that times a code block and one that temporarily changes the working directory.', snippet: 'from contextlib import contextmanager\nimport os, time\n\n# Generator-based context manager\n@contextmanager\ndef timer_block(label=""):\n    start = time.perf_counter()\n    try:\n        yield\n    finally:\n        elapsed = time.perf_counter() - start\n        print(f"{label}: {elapsed:.4f}s")\n\n@contextmanager\ndef cd(path):\n    old = os.getcwd()\n    os.chdir(path)\n    try:\n        yield\n    finally:\n        os.chdir(old)\n\n# Usage\nwith timer_block("processing"):\n    process_data()\n\nwith cd("/tmp"):\n    print(os.getcwd())  # /tmp\nprint(os.getcwd())      # back to original' },
+
+      { title: 'Comprehensions & Generators', theory: 'Python has four comprehension types: list [], dict {k:v}, set {v}, and generator () which is lazy. Generator expressions compute values on demand — memory efficient for large data. Use list comprehension when you need all values. Use generator when iterating once or with large sequences.', challenge: 'Process a sequence of 1 million numbers using generator expressions to find the sum without loading all into memory.', snippet: '# List comprehension\nsquares = [x**2 for x in range(10)]\n\n# With condition\nevens = [x for x in range(20) if x % 2 == 0]\n\n# Dict comprehension\nword_len = {w: len(w) for w in ["hello", "world"]}\n\n# Set comprehension (unique values)\nunique = {len(w) for w in ["hi", "hey", "hello"]}\n\n# Generator expression (lazy)\ntotal = sum(x**2 for x in range(1_000_000))\n# Never builds a list in memory!\n\n# Generator function\ndef read_file(path):\n    with open(path) as f:\n        for line in f:\n            yield line.strip()\n\n# Memory comparison\nimport sys\nlist_v = [x**2 for x in range(10000)]\ngen_v  = (x**2 for x in range(10000))\nprint(sys.getsizeof(list_v))  # ~87624\nprint(sys.getsizeof(gen_v))   # ~208' },
+
+      { title: 'Testing with pytest', theory: 'pytest is Python\'s standard testing framework. Test functions start with test_. Use assert for checks. @pytest.fixture provides reusable setup. @pytest.mark.parametrize runs tests with multiple inputs. mock.patch replaces dependencies. Run with: pytest. Check coverage with: pytest --cov.', challenge: 'Write a full test suite for a calculator: test add, divide, division by zero, and use parametrize for multiple inputs.', snippet: '# calculator.py\ndef add(a, b): return a + b\ndef divide(a, b):\n    if b == 0: raise ValueError("Cannot divide by zero")\n    return a / b\n\n# test_calculator.py\nimport pytest\nfrom calculator import add, divide\n\ndef test_add():\n    assert add(2, 3) == 5\n    assert add(-1, 1) == 0\n\ndef test_divide_by_zero():\n    with pytest.raises(ValueError):\n        divide(10, 0)\n\n@pytest.mark.parametrize("a,b,expected", [\n    (10, 2, 5),\n    (9, 3, 3),\n    (-10, 2, -5),\n])\ndef test_divide(a, b, expected):\n    assert divide(a, b) == expected\n\n@pytest.fixture\ndef sample_data():\n    return [{"name": "Alice", "score": 95}]\n\ndef test_best_student(sample_data):\n    best = max(sample_data, key=lambda u: u["score"])\n    assert best["name"] == "Alice"' },
+
     ]
-  },
-
-      { title: 'Virtual Environments & pip', theory: 'Virtual environments isolate project dependencies so different projects can use different versions of packages. venv creates them. Activate with source venv/bin/activate (Mac/Linux) or venv\\Scripts\\activate (Windows). pip installs packages from PyPI. requirements.txt pins versions. pip freeze captures current environment. Always use virtual environments for every project.', challenge: 'Create a virtual environment, install requests and pytest, freeze requirements, then recreate the environment from requirements.txt.', snippet: `# Create virtual environment
-python -m venv venv
-
-# Activate (Mac/Linux)
-source venv/bin/activate
-
-# Activate (Windows)
-venv\Scripts\activate
-
-# Install packages
-pip install requests pandas numpy
-
-# Install specific version
-pip install requests==2.28.0
-
-# Save dependencies
-pip freeze > requirements.txt
-
-# Install from requirements
-pip install -r requirements.txt
-
-# Deactivate
-deactivate
-
-# requirements.txt example:
-# requests==2.28.2
-# pandas==2.0.1
-# numpy==1.24.3
-
-# Check installed packages
-pip list
-pip show requests` },
-
-      { title: 'Decorators', theory: 'Decorators are functions that wrap other functions to add behaviour without modifying the original. Python has built-in decorators: @property, @staticmethod, @classmethod. You can write custom decorators using functools.wraps to preserve the original function metadata. Decorators are used extensively in Flask, Django, and FastAPI for routing.', challenge: 'Write a @timer decorator that logs execution time, a @retry decorator that retries on failure, and a @cache decorator.', snippet: `import functools
-import time
-
-# Basic decorator
-def timer(func):
-    @functools.wraps(func)  # preserves func metadata
-    def wrapper(*args, **kwargs):
-        start = time.perf_counter()
-        result = func(*args, **kwargs)
-        elapsed = time.perf_counter() - start
-        print(f"{func.__name__} took {elapsed:.4f}s")
-        return result
-    return wrapper
-
-# Decorator with parameters
-def retry(times=3, delay=1):
-    def decorator(func):
-        @functools.wraps(func)
-        def wrapper(*args, **kwargs):
-            for attempt in range(times):
-                try:
-                    return func(*args, **kwargs)
-                except Exception as e:
-                    if attempt == times - 1: raise
-                    print(f"Retry {attempt+1}: {e}")
-                    time.sleep(delay)
-        return wrapper
-    return decorator
-
-@timer
-@retry(times=3, delay=0.5)
-def fetch_data(url: str):
-    import requests
-    return requests.get(url).json()` },
-
-      { title: 'Context Managers', theory: 'Context managers handle setup and teardown automatically using the with statement. Built-in: open(), threading.Lock(), decimal.localcontext(). Create custom ones using __enter__/__exit__ methods or the @contextmanager decorator from contextlib. They guarantee cleanup even if exceptions occur. Great for database connections, locks, and temporary changes.', challenge: 'Write a context manager that times a code block, one that temporarily changes directory, and one that suppresses specific exceptions.', snippet: `from contextlib import contextmanager
-import os, time
-
-# Class-based context manager
-class DatabaseConnection:
-    def __init__(self, url):
-        self.url = url
-        self.conn = None
-
-    def __enter__(self):
-        self.conn = connect(self.url)
-        return self.conn
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        if self.conn:
-            if exc_type:
-                self.conn.rollback()
-            else:
-                self.conn.commit()
-            self.conn.close()
-        return False  # don't suppress exceptions
-
-# Generator-based (simpler)
-@contextmanager
-def timer_block(label=""):
-    start = time.perf_counter()
-    try:
-        yield
-    finally:
-        elapsed = time.perf_counter() - start
-        print(f"{label}: {elapsed:.4f}s")
-
-@contextmanager
-def cd(path):
-    old = os.getcwd()
-    os.chdir(path)
-    try:
-        yield
-    finally:
-        os.chdir(old)
-
-# Usage
-with timer_block("Data processing"):
-    process_large_dataset()
-
-with cd("/tmp"):
-    print(os.getcwd())  # /tmp
-print(os.getcwd())      # back to original` },
-
-      { title: 'Comprehensions & Generators', theory: 'Python has four comprehension types: list [], dict {k:v}, set {v}, and generator (v) — lazy. Generator expressions are memory-efficient for large data. They compute values on demand. Use list comprehension when you need all values at once. Use generator when iterating once or dealing with large sequences. yield from delegates to another generator.', challenge: 'Process a 1 million number sequence using generator expressions to count, sum, and find the max without loading all numbers into memory.', snippet: `# List comprehension
-squares = [x**2 for x in range(10)]
-
-# Dict comprehension
-scores = {name: score for name, score in zip(names, scores)}
-
-# Set comprehension (unique values)
-unique_lengths = {len(word) for word in words}
-
-# Generator expression (lazy, memory efficient)
-total = sum(x**2 for x in range(1_000_000))  # never builds list
-
-# Nested comprehension
-matrix = [[i * j for j in range(5)] for i in range(5)]
-
-# Conditional comprehension
-adults = [p for p in people if p.age >= 18]
-
-# Generator function
-def read_large_file(filepath):
-    with open(filepath) as f:
-        for line in f:
-            yield line.strip()
-
-# yield from — delegate to sub-generator
-def chain(*iterables):
-    for it in iterables:
-        yield from it
-
-# Memory comparison
-import sys
-list_comp = [x**2 for x in range(10000)]
-gen_expr  = (x**2 for x in range(10000))
-print(sys.getsizeof(list_comp))  # ~87624 bytes
-print(sys.getsizeof(gen_expr))   # ~208 bytes` },
-
-      { title: 'Testing with pytest', theory: 'Testing ensures code works correctly and keeps working as it changes. pytest is the most popular Python testing framework. Test functions start with test_. Assertions use assert. Fixtures provide reusable test data with @pytest.fixture. parametrize runs tests with multiple inputs. mock.patch replaces dependencies. Aim for high coverage on business logic.', challenge: 'Write a test suite for a calculator module: test add, subtract, divide (including division by zero), and use parametrize for edge cases.', snippet: `# calculator.py
-def add(a, b): return a + b
-def divide(a, b):
-    if b == 0: raise ValueError("Cannot divide by zero")
-    return a / b
-
-# test_calculator.py
-import pytest
-from calculator import add, divide
-
-# Basic test
-def test_add():
-    assert add(2, 3) == 5
-    assert add(-1, 1) == 0
-    assert add(0, 0) == 0
-
-# Test exception
-def test_divide_by_zero():
-    with pytest.raises(ValueError, match="Cannot divide by zero"):
-        divide(10, 0)
-
-# Parametrize: run test with multiple inputs
-@pytest.mark.parametrize("a,b,expected", [
-    (10, 2, 5),
-    (9, 3, 3),
-    (7, 2, 3.5),
-    (-10, 2, -5),
-])
-def test_divide(a, b, expected):
-    assert divide(a, b) == expected
-
-# Fixture: reusable test data
-@pytest.fixture
-def sample_users():
-    return [
-        {"name": "Alice", "score": 95},
-        {"name": "Bob",   "score": 72},
-    ]
-
-def test_top_student(sample_users):
-    best = max(sample_users, key=lambda u: u["score"])
-    assert best["name"] == "Alice"` },
-    ]
-  },
-
+  }
 };
 
 window.curriculumData = curriculumData;
