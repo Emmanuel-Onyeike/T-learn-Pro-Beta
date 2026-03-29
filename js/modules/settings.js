@@ -129,34 +129,29 @@ async function syncProfileUI() {
  */
 async function saveProfile(event) {
     const client = await window.supabaseLoader.load();
-    const user = await window.AuthState.getUser(); 
-    
+    const user   = await window.AuthState.getUser();
+
     if (!user) {
-        alert("Session expired. Please log in again.");
-        window.location.href = 'login.html';
+        _showSettingsToast('Session expired — please log in again', 'error');
+        setTimeout(() => window.location.href = 'login.html', 1500);
         return;
     }
 
     const nameInput = document.getElementById('editFullName');
-    const bioInput = document.getElementById('editBio');
-    
-    // Hardened button selection
-    const saveBtn = (event && event.currentTarget) ? event.currentTarget : document.querySelector('button[onclick*="saveProfile"]');
+    const bioInput  = document.getElementById('editBio');
+    const saveBtn   = document.querySelector('button[onclick*="saveProfile"]');
 
-    if (!saveBtn || !nameInput) return;
-
-    const newName = nameInput.value.trim();
-    const newBio = bioInput ? bioInput.value.trim() : "";
+    const newName = nameInput?.value.trim() || '';
+    const newBio  = bioInput?.value.trim() || '';
     const bufferedImg = localStorage.getItem('temp_img_buffer');
 
     if (!newName) {
-        alert("DATA ERROR: A name is required.");
+        _showSettingsToast('Name cannot be empty', 'error');
+        nameInput?.focus();
         return;
     }
 
-    const originalText = saveBtn.innerText;
-    saveBtn.innerText = "SYNCING...";
-    saveBtn.disabled = true;
+    if (saveBtn) { saveBtn.textContent = 'Saving...'; saveBtn.disabled = true; }
 
     try {
         let avatarUrl = localStorage.getItem('tlp_user_img') || "/assets/Logo.webp";
@@ -197,6 +192,9 @@ async function saveProfile(event) {
 
         if (updateError) throw updateError;
 
+        // Clear AuthState cache so next getUser() returns fresh data
+        if (window.AuthState?.clear) window.AuthState.clear();
+
         // Also upsert profiles table to keep it in sync
         try {
             await client.from('profiles').upsert({
@@ -213,12 +211,11 @@ async function saveProfile(event) {
         localStorage.removeItem('temp_img_buffer');
 
         await syncProfileUI();
-        
-        // This will appear in your centered modal
-        alert("SUCCESS: Profile synced across all devices!");
+        _showSettingsToast('✓ Profile saved successfully', 'success');
 
     } catch (err) {
-        alert("SYNC ERROR: " + err.message);
+        console.error("[Profile] Save error:", err);
+        _showSettingsToast("Save failed: " + err.message, "error");
     } finally {
         if (saveBtn) {
             saveBtn.innerText = originalText;

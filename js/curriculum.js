@@ -145,6 +145,315 @@ const curriculumData = {
 
       { title: 'Local Storage & Browser APIs', theory: 'localStorage stores data persistently (survives tab/browser close). sessionStorage clears when tab closes. Both only store strings — use JSON.stringify/parse for objects. Useful browser APIs: Clipboard API (copy/paste), Geolocation API, Notification API, IntersectionObserver (lazy loading), Web Workers (background threads).', challenge: 'Build a persistent theme switcher (light/dark) that saves preference in localStorage and applies on page load.', snippet: `// localStorage\nlocalStorage.setItem("user", JSON.stringify({ name: "Alice" }));\nconst user = JSON.parse(localStorage.getItem("user") ?? "{}");\nlocalStorage.removeItem("user");\nlocalStorage.clear();\n\n// Session storage (clears on tab close)\nsessionStorage.setItem("draft", formData);\n\n// Theme switcher\nconst savedTheme = localStorage.getItem("theme") ?? "dark";\ndocument.documentElement.dataset.theme = savedTheme;\n\nfunction toggleTheme() {\n  const current = document.documentElement.dataset.theme;\n  const next = current === "dark" ? "light" : "dark";\n  document.documentElement.dataset.theme = next;\n  localStorage.setItem("theme", next);\n}\n\n// Clipboard API\nasync function copyToClipboard(text) {\n  await navigator.clipboard.writeText(text);\n  showToast("Copied!");\n}\n\n// IntersectionObserver (lazy loading)\nconst observer = new IntersectionObserver(entries => {\n  entries.forEach(entry => {\n    if (entry.isIntersecting) {\n      entry.target.src = entry.target.dataset.src;\n      observer.unobserve(entry.target);\n    }\n  });\n});\ndocument.querySelectorAll("img[data-src]").forEach(img => observer.observe(img));` },
     ]
+
+      { title: 'Template Literals & String Methods', theory: 'Template literals use backticks and support multi-line strings, embedded expressions with ${}, and tagged templates. Essential string methods: includes(), startsWith(), endsWith(), padStart(), padEnd(), repeat(), trimStart(), trimEnd(), replaceAll(). String.raw preserves backslashes.', challenge: 'Build a function that generates an HTML card template using template literals and formats a price with padStart.', snippet: `// Template literals
+const name = "Alice", score = 95;
+const card = \`
+  <div class="card">
+    <h2>\${name}</h2>
+    <p>Score: \${score >= 60 ? "Pass" : "Fail"}</p>
+    <p>Grade: \${score}%</p>
+  </div>
+\`;
+
+// Multi-line string
+const sql = \`
+  SELECT * FROM users
+  WHERE score > \${score}
+  ORDER BY name
+\`;
+
+// String methods
+"hello world".includes("world");   // true
+"hello".startsWith("hel");         // true
+"hello".padStart(10, "*");         // "*****hello"
+"ha".repeat(3);                    // "hahaha"
+"  trim  ".trimStart();            // "trim  "
+"a-b-a".replaceAll("a", "x");      // "x-b-x"` },
+
+      { title: 'Error Types & Debugging', theory: 'JavaScript has built-in error types: Error (generic), TypeError (wrong type), ReferenceError (undefined variable), SyntaxError (bad code), RangeError (out of range), URIError. The Error object has message and stack properties. Custom errors extend Error. Use browser DevTools debugger, console.table(), console.group(), performance.now() for debugging.', challenge: 'Create custom error classes for a form validator: ValidationError, NetworkError, AuthError — each with helpful messages.', snippet: `// Built-in errors
+try {
+  null.property;          // TypeError
+  undeclaredVar;          // ReferenceError
+  new Array(-1);          // RangeError
+} catch (err) {
+  console.log(err.name);    // "TypeError"
+  console.log(err.message); // "Cannot read..."
+  console.log(err.stack);   // Full call stack
+}
+
+// Custom error classes
+class ValidationError extends Error {
+  constructor(field, message) {
+    super(message);
+    this.name = "ValidationError";
+    this.field = field;
+  }
+}
+
+class NetworkError extends Error {
+  constructor(statusCode, message) {
+    super(message);
+    this.name = "NetworkError";
+    this.statusCode = statusCode;
+  }
+}
+
+// Debugging tools
+console.table(users);          // tabular display
+console.group("API Call");
+console.log("Request sent");
+console.groupEnd();
+const t0 = performance.now();
+// ...code...
+console.log(performance.now() - t0, "ms");` },
+
+      { title: 'Modules: import & export', theory: 'ES Modules split code into separate files. Named exports: export const/function/class. Default export: one per file, export default. Import named: import { name } from "./file.js". Import default: import name from "./file.js". Import all: import * as ns from "./file.js". Dynamic import: import("./file.js") returns a Promise — use for code splitting.', challenge: 'Split a utility file into separate modules: math.js, string.js, date.js and import them into main.js using both named and default exports.', snippet: `// math.js — named exports
+export const add  = (a, b) => a + b;
+export const mul  = (a, b) => a * b;
+export function clamp(val, min, max) {
+  return Math.min(Math.max(val, min), max);
+}
+
+// user.js — default export
+export default class User {
+  constructor(name) { this.name = name; }
+}
+
+// main.js — importing
+import User from "./user.js";
+import { add, mul, clamp } from "./math.js";
+import * as MathUtils from "./math.js";
+
+// Re-export
+export { add } from "./math.js";
+
+// Dynamic import (lazy loading)
+button.addEventListener("click", async () => {
+  const { renderChart } = await import("./charts.js");
+  renderChart(data);
+});` },
+
+      { title: 'Regular Expressions', theory: 'Regular expressions (regex) match patterns in strings. Create with /pattern/flags or new RegExp(). Flags: g (global), i (case-insensitive), m (multiline). Methods: test() checks match, match() returns matches, replace() replaces, split() splits. Key patterns: \d (digit), \w (word char), \s (whitespace), . (any char), * (0+), + (1+), ? (0-1), ^ (start), $ (end).', challenge: 'Write regex patterns to: validate email, extract phone numbers, validate password strength, and find all URLs in text.', snippet: `// Test a pattern
+/^\d+$/.test("123");      // true (only digits)
+/^\d+$/.test("12a");      // false
+
+// Email validation
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+emailRegex.test("alice@example.com"); // true
+
+// Extract matches
+const text = "Call 080-1234-5678 or 090-8765-4321";
+const phones = text.match(/\d{3}-\d{4}-\d{4}/g);
+// ["080-1234-5678", "090-8765-4321"]
+
+// Replace
+"Hello World".replace(/world/i, "JavaScript");
+// "Hello JavaScript"
+
+// Groups
+const date = "2026-03-29";
+const [, year, month, day] = date.match(/(\d{4})-(\d{2})-(\d{2})/);
+
+// Password: min 8 chars, letter + number
+const strongPassword = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!]{8,}$/;` },
+
+      { title: 'Web APIs: Geolocation, Notifications & Clipboard', theory: 'Browser Web APIs provide powerful features beyond DOM manipulation. Geolocation API gets user location (requires permission). Notifications API shows OS notifications. Clipboard API reads/writes clipboard. IntersectionObserver triggers when elements enter viewport. ResizeObserver watches element size changes. All require user permission and use Promises.', challenge: 'Build a "copy code" button using Clipboard API with a fallback, and a "notify me" button using the Notifications API.', snippet: `// Clipboard API
+async function copyToClipboard(text) {
+  try {
+    await navigator.clipboard.writeText(text);
+    showToast("Copied!");
+  } catch {
+    // Fallback for older browsers
+    const el = document.createElement("textarea");
+    el.value = text;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand("copy");
+    el.remove();
+  }
+}
+
+// Notifications API
+async function requestNotification() {
+  const permission = await Notification.requestPermission();
+  if (permission === "granted") {
+    new Notification("T-Learn Pro", {
+      body: "Your exam result is ready!",
+      icon: "/assets/Logo.webp"
+    });
+  }
+}
+
+// IntersectionObserver
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add("visible");
+      observer.unobserve(entry.target); // stop after first trigger
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll(".card").forEach(el => observer.observe(el));` },
+
+      { title: 'Object-Oriented JavaScript: Classes', theory: 'ES6 Classes provide cleaner OOP syntax. class keyword, constructor, methods, static methods (class.method, not instance.method), private fields (#), getters/setters, extends for inheritance, super() calls parent constructor. instanceof checks type. Classes are syntactic sugar over prototypes — good to understand both.', challenge: 'Build a BankAccount class with private balance, deposit/withdraw methods, transaction history, and overdraft protection.', snippet: `class Animal {
+  #name; // private field
+
+  constructor(name, sound) {
+    this.#name = name;
+    this.sound = sound;
+  }
+
+  get name() { return this.#name; }  // getter
+
+  speak() {
+    return \`\${this.#name} says \${this.sound}\`;
+  }
+
+  static create(name, sound) {        // static method
+    return new Animal(name, sound);
+  }
+}
+
+// Inheritance
+class Dog extends Animal {
+  #tricks = [];
+
+  constructor(name) {
+    super(name, "Woof");              // call parent
+  }
+
+  learn(trick) {
+    this.#tricks.push(trick);
+    return this;                      // method chaining
+  }
+
+  perform() {
+    return this.#tricks.join(", ");
+  }
+}
+
+const dog = new Dog("Max");
+dog.learn("sit").learn("stay").learn("fetch");
+console.log(dog.speak());     // Max says Woof
+console.log(dog.perform());   // sit, stay, fetch
+console.log(dog instanceof Animal); // true` },
+
+      { title: 'Iterators, Generators & Symbols', theory: 'Iterators implement the iterator protocol: objects with a next() method returning {value, done}. Any object with [Symbol.iterator] is iterable (arrays, strings, Maps, Sets). Generators (function*) produce values lazily with yield. They pause execution and resume on .next(). Useful for infinite sequences, lazy evaluation, and async control flow.', challenge: 'Write a generator that yields Fibonacci numbers indefinitely, and a custom iterable class for a range.', snippet: `// Iterator protocol
+const range = {
+  from: 1, to: 5,
+  [Symbol.iterator]() {
+    let current = this.from;
+    const last = this.to;
+    return {
+      next() {
+        return current <= last
+          ? { value: current++, done: false }
+          : { value: undefined, done: true };
+      }
+    };
+  }
+};
+console.log([...range]); // [1, 2, 3, 4, 5]
+
+// Generator function
+function* fibonacci() {
+  let [a, b] = [0, 1];
+  while (true) {
+    yield a;
+    [a, b] = [b, a + b];
+  }
+}
+
+const fib = fibonacci();
+console.log(fib.next().value); // 0
+console.log(fib.next().value); // 1
+console.log(fib.next().value); // 1
+console.log(fib.next().value); // 2
+
+// Take first n values
+function take(gen, n) {
+  return Array.from({ length: n }, () => gen.next().value);
+}
+console.log(take(fibonacci(), 8)); // [0,1,1,2,3,5,8,13]` },
+
+      { title: 'Performance & Best Practices', theory: 'Write performant JS: avoid layout thrashing (batch DOM reads then writes), use requestAnimationFrame for animations, debounce scroll/resize handlers, prefer CSS transitions over JS animations, use Web Workers for CPU-heavy tasks, lazy load non-critical code, avoid memory leaks (remove event listeners, clear intervals). Measure with performance.mark() and Chrome DevTools.', challenge: 'Implement a debounce function from scratch and use it to optimise a search input that fires API calls.', snippet: `// Debounce: wait until user stops typing
+function debounce(fn, delay) {
+  let timer;
+  return function(...args) {
+    clearTimeout(timer);
+    timer = setTimeout(() => fn.apply(this, args), delay);
+  };
+}
+
+// Throttle: at most once per interval
+function throttle(fn, limit) {
+  let lastCall = 0;
+  return function(...args) {
+    const now = Date.now();
+    if (now - lastCall >= limit) {
+      lastCall = now;
+      return fn.apply(this, args);
+    }
+  };
+}
+
+// Usage
+const search = debounce(async (query) => {
+  const results = await fetchSearch(query);
+  renderResults(results);
+}, 300); // wait 300ms after last keystroke
+
+input.addEventListener("input", e => search(e.target.value));
+
+// Avoid layout thrashing
+// BAD: alternates read/write
+elements.forEach(el => el.style.width = el.offsetWidth + 10 + "px");
+
+// GOOD: batch reads, then batch writes
+const widths = elements.map(el => el.offsetWidth);
+elements.forEach((el, i) => el.style.width = widths[i] + 10 + "px");` },
+
+      { title: 'TypeScript Basics', theory: 'TypeScript adds static types to JavaScript. Types catch bugs at compile time, not runtime. Basic types: string, number, boolean, null, undefined, any, unknown, never, void. Interfaces define object shapes. Type aliases with type keyword. Union types (string | number), intersection types (&). Generics make reusable typed components. TypeScript compiles to JavaScript.', challenge: 'Convert a JavaScript user management module to TypeScript with interfaces, type guards, and generics.', snippet: `// Basic types
+let name: string = "Alice";
+let age: number = 25;
+let active: boolean = true;
+
+// Interface
+interface User {
+  id: number;
+  name: string;
+  email: string;
+  role?: "student" | "admin"; // optional, union type
+}
+
+// Type alias
+type Score = number;
+type Grade = "A" | "B" | "C" | "D" | "F";
+
+// Function types
+function greet(user: User): string {
+  return \`Hello, \${user.name}\`;
+}
+
+// Generics
+function getFirst<T>(arr: T[]): T | undefined {
+  return arr[0];
+}
+getFirst<number>([1, 2, 3]);    // number
+getFirst<string>(["a", "b"]);   // string
+
+// Type guard
+function isUser(obj: unknown): obj is User {
+  return typeof obj === "object" && obj !== null && "name" in obj;
+}
+
+// Readonly and Partial
+type ReadonlyUser = Readonly<User>;
+type PartialUser  = Partial<User>;  // all fields optional` },
+    ]
+  },
   },
 
   Python: {
@@ -179,6 +488,204 @@ const curriculumData = {
       { title: 'Working with APIs using requests', theory: 'The requests library simplifies HTTP calls. requests.get() fetches data. .json() parses JSON response. .status_code checks the result. .raise_for_status() throws on 4xx/5xx. For POST, pass json= parameter. Add headers= dict for API keys. Use sessions for multiple requests to the same host. Always handle timeouts.', challenge: 'Build a weather fetcher that calls a public API, formats the response, handles errors, and saves results to JSON.', snippet: `import requests\nimport json\n\ndef fetch_user(user_id: int) -> dict:\n    """Fetch a user from JSONPlaceholder API."""\n    try:\n        res = requests.get(\n            f"https://jsonplaceholder.typicode.com/users/{user_id}",\n            timeout=10  # seconds — always set a timeout!\n        )\n        res.raise_for_status()  # raises on 4xx/5xx\n        return res.json()\n    except requests.exceptions.Timeout:\n        raise TimeoutError("Request took too long")\n    except requests.exceptions.HTTPError as e:\n        raise ValueError(f"API error: {e.response.status_code}")\n    except requests.exceptions.ConnectionError:\n        raise ConnectionError("No internet connection")\n\n# POST with JSON body and headers\ndef create_post(title: str, body: str, user_id: int) -> dict:\n    res = requests.post(\n        "https://jsonplaceholder.typicode.com/posts",\n        json={"title": title, "body": body, "userId": user_id},\n        headers={"Authorization": "Bearer YOUR_TOKEN"},\n        timeout=10\n    )\n    res.raise_for_status()\n    return res.json()\n\n# Session for multiple requests\nwith requests.Session() as session:\n    session.headers.update({"Authorization": "Bearer TOKEN"})\n    users = session.get("/api/users").json()\n    posts = session.get("/api/posts").json()` },
 
       { title: 'OOP Projects: Calculator & To-Do App', theory: 'Putting it all together: classes, file I/O, error handling, and clean code. A Calculator class with history. A persistent To-Do list saved to JSON. These projects combine everything from the course. Focus on clean interfaces, proper error handling, and data persistence.', challenge: 'Build a command-line To-Do app that persists tasks to JSON, supports add/complete/delete/list operations, and handles all edge cases.', snippet: `import json\nfrom pathlib import Path\nfrom datetime import datetime\n\nclass TodoApp:\n    def __init__(self, filepath: str = "todos.json"):\n        self.path = Path(filepath)\n        self.todos = self._load()\n    \n    def _load(self) -> list:\n        if self.path.exists():\n            with self.path.open() as f:\n                return json.load(f)\n        return []\n    \n    def _save(self) -> None:\n        with self.path.open("w") as f:\n            json.dump(self.todos, f, indent=2)\n    \n    def add(self, title: str) -> dict:\n        todo = {\n            "id": len(self.todos) + 1,\n            "title": title,\n            "done": False,\n            "created": datetime.now().isoformat()\n        }\n        self.todos.append(todo)\n        self._save()\n        return todo\n    \n    def complete(self, todo_id: int) -> bool:\n        for todo in self.todos:\n            if todo["id"] == todo_id:\n                todo["done"] = True\n                self._save()\n                return True\n        return False\n    \n    def pending(self) -> list:\n        return [t for t in self.todos if not t["done"]]\n\n# Usage\napp = TodoApp()\napp.add("Complete HTML course")\napp.add("Take JavaScript exam")\napp.complete(1)\nprint(f"{len(app.pending())} tasks remaining")` },
+    ]
+  },
+
+      { title: 'Virtual Environments & pip', theory: 'Virtual environments isolate project dependencies so different projects can use different versions of packages. venv creates them. Activate with source venv/bin/activate (Mac/Linux) or venv\\Scripts\\activate (Windows). pip installs packages from PyPI. requirements.txt pins versions. pip freeze captures current environment. Always use virtual environments for every project.', challenge: 'Create a virtual environment, install requests and pytest, freeze requirements, then recreate the environment from requirements.txt.', snippet: `# Create virtual environment
+python -m venv venv
+
+# Activate (Mac/Linux)
+source venv/bin/activate
+
+# Activate (Windows)
+venv\Scripts\activate
+
+# Install packages
+pip install requests pandas numpy
+
+# Install specific version
+pip install requests==2.28.0
+
+# Save dependencies
+pip freeze > requirements.txt
+
+# Install from requirements
+pip install -r requirements.txt
+
+# Deactivate
+deactivate
+
+# requirements.txt example:
+# requests==2.28.2
+# pandas==2.0.1
+# numpy==1.24.3
+
+# Check installed packages
+pip list
+pip show requests` },
+
+      { title: 'Decorators', theory: 'Decorators are functions that wrap other functions to add behaviour without modifying the original. Python has built-in decorators: @property, @staticmethod, @classmethod. You can write custom decorators using functools.wraps to preserve the original function metadata. Decorators are used extensively in Flask, Django, and FastAPI for routing.', challenge: 'Write a @timer decorator that logs execution time, a @retry decorator that retries on failure, and a @cache decorator.', snippet: `import functools
+import time
+
+# Basic decorator
+def timer(func):
+    @functools.wraps(func)  # preserves func metadata
+    def wrapper(*args, **kwargs):
+        start = time.perf_counter()
+        result = func(*args, **kwargs)
+        elapsed = time.perf_counter() - start
+        print(f"{func.__name__} took {elapsed:.4f}s")
+        return result
+    return wrapper
+
+# Decorator with parameters
+def retry(times=3, delay=1):
+    def decorator(func):
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            for attempt in range(times):
+                try:
+                    return func(*args, **kwargs)
+                except Exception as e:
+                    if attempt == times - 1: raise
+                    print(f"Retry {attempt+1}: {e}")
+                    time.sleep(delay)
+        return wrapper
+    return decorator
+
+@timer
+@retry(times=3, delay=0.5)
+def fetch_data(url: str):
+    import requests
+    return requests.get(url).json()` },
+
+      { title: 'Context Managers', theory: 'Context managers handle setup and teardown automatically using the with statement. Built-in: open(), threading.Lock(), decimal.localcontext(). Create custom ones using __enter__/__exit__ methods or the @contextmanager decorator from contextlib. They guarantee cleanup even if exceptions occur. Great for database connections, locks, and temporary changes.', challenge: 'Write a context manager that times a code block, one that temporarily changes directory, and one that suppresses specific exceptions.', snippet: `from contextlib import contextmanager
+import os, time
+
+# Class-based context manager
+class DatabaseConnection:
+    def __init__(self, url):
+        self.url = url
+        self.conn = None
+
+    def __enter__(self):
+        self.conn = connect(self.url)
+        return self.conn
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        if self.conn:
+            if exc_type:
+                self.conn.rollback()
+            else:
+                self.conn.commit()
+            self.conn.close()
+        return False  # don't suppress exceptions
+
+# Generator-based (simpler)
+@contextmanager
+def timer_block(label=""):
+    start = time.perf_counter()
+    try:
+        yield
+    finally:
+        elapsed = time.perf_counter() - start
+        print(f"{label}: {elapsed:.4f}s")
+
+@contextmanager
+def cd(path):
+    old = os.getcwd()
+    os.chdir(path)
+    try:
+        yield
+    finally:
+        os.chdir(old)
+
+# Usage
+with timer_block("Data processing"):
+    process_large_dataset()
+
+with cd("/tmp"):
+    print(os.getcwd())  # /tmp
+print(os.getcwd())      # back to original` },
+
+      { title: 'Comprehensions & Generators', theory: 'Python has four comprehension types: list [], dict {k:v}, set {v}, and generator (v) — lazy. Generator expressions are memory-efficient for large data. They compute values on demand. Use list comprehension when you need all values at once. Use generator when iterating once or dealing with large sequences. yield from delegates to another generator.', challenge: 'Process a 1 million number sequence using generator expressions to count, sum, and find the max without loading all numbers into memory.', snippet: `# List comprehension
+squares = [x**2 for x in range(10)]
+
+# Dict comprehension
+scores = {name: score for name, score in zip(names, scores)}
+
+# Set comprehension (unique values)
+unique_lengths = {len(word) for word in words}
+
+# Generator expression (lazy, memory efficient)
+total = sum(x**2 for x in range(1_000_000))  # never builds list
+
+# Nested comprehension
+matrix = [[i * j for j in range(5)] for i in range(5)]
+
+# Conditional comprehension
+adults = [p for p in people if p.age >= 18]
+
+# Generator function
+def read_large_file(filepath):
+    with open(filepath) as f:
+        for line in f:
+            yield line.strip()
+
+# yield from — delegate to sub-generator
+def chain(*iterables):
+    for it in iterables:
+        yield from it
+
+# Memory comparison
+import sys
+list_comp = [x**2 for x in range(10000)]
+gen_expr  = (x**2 for x in range(10000))
+print(sys.getsizeof(list_comp))  # ~87624 bytes
+print(sys.getsizeof(gen_expr))   # ~208 bytes` },
+
+      { title: 'Testing with pytest', theory: 'Testing ensures code works correctly and keeps working as it changes. pytest is the most popular Python testing framework. Test functions start with test_. Assertions use assert. Fixtures provide reusable test data with @pytest.fixture. parametrize runs tests with multiple inputs. mock.patch replaces dependencies. Aim for high coverage on business logic.', challenge: 'Write a test suite for a calculator module: test add, subtract, divide (including division by zero), and use parametrize for edge cases.', snippet: `# calculator.py
+def add(a, b): return a + b
+def divide(a, b):
+    if b == 0: raise ValueError("Cannot divide by zero")
+    return a / b
+
+# test_calculator.py
+import pytest
+from calculator import add, divide
+
+# Basic test
+def test_add():
+    assert add(2, 3) == 5
+    assert add(-1, 1) == 0
+    assert add(0, 0) == 0
+
+# Test exception
+def test_divide_by_zero():
+    with pytest.raises(ValueError, match="Cannot divide by zero"):
+        divide(10, 0)
+
+# Parametrize: run test with multiple inputs
+@pytest.mark.parametrize("a,b,expected", [
+    (10, 2, 5),
+    (9, 3, 3),
+    (7, 2, 3.5),
+    (-10, 2, -5),
+])
+def test_divide(a, b, expected):
+    assert divide(a, b) == expected
+
+# Fixture: reusable test data
+@pytest.fixture
+def sample_users():
+    return [
+        {"name": "Alice", "score": 95},
+        {"name": "Bob",   "score": 72},
+    ]
+
+def test_top_student(sample_users):
+    best = max(sample_users, key=lambda u: u["score"])
+    assert best["name"] == "Alice"` },
     ]
   },
 

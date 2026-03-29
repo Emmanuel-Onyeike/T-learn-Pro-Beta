@@ -568,24 +568,12 @@ window.startExam = async function() {
 };
 
 async function _generateAIQuestions(course) {
-    const topics = (window.curriculumData?.[course]?.topics || []).map(t => t.title).join(', ');
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            model: 'claude-sonnet-4-20250514',
-            max_tokens: 1000,
-            messages: [{ role: 'user', content:
-                `Generate exactly 30 multiple-choice questions about ${course} covering: ${topics}.
-Return ONLY a JSON array, no markdown, no extra text:
-[{"q":"question","options":["A) option","B) option","C) option","D) option"],"answer":"A"},...]
-Mix easy, medium, and hard. Test real understanding not just definitions.`
-            }]
-        })
-    });
-    const data  = await res.json();
-    const raw   = data.content?.[0]?.text || '[]';
-    return JSON.parse(raw.replace(/```json|```/g,'').trim());
+    // Use local question bank — no API needed, works offline, no CORS issues
+    if (typeof getExamQuestions === 'function') {
+        return getExamQuestions(course);
+    }
+    // Fallback if exam_questions.js not loaded yet
+    throw new Error('Question bank not loaded. Please refresh the page.');
 }
 
 function _renderExamQuestions(questions, courseKey) {
