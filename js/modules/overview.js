@@ -106,17 +106,17 @@ async function loadOverviewStats() {
 // ─── 2. XT POINTS EARN ENGINE ────────────────────────────────────────────────
 // Call awardXP(eventType) from anywhere in the app to give points
 const XP_TABLE = {
-    register:          5,   // new user bonus
-    daily_login:       5,   // login each day
-    complete_lesson:  10,   // per course opened (HTML/CSS/JS/Python)
-    pass_exam:       100,   // pass exam
-    fail_exam:       -25,   // fail exam (deduct)
-    write_exam:       25,   // just for taking the exam
-    add_project:       3,
-    hourly_active:     0,   // disabled — was inflating too fast
+    register:          1,   // new user bonus
+    daily_login:       1,   // login each day
+    complete_lesson:   2,   // per topic completed
+    pass_exam:        25,   // pass exam
+    fail_exam:        -5,   // fail exam (small deduct)
+    write_exam:        5,   // just for taking the exam
+    add_project:       1,
+    hourly_active:     0,   // disabled
     rank_up:           1,   // rank improvement
-    promoted:        200,   // semester promotion
-    streak_bonus:      5,   // streak milestone
+    promoted:         50,   // semester promotion
+    streak_bonus:      1,   // streak milestone
 };
 
 async function awardXP(eventType) {
