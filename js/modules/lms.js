@@ -593,13 +593,16 @@ function _renderExamQuestions(questions, courseKey) {
                     <span class="text-blue-400 font-black mr-2">${i+1}.</span>${q.q}
                 </p>
                 <div class="space-y-2">
-                    ${q.options.map(opt => `
+                    ${q.options.map(opt => {
+                        const safe = opt.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+                        return `
                     <label class="flex items-center gap-3 p-3 rounded-xl border border-transparent
                         hover:bg-white/5 hover:border-white/10 cursor-pointer transition-all
                         has-[:checked]:bg-blue-500/10 has-[:checked]:border-blue-500/30">
                         <input type="radio" name="q${i}" value="${opt[0]}" class="accent-blue-500 w-4 h-4">
-                        <span class="text-white/70 text-sm">${opt}</span>
-                    </label>`).join('')}
+                        <span class="text-white/70 text-sm">${safe}</span>
+                    </label>`;
+                    }).join('')}
                 </div>
             </div>`).join('')}
 
