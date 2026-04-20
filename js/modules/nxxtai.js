@@ -1,13 +1,11 @@
 /* ── T LEARN PRO: modules/nxxtai.js ── */
-/* Nxxt AI: chat flow, image gen, build stream, Jivo agent */
+/* Nxxt AI: Updated for Real API Integration & Production Flow */
 
-function handleNxxtFlow() {
-    sendMessage();
-}
+const NXXT_CONFIG = {
+    API_ENDPOINT: 'https://your-backend-api.com/chat', // Replace with your actual endpoint
+    IMG_GEN_URL: 'https://image.pollinations.ai/prompt/'
+};
 
-/**
- * Main function called by the Send Button or Enter Key
- */
 async function sendMessage() {
     const input = document.getElementById('nxxtInput');
     const thread = document.getElementById('aiThread');
@@ -16,26 +14,107 @@ async function sendMessage() {
 
     if (!prompt) return;
 
-    // 1. UI RESET & WATERMARK FADE
+    // 1. UI CLEANUP
     if (watermark) watermark.style.opacity = '0.01';
     input.value = '';
     input.style.height = 'auto';
+    input.disabled = true; // Disable input while AI "thinks"
 
     // 2. RENDER USER MESSAGE
+    renderUserMessage(prompt);
+    scrollThread();
+
+    // 3. SHOW THINKING INDICATOR
+    const thinkId = 'think-' + Date.now();
+    showThinkingIndicator(thinkId);
+    scrollThread();
+
+    try {
+        const isImageRequest = /image|draw|generate|create|picture/i.test(prompt);
+
+        if (isImageRequest) {
+            if (window.imgCredits <= 0) throw new Error("CREDIT_LIMIT");
+            await handleImageGeneration(prompt, thinkId);
+        } else {
+            await handleTextGeneration(prompt, thinkId);
+        }
+    } catch (error) {
+        document.getElementById(thinkId)?.remove();
+        handleError(error);
+    } finally {
+        input.disabled = false;
+        input.focus();
+    }
+}
+
+/**
+ * Handle Real Text Generation via API
+ */
+async function handleTextGeneration(prompt, thinkId) {
+    try {
+        const response = await fetch(NXXT_CONFIG.API_ENDPOINT, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                prompt: prompt,
+                mode: window.nxxtMode || 'standard',
+                userId: 'user_123' // Example identifier
+            })
+        });
+
+        if (!response.ok) throw new Error("NETWORK_ERROR");
+
+        const data = await response.json();
+        document.getElementById(thinkId)?.remove();
+        
+        let finalReply = data.reply;
+        if(window.nxxtMode === 'fun') finalReply = `🙄 [MODE: FUN]: ${finalReply} 🔥`;
+
+        renderAiResponse(finalReply, 'text');
+    } catch (err) {
+        throw err;
+    }
+}
+
+/**
+ * Handle Image Generation
+ */
+async function handleImageGeneration(prompt, thinkId) {
+    window.imgCredits--;
+    updateCreditUI();
+
+    const seed = Math.floor(Math.random() * 1000000);
+    const imageUrl = `${NXXT_CONFIG.IMG_GEN_URL}${encodeURIComponent(prompt)}?width=1024&height=1024&nologo=true&seed=${seed}`;
+    
+    // Pre-load image to ensure it's ready before removing thinking indicator
+    await new Promise((resolve) => {
+        const img = new Image();
+        img.src = imageUrl;
+        img.onload = resolve;
+        img.onerror = resolve; // Continue anyway if it fails
+    });
+
+    document.getElementById(thinkId)?.remove();
+    renderAiResponse(imageUrl, 'image');
+}
+
+// --- REFACTORED UI HELPERS ---
+
+function renderUserMessage(text) {
+    const thread = document.getElementById('aiThread');
     thread.insertAdjacentHTML('beforeend', `
         <div class="flex justify-end mb-8 animate-in slide-in-from-right-4 duration-300">
             <div class="bg-blue-600 text-white rounded-[2rem] rounded-tr-sm p-5 max-w-[80%] shadow-lg shadow-blue-600/10">
-                <p class="text-[16px] font-medium leading-relaxed">${prompt}</p>
+                <p class="text-[16px] font-medium leading-relaxed">${text}</p>
             </div>
         </div>
     `);
-    
-    scrollThread();
+}
 
-    // 3. CREATE THINKING INDICATOR
-    const thinkId = 'think-' + Date.now();
+function showThinkingIndicator(id) {
+    const thread = document.getElementById('aiThread');
     thread.insertAdjacentHTML('beforeend', `
-        <div id="${thinkId}" class="flex gap-4 animate-in fade-in mb-8">
+        <div id="${id}" class="flex gap-4 animate-in fade-in mb-8">
             <div class="w-8 h-8 rounded-xl bg-white/5 flex items-center justify-center border border-white/10">
                 <i class="fas fa-brain text-[10px] text-blue-500 animate-pulse"></i>
             </div>
@@ -46,64 +125,22 @@ async function sendMessage() {
             </div>
         </div>
     `);
-    scrollThread();
-
-    // 4. LOGIC: TEXT VS IMAGE (SIMULATED)
-    const isImageRequest = /image|draw|generate|create|picture/i.test(prompt);
-
-    setTimeout(() => {
-        document.getElementById(thinkId)?.remove();
-        
-        try {
-            if (isImageRequest) {
-                if (window.imgCredits <= 0) throw new Error("CREDIT_LIMIT");
-                handleImageGeneration(prompt);
-            } else {
-                // AUTO-REPLY LOGIC
-                const cleanPrompt = prompt.toLowerCase();
-                let reply = TEST_RESPONSES["default"];
-                
-                // Check if any keyword matches our test keys
-                for (let key in TEST_RESPONSES) {
-                    if (cleanPrompt.includes(key)) {
-                        reply = TEST_RESPONSES[key];
-                        break;
-                    }
-                }
-                
-                // Edge/Fun Mode Modifier
-                if(window.nxxtMode === 'fun') {
-                    reply = "🙄 [TEST MODE]: " + reply + " 🔥";
-                }
-
-                renderAiResponse(reply, 'text');
-            }
-        } catch (error) {
-            let errorMsg = "Critical: Neural Link Severed.";
-            if (error.message === "CREDIT_LIMIT") errorMsg = "Visual bandwidth exhausted. (0/5 Credits left).";
-            showModalAlert(errorMsg);
-        }
-    }, 1200); // Simulated "Thinking" delay
 }
 
-// --- SIMULATED GENERATION HANDLERS ---
-
-function handleImageGeneration(prompt) {
-    window.imgCredits--;
-    updateCreditUI();
-
-    const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=1024&height=1024&nologo=true&seed=${Math.floor(Math.random()*1000)}`;
-    renderAiResponse(imageUrl, 'image');
+function handleError(error) {
+    let errorMsg = "Critical: Neural Link Severed.";
+    if (error.message === "CREDIT_LIMIT") errorMsg = "Visual bandwidth exhausted. (0/5 Credits left).";
+    if (error.message === "NETWORK_ERROR") errorMsg = "Nxxt AI is currently offline. Check your uplink.";
+    
+    showModalAlert(errorMsg);
 }
-
-// --- UI RENDERING ---
 
 function renderAiResponse(content, type) {
     const thread = document.getElementById('aiThread');
     const displayHTML = type === 'image' 
         ? `<div class="space-y-4">
             <img src="${content}" class="rounded-[2rem] border border-white/10 shadow-2xl max-w-full h-auto hover:scale-[1.02] transition-transform duration-500" />
-            <a href="${content}" target="_blank" class="inline-block text-[9px] font-black text-blue-400 uppercase tracking-widest">Download Asset</a>
+            <a href="${content}" download="nxxt-asset.png" target="_blank" class="inline-block text-[9px] font-black text-blue-400 uppercase tracking-widest">Download Asset</a>
            </div>`
         : `<p class="text-white/90 text-lg font-medium leading-relaxed tracking-tight">${content.replace(/\n/g, '<br>')}</p>`;
 
@@ -122,28 +159,14 @@ function renderAiResponse(content, type) {
 
 function scrollThread() {
     const thread = document.getElementById('aiThread');
-    thread.scrollTo({ top: thread.scrollHeight, behavior: 'smooth' });
+    // Use requestAnimationFrame for smoother scrolling after DOM updates
+    requestAnimationFrame(() => {
+        thread.scrollTo({ top: thread.scrollHeight, behavior: 'smooth' });
+    });
 }
 
-function updateCreditUI() {
-    const creditBar = document.getElementById('imageCredits');
-    if (creditBar && creditBar.lastElementChild) {
-        creditBar.removeChild(creditBar.lastElementChild);
-    }
-}
 
-function showModalAlert(message) {
-    const modal = document.createElement('div');
-    modal.className = "fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4";
-    modal.innerHTML = `
-        <div class="bg-[#0d1117] border border-white/10 p-8 rounded-[2rem] max-w-sm w-full text-center shadow-2xl animate-in zoom-in duration-300">
-            <i class="fas fa-exclamation-triangle text-blue-500 text-3xl mb-4"></i>
-            <p class="text-white font-medium mb-6 uppercase tracking-tighter text-sm">${message}</p>
-            <button onclick="this.parentElement.parentElement.remove()" class="w-full py-3 bg-white text-black rounded-xl font-bold uppercase tracking-widest text-[10px] hover:bg-blue-600 hover:text-white transition-all">Acknowledge</button>
-        </div>
-    `;
-    document.body.appendChild(modal);
-}
+
 
 ////// FOR THE NXXT LAB
 
