@@ -47,6 +47,48 @@ views['Nxxt AI'] = `
                 </div>
             </div>
         </div>
+        
+                <div class="grid grid-cols-2 gap-4 w-full max-w-md px-4">
+
+                    <div class="bg-gradient-to-br from-blue-600/20 to-blue-900/10 border border-white/10 p-6 rounded-[2rem] text-left hover:border-blue-500/50 transition-all cursor-pointer group">
+
+                        <i class="fas fa-microphone text-blue-500 mb-3 block"></i>
+
+                        <span class="text-sm font-bold block">Speak to AI</span>
+
+                    </div>
+
+                    <div class="bg-gradient-to-br from-indigo-600/20 to-indigo-900/10 border border-white/10 p-6 rounded-[2rem] text-left hover:border-blue-500/50 transition-all cursor-pointer group">
+
+                        <i class="fas fa-comment-dots text-indigo-500 mb-3 block"></i>
+
+                        <span class="text-sm font-bold block">Chat Neural</span>
+
+                    </div>
+
+                    <div class="bg-gradient-to-br from-slate-600/20 to-slate-900/10 border border-white/10 p-6 rounded-[2rem] text-left hover:border-blue-500/50 transition-all cursor-pointer group">
+
+                        <i class="fas fa-image text-slate-400 mb-3 block"></i>
+
+                        <span class="text-sm font-bold block">Generate Assets</span>
+
+                    </div>
+
+                    <div class="bg-gradient-to-br from-purple-600/20 to-purple-900/10 border border-white/10 p-6 rounded-[2rem] text-left hover:border-blue-500/50 transition-all cursor-pointer group">
+
+                        <i class="fas fa-expand text-purple-500 mb-3 block"></i>
+
+                        <span class="text-sm font-bold block">Scan Logic</span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            
+
+            </div>
 
         <div class="p-6 md:p-8 shrink-0">
             <div class="max-w-4xl mx-auto">
