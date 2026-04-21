@@ -1,108 +1,121 @@
 views['Nxxt AI'] = `
-<div class="nxxt-terminal-wrapper flex h-[92vh] max-w-[1600px] mx-auto bg-[#020408] rounded-[2.5rem] border border-blue-500/10 shadow-[0_0_100px_rgba(0,0,0,1)] overflow-hidden font-sans text-slate-300 relative">
+<div class="nxxt-main-wrapper min-h-[92vh] w-full flex flex-col md:flex-row bg-[#020408] font-sans text-slate-200 overflow-hidden relative">
     
-    <aside class="w-20 md:w-24 border-r border-white/5 bg-black/20 flex flex-col items-center py-10 gap-10">
+    <aside class="hidden md:flex w-24 border-r border-white/5 bg-black/40 flex-col items-center py-8 gap-12 z-20">
         <div class="w-12 h-12 rounded-2xl bg-blue-600 flex items-center justify-center shadow-[0_0_20px_rgba(37,99,235,0.4)]">
-            <i class="fas fa-microchip text-white text-xl"></i>
+            <i class="fas fa-bolt text-white"></i>
         </div>
-        <div class="flex flex-col gap-6 opacity-40 text-[12px]">
-            <i class="fas fa-shield-alt hover:text-blue-400 cursor-pointer transition-colors"></i>
-            <i class="fas fa-network-wired hover:text-blue-400 cursor-pointer transition-colors"></i>
-            <i class="fas fa-database hover:text-blue-400 cursor-pointer transition-colors"></i>
-            <i class="fas fa-broadcast-tower hover:text-blue-400 cursor-pointer transition-colors"></i>
-        </div>
-        <div class="mt-auto mb-4 origin-center -rotate-90 whitespace-nowrap text-[8px] font-black tracking-[0.5em] text-white/10 uppercase">
-            System.Core.Process
+        <nav class="flex flex-col gap-8 text-white/20 text-lg">
+            <i class="fas fa-layer-group hover:text-blue-500 cursor-pointer transition-all"></i>
+            <i class="fas fa-code-branch hover:text-blue-500 cursor-pointer transition-all"></i>
+            <i class="fas fa-terminal hover:text-blue-400 cursor-pointer"></i>
+        </nav>
+        <div class="mt-auto mb-6 vertical-text text-[9px] font-black tracking-[0.5em] text-white/5 uppercase select-none" style="writing-mode: vertical-rl;">
+            PROTOCOL_NX_V4
         </div>
     </aside>
 
-    <main class="flex-1 flex flex-col relative">
+    <main class="flex-1 flex flex-col relative z-10">
         
-        <nav class="flex justify-between items-center px-10 py-6 border-b border-white/5 backdrop-blur-md">
+        <header class="flex justify-between items-center px-6 md:px-10 py-6 backdrop-blur-xl border-b border-white/5">
             <div class="flex flex-col">
-                <span class="text-[9px] font-black text-blue-500 uppercase tracking-[0.4em]">Proprietary Neural Link</span>
-                <h2 class="text-2xl font-black italic tracking-tighter text-white">TECH NXXT <span class="text-blue-500">AI</span></h2>
+                <h2 class="text-xl md:text-2xl font-black italic tracking-tighter text-white">TECH NXXT <span class="text-blue-500">AI</span></h2>
+                <span class="text-[8px] font-bold text-blue-500/50 uppercase tracking-[0.3em] md:block hidden">Neural Link Stable</span>
             </div>
+            
+            <div class="flex items-center gap-4">
+                <div id="imageCredits" class="flex gap-1 bg-white/5 p-2 rounded-lg border border-white/5">
+                    <div class="w-1.5 h-3 bg-blue-500 rounded-full shadow-[0_0_8px_blue]"></div>
+                    <div class="w-1.5 h-3 bg-blue-500 rounded-full"></div>
+                    <div class="w-1.5 h-3 bg-blue-500 rounded-full"></div>
+                    <div class="w-1.5 h-3 bg-white/10 rounded-full"></div>
+                </div>
+                <div class="flex bg-black/50 p-1 rounded-xl border border-white/5">
+                    <button id="modeStandard" class="px-4 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest text-white bg-blue-600 shadow-lg">STD</button>
+                    <button id="modeFun" class="px-4 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest text-white/30">FUN</button>
+                </div>
+            </div>
+        </header>
 
-            <div class="flex items-center gap-8">
-                <div class="hidden lg:flex flex-col items-end">
-                    <span class="text-[8px] font-bold text-white/30 uppercase tracking-widest mb-1">Visual Credits</span>
-                    <div id="imageCredits" class="flex gap-1">
-                        <div class="w-4 h-1.5 bg-blue-500 rounded-full shadow-[0_0_10px_rgba(59,130,246,0.5)]"></div>
-                        <div class="w-4 h-1.5 bg-blue-500 rounded-full shadow-[0_0_10px_rgba(59,130,246,0.5)]"></div>
-                        <div class="w-4 h-1.5 bg-blue-500 rounded-full shadow-[0_0_10px_rgba(59,130,246,0.5)]"></div>
-                        <div class="w-4 h-1.5 bg-white/10 rounded-full"></div>
-                        <div class="w-4 h-1.5 bg-white/10 rounded-full"></div>
+        <div id="aiThread" class="flex-1 overflow-y-auto px-6 md:px-12 py-8 space-y-8 custom-scrollbar">
+            
+            <div id="nxxtLanding" class="flex flex-col items-center justify-center py-12 text-center space-y-8 animate-in fade-in zoom-in duration-700">
+                <div class="relative">
+                    <div class="w-32 h-32 md:w-48 md:h-48 rounded-full bg-gradient-to-tr from-blue-700 via-blue-400 to-indigo-900 shadow-[0_0_80px_rgba(37,99,235,0.4)] flex items-center justify-center animate-pulse">
+                        <i class="fas fa-sparkles text-white text-4xl md:text-6xl opacity-80"></i>
+                    </div>
+                    <div class="absolute -inset-4 bg-blue-500/10 blur-3xl rounded-full -z-10"></div>
+                </div>
+                
+                <div class="max-w-xs mx-auto">
+                    <h1 class="text-2xl font-bold text-white mb-2">Engage Intelligence</h1>
+                    <p class="text-sm text-white/40 leading-relaxed font-light">Control tasks effortlessly, from building UI to managing the Mikoko League.</p>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4 w-full max-w-md px-4">
+                    <div class="bg-gradient-to-br from-blue-600/20 to-blue-900/10 border border-white/10 p-6 rounded-[2rem] text-left hover:border-blue-500/50 transition-all cursor-pointer group">
+                        <i class="fas fa-microphone text-blue-500 mb-3 block"></i>
+                        <span class="text-sm font-bold block">Speak to AI</span>
+                    </div>
+                    <div class="bg-gradient-to-br from-indigo-600/20 to-indigo-900/10 border border-white/10 p-6 rounded-[2rem] text-left hover:border-blue-500/50 transition-all cursor-pointer group">
+                        <i class="fas fa-comment-dots text-indigo-500 mb-3 block"></i>
+                        <span class="text-sm font-bold block">Chat Neural</span>
+                    </div>
+                    <div class="bg-gradient-to-br from-slate-600/20 to-slate-900/10 border border-white/10 p-6 rounded-[2rem] text-left hover:border-blue-500/50 transition-all cursor-pointer group">
+                        <i class="fas fa-image text-slate-400 mb-3 block"></i>
+                        <span class="text-sm font-bold block">Generate Assets</span>
+                    </div>
+                    <div class="bg-gradient-to-br from-purple-600/20 to-purple-900/10 border border-white/10 p-6 rounded-[2rem] text-left hover:border-blue-500/50 transition-all cursor-pointer group">
+                        <i class="fas fa-expand text-purple-500 mb-3 block"></i>
+                        <span class="text-sm font-bold block">Scan Logic</span>
                     </div>
                 </div>
-                <div class="flex bg-white/5 p-1 rounded-xl border border-white/5">
-                    <button id="modeStandard" class="px-5 py-2 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all text-white bg-blue-600 shadow-lg">Tactical</button>
-                    <button id="modeFun" class="px-5 py-2 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all text-white/30 hover:text-white">Override</button>
-                </div>
             </div>
-        </nav>
-
-        <div id="aiThread" class="flex-1 overflow-y-auto px-12 py-10 space-y-8 scroll-smooth custom-scrollbar">
-            <div class="flex flex-col gap-4 max-w-2xl animate-in fade-in slide-in-from-bottom-4 duration-1000">
-                <div class="p-6 rounded-[2rem] bg-white/[0.02] border border-white/5 border-l-blue-600 border-l-4">
-                    <p class="text-lg font-light leading-relaxed">
-                        <span class="text-blue-500 font-bold uppercase text-[10px] block mb-2 tracking-[0.2em]">Uplink Active // Protocol NX-4</span>
-                        Neural link established. System specialized in <span class="text-white font-medium">Software Engineering</span> and <span class="text-white font-medium">Mikoko League Ops</span>. Ready for command input.
-                    </p>
-                </div>
+            
             </div>
-        </div>
 
-        <div class="p-10 bg-gradient-to-t from-black to-transparent">
-            <div class="max-w-4xl mx-auto relative">
-                <div class="absolute -top-12 left-6 flex items-center gap-4">
-                    <span class="flex items-center gap-2 text-[8px] font-bold text-green-500 tracking-widest">
-                        <span class="w-1.5 h-1.5 bg-green-500 rounded-full animate-ping"></span> ENCRYPTION: AES-256
-                    </span>
-                    <span class="text-[8px] font-bold text-white/20 tracking-widest uppercase">Target: v4-Neural-Process</span>
-                </div>
-
-                <div class="relative flex items-end bg-[#080c14] border border-white/10 rounded-[1.5rem] p-2 focus-within:border-blue-500/50 transition-all shadow-2xl">
-                    <textarea id="nxxtInput" rows="1" placeholder="Type command sequence..." 
-                        class="flex-1 bg-transparent border-none outline-none text-white text-md px-6 py-4 resize-none placeholder:text-white/10 min-h-[60px]"
-                        oninput="this.style.height = 'auto'; this.style.height = this.scrollHeight + 'px'"></textarea>
+        <div class="p-6 md:p-10">
+            <div class="max-w-4xl mx-auto">
+                <div class="relative flex items-center bg-white/[0.03] border border-white/10 rounded-full px-2 py-2 focus-within:border-blue-500/40 focus-within:bg-white/[0.05] transition-all shadow-2xl">
+                    <input id="nxxtInput" type="text" placeholder="Ask anything..." 
+                        class="flex-1 bg-transparent border-none outline-none text-white px-6 py-3 text-[16px] placeholder:text-white/20">
                     
-                    <button id="nxxtSendBtn" class="m-2 w-14 h-14 rounded-2xl bg-blue-600 text-white hover:bg-blue-500 transition-all flex items-center justify-center shadow-[0_0_30px_rgba(37,99,235,0.3)] active:scale-95 group">
-                        <i class="fas fa-bolt group-hover:animate-pulse"></i>
+                    <button id="nxxtSendBtn" class="w-12 h-12 rounded-full bg-blue-600 text-white flex items-center justify-center hover:scale-105 active:scale-95 transition-all shadow-lg shadow-blue-600/20">
+                        <i class="fas fa-arrow-up text-sm"></i>
                     </button>
                 </div>
-                <p class="text-center mt-6 text-[7px] font-black text-white/10 uppercase tracking-[1em]">Industrial Intelligence // Built for Tech Nxxt</p>
             </div>
         </div>
     </main>
 
-    <aside class="hidden xl:flex w-72 border-l border-white/5 bg-black/20 flex-col p-8 gap-8">
-        <div class="space-y-4">
-            <h3 class="text-[10px] font-black text-blue-500 uppercase tracking-widest">Neural Load</h3>
-            <div class="h-1 w-full bg-white/5 rounded-full overflow-hidden">
-                <div class="h-full w-[65%] bg-blue-600 shadow-[0_0_10px_rgba(37,99,235,0.5)]"></div>
+    <aside class="hidden xl:flex w-80 border-l border-white/5 bg-black/40 flex-col p-10 gap-8">
+        <div class="space-y-6">
+            <div>
+                <h3 class="text-[10px] font-black text-blue-500 uppercase tracking-widest mb-4">Neural Engine</h3>
+                <div class="space-y-2">
+                    <div class="flex justify-between text-[9px] font-bold uppercase tracking-tighter">
+                        <span>CPU Load</span>
+                        <span class="text-blue-500">42%</span>
+                    </div>
+                    <div class="h-1 w-full bg-white/5 rounded-full overflow-hidden">
+                        <div class="h-full w-[42%] bg-blue-600"></div>
+                    </div>
+                </div>
             </div>
-        </div>
 
-        <div class="space-y-4 pt-4 border-t border-white/5">
-            <h3 class="text-[10px] font-black text-white/40 uppercase tracking-widest">Active Modules</h3>
-            <ul class="space-y-3">
-                <li class="flex items-center gap-3 text-[10px] font-bold text-white/60">
-                    <span class="w-1 h-1 bg-blue-500 rounded-full"></span> FULL_STACK_ENGINE
-                </li>
-                <li class="flex items-center gap-3 text-[10px] font-bold text-white/60">
-                    <span class="w-1 h-1 bg-blue-500 rounded-full"></span> MIKOKO_LEAGUE_DB
-                </li>
-                <li class="flex items-center gap-3 text-[10px] font-bold text-white/20">
-                    <span class="w-1 h-1 bg-white/10 rounded-full"></span> ASSET_GEN_V2
-                </li>
-            </ul>
-        </div>
-
-        <div class="mt-auto p-4 rounded-2xl bg-blue-600/5 border border-blue-500/10">
-            <p class="text-[9px] font-medium leading-relaxed text-blue-400/80">
-                "Precision is the engine of progress. In the grid, code is law."
-            </p>
+            <div class="pt-6 border-t border-white/5">
+                <h3 class="text-[10px] font-black text-white/30 uppercase tracking-widest mb-4">Active Threads</h3>
+                <div class="space-y-3">
+                    <div class="flex items-center gap-3 p-3 bg-white/5 rounded-xl border border-white/5">
+                        <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                        <span class="text-[10px] font-bold text-white/80 uppercase">Mikoko League DB</span>
+                    </div>
+                    <div class="flex items-center gap-3 p-3 bg-white/5 rounded-xl border border-white/5">
+                        <div class="w-2 h-2 rounded-full bg-blue-500"></div>
+                        <span class="text-[10px] font-bold text-white/80 uppercase">Full-Stack Hub</span>
+                    </div>
+                </div>
+            </div>
         </div>
     </aside>
 </div>
