@@ -15,14 +15,14 @@ views['Nxxt AI'] = `
             </div>
         </nav>
         <div class="mt-auto mb-6 vertical-text text-[9px] font-black tracking-[0.5em] text-white/5 uppercase select-none" style="writing-mode: vertical-rl;">
-            PROTOCOL_NX_V4
+            TECH NXXT COMPANY
         </div>
     </aside>
 
     <main class="flex-1 flex flex-col relative z-10 overflow-hidden">
         <header class="flex justify-between items-center px-6 md:px-10 py-6 backdrop-blur-xl border-b border-white/5 shrink-0">
             <div class="flex flex-col">
-                <h2 class="text-xl md:text-2xl font-black italic tracking-tighter text-white uppercase">Neural <span class="text-blue-500">Interface</span></h2>
+                <h2 class="text-xl md:text-2xl font-black italic tracking-tighter text-white uppercase">Nxxt <span class="text-blue-500">AI</span></h2>
                 <span class="text-[8px] font-bold text-blue-500/50 uppercase tracking-[0.3em]">V1 System Active</span>
             </div>
             <div class="flex bg-black/50 p-1 rounded-xl border border-white/5">
@@ -41,7 +41,7 @@ views['Nxxt AI'] = `
                 
                 <div class="max-w-xs mx-auto">
                     <h1 class="text-2xl font-bold text-white mb-2 uppercase tracking-tighter">Engage Nxxt</h1>
-                    <p class="text-sm text-white/40 leading-relaxed font-light">Manual training protocols active. System ready for deployment.</p>
+                    <p class="text-sm text-white/40 leading-relaxed font-light">HEY ASK AWAY.</p>
                 </div>
 
                 <div class="grid grid-cols-2 gap-4 w-full max-w-md px-4">
