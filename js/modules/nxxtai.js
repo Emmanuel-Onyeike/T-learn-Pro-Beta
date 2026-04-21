@@ -1,25 +1,33 @@
-/* ── T LEARN PRO: modules/nxxtai.js (Neural Command Build) ── */
-
 const NXXT_CONFIG = {
     API_ENDPOINT: 'https://api.technxxt.com/v1/neural-process', 
     IMG_GEN_URL: 'https://image.pollinations.ai/prompt/',
-    SYSTEM_PROMPT: "You are Tech Nxxt AI, a tactical industrial intelligence. Your tone is professional, high-octane, and precise. You specialize in software development, full-stack tech, and Mikoko League management. Use industrial metaphors."
+    SYSTEM_PROMPT: "Tech Nxxt AI: Tactical Industrial Intelligence. Professional, high-octane, precise. Focus: Full-stack, Mikoko League, UI/UX."
 };
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Event Delegation for persistent UI elements
+    // Initialize Neural Logs from Database
+    syncNeuralLogs();
+
     document.body.addEventListener('click', (e) => {
         if (e.target.closest('#nxxtSendBtn')) sendMessage();
         
+        // Mode Switcher
         const modeBtn = e.target.closest('#modeStandard') || e.target.closest('#modeFun');
         if (modeBtn) switchMode(modeBtn.id === 'modeFun' ? 'fun' : 'standard');
         
+        // Navigation Icons
+        if (e.target.closest('#newChatBtn')) startNewInterface();
+        if (e.target.closest('#searchChatBtn')) triggerNeuralSearch();
+
         // Quick Action Grid Handler
         const actionCard = e.target.closest('.action-card');
         if (actionCard) {
             const cmd = actionCard.dataset.command;
-            document.getElementById('nxxtInput').value = cmd;
-            sendMessage();
+            const input = document.getElementById('nxxtInput');
+            if(input) {
+                input.value = cmd;
+                sendMessage();
+            }
         }
     });
 
@@ -43,10 +51,10 @@ async function sendMessage() {
     const prompt = input.value.trim();
     if (!prompt) return;
 
-    // TRANSITION: Hide Orb Landing if it exists
+    // Transition: Clear Landing for Active Thread
     if (landing) {
         landing.classList.add('fade-out');
-        setTimeout(() => landing.remove(), 500);
+        setTimeout(() => landing.remove(), 400);
     }
 
     input.value = '';
@@ -64,8 +72,10 @@ async function sendMessage() {
             if (window.imgCredits <= 0) throw new Error("CREDIT_LIMIT");
             await handleImageGeneration(prompt, thinkId);
         } else {
-            await handleTechNxxtNeuralProcess(prompt, thinkId);
+            await handleNeuralProcess(prompt, thinkId);
         }
+        // Auto-save thread state to DB after every exchange
+        updateCurrentLog(thread.innerHTML);
     } catch (error) {
         if (document.getElementById(thinkId)) document.getElementById(thinkId).remove();
         handleError(error);
@@ -75,39 +85,104 @@ async function sendMessage() {
     }
 }
 
-async function handleTechNxxtNeuralProcess(prompt, thinkId) {
-    // Dynamic Load UI Feedback
-    const cpuBar = document.getElementById('cpuLoadBar');
-    if(cpuBar) cpuBar.style.width = '85%';
+// --- DATABASE & LOGIC ENGINE ---
 
-    const response = await fetch(NXXT_CONFIG.API_ENDPOINT, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            model: "nxxt-v4-turbo",
-            system_instruction: NXXT_CONFIG.SYSTEM_PROMPT,
-            messages: [{ role: "user", content: prompt }],
-            context_mode: window.nxxtMode
-        })
+function startNewInterface() {
+    const thread = document.getElementById('aiThread');
+    if (thread.children.length > 1) { // Save current before clearing
+        const firstMsg = thread.querySelector('p')?.innerText || "Neural Session";
+        saveToDatabase(firstMsg, thread.innerHTML);
+    }
+    location.reload(); // Quickest way to reset all states to "New Chat"
+}
+
+function saveToDatabase(title, html) {
+    let logs = JSON.parse(localStorage.getItem('nxxt_logs') || '[]');
+    const newEntry = {
+        id: Date.now(),
+        title: title.slice(0, 30) + "...",
+        data: html,
+        time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+    };
+    logs.unshift(newEntry);
+    localStorage.setItem('nxxt_logs', JSON.stringify(logs.slice(0, 20))); // Keep last 20
+    syncNeuralLogs();
+}
+
+function syncNeuralLogs() {
+    const list = document.getElementById('historyList');
+    const noState = document.getElementById('historyNoState');
+    const logs = JSON.parse(localStorage.getItem('nxxt_logs') || '[]');
+
+    if (!list) return;
+
+    if (logs.length > 0) {
+        if(noState) noState.style.display = 'none';
+        list.innerHTML = logs.map(log => `
+            <div onclick="restoreNeuralLink(${log.id})" class="p-4 bg-white/[0.03] border border-white/5 rounded-2xl hover:border-blue-500/50 cursor-pointer transition-all group">
+                <div class="flex justify-between items-center mb-1">
+                    <span class="text-[8px] font-black text-blue-500 uppercase tracking-widest">LOG_${log.id.toString().slice(-4)}</span>
+                    <span class="text-[8px] text-white/20">${log.time}</span>
+                </div>
+                <p class="text-[11px] text-white/50 group-hover:text-white truncate">${log.title}</p>
+            </div>
+        `).join('');
+    }
+}
+
+window.restoreNeuralLink = (id) => {
+    const logs = JSON.parse(localStorage.getItem('nxxt_logs') || '[]');
+    const log = logs.find(l => l.id === id);
+    if (log) {
+        const landing = document.getElementById('nxxtLanding');
+        if(landing) landing.remove();
+        document.getElementById('aiThread').innerHTML = log.data;
+        scrollThread();
+    }
+};
+
+function triggerNeuralSearch() {
+    const query = prompt("Enter Neural ID or Keyword:");
+    if (!query) return;
+    const logs = document.querySelectorAll('#historyList > div');
+    logs.forEach(log => {
+        const text = log.innerText.toLowerCase();
+        log.style.display = text.includes(query.toLowerCase()) ? 'block' : 'none';
     });
+}
 
-    if (!response.ok) throw new Error("NETWORK_ERROR");
+// --- API & RENDERING ---
 
-    const data = await response.json();
-    document.getElementById(thinkId)?.remove();
-    
-    let finalReply = data.output || data.reply || "Link Failure.";
-    if(window.nxxtMode === 'fun') finalReply = `🔥 [OVERRIDE]: ${finalReply} 🚀`;
+async function handleNeuralProcess(prompt, thinkId) {
+    // API logic remains consistent with your endpoint
+    try {
+        const response = await fetch(NXXT_CONFIG.API_ENDPOINT, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                model: "nxxt-v4-turbo",
+                prompt: prompt,
+                mode: window.nxxtMode
+            })
+        });
 
-    renderAiResponse(finalReply, 'text');
-    if(cpuBar) cpuBar.style.width = '12%';
+        const data = await response.json();
+        document.getElementById(thinkId)?.remove();
+        let reply = data.output || "Link Stabilized. No data returned.";
+        if(window.nxxtMode === 'fun') reply = `🔥 [OVERRIDE]: ${reply} 🚀`;
+        renderAiResponse(reply, 'text');
+    } catch (e) {
+        // Fallback for manual training/offline
+        document.getElementById(thinkId)?.remove();
+        renderAiResponse("Neural Link Offline. Manual Override suggested.", 'text');
+    }
 }
 
 async function handleImageGeneration(prompt, thinkId) {
     window.imgCredits--;
     updateCreditUI();
     const seed = Math.floor(Math.random() * 99999);
-    const imageUrl = `${NXXT_CONFIG.IMG_GEN_URL}${encodeURIComponent(prompt)}?width=1024&height=1024&nologo=true&seed=${seed}`;
+    const imageUrl = `${NXXT_CONFIG.IMG_GEN_URL}${encodeURIComponent(prompt)}?width=1024&height=1024&seed=${seed}`;
     
     await new Promise(r => { const img = new Image(); img.src = imageUrl; img.onload = r; img.onerror = r; });
     document.getElementById(thinkId)?.remove();
@@ -117,9 +192,9 @@ async function handleImageGeneration(prompt, thinkId) {
 function renderUserMessage(text) {
     const thread = document.getElementById('aiThread');
     thread.insertAdjacentHTML('beforeend', `
-        <div class="flex justify-end mb-8 animate-in slide-in-from-right-4 duration-300">
-            <div class="bg-blue-600 text-white rounded-[2rem] rounded-tr-sm p-5 max-w-[85%] shadow-lg shadow-blue-600/20 border border-white/10">
-                <p class="text-[16px] font-medium leading-relaxed">${text}</p>
+        <div class="flex justify-end mb-8 animate-in slide-in-from-right-4">
+            <div class="bg-blue-600 text-white rounded-[2rem] rounded-tr-sm p-5 max-w-[85%] shadow-lg border border-white/10">
+                <p class="text-[16px] font-medium">${text}</p>
             </div>
         </div>
     `);
@@ -132,27 +207,14 @@ function renderAiResponse(content, type) {
         : `<div class="space-y-4"><img src="${content}" class="rounded-[2rem] border border-white/10 shadow-2xl" /><p class="text-[9px] text-blue-500 font-bold uppercase tracking-[0.3em]">Neural Asset Processed</p></div>`;
 
     thread.insertAdjacentHTML('beforeend', `
-        <div class="flex gap-4 md:gap-6 animate-in slide-in-from-left-4 duration-500 mb-10">
-            <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-900 flex items-center justify-center border border-white/10 shadow-lg shrink-0">
+        <div class="flex gap-4 md:gap-6 animate-in slide-in-from-left-4 mb-10">
+            <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-900 flex items-center justify-center border border-white/10 shrink-0">
                 <i class="fas fa-bolt text-white text-xs"></i>
             </div>
             <div class="flex-1 pt-1 text-slate-300 text-lg font-light leading-relaxed">${formatted}</div>
         </div>
     `);
     scrollThread();
-}
-
-function switchMode(mode) {
-    window.nxxtMode = mode;
-    const std = document.getElementById('modeStandard');
-    const fun = document.getElementById('modeFun');
-    if (!std || !fun) return;
-    
-    const activeClass = "px-5 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all text-white bg-blue-600 shadow-lg";
-    const inactiveClass = "px-5 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all text-white/30";
-    
-    std.className = mode === 'standard' ? activeClass : inactiveClass;
-    fun.className = mode === 'fun' ? activeClass : inactiveClass;
 }
 
 function showThinkingIndicator(id) {
@@ -162,34 +224,38 @@ function showThinkingIndicator(id) {
             <div class="w-8 h-8 rounded-xl bg-white/5 flex items-center justify-center border border-white/10">
                 <i class="fas fa-brain text-[10px] text-blue-500 animate-pulse"></i>
             </div>
-            <div class="flex items-center gap-1.5"><div class="w-1.5 h-1.5 bg-blue-500 rounded-full animate-bounce"></div><div class="w-1.5 h-1.5 bg-blue-500 rounded-full animate-bounce" style="animation-delay:0.1s"></div></div>
+            <div class="flex items-center gap-1.5">
+                <div class="w-1.5 h-1.5 bg-blue-500 rounded-full animate-bounce"></div>
+                <div class="w-1.5 h-1.5 bg-blue-500 rounded-full animate-bounce" style="animation-delay:0.1s"></div>
+            </div>
         </div>
     `);
 }
 
-function handleError(error) {
-    const msg = error.message === "CREDIT_LIMIT" ? "Visual Bandwidth Exhausted." : "Neural Link Severed.";
-    const modal = document.createElement('div');
-    modal.className = "fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4";
-    modal.innerHTML = `<div class="bg-[#0d1117] border border-white/10 p-8 rounded-[2rem] max-w-sm w-full text-center shadow-2xl animate-in zoom-in">
-        <i class="fas fa-exclamation-triangle text-blue-500 text-3xl mb-4"></i>
-        <p class="text-white font-bold mb-6 uppercase tracking-tighter text-xs">${msg}</p>
-        <button onclick="this.closest('.fixed').remove()" class="w-full py-3 bg-white text-black rounded-xl font-black uppercase tracking-widest text-[10px]">Acknowledge</button>
-    </div>`;
-    document.body.appendChild(modal);
-}
-
-function updateCreditUI() {
-    const bar = document.getElementById('imageCredits');
-    if (bar && bar.lastElementChild) bar.removeChild(bar.lastElementChild);
-}
-
 function scrollThread() {
     const thread = document.getElementById('aiThread');
-    if (thread) requestAnimationFrame(() => thread.scrollTo({ top: thread.scrollHeight, behavior: 'smooth' }));
+    if (thread) {
+        requestAnimationFrame(() => {
+            thread.scrollTo({ top: thread.scrollHeight, behavior: 'smooth' });
+        });
+    }
 }
 
+function switchMode(mode) {
+    window.nxxtMode = mode;
+    const std = document.getElementById('modeStandard');
+    const fun = document.getElementById('modeFun');
+    if (!std || !fun) return;
+    const active = "px-4 py-1.5 rounded-lg text-[9px] font-black uppercase text-white bg-blue-600 shadow-lg";
+    const inactive = "px-4 py-1.5 rounded-lg text-[9px] font-black uppercase text-white/30";
+    std.className = mode === 'standard' ? active : inactive;
+    fun.className = mode === 'fun' ? active : inactive;
+}
 
+function handleError(error) {
+    const msg = error.message === "CREDIT_LIMIT" ? "Visual Bandwidth Exhausted." : "NO connection please.";
+    alert(msg); // You can replace with your modal logic if preferred
+}
 
 
 
