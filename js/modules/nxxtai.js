@@ -1,33 +1,34 @@
+/* ── T LEARN PRO: modules/nxxtai.js (Local Session & Manual Override) ── */
+
 const NXXT_CONFIG = {
-    API_ENDPOINT: 'https://api.technxxt.com/v1/neural-process', 
     IMG_GEN_URL: 'https://image.pollinations.ai/prompt/',
-    SYSTEM_PROMPT: "Tech Nxxt AI: Tactical Industrial Intelligence. Professional, high-octane, precise. Focus: Full-stack, Mikoko League, UI/UX."
+    // Add your manual responses here
+    MANUAL_REPLIES: {
+        "hello": "Neural link established. System standing by for tactical commands.",
+        "status": "All systems operational. Protocol NX_V4 active. Neural logs synced.",
+        "default": "Command received. Manual training protocol active. [Awaiting backend override]"
+    }
 };
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Initialize Neural Logs from Database
     syncNeuralLogs();
 
     document.body.addEventListener('click', (e) => {
+        // Core Actions
         if (e.target.closest('#nxxtSendBtn')) sendMessage();
-        
+        if (e.target.closest('#newChatBtn')) handleNewChatSequence();
+        if (e.target.closest('#searchChatBtn')) triggerNeuralSearch();
+
         // Mode Switcher
         const modeBtn = e.target.closest('#modeStandard') || e.target.closest('#modeFun');
         if (modeBtn) switchMode(modeBtn.id === 'modeFun' ? 'fun' : 'standard');
         
-        // Navigation Icons
-        if (e.target.closest('#newChatBtn')) startNewInterface();
-        if (e.target.closest('#searchChatBtn')) triggerNeuralSearch();
-
-        // Quick Action Grid Handler
+        // Quick Action Grid
         const actionCard = e.target.closest('.action-card');
         if (actionCard) {
             const cmd = actionCard.dataset.command;
             const input = document.getElementById('nxxtInput');
-            if(input) {
-                input.value = cmd;
-                sendMessage();
-            }
+            if(input) { input.value = cmd; sendMessage(); }
         }
     });
 
@@ -38,9 +39,64 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    window.imgCredits = window.imgCredits || 5;
     window.nxxtMode = window.nxxtMode || 'standard';
 });
+
+// --- SESSION MANAGEMENT ---
+
+function handleNewChatSequence() {
+    const thread = document.getElementById('aiThread');
+    const landing = document.getElementById('nxxtLanding');
+
+    // Only archive if there is an actual conversation happening
+    if (!landing && thread.children.length > 0) {
+        const firstUserMsg = thread.querySelector('.justify-end p')?.innerText || "Neural Session";
+        saveToDatabase(firstUserMsg, thread.innerHTML);
+    }
+
+    // Reset UI to Landing State without page reload
+    resetInterface();
+}
+
+function resetInterface() {
+    const thread = document.getElementById('aiThread');
+    // Inject the landing HTML back into the thread
+    thread.innerHTML = `
+        <div id="nxxtLanding" class="flex flex-col items-center justify-center min-h-full text-center space-y-8 animate-in fade-in zoom-in duration-700">
+            <div class="relative">
+                <div class="w-32 h-32 md:w-40 md:h-40 rounded-full bg-gradient-to-tr from-blue-700 via-blue-400 to-indigo-900 shadow-[0_0_80px_rgba(37,99,235,0.4)] flex items-center justify-center animate-pulse">
+                    <i class="fas fa-bolt text-white text-4xl opacity-80"></i>
+                </div>
+            </div>
+            <div class="max-w-xs mx-auto">
+                <h1 class="text-2xl font-bold text-white mb-2 uppercase tracking-tighter">Engage Nxxt</h1>
+                <p class="text-sm text-white/40 leading-relaxed font-light">Manual training protocols active. System ready for deployment.</p>
+            </div>
+            <div class="grid grid-cols-2 gap-4 w-full max-w-md px-4">
+                <div class="bg-gradient-to-br from-blue-600/10 to-blue-900/5 border border-white/5 p-6 rounded-[2rem] text-left hover:border-blue-500/50 transition-all cursor-pointer group action-card" data-command="Speak to AI">
+                    <i class="fas fa-microphone text-blue-500 mb-3 block"></i>
+                    <span class="text-xs font-bold block uppercase tracking-widest">Speak to AI</span>
+                </div>
+                <div class="bg-gradient-to-br from-indigo-600/10 to-indigo-900/5 border border-white/5 p-6 rounded-[2rem] text-left hover:border-blue-500/50 transition-all cursor-pointer group action-card" data-command="Chat Neural">
+                    <i class="fas fa-comment-dots text-indigo-500 mb-3 block"></i>
+                    <span class="text-xs font-bold block uppercase tracking-widest">Chat Neural</span>
+                </div>
+                <div class="bg-gradient-to-br from-slate-600/10 to-slate-900/5 border border-white/5 p-6 rounded-[2rem] text-left hover:border-blue-500/50 transition-all cursor-pointer group action-card" data-command="Generate Assets">
+                    <i class="fas fa-image text-slate-400 mb-3 block"></i>
+                    <span class="text-xs font-bold block uppercase tracking-widest">Generate Assets</span>
+                </div>
+                <div class="bg-gradient-to-br from-purple-600/10 to-purple-900/5 border border-white/5 p-6 rounded-[2rem] text-left hover:border-blue-500/50 transition-all cursor-pointer group action-card" data-command="Scan Logic">
+                    <i class="fas fa-expand text-purple-500 mb-3 block"></i>
+                    <span class="text-xs font-bold block uppercase tracking-widest">Scan Logic</span>
+                </div>
+            </div>
+        </div>
+    `;
+    document.getElementById('nxxtInput').value = '';
+    document.getElementById('nxxtInput').focus();
+}
+
+// --- MESSAGE HANDLING (MANUAL OVERRIDE) ---
 
 async function sendMessage() {
     const input = document.getElementById('nxxtInput');
@@ -51,80 +107,91 @@ async function sendMessage() {
     const prompt = input.value.trim();
     if (!prompt) return;
 
-    // Transition: Clear Landing for Active Thread
-    if (landing) {
-        landing.classList.add('fade-out');
-        setTimeout(() => landing.remove(), 400);
-    }
+    if (landing) landing.remove();
 
     input.value = '';
-    input.disabled = true;
-
     renderUserMessage(prompt);
     scrollThread();
 
     const thinkId = 'think-' + Date.now();
     showThinkingIndicator(thinkId);
 
-    try {
+    // Simulate Processing Delay
+    setTimeout(() => {
+        document.getElementById(thinkId)?.remove();
+        
         const isImage = /image|draw|generate|picture/i.test(prompt);
         if (isImage) {
-            if (window.imgCredits <= 0) throw new Error("CREDIT_LIMIT");
-            await handleImageGeneration(prompt, thinkId);
+            handleManualImage(prompt);
         } else {
-            await handleNeuralProcess(prompt, thinkId);
+            handleManualText(prompt);
         }
-        // Auto-save thread state to DB after every exchange
-        updateCurrentLog(thread.innerHTML);
-    } catch (error) {
-        if (document.getElementById(thinkId)) document.getElementById(thinkId).remove();
-        handleError(error);
-    } finally {
-        input.disabled = false;
-        input.focus();
-    }
+    }, 1200);
 }
 
-// --- DATABASE & LOGIC ENGINE ---
-
-function startNewInterface() {
-    const thread = document.getElementById('aiThread');
-    if (thread.children.length > 1) { // Save current before clearing
-        const firstMsg = thread.querySelector('p')?.innerText || "Neural Session";
-        saveToDatabase(firstMsg, thread.innerHTML);
-    }
-    location.reload(); // Quickest way to reset all states to "New Chat"
+function handleManualText(prompt) {
+    const key = prompt.toLowerCase();
+    let response = NXXT_CONFIG.MANUAL_REPLIES[key] || NXXT_CONFIG.MANUAL_REPLIES["default"];
+    
+    if(window.nxxtMode === 'fun') response = `🔥 [FUN_MODE]: ${response} 🚀`;
+    
+    renderAiResponse(response, 'text');
 }
+
+function handleManualImage(prompt) {
+    const seed = Math.floor(Math.random() * 9999);
+    const url = `${NXXT_CONFIG.IMG_GEN_URL}${encodeURIComponent(prompt)}?seed=${seed}&nologo=true`;
+    renderAiResponse(url, 'image');
+}
+
+// --- MODAL ALERT SYSTEM ---
+
+function showAlert(message) {
+    const modal = document.createElement('div');
+    modal.className = "fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in";
+    modal.innerHTML = `
+        <div class="bg-[#020408] border border-white/10 p-8 rounded-[2rem] max-w-sm w-full text-center shadow-[0_0_50px_rgba(37,99,235,0.2)] animate-in zoom-in duration-300">
+            <div class="w-16 h-16 bg-blue-600/20 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-blue-500/30">
+                <i class="fas fa-bolt text-blue-500 text-2xl"></i>
+            </div>
+            <p class="text-white font-black uppercase tracking-widest text-[10px] mb-6">${message}</p>
+            <button onclick="this.closest('.fixed').remove()" class="w-full py-4 bg-blue-600 text-white rounded-xl font-black uppercase tracking-widest text-[10px] hover:bg-blue-500 transition-colors">Acknowledge</button>
+        </div>
+    `;
+    document.body.appendChild(modal);
+}
+
+// --- DATABASE LOGIC (LOCALSTORAGE) ---
 
 function saveToDatabase(title, html) {
     let logs = JSON.parse(localStorage.getItem('nxxt_logs') || '[]');
     const newEntry = {
         id: Date.now(),
-        title: title.slice(0, 30) + "...",
+        title: title.length > 25 ? title.substring(0, 25) + "..." : title,
         data: html,
         time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
     };
     logs.unshift(newEntry);
-    localStorage.setItem('nxxt_logs', JSON.stringify(logs.slice(0, 20))); // Keep last 20
+    localStorage.setItem('nxxt_logs', JSON.stringify(logs.slice(0, 15)));
     syncNeuralLogs();
+    showAlert("Neural Session Archived");
 }
 
 function syncNeuralLogs() {
     const list = document.getElementById('historyList');
     const noState = document.getElementById('historyNoState');
     const logs = JSON.parse(localStorage.getItem('nxxt_logs') || '[]');
-
     if (!list) return;
 
     if (logs.length > 0) {
         if(noState) noState.style.display = 'none';
         list.innerHTML = logs.map(log => `
-            <div onclick="restoreNeuralLink(${log.id})" class="p-4 bg-white/[0.03] border border-white/5 rounded-2xl hover:border-blue-500/50 cursor-pointer transition-all group">
+            <div onclick="restoreNeuralLink(${log.id})" class="p-4 bg-white/[0.03] border border-white/5 rounded-2xl hover:border-blue-500/50 cursor-pointer transition-all group animate-in slide-in-from-right-2">
                 <div class="flex justify-between items-center mb-1">
                     <span class="text-[8px] font-black text-blue-500 uppercase tracking-widest">LOG_${log.id.toString().slice(-4)}</span>
                     <span class="text-[8px] text-white/20">${log.time}</span>
                 </div>
-                <p class="text-[11px] text-white/50 group-hover:text-white truncate">${log.title}</p>
+                <p class="text-[11px] text-white/50 group-hover:text-white truncate font-medium">${log.title}</p>
             </div>
         `).join('');
     }
@@ -134,67 +201,20 @@ window.restoreNeuralLink = (id) => {
     const logs = JSON.parse(localStorage.getItem('nxxt_logs') || '[]');
     const log = logs.find(l => l.id === id);
     if (log) {
-        const landing = document.getElementById('nxxtLanding');
-        if(landing) landing.remove();
         document.getElementById('aiThread').innerHTML = log.data;
         scrollThread();
+        showAlert(`Restoring Neural Link: LOG_${id.toString().slice(-4)}`);
     }
 };
 
-function triggerNeuralSearch() {
-    const query = prompt("Enter Neural ID or Keyword:");
-    if (!query) return;
-    const logs = document.querySelectorAll('#historyList > div');
-    logs.forEach(log => {
-        const text = log.innerText.toLowerCase();
-        log.style.display = text.includes(query.toLowerCase()) ? 'block' : 'none';
-    });
-}
-
-// --- API & RENDERING ---
-
-async function handleNeuralProcess(prompt, thinkId) {
-    // API logic remains consistent with your endpoint
-    try {
-        const response = await fetch(NXXT_CONFIG.API_ENDPOINT, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                model: "nxxt-v4-turbo",
-                prompt: prompt,
-                mode: window.nxxtMode
-            })
-        });
-
-        const data = await response.json();
-        document.getElementById(thinkId)?.remove();
-        let reply = data.output || "Link Stabilized. No data returned.";
-        if(window.nxxtMode === 'fun') reply = `🔥 [OVERRIDE]: ${reply} 🚀`;
-        renderAiResponse(reply, 'text');
-    } catch (e) {
-        // Fallback for manual training/offline
-        document.getElementById(thinkId)?.remove();
-        renderAiResponse("Neural Link Offline. Manual Override suggested.", 'text');
-    }
-}
-
-async function handleImageGeneration(prompt, thinkId) {
-    window.imgCredits--;
-    updateCreditUI();
-    const seed = Math.floor(Math.random() * 99999);
-    const imageUrl = `${NXXT_CONFIG.IMG_GEN_URL}${encodeURIComponent(prompt)}?width=1024&height=1024&seed=${seed}`;
-    
-    await new Promise(r => { const img = new Image(); img.src = imageUrl; img.onload = r; img.onerror = r; });
-    document.getElementById(thinkId)?.remove();
-    renderAiResponse(imageUrl, 'image');
-}
+// --- HELPERS ---
 
 function renderUserMessage(text) {
     const thread = document.getElementById('aiThread');
     thread.insertAdjacentHTML('beforeend', `
         <div class="flex justify-end mb-8 animate-in slide-in-from-right-4">
             <div class="bg-blue-600 text-white rounded-[2rem] rounded-tr-sm p-5 max-w-[85%] shadow-lg border border-white/10">
-                <p class="text-[16px] font-medium">${text}</p>
+                <p class="text-[16px] font-medium leading-relaxed">${text}</p>
             </div>
         </div>
     `);
@@ -224,7 +244,7 @@ function showThinkingIndicator(id) {
             <div class="w-8 h-8 rounded-xl bg-white/5 flex items-center justify-center border border-white/10">
                 <i class="fas fa-brain text-[10px] text-blue-500 animate-pulse"></i>
             </div>
-            <div class="flex items-center gap-1.5">
+            <div class="flex items-center gap-1.5 px-2">
                 <div class="w-1.5 h-1.5 bg-blue-500 rounded-full animate-bounce"></div>
                 <div class="w-1.5 h-1.5 bg-blue-500 rounded-full animate-bounce" style="animation-delay:0.1s"></div>
             </div>
@@ -234,11 +254,7 @@ function showThinkingIndicator(id) {
 
 function scrollThread() {
     const thread = document.getElementById('aiThread');
-    if (thread) {
-        requestAnimationFrame(() => {
-            thread.scrollTo({ top: thread.scrollHeight, behavior: 'smooth' });
-        });
-    }
+    if (thread) requestAnimationFrame(() => thread.scrollTo({ top: thread.scrollHeight, behavior: 'smooth' }));
 }
 
 function switchMode(mode) {
@@ -246,18 +262,11 @@ function switchMode(mode) {
     const std = document.getElementById('modeStandard');
     const fun = document.getElementById('modeFun');
     if (!std || !fun) return;
-    const active = "px-4 py-1.5 rounded-lg text-[9px] font-black uppercase text-white bg-blue-600 shadow-lg";
-    const inactive = "px-4 py-1.5 rounded-lg text-[9px] font-black uppercase text-white/30";
+    const active = "px-4 py-1.5 rounded-lg text-[9px] font-black uppercase text-white bg-blue-600 shadow-lg transition-all";
+    const inactive = "px-4 py-1.5 rounded-lg text-[9px] font-black uppercase text-white/30 transition-all";
     std.className = mode === 'standard' ? active : inactive;
     fun.className = mode === 'fun' ? active : inactive;
 }
-
-function handleError(error) {
-    const msg = error.message === "CREDIT_LIMIT" ? "Visual Bandwidth Exhausted." : "NO connection please.";
-    alert(msg); // You can replace with your modal logic if preferred
-}
-
-
 
 ////// FOR THE NXXT LAB
 
