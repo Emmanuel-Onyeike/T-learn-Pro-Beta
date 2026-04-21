@@ -1,66 +1,84 @@
-/* ── T LEARN PRO: modules/nxxtai.js (Local Session & Manual Override) ── */
+/**
+ * T-LEARN PRO: NXXT AI NEURAL INTERFACE
+ * Version: Protocol_NX_V4
+ * Description: Tactical UI, Local-First Sessions, Manual Override.
+ */
 
 const NXXT_CONFIG = {
     IMG_GEN_URL: 'https://image.pollinations.ai/prompt/',
-    // Add your manual responses here
+    // Reference your logo from the images you provided
+    AI_LOGO: '../assets/nxxt-logo.png', 
     MANUAL_REPLIES: {
         "hello": "Neural link established. System standing by for tactical commands.",
         "status": "All systems operational. Protocol NX_V4 active. Neural logs synced.",
+        "mikoko": "Mikoko League Database access granted. Fixtures and leaderboards are stable.",
         "default": "Command received. Manual training protocol active. [Awaiting backend override]"
     }
 };
 
 document.addEventListener('DOMContentLoaded', () => {
+    // 1. Initial State Sync
     syncNeuralLogs();
+    window.nxxtMode = 'standard';
 
+    // 2. Tactical Event Delegation
     document.body.addEventListener('click', (e) => {
-        // Core Actions
-        if (e.target.closest('#nxxtSendBtn')) sendMessage();
-        if (e.target.closest('#newChatBtn')) handleNewChatSequence();
-        if (e.target.closest('#searchChatBtn')) triggerNeuralSearch();
+        const target = e.target;
 
-        // Mode Switcher
-        const modeBtn = e.target.closest('#modeStandard') || e.target.closest('#modeFun');
+        // Message Transmit
+        if (target.closest('#nxxtSendBtn')) sendMessage();
+        
+        // Navigation & Session Control
+        if (target.closest('#newChatBtn')) handleNewChatSequence();
+        if (target.closest('#searchChatBtn')) triggerNeuralSearch();
+
+        // Mode Switcher Logic
+        const modeBtn = target.closest('#modeStandard') || target.closest('#modeFun');
         if (modeBtn) switchMode(modeBtn.id === 'modeFun' ? 'fun' : 'standard');
         
-        // Quick Action Grid
-        const actionCard = e.target.closest('.action-card');
+        // Quick Action Cards from Landing
+        const actionCard = target.closest('.action-card');
         if (actionCard) {
             const cmd = actionCard.dataset.command;
             const input = document.getElementById('nxxtInput');
-            if(input) { input.value = cmd; sendMessage(); }
+            if(input) { 
+                input.value = cmd; 
+                sendMessage(); 
+            }
         }
     });
 
+    // 3. Command Line Inputs
     document.body.addEventListener('keypress', (e) => {
         if (e.target.id === 'nxxtInput' && e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
             sendMessage();
         }
     });
-
-    window.nxxtMode = window.nxxtMode || 'standard';
 });
 
 // --- SESSION MANAGEMENT ---
 
+/**
+ * Handles the "New Chat" logic: Saves current, resets UI.
+ */
 function handleNewChatSequence() {
     const thread = document.getElementById('aiThread');
     const landing = document.getElementById('nxxtLanding');
 
-    // Only archive if there is an actual conversation happening
+    // Archive current session if it contains data
     if (!landing && thread.children.length > 0) {
         const firstUserMsg = thread.querySelector('.justify-end p')?.innerText || "Neural Session";
         saveToDatabase(firstUserMsg, thread.innerHTML);
     }
 
-    // Reset UI to Landing State without page reload
+    // Reset UI to Landing State (Mobile-First)
     resetInterface();
 }
 
 function resetInterface() {
     const thread = document.getElementById('aiThread');
-    // Inject the landing HTML back into the thread
+    // Reinject the tactical landing grid
     thread.innerHTML = `
         <div id="nxxtLanding" class="flex flex-col items-center justify-center min-h-full text-center space-y-8 animate-in fade-in zoom-in duration-700">
             <div class="relative">
@@ -69,34 +87,37 @@ function resetInterface() {
                 </div>
             </div>
             <div class="max-w-xs mx-auto">
-                <h1 class="text-2xl font-bold text-white mb-2 uppercase tracking-tighter">Engage Nxxt</h1>
-                <p class="text-sm text-white/40 leading-relaxed font-light">Manual training protocols active. System ready for deployment.</p>
+                <h1 class="text-2xl font-bold text-white mb-2 uppercase tracking-tighter italic">Engage Nxxt</h1>
+                <p class="text-[10px] text-white/40 leading-relaxed font-bold uppercase tracking-[0.2em]">Manual training protocols active. System ready.</p>
             </div>
-            <div class="grid grid-cols-2 gap-4 w-full max-w-md px-4">
+            <div class="grid grid-cols-2 gap-4 w-full max-w-md px-4 pb-10">
                 <div class="bg-gradient-to-br from-blue-600/10 to-blue-900/5 border border-white/5 p-6 rounded-[2rem] text-left hover:border-blue-500/50 transition-all cursor-pointer group action-card" data-command="Speak to AI">
                     <i class="fas fa-microphone text-blue-500 mb-3 block"></i>
-                    <span class="text-xs font-bold block uppercase tracking-widest">Speak to AI</span>
+                    <span class="text-[9px] font-black block uppercase tracking-widest">Speak to AI</span>
                 </div>
                 <div class="bg-gradient-to-br from-indigo-600/10 to-indigo-900/5 border border-white/5 p-6 rounded-[2rem] text-left hover:border-blue-500/50 transition-all cursor-pointer group action-card" data-command="Chat Neural">
                     <i class="fas fa-comment-dots text-indigo-500 mb-3 block"></i>
-                    <span class="text-xs font-bold block uppercase tracking-widest">Chat Neural</span>
+                    <span class="text-[9px] font-black block uppercase tracking-widest">Chat Neural</span>
                 </div>
                 <div class="bg-gradient-to-br from-slate-600/10 to-slate-900/5 border border-white/5 p-6 rounded-[2rem] text-left hover:border-blue-500/50 transition-all cursor-pointer group action-card" data-command="Generate Assets">
                     <i class="fas fa-image text-slate-400 mb-3 block"></i>
-                    <span class="text-xs font-bold block uppercase tracking-widest">Generate Assets</span>
+                    <span class="text-[9px] font-black block uppercase tracking-widest">Generate Assets</span>
                 </div>
                 <div class="bg-gradient-to-br from-purple-600/10 to-purple-900/5 border border-white/5 p-6 rounded-[2rem] text-left hover:border-blue-500/50 transition-all cursor-pointer group action-card" data-command="Scan Logic">
                     <i class="fas fa-expand text-purple-500 mb-3 block"></i>
-                    <span class="text-xs font-bold block uppercase tracking-widest">Scan Logic</span>
+                    <span class="text-[9px] font-black block uppercase tracking-widest">Scan Logic</span>
                 </div>
             </div>
         </div>
     `;
-    document.getElementById('nxxtInput').value = '';
-    document.getElementById('nxxtInput').focus();
+    const input = document.getElementById('nxxtInput');
+    if(input) {
+        input.value = '';
+        input.focus();
+    }
 }
 
-// --- MESSAGE HANDLING (MANUAL OVERRIDE) ---
+// --- CORE MESSAGE LOGIC ---
 
 async function sendMessage() {
     const input = document.getElementById('nxxtInput');
@@ -116,9 +137,10 @@ async function sendMessage() {
     const thinkId = 'think-' + Date.now();
     showThinkingIndicator(thinkId);
 
-    // Simulate Processing Delay
+    // Simulate Processing Delay for manual backend
     setTimeout(() => {
-        document.getElementById(thinkId)?.remove();
+        const indicator = document.getElementById(thinkId);
+        if(indicator) indicator.remove();
         
         const isImage = /image|draw|generate|picture/i.test(prompt);
         if (isImage) {
@@ -126,14 +148,14 @@ async function sendMessage() {
         } else {
             handleManualText(prompt);
         }
-    }, 1200);
+    }, 1000);
 }
 
 function handleManualText(prompt) {
     const key = prompt.toLowerCase();
     let response = NXXT_CONFIG.MANUAL_REPLIES[key] || NXXT_CONFIG.MANUAL_REPLIES["default"];
     
-    if(window.nxxtMode === 'fun') response = `🔥 [FUN_MODE]: ${response} 🚀`;
+    if(window.nxxtMode === 'fun') response = `🔥 [FUN_MODE_ACTIVE]: ${response} 🚀`;
     
     renderAiResponse(response, 'text');
 }
@@ -144,24 +166,61 @@ function handleManualImage(prompt) {
     renderAiResponse(url, 'image');
 }
 
-// --- MODAL ALERT SYSTEM ---
+// --- RENDERING (TACTICAL UI) ---
+
+function renderUserMessage(text) {
+    const thread = document.getElementById('aiThread');
+    thread.insertAdjacentHTML('beforeend', `
+        <div class="flex justify-end mb-6 animate-in slide-in-from-right-4 duration-300">
+            <div class="max-w-[85%] md:max-w-[70%]">
+                <div class="bg-blue-600 text-white px-6 py-4 rounded-[2rem] rounded-tr-md shadow-[0_10px_30px_rgba(37,99,235,0.2)] border border-white/10">
+                    <p class="text-[15px] font-medium leading-relaxed">${text}</p>
+                </div>
+            </div>
+        </div>
+    `);
+}
+
+function renderAiResponse(content, type) {
+    const thread = document.getElementById('aiThread');
+    const formatted = type === 'text' 
+        ? content.replace(/\*\*(.*?)\*\*/g, '<b class="text-blue-400">$1</b>').replace(/\n/g, '<br>') 
+        : `<div class="space-y-4"><img src="${content}" class="rounded-[2rem] border border-white/10 shadow-2xl" /><p class="text-[8px] text-blue-500 font-black uppercase tracking-[0.4em]">Neural_Asset_Rendered</p></div>`;
+
+    thread.insertAdjacentHTML('beforeend', `
+        <div class="flex gap-4 md:gap-6 animate-in slide-in-from-left-4 duration-500 mb-10">
+            <div class="w-12 h-12 rounded-2xl bg-[#0d1117] border border-white/10 flex items-center justify-center p-2 shadow-lg shrink-0">
+                <i class="fas fa-bolt text-blue-500 text-xs"></i>
+            </div>
+            <div class="flex-1 pt-1">
+                <div class="text-slate-300 text-[17px] font-light leading-relaxed max-w-2xl">
+                    ${formatted}
+                </div>
+            </div>
+        </div>
+    `);
+    scrollThread();
+}
+
+// --- SYSTEM NOTIFICATIONS (MODAL) ---
 
 function showAlert(message) {
     const modal = document.createElement('div');
-    modal.className = "fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in";
+    modal.className = "fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-md p-4 animate-in fade-in";
     modal.innerHTML = `
-        <div class="bg-[#020408] border border-white/10 p-8 rounded-[2rem] max-w-sm w-full text-center shadow-[0_0_50px_rgba(37,99,235,0.2)] animate-in zoom-in duration-300">
-            <div class="w-16 h-16 bg-blue-600/20 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-blue-500/30">
+        <div class="bg-[#020408] border border-white/10 p-8 rounded-[2.5rem] max-w-sm w-full text-center shadow-2xl animate-in zoom-in duration-300">
+            <div class="w-16 h-16 bg-blue-600/20 rounded-2xl flex items-center justify-center mx-auto mb-5 border border-blue-500/30">
                 <i class="fas fa-bolt text-blue-500 text-2xl"></i>
             </div>
-            <p class="text-white font-black uppercase tracking-widest text-[10px] mb-6">${message}</p>
-            <button onclick="this.closest('.fixed').remove()" class="w-full py-4 bg-blue-600 text-white rounded-xl font-black uppercase tracking-widest text-[10px] hover:bg-blue-500 transition-colors">Acknowledge</button>
+            <h4 class="text-white font-black uppercase tracking-tighter text-sm mb-2">Neural Interface</h4>
+            <p class="text-white/40 font-medium text-[10px] mb-8 leading-relaxed uppercase tracking-widest">${message}</p>
+            <button onclick="this.closest('.fixed').remove()" class="w-full py-4 bg-blue-600 text-white rounded-2xl font-black uppercase tracking-widest text-[10px] hover:scale-[1.02] active:scale-[0.98] transition-all">Acknowledge</button>
         </div>
     `;
     document.body.appendChild(modal);
 }
 
-// --- DATABASE LOGIC (LOCALSTORAGE) ---
+// --- LOGGING & DATABASE ---
 
 function saveToDatabase(title, html) {
     let logs = JSON.parse(localStorage.getItem('nxxt_logs') || '[]');
@@ -174,7 +233,7 @@ function saveToDatabase(title, html) {
     logs.unshift(newEntry);
     localStorage.setItem('nxxt_logs', JSON.stringify(logs.slice(0, 15)));
     syncNeuralLogs();
-    showAlert("Neural Session Archived");
+    showAlert("Session Archived to Neural Logs");
 }
 
 function syncNeuralLogs() {
@@ -191,7 +250,7 @@ function syncNeuralLogs() {
                     <span class="text-[8px] font-black text-blue-500 uppercase tracking-widest">LOG_${log.id.toString().slice(-4)}</span>
                     <span class="text-[8px] text-white/20">${log.time}</span>
                 </div>
-                <p class="text-[11px] text-white/50 group-hover:text-white truncate font-medium">${log.title}</p>
+                <p class="text-[11px] text-white/5 group-hover:text-white truncate font-medium">${log.title}</p>
             </div>
         `).join('');
     }
@@ -201,7 +260,10 @@ window.restoreNeuralLink = (id) => {
     const logs = JSON.parse(localStorage.getItem('nxxt_logs') || '[]');
     const log = logs.find(l => l.id === id);
     if (log) {
-        document.getElementById('aiThread').innerHTML = log.data;
+        const thread = document.getElementById('aiThread');
+        const landing = document.getElementById('nxxtLanding');
+        if(landing) landing.remove();
+        thread.innerHTML = log.data;
         scrollThread();
         showAlert(`Restoring Neural Link: LOG_${id.toString().slice(-4)}`);
     }
@@ -209,44 +271,16 @@ window.restoreNeuralLink = (id) => {
 
 // --- HELPERS ---
 
-function renderUserMessage(text) {
-    const thread = document.getElementById('aiThread');
-    thread.insertAdjacentHTML('beforeend', `
-        <div class="flex justify-end mb-8 animate-in slide-in-from-right-4">
-            <div class="bg-blue-600 text-white rounded-[2rem] rounded-tr-sm p-5 max-w-[85%] shadow-lg border border-white/10">
-                <p class="text-[16px] font-medium leading-relaxed">${text}</p>
-            </div>
-        </div>
-    `);
-}
-
-function renderAiResponse(content, type) {
-    const thread = document.getElementById('aiThread');
-    const formatted = type === 'text' 
-        ? content.replace(/\*\*(.*?)\*\*/g, '<b class="text-blue-400">$1</b>').replace(/\n/g, '<br>') 
-        : `<div class="space-y-4"><img src="${content}" class="rounded-[2rem] border border-white/10 shadow-2xl" /><p class="text-[9px] text-blue-500 font-bold uppercase tracking-[0.3em]">Neural Asset Processed</p></div>`;
-
-    thread.insertAdjacentHTML('beforeend', `
-        <div class="flex gap-4 md:gap-6 animate-in slide-in-from-left-4 mb-10">
-            <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-900 flex items-center justify-center border border-white/10 shrink-0">
-                <i class="fas fa-bolt text-white text-xs"></i>
-            </div>
-            <div class="flex-1 pt-1 text-slate-300 text-lg font-light leading-relaxed">${formatted}</div>
-        </div>
-    `);
-    scrollThread();
-}
-
 function showThinkingIndicator(id) {
     const thread = document.getElementById('aiThread');
     thread.insertAdjacentHTML('beforeend', `
         <div id="${id}" class="flex gap-4 animate-in fade-in mb-8">
-            <div class="w-8 h-8 rounded-xl bg-white/5 flex items-center justify-center border border-white/10">
-                <i class="fas fa-brain text-[10px] text-blue-500 animate-pulse"></i>
+            <div class="w-12 h-12 rounded-2xl bg-white/5 border border-white/5 flex items-center justify-center">
+                <div class="w-2 h-2 bg-blue-500 rounded-full animate-ping-slow"></div>
             </div>
             <div class="flex items-center gap-1.5 px-2">
-                <div class="w-1.5 h-1.5 bg-blue-500 rounded-full animate-bounce"></div>
-                <div class="w-1.5 h-1.5 bg-blue-500 rounded-full animate-bounce" style="animation-delay:0.1s"></div>
+                <div class="w-1.5 h-1.5 bg-blue-500/40 rounded-full animate-bounce"></div>
+                <div class="w-1.5 h-1.5 bg-blue-500/40 rounded-full animate-bounce" style="animation-delay:0.1s"></div>
             </div>
         </div>
     `);
@@ -267,6 +301,9 @@ function switchMode(mode) {
     std.className = mode === 'standard' ? active : inactive;
     fun.className = mode === 'fun' ? active : inactive;
 }
+
+
+
 
 ////// FOR THE NXXT LAB
 
