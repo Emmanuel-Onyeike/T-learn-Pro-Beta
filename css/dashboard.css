@@ -487,3 +487,16 @@ body.agent-bridge-active #jivo-iframe-container {
   from { transform: translateY(40px); opacity: 0; }
   to   { transform: translateY(0);    opacity: 1; }
 }
+
+/* Custom Scrollbar for the Neural Thread */
+.custom-scrollbar::-webkit-scrollbar { width: 4px; }
+.custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+.custom-scrollbar::-webkit-scrollbar-thumb { 
+    background: rgba(37,99,235,0.2); 
+    border-radius: 20px; 
+}
+
+@keyframes ping-slow {
+    75%, 100% { transform: scale(1.5); opacity: 0; }
+}
+.animate-ping-slow { animation: ping-slow 2s cubic-bezier(0, 0, 0.2, 1) infinite; }
