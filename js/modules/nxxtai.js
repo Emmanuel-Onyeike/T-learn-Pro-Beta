@@ -1,36 +1,38 @@
-/* ── T LEARN PRO: modules/nxxtai.js ── */
-/* Nxxt AI: Final Production Build with Event Delegation & Modal Logic */
+/* ── T LEARN PRO: modules/nxxtai.js (Final Production Build) ── */
 
 const NXXT_CONFIG = {
-    API_ENDPOINT: 'https://your-backend-api.com/chat', 
-    IMG_GEN_URL: 'https://image.pollinations.ai/prompt/'
+    // UPDATED: Proprietary Tech Nxxt Neural Endpoint
+    API_ENDPOINT: 'https://api.technxxt.com/v1/neural-process', 
+    IMG_GEN_URL: 'https://image.pollinations.ai/prompt/',
+    // Training Data: The Persona
+    SYSTEM_PROMPT: "You are Tech Nxxt AI, a tactical industrial intelligence. Your tone is professional, high-octane, and precise. You specialize in software development, full-stack tech, and the Mikoko League dashboard management. Use industrial metaphors and keep responses concise but powerful."
 };
 
-// 1. GLOBAL INITIALIZATION (Fixes "Not Defined" errors)
 document.addEventListener('DOMContentLoaded', () => {
-    const sendBtn = document.getElementById('nxxtSendBtn');
-    const input = document.getElementById('nxxtInput');
+    // Setup listeners using Event Delegation to prevent view-swap breakage
+    document.body.addEventListener('click', (e) => {
+        if (e.target.closest('#nxxtSendBtn')) sendMessage();
+        
+        // Handle Mode Switching
+        const modeBtn = e.target.closest('.mode-toggle') || e.target.closest('#modeStandard') || e.target.closest('#modeFun');
+        if (modeBtn) {
+            const mode = modeBtn.id === 'modeFun' ? 'fun' : 'standard';
+            switchMode(mode);
+        }
+    });
 
-    if (sendBtn) {
-        sendBtn.addEventListener('click', sendMessage);
-    }
+    // Keyboard listener for command sequence (Enter key)
+    document.body.addEventListener('keypress', (e) => {
+        if (e.target.id === 'nxxtInput' && e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage();
+        }
+    });
 
-    if (input) {
-        input.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                sendMessage();
-            }
-        });
-    }
-    
-    // Setup initial state
-    window.imgCredits = window.imgCredits || 5; 
+    window.imgCredits = window.imgCredits || 5;
+    window.nxxtMode = window.nxxtMode || 'standard';
 });
 
-/**
- * Main Logic Flow
- */
 async function sendMessage() {
     const input = document.getElementById('nxxtInput');
     const thread = document.getElementById('aiThread');
@@ -40,7 +42,7 @@ async function sendMessage() {
     const prompt = input.value.trim();
     if (!prompt) return;
 
-    // UI Feedback
+    // UI Feedback: Dim watermark and lock input
     if (watermark) watermark.style.opacity = '0.01';
     input.value = '';
     input.style.height = 'auto';
@@ -51,19 +53,18 @@ async function sendMessage() {
 
     const thinkId = 'think-' + Date.now();
     showThinkingIndicator(thinkId);
-    scrollThread();
 
     try {
-        const isImageRequest = /image|draw|generate|create|picture/i.test(prompt);
-
-        if (isImageRequest) {
+        const isImage = /image|draw|generate|picture/i.test(prompt);
+        if (isImage) {
             if (window.imgCredits <= 0) throw new Error("CREDIT_LIMIT");
             await handleImageGeneration(prompt, thinkId);
         } else {
-            await handleTextGeneration(prompt, thinkId);
+            // Processing through Tech Nxxt Custom API
+            await handleTechNxxtNeuralProcess(prompt, thinkId);
         }
     } catch (error) {
-        document.getElementById(thinkId)?.remove();
+        if (document.getElementById(thinkId)) document.getElementById(thinkId).remove();
         handleError(error);
     } finally {
         input.disabled = false;
@@ -71,40 +72,41 @@ async function sendMessage() {
     }
 }
 
-// --- API HANDLERS ---
+async function handleTechNxxtNeuralProcess(prompt, thinkId) {
+    const response = await fetch(NXXT_CONFIG.API_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            model: "nxxt-v4-turbo",
+            system_instruction: NXXT_CONFIG.SYSTEM_PROMPT,
+            messages: [{ role: "user", content: prompt }],
+            context_mode: window.nxxtMode
+        })
+    });
 
-async function handleTextGeneration(prompt, thinkId) {
-    try {
-        const response = await fetch(NXXT_CONFIG.API_ENDPOINT, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                prompt: prompt,
-                mode: window.nxxtMode || 'standard'
-            })
-        });
+    if (!response.ok) throw new Error("NETWORK_ERROR");
 
-        if (!response.ok) throw new Error("NETWORK_ERROR");
-
-        const data = await response.json();
-        document.getElementById(thinkId)?.remove();
-        
-        let finalReply = data.reply;
-        if(window.nxxtMode === 'fun') finalReply = `🙄 [MODE: FUN]: ${finalReply} 🔥`;
-
-        renderAiResponse(finalReply, 'text');
-    } catch (err) {
-        throw err;
+    const data = await response.json();
+    const thinkNode = document.getElementById(thinkId);
+    if (thinkNode) thinkNode.remove();
+    
+    let finalReply = data.output || data.reply || "Protocol Error: No Response.";
+    
+    // Inject Fun Mode flavoring if active
+    if(window.nxxtMode === 'fun') {
+        finalReply = `🔥 [OVERRIDE]: ${finalReply} 🚀`;
     }
+
+    renderAiResponse(finalReply, 'text');
 }
 
 async function handleImageGeneration(prompt, thinkId) {
     window.imgCredits--;
     updateCreditUI();
-
     const seed = Math.floor(Math.random() * 1000000);
     const imageUrl = `${NXXT_CONFIG.IMG_GEN_URL}${encodeURIComponent(prompt)}?width=1024&height=1024&nologo=true&seed=${seed}`;
     
+    // Pre-load image for smooth transition
     await new Promise((resolve) => {
         const img = new Image();
         img.src = imageUrl;
@@ -112,18 +114,19 @@ async function handleImageGeneration(prompt, thinkId) {
         img.onerror = resolve;
     });
 
-    document.getElementById(thinkId)?.remove();
+    const thinkNode = document.getElementById(thinkId);
+    if (thinkNode) thinkNode.remove();
     renderAiResponse(imageUrl, 'image');
 }
 
-// --- UI COMPONENTS ---
+// --- STABLE UI HELPERS ---
 
 function renderUserMessage(text) {
     const thread = document.getElementById('aiThread');
     thread.insertAdjacentHTML('beforeend', `
         <div class="flex justify-end mb-8 animate-in slide-in-from-right-4 duration-300">
-            <div class="bg-blue-600 text-white rounded-[2rem] rounded-tr-sm p-5 max-w-[80%] shadow-lg shadow-blue-600/10">
-                <p class="text-[16px] font-medium leading-relaxed">${text}</p>
+            <div class="bg-blue-600 text-white rounded-[2rem] rounded-tr-sm p-5 max-w-[80%] shadow-lg shadow-blue-600/20 border border-white/10">
+                <p class="text-[15px] font-medium leading-relaxed">${text}</p>
             </div>
         </div>
     `);
@@ -131,28 +134,41 @@ function renderUserMessage(text) {
 
 function renderAiResponse(content, type) {
     const thread = document.getElementById('aiThread');
-    
-    // Basic Markdown formatting (Bold and Line breaks)
-    const formattedContent = type === 'text' 
-        ? content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>')
+    const formatted = type === 'text' 
+        ? content.replace(/\*\*(.*?)\*\*/g, '<b class="text-blue-400">$1</b>').replace(/\n/g, '<br>') 
         : content;
 
-    const displayHTML = type === 'image' 
+    const html = type === 'image' 
         ? `<div class="space-y-4">
-            <img src="${content}" class="rounded-[2rem] border border-white/10 shadow-2xl max-w-full h-auto hover:scale-[1.02] transition-transform duration-500" />
-            <a href="${content}" download="nxxt-asset.png" target="_blank" class="inline-block text-[9px] font-black text-blue-400 uppercase tracking-widest">Download Asset</a>
+            <img src="${content}" class="rounded-[2rem] border border-white/10 shadow-2xl hover:scale-[1.01] transition-transform duration-500" />
+            <p class="text-[9px] text-blue-500 font-bold tracking-widest uppercase">Asset Manifested</p>
            </div>`
-        : `<p class="text-white/90 text-lg font-medium leading-relaxed tracking-tight">${formattedContent}</p>`;
+        : `<p class="text-slate-300 text-lg font-light leading-relaxed">${formatted}</p>`;
 
     thread.insertAdjacentHTML('beforeend', `
-        <div class="flex gap-6 group animate-in slide-in-from-left-4 duration-500 mb-10">
-            <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-blue-600 to-purple-600 shrink-0 flex items-center justify-center shadow-lg">
-                <i class="fas fa-robot text-white text-sm"></i>
+        <div class="flex gap-6 animate-in slide-in-from-left-4 duration-500 mb-10">
+            <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-900 flex items-center justify-center border border-white/10 shadow-lg shrink-0">
+                <i class="fas fa-bolt text-white text-xs"></i>
             </div>
-            <div class="flex-1 pt-1">${displayHTML}</div>
+            <div class="flex-1 pt-1">${html}</div>
         </div>
     `);
     scrollThread();
+}
+
+function switchMode(mode) {
+    window.nxxtMode = mode;
+    const std = document.getElementById('modeStandard');
+    const fun = document.getElementById('modeFun');
+    if (!std || !fun) return;
+
+    if (mode === 'standard') {
+        std.className = "px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all text-white bg-blue-600 shadow-[0_0_20px_rgba(37,99,235,0.2)]";
+        fun.className = "px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all text-white/30 hover:text-white";
+    } else {
+        fun.className = "px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all text-white bg-blue-600 shadow-[0_0_20px_rgba(37,99,235,0.2)]";
+        std.className = "px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all text-white/30 hover:text-white";
+    }
 }
 
 function showThinkingIndicator(id) {
@@ -162,7 +178,7 @@ function showThinkingIndicator(id) {
             <div class="w-8 h-8 rounded-xl bg-white/5 flex items-center justify-center border border-white/10">
                 <i class="fas fa-brain text-[10px] text-blue-500 animate-pulse"></i>
             </div>
-            <div class="flex items-center gap-1">
+            <div class="flex items-center gap-1.5">
                 <div class="w-1.5 h-1.5 bg-blue-500 rounded-full animate-bounce" style="animation-delay:0ms"></div>
                 <div class="w-1.5 h-1.5 bg-blue-500 rounded-full animate-bounce" style="animation-delay:150ms"></div>
                 <div class="w-1.5 h-1.5 bg-blue-500 rounded-full animate-bounce" style="animation-delay:300ms"></div>
@@ -171,24 +187,22 @@ function showThinkingIndicator(id) {
     `);
 }
 
-function showModalAlert(message) {
+function handleError(error) {
+    let errorMsg = "Critical: Neural Link Severed.";
+    if (error.message === "CREDIT_LIMIT") errorMsg = "Visual bandwidth exhausted. (0/5 Credits left).";
+    if (error.message === "NETWORK_ERROR") errorMsg = "Nxxt AI is currently offline. Check your uplink.";
+    
+    // Center Modal Alert Implementation
     const modal = document.createElement('div');
     modal.className = "fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4";
     modal.innerHTML = `
         <div class="bg-[#0d1117] border border-white/10 p-8 rounded-[2rem] max-w-sm w-full text-center shadow-2xl animate-in zoom-in duration-300">
             <i class="fas fa-exclamation-triangle text-blue-500 text-3xl mb-4"></i>
-            <p class="text-white font-medium mb-6 uppercase tracking-tighter text-sm">${message}</p>
+            <p class="text-white font-medium mb-6 uppercase tracking-tighter text-sm">${errorMsg}</p>
             <button onclick="this.closest('.fixed').remove()" class="w-full py-3 bg-white text-black rounded-xl font-bold uppercase tracking-widest text-[10px] hover:bg-blue-600 hover:text-white transition-all">Acknowledge</button>
         </div>
     `;
     document.body.appendChild(modal);
-}
-
-function handleError(error) {
-    let errorMsg = "Critical: Neural Link Severed.";
-    if (error.message === "CREDIT_LIMIT") errorMsg = "Visual bandwidth exhausted. (0/5 Credits left).";
-    if (error.message === "NETWORK_ERROR") errorMsg = "Nxxt AI is currently offline. Check your uplink.";
-    showModalAlert(errorMsg);
 }
 
 function updateCreditUI() {
@@ -200,11 +214,12 @@ function updateCreditUI() {
 
 function scrollThread() {
     const thread = document.getElementById('aiThread');
-    requestAnimationFrame(() => {
-        thread.scrollTo({ top: thread.scrollHeight, behavior: 'smooth' });
-    });
+    if (thread) {
+        requestAnimationFrame(() => {
+            thread.scrollTo({ top: thread.scrollHeight, behavior: 'smooth' });
+        });
+    }
 }
-
 
 
 ////// FOR THE NXXT LAB
