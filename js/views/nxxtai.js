@@ -68,7 +68,7 @@ views['Nxxt AI'] = `
         <div class="p-6 md:p-8 border-t border-white/5 bg-[#020408] shrink-0">
             <div class="max-w-4xl mx-auto">
                 <div class="relative flex items-center bg-white/[0.03] border border-white/10 rounded-full px-2 py-2 focus-within:border-blue-500/40 transition-all shadow-2xl">
-                    <input id="nxxtInput" type="text" placeholder="Transmit command..." class="flex-1 bg-transparent border-none outline-none text-white px-6 py-3 text-[16px]">
+                    <input id="nxxtInput" type="text" placeholder="Ask Anything..." class="flex-1 bg-transparent border-none outline-none text-white px-6 py-3 text-[16px]">
                     <button id="nxxtSendBtn" class="w-12 h-12 rounded-full bg-blue-600 text-white flex items-center justify-center hover:scale-105 transition-all">
                         <i class="fas fa-arrow-up"></i>
                     </button>
