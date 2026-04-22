@@ -1,9 +1,9 @@
 views['Nxxt AI'] = `
 <div class="nxxt-main-wrapper min-h-[92vh] w-full flex flex-col md:flex-row bg-[#020408] font-sans text-slate-200 overflow-hidden relative">
     
-    <aside class="hidden md:flex w-24 border-r border-white/5 bg-black/40 flex-col items-center py-8 gap-10 z-20">
-        <div class="w-12 h-12 rounded-2xl bg-blue-600 flex items-center justify-center shadow-[0_0_20px_rgba(37,99,235,0.4)]">
-         <img src="/assets/Logo.webp">
+    <aside class="hidden md:flex w-24 border-r border-white/5 bg-black/40 flex-col items-center py-8 gap-10 z-20 shrink-0">
+        <div class="w-12 h-12 rounded-2xl bg-blue-600 flex items-center justify-center shadow-[0_0_20px_rgba(37,99,235,0.4)] overflow-hidden">
+            <img src="/assets/Logo.webp" class="w-full h-full object-contain">
         </div>
         <nav class="flex flex-col gap-8 text-white/20 text-lg">
             <i id="newChatBtn" class="fas fa-plus-circle hover:text-blue-500 cursor-pointer transition-all" title="New Chat"></i>
@@ -19,7 +19,7 @@ views['Nxxt AI'] = `
         </div>
     </aside>
 
-    <main class="flex-1 flex flex-col relative z-10 overflow-hidden">
+    <main class="flex-1 flex flex-col relative z-10 overflow-hidden min-w-0">
         <header class="flex justify-between items-center px-6 md:px-10 py-6 backdrop-blur-xl border-b border-white/5 shrink-0">
             <div class="flex flex-col">
                 <h2 class="text-xl md:text-2xl font-black italic tracking-tighter text-white uppercase">Nxxt <span class="text-blue-500">AI</span></h2>
@@ -34,8 +34,8 @@ views['Nxxt AI'] = `
         <div id="aiThread" class="flex-1 overflow-y-auto px-6 md:px-12 py-8 space-y-8 custom-scrollbar scroll-smooth">
             <div id="nxxtLanding" class="flex flex-col items-center justify-center min-h-full text-center space-y-8 animate-in fade-in zoom-in duration-700">
                 <div class="relative">
-                    <div class="w-32 h-32 md:w-40 md:h-40 rounded-full bg-gradient-to-tr from-blue-700 via-blue-400 to-indigo-900 shadow-[0_0_80px_rgba(37,99,235,0.4)] flex items-center justify-center animate-pulse">
-                    <img src="/assets/Logo.webp">
+                    <div class="w-32 h-32 md:w-40 md:h-40 rounded-full bg-gradient-to-tr from-blue-700 via-blue-400 to-indigo-900 shadow-[0_0_80px_rgba(37,99,235,0.4)] flex items-center justify-center animate-pulse overflow-hidden p-6">
+                        <img src="/assets/Logo.webp" class="w-full h-full object-contain">
                     </div>
                 </div>
                 
@@ -78,14 +78,20 @@ views['Nxxt AI'] = `
     </main>
 
     <aside class="hidden xl:flex w-80 border-l border-white/5 bg-black/40 flex-col overflow-hidden shrink-0">
-        <div class="p-6 border-b border-white/5">
+        <div class="p-6 border-b border-white/5 bg-black/20 shrink-0">
             <h3 class="text-[10px] font-black text-blue-500 uppercase tracking-widest">Neural Logs</h3>
         </div>
-        <div id="historyList" class="flex-1 overflow-y-auto p-6 space-y-4 custom-scrollbar">
+        <div id="historyList" class="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar scroll-smooth">
             <div id="historyNoState" class="flex flex-col items-center justify-center h-full text-center space-y-4 opacity-20">
                 <i class="fas fa-database text-4xl"></i>
                 <p class="text-[10px] font-bold uppercase tracking-widest">No Active Logs Found</p>
             </div>
+        </div>
+        <div class="p-4 border-t border-white/5 bg-black/40 shrink-0">
+             <div class="flex items-center justify-between opacity-30">
+                <span class="text-[7px] font-black tracking-widest uppercase">System Memory</span>
+                <span class="text-[7px] text-blue-500 font-bold uppercase">Ready</span>
+             </div>
         </div>
     </aside>
 </div>
