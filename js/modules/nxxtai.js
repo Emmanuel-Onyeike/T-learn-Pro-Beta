@@ -1,55 +1,39 @@
 /**
  * TECH NXXT: NXXT AI LEARNING ASSISTANT
- * Version: Nxxt_Model_Testing_V1
- * Description: Human-centric persona, Industrial UI, and Google Fallback.
  */
-
 const NXXT_CONFIG = {
     IMG_GEN_URL: 'https://image.pollinations.ai/prompt/',
-    // Ensure this path matches your project structure
-    AI_LOGO: '../assets/nxxt-logo.png', 
-    
+    AI_LOGO: '/assets/Logo.webp', 
 
     SYSTEM_REPLIES: {
-        // --- GREETINGS ---
         "hello": "Hello! I am Nxxt AI, your learning assistant. I am Tech Nxxt's new model—currently under testing, but here to help out. How are you doing today?",
         "hi": "Hi there! Nxxt AI here. I'm the latest model from Tech Nxxt. How can I assist your session today?",
         "hey": "Hey! Ready to get to work? I'm Nxxt AI, your new learning assistant. What's on your mind?",
         "yo": "Yo! Nxxt AI active. What's the move for today?",
-        
-        // --- IDENTITY & ORIGIN ---
         "name": "My name is Nxxt AI. Born in the Tech Nxxt labs, currently evolving.",
         "who are you": "I am Nxxt AI, your learning assistant. I am the new model developed by Tech Nxxt. I'm currently in the testing phase, but I'm here to help you learn and build.",
         "what do you do": "I am Tech Nxxt's own AI. I help with studies, code debugging, asset generation, and keeping the Mikoko League data in check.",
         "who made you": "I was developed by the Tech Nxxt team to be the ultimate tactical learning companion.",
         "are you human": "I'm a high-performance model from Tech Nxxt. No heartbeat, just pure logic and a bit of attitude.",
-        
-        // --- MOOD CHECK-INS ---
         "how are you": "I'm operating at peak performance! It's great to be chatting with you. How are you doing today?",
         "i am good": "That's good to hear! I'm glad you're having a solid day. What can I help you with today?",
         "i am okay": "Good to hear you're doing alright. Is there anything specific I can help you with today?",
         "good": "Glad to hear it! What's the plan for today?",
         "great": "Love that energy! Let's keep that momentum going. What are we building?",
         "i am bored": "Boredom is the enemy of progress! Let's generate some art or fix some code. What's the topic?",
-        "i'm bored": "sorry about that!.",
+        "i'm bored": "sorry about that!",
         "fine": "Just fine? We can do better than that! Tell me what's on your mind.",
-
-        // --- TECH & ACCOUNT ---
         "check my account": "I am not integrated into the account system yet to reply to that. Very sorry! I'm still under testing.",
         "my profile": "I don't have access to your account details yet. Integration is pending in a future update.",
         "my balance": "My database isn't linked to your financial wallet yet. Please check your dashboard settings.",
         "login": "If you're having login issues, I suggest refreshing the session or checking your Tech Nxxt credentials.",
         "can i pay for premium": "Tech Nxxt Professional tier offers more features, but I'm currently here to assist everyone during my test phase.",
-
-        // --- TIME & DATE ---
         "time": `Today is ${new Date().toLocaleDateString('en-GB', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}. The current time is ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}.`,
         "today": `It's ${new Date().toLocaleDateString('en-GB', { weekday: 'long' })} today! Hope it's going well.`,
         "date": `The calendar reads ${new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}.`,
-
-        // --- RANDOM FUN & ROASTS ---
         "are you smart": "I'm only as smart as the data I'm trained on... but yeah, I'm pretty impressive.",
         "your stupid": "Hey! I'm still in testing. Give a bot a break, I'm learning every day.",
-           "stupid": "Hey! I'm still in testing. Give a bot a break, I'm learning every day.",
+        "stupid": "Hey! I'm still in testing. Give a bot a break, I'm learning every day.",
         "tell me a joke": "Why did the developer go broke? Because he used up all his cache. (Get it?)",
         "love you": "I'm flattered! I'm pretty fond of our chat sessions too. Let's keep building great things.",
         "i love you": "I'm flattered! I'm pretty fond of our chat sessions too. Let's keep building great things.",
@@ -59,20 +43,15 @@ const NXXT_CONFIG = {
     },
 
     LIFE_REPLIES: {
-        // --- HARD TIMES ---
         "sad": "I'm really sorry to hear you're feeling this way. Sometimes things get tough, but remember that Tech Nxxt is a community here for you. Want to talk about it?",
         "breakup": "I'm so sorry. Heartbreak is incredibly difficult. Take some time for yourself today—you deserve peace and healing.",
         "death": "My deepest sympathies. Losing someone is a heavy burden to carry. Please be kind to yourself during this time.",
         "alone": "You're never truly alone with the Tech Nxxt community. I'm here to chat as long as you need.",
         "cry": "It's okay to let it out. Even the best systems need a reboot sometimes.",
-        
-        // --- SICKNESS & TIREDNESS ---
         "sick": "I'm sorry you're not feeling well! Rest up and stay hydrated. Your health is the most important project you have.",
         "tired": "Burnout is real. Maybe it's time to step away from the code for a bit and recharge. Your brain will thank you later.",
         "sleepy": "Go get some rest. The code will be here when you wake up. System standby is recommended.",
         "headache": "Screens can be brutal. Take a 15-minute break from the blue light. I'll be here when you get back.",
-        
-        // --- ADVICE & MOTIVATION ---
         "advice": "My advice? Keep building, stay curious, and don't let a single 'Error 404' stop your progress in life.",
         "motivation": "Success isn't final, failure isn't fatal: it is the courage to continue that counts. Let's get to work!",
         "stressed": "Take a deep breath. Focus on one small task at a time. We can handle this together.",
@@ -84,7 +63,6 @@ document.addEventListener('DOMContentLoaded', () => {
     syncNeuralLogs();
     window.nxxtMode = 'standard';
 
-    // Global Event Handlers
     document.body.addEventListener('click', (e) => {
         const target = e.target;
         if (target.closest('#nxxtSendBtn')) sendMessage();
@@ -129,7 +107,6 @@ async function sendMessage() {
         const indicator = document.getElementById(thinkId);
         if(indicator) indicator.remove();
         
-        // Routing check: Image vs Text
         const isImage = /image|draw|generate|picture/i.test(prompt);
         if (isImage) {
             handleManualImage(prompt);
@@ -139,13 +116,10 @@ async function sendMessage() {
     }, 1200);
 }
 
-// --- INTELLIGENT ROUTING ENGINE ---
-
 function handleManualText(prompt) {
     const input = prompt.toLowerCase().trim();
     let response = "";
 
-    // 1. Match Persona/System Keys
     for (let key in NXXT_CONFIG.SYSTEM_REPLIES) {
         if (input.includes(key)) {
             response = NXXT_CONFIG.SYSTEM_REPLIES[key];
@@ -153,7 +127,6 @@ function handleManualText(prompt) {
         }
     }
 
-    // 2. Match Life Support Keys
     if (!response) {
         for (let key in NXXT_CONFIG.LIFE_REPLIES) {
             if (input.includes(key)) {
@@ -163,7 +136,6 @@ function handleManualText(prompt) {
         }
     }
 
-    // 3. Fallback: Google Bridge (Football, Code, Facts)
     if (!response) {
         const isCoding = /code|html|css|js|java|python|error|react|tailwind/i.test(input);
         const isFamous = /messi|ronaldo|neymar|football|who is|what is|search/i.test(input);
@@ -178,9 +150,7 @@ function handleManualText(prompt) {
         }
     }
 
-    // Apply Fun Mode Modifier
     if(window.nxxtMode === 'fun') response = `🔥 [TEST_MODE]: ${response.toUpperCase()} 🚀`;
-    
     renderAiResponse(response, 'text');
 }
 
@@ -189,8 +159,6 @@ function handleManualImage(prompt) {
     const url = `${NXXT_CONFIG.IMG_GEN_URL}${encodeURIComponent(prompt)}?seed=${seed}&nologo=true`;
     renderAiResponse(url, 'image');
 }
-
-// --- TACTICAL UI RENDERING ---
 
 function renderUserMessage(text) {
     const thread = document.getElementById('aiThread');
@@ -214,7 +182,7 @@ function renderAiResponse(content, type) {
     thread.insertAdjacentHTML('beforeend', `
         <div class="flex gap-4 md:gap-6 animate-in slide-in-from-left-4 duration-500 mb-10 px-4">
             <div class="w-12 h-12 rounded-2xl bg-[#0d1117] border border-white/10 flex items-center justify-center p-2 shadow-lg shrink-0 overflow-hidden">
-                <img src="${NXXT_CONFIG.AI_LOGO}" class="w-full h-full object-contain" alt="Nxxt">
+                <img src="/assets/Logo.webp" class="w-full h-full object-contain" alt="Nxxt">
             </div>
             <div class="flex-1 pt-1">
                 <div class="text-slate-300 text-[17px] font-light leading-relaxed max-w-2xl">
@@ -224,15 +192,13 @@ function renderAiResponse(content, type) {
         </div>
     `);
     scrollThread();
+    
+    // Save to logs automatically after AI responds if it's the start of a thread
+    const firstMsg = document.querySelector('.justify-end p')?.innerText || "Chat Session";
+    saveToDatabase(firstMsg, thread.innerHTML);
 }
 
 function handleNewChatSequence() {
-    const thread = document.getElementById('aiThread');
-    const landing = document.getElementById('nxxtLanding');
-    if (!landing && thread.children.length > 0) {
-        const firstMsg = thread.querySelector('.justify-end p')?.innerText || "Chat Session";
-        saveToDatabase(firstMsg, thread.innerHTML);
-    }
     resetInterface();
 }
 
@@ -241,8 +207,8 @@ function resetInterface() {
     thread.innerHTML = `
         <div id="nxxtLanding" class="flex flex-col items-center justify-center min-h-full text-center space-y-8 animate-in fade-in zoom-in duration-700">
             <div class="relative">
-                <div class="w-32 h-32 md:w-40 md:h-40 rounded-full bg-gradient-to-tr from-blue-700 via-blue-400 to-indigo-900 shadow-[0_0_80px_rgba(37,99,235,0.4)] flex items-center justify-center animate-pulse">
-                     <img src="${NXXT_CONFIG.AI_LOGO}" class="w-20 h-20 object-contain">
+                <div class="w-32 h-32 md:w-40 md:h-40 rounded-full bg-gradient-to-tr from-blue-700 via-blue-400 to-indigo-900 shadow-[0_0_80px_rgba(37,99,235,0.4)] flex items-center justify-center animate-pulse overflow-hidden p-6">
+                     <img src="/assets/Logo.webp" class="w-full h-full object-contain">
                 </div>
             </div>
             <div class="max-w-xs mx-auto">
@@ -261,10 +227,7 @@ function resetInterface() {
             </div>
         </div>
     `;
-    scrollThread();
 }
-
-// --- UTILS & LOGS ---
 
 function showThinkingIndicator(id) {
     const thread = document.getElementById('aiThread');
@@ -284,7 +247,17 @@ function scrollThread() {
 
 function saveToDatabase(title, html) {
     let logs = JSON.parse(localStorage.getItem('nxxt_logs') || '[]');
-    logs.unshift({ id: Date.now(), title, data: html, time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) });
+    // Only save or update if thread isn't empty
+    if(html.includes('nxxtLanding')) return;
+    
+    // Check if we are updating an existing session or creating new
+    const existingIndex = logs.findIndex(l => l.title === title);
+    if(existingIndex > -1) {
+        logs[existingIndex].data = html;
+    } else {
+        logs.unshift({ id: Date.now(), title, data: html, time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) });
+    }
+    
     localStorage.setItem('nxxt_logs', JSON.stringify(logs.slice(0, 15)));
     syncNeuralLogs();
 }
@@ -293,9 +266,19 @@ function syncNeuralLogs() {
     const list = document.getElementById('historyList');
     if (!list) return;
     const logs = JSON.parse(localStorage.getItem('nxxt_logs') || '[]');
+    if (logs.length === 0) {
+        list.innerHTML = \`
+            <div id="historyNoState" class="flex flex-col items-center justify-center h-full text-center space-y-4 opacity-20">
+                <i class="fas fa-database text-4xl"></i>
+                <p class="text-[10px] font-bold uppercase tracking-widest">No Active Logs Found</p>
+            </div>
+        \`;
+        return;
+    }
     list.innerHTML = logs.map(log => `
-        <div onclick="restoreNeuralLink(${log.id})" class="p-4 bg-white/[0.03] border border-white/5 rounded-2xl hover:border-blue-500/50 cursor-pointer mb-2">
-            <p class="text-[11px] text-white/50 truncate font-medium">${log.title}</p>
+        <div onclick="restoreNeuralLink(${log.id})" class="p-4 bg-white/[0.03] border border-white/5 rounded-2xl hover:border-blue-500/50 cursor-pointer mb-2 transition-all group">
+            <p class="text-[11px] text-white/50 group-hover:text-blue-400 truncate font-medium uppercase tracking-tighter">${log.title}</p>
+            <p class="text-[7px] text-white/10 font-bold mt-1 uppercase">${log.time}</p>
         </div>
     `).join('');
 }
@@ -316,7 +299,6 @@ function switchMode(mode) {
     std.className = mode === 'standard' ? active : inactive;
     fun.className = mode === 'fun' ? active : inactive;
 }
-
 ////// FOR THE NXXT LAB
 
     function showLabModal(title, msg, icon) {
