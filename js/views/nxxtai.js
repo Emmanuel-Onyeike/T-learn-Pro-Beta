@@ -3,12 +3,12 @@ views['Nxxt AI'] = `
     
     <aside class="hidden md:flex w-24 border-r border-white/5 bg-black/40 flex-col items-center py-8 gap-10 z-20">
         <div class="w-12 h-12 rounded-2xl bg-blue-600 flex items-center justify-center shadow-[0_0_20px_rgba(37,99,235,0.4)]">
-            <i class="fas fa-bolt text-white"></i>
+         <img src="Logo.webp">
         </div>
         <nav class="flex flex-col gap-8 text-white/20 text-lg">
             <i id="newChatBtn" class="fas fa-plus-circle hover:text-blue-500 cursor-pointer transition-all" title="New Chat"></i>
-            <i id="searchChatBtn" class="fas fa-search hover:text-blue-500 cursor-pointer transition-all" title="Search"></i>
-            <i class="fas fa-plug hover:text-blue-500 cursor-pointer transition-all" title="API"></i>
+            <i id="searchChatBtn" class="fas fa-search hover:text-blue-500 cursor-pointer transition-all" title="Search chat"></i>
+            <i class="fas fa-plug hover:text-blue-500 cursor-pointer transition-all" title="API Key"></i>
             <div class="relative group">
                 <i class="fas fa-arrow-alt-circle-up text-white/5 cursor-not-allowed" title="Update Locked"></i>
                 <span class="absolute left-14 top-0 bg-red-600 text-[8px] px-2 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">LOCKED</span>
@@ -35,7 +35,7 @@ views['Nxxt AI'] = `
             <div id="nxxtLanding" class="flex flex-col items-center justify-center min-h-full text-center space-y-8 animate-in fade-in zoom-in duration-700">
                 <div class="relative">
                     <div class="w-32 h-32 md:w-40 md:h-40 rounded-full bg-gradient-to-tr from-blue-700 via-blue-400 to-indigo-900 shadow-[0_0_80px_rgba(37,99,235,0.4)] flex items-center justify-center animate-pulse">
-                        <i class="fas fa-bolt text-white text-4xl opacity-80"></i>
+                    <img src="Logo.webp">
                     </div>
                 </div>
                 
