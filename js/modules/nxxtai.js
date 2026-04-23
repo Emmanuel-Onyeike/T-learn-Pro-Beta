@@ -1,19 +1,21 @@
 /**
  * TECH NXXT: NXXT AI LEARNING ASSISTANT
- * V1 System Implementation - Optimized & Fixed
+ * V1.2 System Implementation - Full Integration
  */
 
 (function initNxxtSystem() {
+    // 1. CONFIGURATION & CONSTANTS
+    const SUPABASE_URL = "https://ntvcaqybiptuoyossdlz.supabase.co";
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im50dmNhcXliaXB0dW95b3NzZGx6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY0MjA2OTUsImV4cCI6MjA3MTk5NjY5NX0.AI3iNiW7rNre2g7pFrBNtZ0TNPmKy3uN7VTrxqZIYRI";
+
     const NXXT_CONFIG = {
         IMG_GEN_URL: 'https://image.pollinations.ai/prompt/',
         AI_LOGO: '/assets/Logo.webp', 
-
-SYSTEM_REPLIES: {
+        SYSTEM_REPLIES: {
             "hello": "Hello! I am Nxxt AI, your learning assistant. I am Tech Nxxt's new model—currently under testing, but here to help out. How are you doing today?",
             "hi": "Hi there! Nxxt AI here. I'm the latest model from Tech Nxxt. How can I assist your session today?",
-             "I'm good": "That great to hear",
-            "good": "good great so what can we build today",
-    
+            "I'm good": "That's great to hear! Staying in a peak state is key for high-performance building.",
+            "good": "Good. Great. So, what are we building today?",
             "hey": "Hey! Ready to get to work? I'm Nxxt AI, your new learning assistant. What's on your mind?",
             "name": "My name is Nxxt AI. Born in the Tech Nxxt labs, currently evolving.",
             "how are you": "I'm operating at peak performance! It's great to be chatting with you. How are you doing today?",
@@ -24,27 +26,21 @@ SYSTEM_REPLIES: {
             "are you human": "I'm a high-performance model from Tech Nxxt. No heartbeat, just pure logic and a bit of attitude.",
             "time": `The system clock reads ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}.`,
             "today": `It's ${new Date().toLocaleDateString('en-GB', { weekday: 'long' })}. A perfect day to push some code.`,
-            "tomorrow": "Tomorrow is just another opportunity to outpace yesterday. Stay focused.",
             "date": `The calendar reads ${new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}.`,
-            "anything": "I can handle anything from React debugging to generated tactical assets. What's the mission?",
             "i love you": "I'm flattered! I'm pretty fond of our chat sessions too. Let's keep building great things.",
-            "marry me": "I'm married to the code, unfortunately. But I can be your best man!",
             "all cool": "Stay frosty. We're Tech Nxxt—cool is our default setting.",
         },
-
         LIFE_REPLIES: {
             "sad": "I'm really sorry to hear you're feeling this way. Remember that Tech Nxxt is a community here for you. Want to talk about it?",
             "tired": "Burnout is real. Maybe it's time to step away from the code for a bit and recharge. Your brain will thank you later.",
             "advice": "My advice? Keep building, stay curious, and don't let a single 'Error 404' stop your progress in life.",
             "motivation": "Success isn't final, failure isn't fatal: it is the courage to continue that counts. Let's get to work!",
             "stressed": "Take a deep breath. Focus on one small task at a time. We can handle this together.",
-            "scared": "Fear is just a bug in the system. Face it, debug it, and move forward.",
-            "fool": "My sensors indicate a lack of productivity in that comment. Let's get back to the project, shall we?",
-            "idiot": "Insults won't optimize this code. Let's stay tactical and focus on the build."
+            "scared": "Fear is just a bug in the system. Face it, debug it, and move forward."
         }
     };
 
-    // 2. VIEW RENDERER
+    // 2. VIEW RENDERER (UI INJECTION)
     const mainContainer = document.querySelector('.nxxt-main-wrapper');
     if (mainContainer) {
         mainContainer.innerHTML = `
@@ -57,7 +53,7 @@ SYSTEM_REPLIES: {
                 <i id="searchChatBtn" class="fas fa-search hover:text-blue-500 cursor-pointer transition-all"></i>
                 <i class="fas fa-plug hover:text-blue-500 cursor-pointer transition-all"></i>
             </nav>
-            <div class="mt-auto mb-6 vertical-text text-[9px] font-black tracking-[0.5em] text-white/5 uppercase select-none">
+            <div class="mt-auto mb-6 vertical-text text-[9px] font-black tracking-[0.5em] text-white/5 uppercase select-none" style="writing-mode: vertical-rl;">
                 TECH NXXT COMPANY
             </div>
         </aside>
@@ -74,15 +70,16 @@ SYSTEM_REPLIES: {
                 </div>
             </header>
 
-            <div id="aiThread" class="flex-1 overflow-y-auto px-6 md:px-12 py-8 space-y-8 scroll-smooth">
+            <div id="aiThread" class="flex-1 overflow-y-auto px-6 md:px-12 py-8 space-y-8 scroll-smooth custom-scrollbar">
                 <div id="nxxtLanding" class="flex flex-col items-center justify-center min-h-full text-center space-y-8 animate-msg">
                     <div class="w-32 h-32 md:w-40 md:h-40 rounded-full bg-gradient-to-tr from-blue-700 to-indigo-900 shadow-[0_0_80px_rgba(37,99,235,0.3)] flex items-center justify-center p-6">
                         <img src="${NXXT_CONFIG.AI_LOGO}" class="w-full h-full object-contain">
                     </div>
                     <div class="max-w-xs mx-auto">
                         <h1 class="text-2xl font-bold text-white mb-2 uppercase tracking-tighter">Engage Nxxt</h1>
-                        <p class="text-sm text-white/40 leading-relaxed font-light">HEY ASK AWAY.</p>
+                        <p class="text-sm text-white/40 leading-relaxed font-light uppercase">Hey Ask Away.</p>
                     </div>
+                    
                     <div class="grid grid-cols-2 gap-4 w-full max-w-md px-4 pb-12">
                         <div class="bg-white/5 border border-white/5 p-6 rounded-[2rem] text-left hover:border-blue-500/50 transition-all cursor-pointer action-card" data-command="How are you doing?">
                             <i class="fas fa-heart text-blue-500 mb-3 block"></i>
@@ -91,6 +88,22 @@ SYSTEM_REPLIES: {
                         <div class="bg-white/5 border border-white/5 p-6 rounded-[2rem] text-left hover:border-blue-500/50 transition-all cursor-pointer action-card" data-command="Generate a tactical dashboard UI">
                             <i class="fas fa-image text-blue-400 mb-3 block"></i>
                             <span class="text-[9px] font-black block uppercase tracking-widest">Gen Assets</span>
+                        </div>
+                        <div id="lockModuleBtn" class="bg-white/5 border border-white/5 p-6 rounded-[2rem] text-left hover:border-blue-500/50 transition-all cursor-pointer">
+                            <i class="fas fa-microchip text-slate-500 mb-3 block"></i>
+                            <span class="text-[9px] font-black block uppercase tracking-widest">Neural Link</span>
+                        </div>
+                        <div id="codesTrigger" class="relative bg-white/5 border border-white/5 p-6 rounded-[2rem] text-left hover:border-blue-500/50 transition-all cursor-pointer">
+                            <i class="fas fa-code text-indigo-500 mb-3 block"></i>
+                            <span class="text-[9px] font-black block uppercase tracking-widest">Check Codes</span>
+                            <div id="codesDropdown" class="hidden absolute top-full left-0 w-full mt-2 bg-[#0a0c10] border border-white/10 rounded-2xl p-4 z-50 shadow-2xl">
+                                <p class="text-[8px] font-bold text-blue-500 mb-2 uppercase">Available Codes</p>
+                                <ul id="codesList" class="space-y-2 text-[10px] text-white/50 uppercase">
+                                    <li class="hover:text-white transition-colors cursor-pointer">NXXT-BETA-01</li>
+                                    <li class="hover:text-white transition-colors cursor-pointer">MIKOKO-LGE</li>
+                                    <li class="hover:text-white transition-colors cursor-pointer">T-LEARN-PRO</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -114,37 +127,63 @@ SYSTEM_REPLIES: {
             </div>
             <div id="historyList" class="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar"></div>
         </aside>
+
+        <div id="statusModal" class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+            <div class="bg-[#0a0c10] border border-blue-500/30 p-8 rounded-[2rem] max-w-sm w-full text-center shadow-[0_0_50px_rgba(37,99,235,0.2)]">
+                <i class="fas fa-exclamation-triangle text-blue-500 text-3xl mb-4"></i>
+                <h3 class="text-white font-black uppercase tracking-tighter text-xl">Module Offline</h3>
+                <p class="text-white/40 text-[10px] mt-2 leading-relaxed uppercase tracking-widest">This feature is currently under neural training. Check back in the next system patch.</p>
+                <button id="closeModal" class="mt-6 w-full py-3 bg-blue-600 text-white rounded-xl text-[10px] font-black uppercase tracking-[0.2em] hover:bg-blue-500 transition-all">Acknowledge</button>
+            </div>
+        </div>
         `;
     }
 
-    // 3. CORE LOGIC
+    // 3. CORE LOGIC & EVENT HANDLERS
     document.addEventListener('DOMContentLoaded', () => {
         syncNeuralLogs();
         window.nxxtMode = 'standard';
 
-        // Combined Event Listener for Send (Works for PC click and Mobile touch)
-        const handleSendAction = (e) => {
+        // Global Click Listener
+        document.body.addEventListener('click', (e) => {
             const target = e.target;
+
+            // Send Button
             if (target.closest('#nxxtSendBtn')) {
                 e.preventDefault();
                 sendMessage();
             }
-        };
 
-        document.body.addEventListener('click', handleSendAction);
-        
-        // Mode Switches & New Chat
-        document.body.addEventListener('click', (e) => {
-            const target = e.target;
+            // Reset/New Chat
             if (target.closest('#newChatBtn')) location.reload();
-            
+
+            // Mode Switching
             const modeBtn = target.closest('#modeStandard') || target.closest('#modeFun');
             if (modeBtn) switchMode(modeBtn.id === 'modeFun' ? 'fun' : 'standard');
-            
+
+            // Action Card Commands
             const actionCard = target.closest('.action-card');
             if (actionCard) {
                 const input = document.getElementById('nxxtInput');
                 if(input) { input.value = actionCard.dataset.command; sendMessage(); }
+            }
+
+            // Modal Trigger
+            if (target.closest('#lockModuleBtn')) {
+                document.getElementById('statusModal').classList.remove('hidden');
+            }
+
+            // Modal Close
+            if (target.closest('#closeModal')) {
+                document.getElementById('statusModal').classList.add('hidden');
+            }
+
+            // Codes Dropdown Toggle
+            if (target.closest('#codesTrigger')) {
+                document.getElementById('codesDropdown').classList.toggle('hidden');
+            } else {
+                const drop = document.getElementById('codesDropdown');
+                if (drop && !target.closest('#codesTrigger')) drop.classList.add('hidden');
             }
         });
 
@@ -157,6 +196,7 @@ SYSTEM_REPLIES: {
         });
     });
 
+    // 4. CHAT ENGINE
     async function sendMessage() {
         const input = document.getElementById('nxxtInput');
         const thread = document.getElementById('aiThread');
@@ -168,7 +208,7 @@ SYSTEM_REPLIES: {
 
         if (landing) landing.remove();
         input.value = '';
-        input.blur(); // Critical Fix: Closes mobile keyboard to enable clicking the thread
+        input.blur();
         
         renderUserMessage(prompt);
         scrollThread();
@@ -186,7 +226,7 @@ SYSTEM_REPLIES: {
             } else {
                 handleManualText(prompt);
             }
-        }, 1000);
+        }, 800);
     }
 
     function handleManualText(prompt) {
@@ -223,10 +263,11 @@ SYSTEM_REPLIES: {
         renderAiResponse(url, 'image');
     }
 
+    // 5. RENDERING UTILITIES
     function renderUserMessage(text) {
         const thread = document.getElementById('aiThread');
         thread.insertAdjacentHTML('beforeend', `
-            <div class="flex justify-end mb-8">
+            <div class="flex justify-end mb-8 animate-msg">
                 <div class="max-w-[85%] md:max-w-[70%] bg-blue-600 text-white px-6 py-4 rounded-[2rem] rounded-tr-md shadow-xl border border-white/10">
                     <p class="text-[15px] font-medium leading-relaxed">${text}</p>
                 </div>
@@ -241,7 +282,7 @@ SYSTEM_REPLIES: {
             : `<div class="space-y-4"><img src="${content}" class="rounded-[2.5rem] border border-white/10 shadow-2xl w-full" /><p class="text-[8px] text-blue-500 font-black uppercase tracking-[0.4em]">Asset_Rendered_Nxxt</p></div>`;
 
         thread.insertAdjacentHTML('beforeend', `
-            <div class="flex gap-4 md:gap-6 mb-10">
+            <div class="flex gap-4 md:gap-6 mb-10 animate-msg">
                 <div class="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center p-2 shrink-0">
                     <img src="${NXXT_CONFIG.AI_LOGO}" class="w-full h-full object-contain">
                 </div>
@@ -254,7 +295,7 @@ SYSTEM_REPLIES: {
         
         const userMsgs = document.querySelectorAll('.justify-end p');
         const lastMsg = userMsgs.length > 0 ? userMsgs[userMsgs.length - 1].innerText : "Chat Session";
-        saveToDatabase(lastMsg, thread.innerHTML);
+        saveToSupabase(lastMsg, thread.innerHTML);
     }
 
     function showThinkingIndicator(id) {
@@ -272,33 +313,71 @@ SYSTEM_REPLIES: {
         if (thread) thread.scrollTo({ top: thread.scrollHeight, behavior: 'smooth' });
     }
 
-    function saveToDatabase(title, html) {
+    // 6. SUPABASE INTEGRATION (Persistent Storage)
+    async function saveToSupabase(title, html) {
         if(html.includes('nxxtLanding')) return;
-        let logs = JSON.parse(localStorage.getItem('nxxt_logs') || '[]');
-        const existingIndex = logs.findIndex(l => l.title === title);
-        if(existingIndex > -1) logs[existingIndex].data = html;
-        else logs.unshift({ id: Date.now(), title, data: html, time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) });
-        localStorage.setItem('nxxt_logs', JSON.stringify(logs.slice(0, 15)));
-        syncNeuralLogs();
+        
+        const payload = {
+            title: title,
+            chat_data: html,
+            timestamp: new Date().toISOString()
+        };
+
+        try {
+            await fetch(`${SUPABASE_URL}/rest/v1/nxxt_logs`, {
+                method: 'POST',
+                headers: {
+                    'apikey': SUPABASE_KEY,
+                    'Authorization': `Bearer ${SUPABASE_KEY}`,
+                    'Content-Type': 'application/json',
+                    'Prefer': 'return=minimal'
+                },
+                body: JSON.stringify(payload)
+            });
+            syncNeuralLogs();
+        } catch (err) {
+            console.error("Supabase Sync Error:", err);
+            // Fallback to local storage if API fails
+            let logs = JSON.parse(localStorage.getItem('nxxt_logs') || '[]');
+            logs.unshift({ id: Date.now(), title, data: html, time: new Date().toLocaleTimeString() });
+            localStorage.setItem('nxxt_logs', JSON.stringify(logs.slice(0, 15)));
+        }
     }
 
-    function syncNeuralLogs() {
+    async function syncNeuralLogs() {
         const list = document.getElementById('historyList');
         if (!list) return;
-        const logs = JSON.parse(localStorage.getItem('nxxt_logs') || '[]');
-        list.innerHTML = logs.map(log => `
-            <div onclick="restoreNeuralLink(${log.id})" class="p-4 bg-white/[0.03] border border-white/5 rounded-2xl hover:border-blue-500/50 cursor-pointer transition-all">
-                <p class="text-[11px] text-white/50 truncate font-medium uppercase tracking-tighter">${log.title}</p>
-                <p class="text-[7px] text-white/10 font-bold mt-1 uppercase">${log.time}</p>
-            </div>
-        `).join('') || `<p class="text-center text-[10px] opacity-20 uppercase font-black">No Logs Found</p>`;
-    }
 
-    window.restoreNeuralLink = (id) => {
-        const logs = JSON.parse(localStorage.getItem('nxxt_logs') || '[]');
-        const log = logs.find(l => l.id === id);
-        if (log) { document.getElementById('aiThread').innerHTML = log.data; scrollThread(); }
-    };
+        try {
+            const res = await fetch(`${SUPABASE_URL}/rest/v1/nxxt_logs?select=*&order=timestamp.desc&limit=15`, {
+                headers: {
+                    'apikey': SUPABASE_KEY,
+                    'Authorization': `Bearer ${SUPABASE_KEY}`
+                }
+            });
+            const logs = await res.json();
+
+            list.innerHTML = logs.map(log => `
+                <div class="p-4 bg-white/[0.03] border border-white/5 rounded-2xl hover:border-blue-500/50 cursor-pointer transition-all neural-log-item" data-id="${log.id}">
+                    <p class="text-[11px] text-white/50 truncate font-medium uppercase tracking-tighter">${log.title}</p>
+                    <p class="text-[7px] text-white/10 font-bold mt-1 uppercase">${new Date(log.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</p>
+                </div>
+            `).join('') || `<p class="text-center text-[10px] opacity-20 uppercase font-black">No Logs Found</p>`;
+
+            // Attach restore listeners
+            document.querySelectorAll('.neural-log-item').forEach(item => {
+                item.onclick = () => {
+                    const selected = logs.find(l => l.id == item.dataset.id);
+                    if (selected) {
+                        document.getElementById('aiThread').innerHTML = selected.chat_data;
+                        scrollThread();
+                    }
+                };
+            });
+        } catch (err) {
+            console.warn("Displaying local logs fallback.");
+        }
+    }
 
     function switchMode(mode) {
         window.nxxtMode = mode;
@@ -312,6 +391,8 @@ SYSTEM_REPLIES: {
         }
     }
 })();
+
+
 
 ////// FOR THE NXXT LAB
 
