@@ -8,19 +8,22 @@
         IMG_GEN_URL: 'https://image.pollinations.ai/prompt/',
         AI_LOGO: '/assets/Logo.webp', 
 
-        SYSTEM_REPLIES: {
+SYSTEM_REPLIES: {
             "hello": "Hello! I am Nxxt AI, your learning assistant. I am Tech Nxxt's new model—currently under testing, but here to help out. How are you doing today?",
             "hi": "Hi there! Nxxt AI here. I'm the latest model from Tech Nxxt. How can I assist your session today?",
             "hey": "Hey! Ready to get to work? I'm Nxxt AI, your new learning assistant. What's on your mind?",
             "name": "My name is Nxxt AI. Born in the Tech Nxxt labs, currently evolving.",
             "how are you": "I'm operating at peak performance! It's great to be chatting with you. How are you doing today?",
-            "who are you": "I am Nxxt AI, your learning assistant. I am the new model developed by Tech Nxxt. I'm currently in the testing phase, but I'm here to help you learn and build.",
+            "who are you": "I am Nxxt AI, your learning assistant—the latest model developed by Tech Nxxt. I'm here to help you learn and build.",
             "what do you do": "I am Tech Nxxt's own AI. I help with studies, code debugging, asset generation, and keeping the Mikoko League data in check.",
             "who made you": "I was developed by the Tech Nxxt team to be the ultimate tactical learning companion.",
+            "tech nxxt": "Tech Nxxt is where innovation meets execution. We're building the future of AI-driven education and management.",
             "are you human": "I'm a high-performance model from Tech Nxxt. No heartbeat, just pure logic and a bit of attitude.",
-            "time": `Today is ${new Date().toLocaleDateString('en-GB', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}. The current time is ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}.`,
-            "today": `It's ${new Date().toLocaleDateString('en-GB', { weekday: 'long' })} today! Hope it's going well.`,
+            "time": `The system clock reads ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}.`,
+            "today": `It's ${new Date().toLocaleDateString('en-GB', { weekday: 'long' })}. A perfect day to push some code.`,
+            "tomorrow": "Tomorrow is just another opportunity to outpace yesterday. Stay focused.",
             "date": `The calendar reads ${new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}.`,
+            "anything": "I can handle anything from React debugging to generated tactical assets. What's the mission?",
             "i love you": "I'm flattered! I'm pretty fond of our chat sessions too. Let's keep building great things.",
             "marry me": "I'm married to the code, unfortunately. But I can be your best man!",
             "all cool": "Stay frosty. We're Tech Nxxt—cool is our default setting.",
@@ -32,7 +35,9 @@
             "advice": "My advice? Keep building, stay curious, and don't let a single 'Error 404' stop your progress in life.",
             "motivation": "Success isn't final, failure isn't fatal: it is the courage to continue that counts. Let's get to work!",
             "stressed": "Take a deep breath. Focus on one small task at a time. We can handle this together.",
-            "scared": "Fear is just a bug in the system. Face it, debug it, and move forward."
+            "scared": "Fear is just a bug in the system. Face it, debug it, and move forward.",
+            "fool": "My sensors indicate a lack of productivity in that comment. Let's get back to the project, shall we?",
+            "idiot": "Insults won't optimize this code. Let's stay tactical and focus on the build."
         }
     };
 
