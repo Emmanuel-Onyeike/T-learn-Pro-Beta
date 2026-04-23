@@ -1,8 +1,9 @@
 /**
  * TECH NXXT: NXXT AI LEARNING ASSISTANT
- * V1 System Implementation - Full Build with Integrated Styling & Mobile Fixes
+ * V1 System Implementation - Optimized & Fixed
  */
 
+(function initNxxtSystem() {
     const NXXT_CONFIG = {
         IMG_GEN_URL: 'https://image.pollinations.ai/prompt/',
         AI_LOGO: '/assets/Logo.webp', 
@@ -113,9 +114,20 @@
         syncNeuralLogs();
         window.nxxtMode = 'standard';
 
+        // Combined Event Listener for Send (Works for PC click and Mobile touch)
+        const handleSendAction = (e) => {
+            const target = e.target;
+            if (target.closest('#nxxtSendBtn')) {
+                e.preventDefault();
+                sendMessage();
+            }
+        };
+
+        document.body.addEventListener('click', handleSendAction);
+        
+        // Mode Switches & New Chat
         document.body.addEventListener('click', (e) => {
             const target = e.target;
-            if (target.closest('#nxxtSendBtn')) sendMessage();
             if (target.closest('#newChatBtn')) location.reload();
             
             const modeBtn = target.closest('#modeStandard') || target.closest('#modeFun');
@@ -128,6 +140,7 @@
             }
         });
 
+        // Enter Key Support
         document.body.addEventListener('keypress', (e) => {
             if (e.target.id === 'nxxtInput' && e.key === 'Enter') {
                 e.preventDefault();
@@ -147,7 +160,7 @@
 
         if (landing) landing.remove();
         input.value = '';
-        input.blur(); // Mobile keyboard fix
+        input.blur(); // Critical Fix: Closes mobile keyboard to enable clicking the thread
         
         renderUserMessage(prompt);
         scrollThread();
@@ -184,15 +197,15 @@
             const isCoding = /code|html|css|js|react|tailwind|error|python|api/i.test(query);
             if (isCoding || query.length > 10) {
                 const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
-                response = `I'm currently processing this. Based on my neural training: <br><br> 
+                response = `Analyzing request... Based on my current neural training: <br><br> 
                             <a href="${searchUrl}" target="_blank" class="inline-block px-5 py-3 bg-blue-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest mt-2 hover:bg-blue-500 shadow-lg">Open Documentation</a>. 
-                            <br><br>As I'm in beta, native deep-coding is arriving in the next system patch!`;
+                            <br><br>As I'm in beta, I'll handle deep coding natively in the next system patch!`;
             } else {
-                response = "I'm still learning that aspect. Ask me about coding, UI design, or how I can help with your Tech Nxxt projects!";
+                response = "I'm still learning that. Ask me about coding, Tech Nxxt, or just say hello!";
             }
         }
 
-        if(window.nxxtMode === 'fun') response = `🔥 [NEURAL_FUN]: ${response.toUpperCase()} 🚀`;
+        if(window.nxxtMode === 'fun') response = `🔥 [TEST_MODE]: ${response.toUpperCase()} 🚀`;
         renderAiResponse(response, 'text');
     }
 
@@ -205,7 +218,7 @@
     function renderUserMessage(text) {
         const thread = document.getElementById('aiThread');
         thread.insertAdjacentHTML('beforeend', `
-            <div class="flex justify-end mb-8 animate-msg">
+            <div class="flex justify-end mb-8">
                 <div class="max-w-[85%] md:max-w-[70%] bg-blue-600 text-white px-6 py-4 rounded-[2rem] rounded-tr-md shadow-xl border border-white/10">
                     <p class="text-[15px] font-medium leading-relaxed">${text}</p>
                 </div>
@@ -217,10 +230,10 @@
         const thread = document.getElementById('aiThread');
         const formatted = type === 'text' 
             ? content.replace(/\*\*(.*?)\*\*/g, '<b class="text-blue-400">$1</b>').replace(/\n/g, '<br>') 
-            : `<div class="space-y-4"><img src="${content}" class="rounded-[2.5rem] border border-white/10 shadow-2xl w-full" /><p class="text-[8px] text-blue-500 font-black uppercase tracking-[0.4em]">Neural_Asset_Rendered</p></div>`;
+            : `<div class="space-y-4"><img src="${content}" class="rounded-[2.5rem] border border-white/10 shadow-2xl w-full" /><p class="text-[8px] text-blue-500 font-black uppercase tracking-[0.4em]">Asset_Rendered_Nxxt</p></div>`;
 
         thread.insertAdjacentHTML('beforeend', `
-            <div class="flex gap-4 md:gap-6 animate-msg mb-10">
+            <div class="flex gap-4 md:gap-6 mb-10">
                 <div class="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center p-2 shrink-0">
                     <img src="${NXXT_CONFIG.AI_LOGO}" class="w-full h-full object-contain">
                 </div>
@@ -238,7 +251,7 @@
 
     function showThinkingIndicator(id) {
         document.getElementById('aiThread').insertAdjacentHTML('beforeend', `
-            <div id="${id}" class="flex gap-4 animate-msg mb-8">
+            <div id="${id}" class="flex gap-4 mb-8">
                 <div class="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center">
                     <div class="w-2 h-2 bg-blue-500 rounded-full animate-ping"></div>
                 </div>
@@ -285,8 +298,10 @@
         const fun = document.getElementById('modeFun');
         const active = "px-4 py-1.5 rounded-lg text-[9px] font-black uppercase text-white bg-blue-600 shadow-lg";
         const inactive = "px-4 py-1.5 rounded-lg text-[9px] font-black uppercase text-white/30";
-        std.className = mode === 'standard' ? active : inactive;
-        fun.className = mode === 'fun' ? active : inactive;
+        if(std && fun) {
+            std.className = mode === 'standard' ? active : inactive;
+            fun.className = mode === 'fun' ? active : inactive;
+        }
     }
 })();
 
