@@ -9,9 +9,9 @@ views['Nxxt AI'] = `
             <i id="newChatBtn" class="fas fa-plus-circle hover:text-blue-500 cursor-pointer transition-all" title="New Chat"></i>
             <i id="searchChatBtn" class="fas fa-search hover:text-blue-500 cursor-pointer transition-all" title="Search chat"></i>
             <i class="fas fa-plug hover:text-blue-500 cursor-pointer transition-all" title="API Key"></i>
-            <div class="relative group">
-                <i class="fas fa-arrow-alt-circle-up text-white/5 cursor-not-allowed" title="Update Locked"></i>
-                <span class="absolute left-14 top-0 bg-red-600 text-[8px] px-2 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">LOCKED</span>
+            <div id="lockModuleBtn" class="relative group cursor-pointer">
+                <i class="fas fa-arrow-alt-circle-up text-white/10 hover:text-blue-500 transition-all"></i>
+                <span class="absolute left-14 top-0 bg-blue-600 text-[8px] px-2 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap font-black">UPDATE</span>
             </div>
         </nav>
         <div class="mt-auto mb-6 vertical-text text-[9px] font-black tracking-[0.5em] text-white/5 uppercase select-none" style="writing-mode: vertical-rl;">
@@ -45,21 +45,30 @@ views['Nxxt AI'] = `
                 </div>
 
                 <div class="grid grid-cols-2 gap-4 w-full max-w-md px-4">
-                    <div class="bg-gradient-to-br from-blue-600/10 to-blue-900/5 border border-white/5 p-6 rounded-[2rem] text-left hover:border-blue-500/50 transition-all cursor-pointer group action-card" data-command="Speak to AI">
+                    <div class="bg-gradient-to-br from-blue-600/10 to-blue-900/5 border border-white/5 p-6 rounded-[2rem] text-left hover:border-blue-500/50 transition-all cursor-pointer group action-card" data-command="How are you doing?">
                         <i class="fas fa-microphone text-blue-500 mb-3 block"></i>
-                        <span class="text-xs font-bold block uppercase tracking-widest">Speak to AI</span>
+                        <span class="text-[10px] font-black block uppercase tracking-widest">Chat Life</span>
                     </div>
-                    <div class="bg-gradient-to-br from-indigo-600/10 to-indigo-900/5 border border-white/5 p-6 rounded-[2rem] text-left hover:border-blue-500/50 transition-all cursor-pointer group action-card" data-command="Chat Neural">
-                        <i class="fas fa-comment-dots text-indigo-500 mb-3 block"></i>
-                        <span class="text-xs font-bold block uppercase tracking-widest">Chat Neural</span>
+                    <div id="codesTrigger" class="relative bg-gradient-to-br from-indigo-600/10 to-indigo-900/5 border border-white/5 p-6 rounded-[2rem] text-left hover:border-blue-500/50 transition-all cursor-pointer group">
+                        <i class="fas fa-code text-indigo-500 mb-3 block"></i>
+                        <span class="text-[10px] font-black block uppercase tracking-widest">Check Codes</span>
+                        
+                        <div id="codesDropdown" class="hidden absolute bottom-full left-0 w-full mb-4 bg-[#0a0c10] border border-blue-500/20 rounded-2xl p-4 z-50 shadow-[0_10px_40px_rgba(0,0,0,0.8)] backdrop-blur-xl">
+                            <p class="text-[8px] font-black text-blue-500 mb-3 uppercase tracking-widest">Active Neural Keys</p>
+                            <ul class="space-y-2 text-[10px] font-bold text-white/40 uppercase">
+                                <li class="hover:text-blue-400 transition-colors cursor-default border-b border-white/5 pb-1">NXXT-BETA-01</li>
+                                <li class="hover:text-blue-400 transition-colors cursor-default border-b border-white/5 pb-1">MIKOKO-LGE</li>
+                                <li class="hover:text-blue-400 transition-colors cursor-default">T-LEARN-PRO</li>
+                            </ul>
+                        </div>
                     </div>
-                    <div class="bg-gradient-to-br from-slate-600/10 to-slate-900/5 border border-white/5 p-6 rounded-[2rem] text-left hover:border-blue-500/50 transition-all cursor-pointer group action-card" data-command="Generate Assets">
+                    <div class="bg-gradient-to-br from-slate-600/10 to-slate-900/5 border border-white/5 p-6 rounded-[2rem] text-left hover:border-blue-500/50 transition-all cursor-pointer group action-card" data-command="Generate a tactical dashboard UI">
                         <i class="fas fa-image text-slate-400 mb-3 block"></i>
-                        <span class="text-xs font-bold block uppercase tracking-widest">Generate Assets</span>
+                        <span class="text-[10px] font-black block uppercase tracking-widest">Gen Assets</span>
                     </div>
-                    <div class="bg-gradient-to-br from-purple-600/10 to-purple-900/5 border border-white/5 p-6 rounded-[2rem] text-left hover:border-blue-500/50 transition-all cursor-pointer group action-card" data-command="Scan Logic">
-                        <i class="fas fa-expand text-purple-500 mb-3 block"></i>
-                        <span class="text-xs font-bold block uppercase tracking-widest">Scan Logic</span>
+                    <div id="scanLogicBtn" class="bg-gradient-to-br from-blue-900/10 to-black border border-white/5 p-6 rounded-[2rem] text-left hover:border-blue-500/50 transition-all cursor-pointer group">
+                        <i class="fas fa-expand text-blue-400 mb-3 block"></i>
+                        <span class="text-[10px] font-black block uppercase tracking-widest">Scan Logic</span>
                     </div>
                 </div>
             </div>
@@ -69,7 +78,7 @@ views['Nxxt AI'] = `
             <div class="max-w-4xl mx-auto">
                 <div class="relative flex items-center bg-white/[0.03] border border-white/10 rounded-full px-2 py-2 focus-within:border-blue-500/40 transition-all shadow-2xl">
                     <input id="nxxtInput" type="text" placeholder="Ask Anything..." class="flex-1 bg-transparent border-none outline-none text-white px-6 py-3 text-[16px]">
-                    <button id="nxxtSendBtn" class="w-12 h-12 rounded-full bg-blue-600 text-white flex items-center justify-center hover:scale-105 transition-all">
+                    <button id="nxxtSendBtn" class="w-12 h-12 rounded-full bg-blue-600 text-white flex items-center justify-center hover:scale-105 transition-all shadow-[0_0_15px_rgba(37,99,235,0.4)]">
                         <i class="fas fa-arrow-up"></i>
                     </button>
                 </div>
@@ -84,15 +93,26 @@ views['Nxxt AI'] = `
         <div id="historyList" class="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar scroll-smooth">
             <div id="historyNoState" class="flex flex-col items-center justify-center h-full text-center space-y-4 opacity-20">
                 <i class="fas fa-database text-4xl"></i>
-                <p class="text-[10px] font-bold uppercase tracking-widest">No Active Logs Found</p>
+                <p class="text-[10px] font-bold uppercase tracking-widest">Synchronizing Logs...</p>
             </div>
         </div>
         <div class="p-4 border-t border-white/5 bg-black/40 shrink-0">
              <div class="flex items-center justify-between opacity-30">
                 <span class="text-[7px] font-black tracking-widest uppercase">System Memory</span>
-                <span class="text-[7px] text-blue-500 font-bold uppercase">Ready</span>
+                <span class="text-[7px] text-blue-500 font-bold uppercase">Cloud Synced</span>
              </div>
         </div>
     </aside>
+
+    <div id="statusModal" class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-md p-4">
+        <div class="bg-[#0a0c10] border border-blue-500/30 p-8 rounded-[2.5rem] max-w-sm w-full text-center shadow-[0_0_60px_rgba(37,99,235,0.15)] animate-in zoom-in duration-300">
+            <div class="w-16 h-16 bg-blue-600/10 rounded-full flex items-center justify-center mx-auto mb-6 border border-blue-500/20">
+                <i class="fas fa-shield-alt text-blue-500 text-2xl"></i>
+            </div>
+            <h3 class="text-white font-black uppercase tracking-tighter text-xl">Access Restricted</h3>
+            <p class="text-white/40 text-[10px] mt-3 leading-relaxed uppercase tracking-widest">This neural module is undergoing optimization. Required encryption keys not found in current build.</p>
+            <button id="closeModal" class="mt-8 w-full py-4 bg-blue-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.3em] hover:bg-blue-500 transition-all shadow-lg">Acknowledge</button>
+        </div>
+    </div>
 </div>
 `;
