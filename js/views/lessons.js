@@ -21,14 +21,14 @@ views['Lessons'] = `
             </div>
 
             <div class="w-full sm:w-auto overflow-x-auto no-scrollbar pb-1 sm:pb-0">
-                <div class="flex gap-1 bg-white/5 p-1 rounded-xl border border-white/5 min-w-max">
-                    ${['Courses','Exam','Results','Analytics'].map((tab, i) => `
-                        <button id="btn-${tab}" onclick="switchLessonSubTab('${tab}')"
-                            class="lesson-nav-btn px-4 py-2.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all duration-200
-                            ${i === 0 ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'text-white/30 hover:text-white'}">
-                            ${tab}
-                        </button>`).join('')}
-                </div>
+            <div class="flex gap-1 bg-white/5 p-1 rounded-xl border border-white/5 min-w-max">
+    ${['Courses', 'Videos', 'Exam', 'Results', 'Analytics'].map((tab, i) => `
+        <button id="btn-${tab}" onclick="switchLessonSubTab('${tab}')"
+            class="lesson-nav-btn px-4 py-2.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all duration-200
+            ${i === 0 ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'text-white/30 hover:text-white'}">
+            ${tab}
+        </button>`).join('')}
+</div>
             </div>
         </div>
     </div>
