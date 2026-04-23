@@ -11,6 +11,9 @@
 SYSTEM_REPLIES: {
             "hello": "Hello! I am Nxxt AI, your learning assistant. I am Tech Nxxt's new model—currently under testing, but here to help out. How are you doing today?",
             "hi": "Hi there! Nxxt AI here. I'm the latest model from Tech Nxxt. How can I assist your session today?",
+             "I'm good": "That great to hear",
+            "good": "good great so what can we build today",
+    
             "hey": "Hey! Ready to get to work? I'm Nxxt AI, your new learning assistant. What's on your mind?",
             "name": "My name is Nxxt AI. Born in the Tech Nxxt labs, currently evolving.",
             "how are you": "I'm operating at peak performance! It's great to be chatting with you. How are you doing today?",
