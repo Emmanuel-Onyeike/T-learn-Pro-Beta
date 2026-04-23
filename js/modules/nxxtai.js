@@ -1,315 +1,352 @@
 /**
  * TECH NXXT: NXXT AI LEARNING ASSISTANT
- * V1 System Implementation - Optimized
+ * V1 System Implementation - Full Build with Integrated Styling & Mobile Fixes
  */
 
-const NXXT_CONFIG = {
-    IMG_GEN_URL: 'https://image.pollinations.ai/prompt/',
-    AI_LOGO: '/assets/Logo.webp', 
+(function initNxxtSystem() {
+    // 1. INTEGRATED STYLING (Tactical Industrial Aesthetic)
+    const style = document.createElement('style');
+    style.innerHTML = `
+        :root {
+            --nxxt-blue: #2563eb;
+            --nxxt-electric: #3b82f6;
+            --nxxt-dark: #020408;
+            --nxxt-glass: rgba(255, 255, 255, 0.03);
+            --nxxt-border: rgba(255, 255, 255, 0.08);
+        }
 
-    SYSTEM_REPLIES: {
-        "hello": "Hello! I am Nxxt AI, your learning assistant. I am Tech Nxxt's new model—currently under testing, but here to help out. How are you doing today?",
-        "hi": "Hi there! Nxxt AI here. I'm the latest model from Tech Nxxt. How can I assist your session today?",
-        "hey": "Hey! Ready to get to work? I'm Nxxt AI, your new learning assistant. What's on your mind?",
-        "name": "My name is Nxxt AI. Born in the Tech Nxxt labs, currently evolving.",
-        "how are you": "I'm operating at peak performance! It's great to be chatting with you. How are you doing today?",
-        "who are you": "I am Nxxt AI, your learning assistant. I am the new model developed by Tech Nxxt. I'm currently in the testing phase, but I'm here to help you learn and build.",
-        "what do you do": "I am Tech Nxxt's own AI. I help with studies, code debugging, asset generation, and keeping the Mikoko League data in check.",
-        "who made you": "I was developed by the Tech Nxxt team to be the ultimate tactical learning companion.",
-        "are you human": "I'm a high-performance model from Tech Nxxt. No heartbeat, just pure logic and a bit of attitude.",
-        "time": `Today is ${new Date().toLocaleDateString('en-GB', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}. The current time is ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}.`,
-        "all cool": "Stay frosty. We're Tech Nxxt—cool is our default setting.",
-    },
+        .nxxt-main-wrapper {
+            background-color: var(--nxxt-dark);
+            color: white;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
 
-    LIFE_REPLIES: {
-        "sad": "I'm really sorry to hear you're feeling this way. Remember that Tech Nxxt is a community here for you. Want to talk about it?",
-        "tired": "Burnout is real. Maybe it's time to step away from the code for a bit and recharge. Your brain will thank you later.",
-        "advice": "My advice? Keep building, stay curious, and don't let a single 'Error 404' stop your progress in life.",
-        "motivation": "Success isn't final, failure isn't fatal: it is the courage to continue that counts. Let's get to work!",
-    }
-};
+        /* Mobile Fix: Ensure input is never covered */
+        .nxxt-input-zone {
+            position: relative;
+            z-index: 100;
+            background: var(--nxxt-dark);
+        }
 
-// Initial View Setup
-const mainContainer = document.querySelector('.nxxt-main-wrapper');
-if (mainContainer) {
-    mainContainer.innerHTML = `
-    <aside class="hidden md:flex w-24 border-r border-white/5 bg-black/40 flex-col items-center py-8 gap-10 z-20 shrink-0">
-        <div class="w-12 h-12 rounded-2xl bg-blue-600 flex items-center justify-center shadow-[0_0_20px_rgba(37,99,235,0.4)] overflow-hidden">
-            <img src="/assets/Logo.webp" class="w-full h-full object-contain">
-        </div>
-        <nav class="flex flex-col gap-8 text-white/20 text-lg">
-            <i id="newChatBtn" class="fas fa-plus-circle hover:text-blue-500 cursor-pointer transition-all" title="New Chat"></i>
-            <i id="searchChatBtn" class="fas fa-search hover:text-blue-500 cursor-pointer transition-all" title="Search chat"></i>
-            <i class="fas fa-plug hover:text-blue-500 cursor-pointer transition-all" title="API Key"></i>
-        </nav>
-        <div class="mt-auto mb-6 vertical-text text-[9px] font-black tracking-[0.5em] text-white/5 uppercase select-none" style="writing-mode: vertical-rl;">
-            TECH NXXT COMPANY
-        </div>
-    </aside>
+        #aiThread {
+            scrollbar-width: thin;
+            scrollbar-color: var(--nxxt-blue) transparent;
+        }
 
-    <main class="flex-1 flex flex-col relative z-10 overflow-hidden min-w-0">
-        <header class="flex justify-between items-center px-6 md:px-10 py-6 backdrop-blur-xl border-b border-white/5 shrink-0">
-            <div class="flex flex-col">
-                <h2 class="text-xl md:text-2xl font-black italic tracking-tighter text-white uppercase">Nxxt <span class="text-blue-500">AI</span></h2>
-                <span class="text-[8px] font-bold text-blue-500/50 uppercase tracking-[0.3em]">V1 System Active</span>
-            </div>
-            <div class="flex bg-black/50 p-1 rounded-xl border border-white/5">
-                <button id="modeStandard" class="px-4 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest text-white bg-blue-600 shadow-lg">STD</button>
-                <button id="modeFun" class="px-4 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest text-white/30">FUN</button>
-            </div>
-        </header>
+        #aiThread::-webkit-scrollbar { width: 4px; }
+        #aiThread::-webkit-scrollbar-thumb { background: var(--nxxt-blue); border-radius: 10px; }
 
-        <div id="aiThread" class="flex-1 overflow-y-auto px-6 md:px-12 py-8 space-y-8 custom-scrollbar scroll-smooth">
-            <div id="nxxtLanding" class="flex flex-col items-center justify-center min-h-full text-center space-y-8">
-                <div class="w-32 h-32 md:w-40 md:h-40 rounded-full bg-gradient-to-tr from-blue-700 to-indigo-900 shadow-[0_0_80px_rgba(37,99,235,0.4)] flex items-center justify-center animate-pulse p-6">
-                    <img src="/assets/Logo.webp" class="w-full h-full object-contain">
-                </div>
-                <div class="max-w-xs mx-auto">
-                    <h1 class="text-2xl font-bold text-white mb-2 uppercase tracking-tighter">Engage Nxxt</h1>
-                    <p class="text-sm text-white/40 leading-relaxed font-light">HEY ASK AWAY.</p>
-                </div>
-                <div class="grid grid-cols-2 gap-4 w-full max-w-md px-4 pb-12">
-                    <div class="bg-white/5 border border-white/5 p-6 rounded-[2rem] text-left hover:border-blue-500/50 transition-all cursor-pointer action-card" data-command="How are you doing today?">
-                        <i class="fas fa-heart text-blue-500 mb-3 block"></i>
-                        <span class="text-[9px] font-black block uppercase tracking-widest">Chat Life</span>
-                    </div>
-                    <div class="bg-white/5 border border-white/5 p-6 rounded-[2rem] text-left hover:border-blue-500/50 transition-all cursor-pointer action-card" data-command="Generate a cyberpunk city">
-                        <i class="fas fa-image text-blue-400 mb-3 block"></i>
-                        <span class="text-[9px] font-black block uppercase tracking-widest">Gen Assets</span>
-                    </div>
-                </div>
-            </div>
-        </div>
+        .vertical-text { writing-mode: vertical-rl; }
 
-        <div class="p-6 md:p-8 border-t border-white/5 bg-[#020408] shrink-0">
-            <div class="max-w-4xl mx-auto">
-                <div class="relative flex items-center bg-white/[0.03] border border-white/10 rounded-full px-2 py-2 focus-within:border-blue-500/40 transition-all">
-                    <input id="nxxtInput" type="text" placeholder="Ask Anything..." class="flex-1 bg-transparent border-none outline-none text-white px-6 py-3 text-[16px]">
-                    <button id="nxxtSendBtn" class="w-12 h-12 rounded-full bg-blue-600 text-white flex items-center justify-center hover:scale-105 transition-all">
-                        <i class="fas fa-arrow-up"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </main>
+        /* Animation for message entry */
+        .animate-msg {
+            animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
 
-    <aside class="hidden xl:flex w-80 border-l border-white/5 bg-black/40 flex-col overflow-hidden shrink-0">
-        <div class="p-6 border-b border-white/5 bg-black/20 shrink-0">
-            <h3 class="text-[10px] font-black text-blue-500 uppercase tracking-widest">Neural Logs</h3>
-        </div>
-        <div id="historyList" class="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar"></div>
-    </aside>
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .nxxt-input-container {
+                margin-bottom: 10px;
+            }
+            #nxxtInput { font-size: 16px !important; } /* Prevents iOS zoom */
+            #nxxtSendBtn { width: 50px; height: 50px; pointer-events: auto !important; }
+        }
     `;
-}
+    document.head.appendChild(style);
 
-// Logic & Event Handling
-document.addEventListener('DOMContentLoaded', () => {
-    syncNeuralLogs();
-    window.nxxtMode = 'standard';
+    const NXXT_CONFIG = {
+        IMG_GEN_URL: 'https://image.pollinations.ai/prompt/',
+        AI_LOGO: '/assets/Logo.webp', 
 
-    document.body.addEventListener('click', (e) => {
-        const target = e.target;
-        if (target.closest('#nxxtSendBtn')) sendMessage();
-        if (target.closest('#newChatBtn')) handleNewChatSequence();
+        SYSTEM_REPLIES: {
+            "hello": "Hello! I am Nxxt AI, your learning assistant. I am Tech Nxxt's new model—currently under testing, but here to help out. How are you doing today?",
+            "hi": "Hi there! Nxxt AI here. I'm the latest model from Tech Nxxt. How can I assist your session today?",
+            "hey": "Hey! Ready to get to work? I'm Nxxt AI, your new learning assistant. What's on your mind?",
+            "name": "My name is Nxxt AI. Born in the Tech Nxxt labs, currently evolving.",
+            "how are you": "I'm operating at peak performance! It's great to be chatting with you. How are you doing today?",
+            "who are you": "I am Nxxt AI, your learning assistant. I am the new model developed by Tech Nxxt. I'm currently in the testing phase, but I'm here to help you learn and build.",
+            "what do you do": "I am Tech Nxxt's own AI. I help with studies, code debugging, asset generation, and keeping the Mikoko League data in check.",
+            "who made you": "I was developed by the Tech Nxxt team to be the ultimate tactical learning companion.",
+            "are you human": "I'm a high-performance model from Tech Nxxt. No heartbeat, just pure logic and a bit of attitude.",
+            "time": `Today is ${new Date().toLocaleDateString('en-GB', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}. The current time is ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}.`,
+            "today": `It's ${new Date().toLocaleDateString('en-GB', { weekday: 'long' })} today! Hope it's going well.`,
+            "date": `The calendar reads ${new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}.`,
+            "i love you": "I'm flattered! I'm pretty fond of our chat sessions too. Let's keep building great things.",
+            "marry me": "I'm married to the code, unfortunately. But I can be your best man!",
+            "all cool": "Stay frosty. We're Tech Nxxt—cool is our default setting.",
+        },
+
+        LIFE_REPLIES: {
+            "sad": "I'm really sorry to hear you're feeling this way. Remember that Tech Nxxt is a community here for you. Want to talk about it?",
+            "tired": "Burnout is real. Maybe it's time to step away from the code for a bit and recharge. Your brain will thank you later.",
+            "advice": "My advice? Keep building, stay curious, and don't let a single 'Error 404' stop your progress in life.",
+            "motivation": "Success isn't final, failure isn't fatal: it is the courage to continue that counts. Let's get to work!",
+            "stressed": "Take a deep breath. Focus on one small task at a time. We can handle this together.",
+            "scared": "Fear is just a bug in the system. Face it, debug it, and move forward."
+        }
+    };
+
+    // 2. VIEW RENDERER
+    const mainContainer = document.querySelector('.nxxt-main-wrapper');
+    if (mainContainer) {
+        mainContainer.innerHTML = `
+        <aside class="hidden md:flex w-24 border-r border-white/5 bg-black/40 flex-col items-center py-8 gap-10 z-20 shrink-0">
+            <div class="w-12 h-12 rounded-2xl bg-blue-600 flex items-center justify-center shadow-[0_0_20px_rgba(37,99,235,0.4)] overflow-hidden">
+                <img src="${NXXT_CONFIG.AI_LOGO}" class="w-full h-full object-contain">
+            </div>
+            <nav class="flex flex-col gap-8 text-white/20 text-lg">
+                <i id="newChatBtn" class="fas fa-plus-circle hover:text-blue-500 cursor-pointer transition-all"></i>
+                <i id="searchChatBtn" class="fas fa-search hover:text-blue-500 cursor-pointer transition-all"></i>
+                <i class="fas fa-plug hover:text-blue-500 cursor-pointer transition-all"></i>
+            </nav>
+            <div class="mt-auto mb-6 vertical-text text-[9px] font-black tracking-[0.5em] text-white/5 uppercase select-none">
+                TECH NXXT COMPANY
+            </div>
+        </aside>
+
+        <main class="flex-1 flex flex-col relative z-10 overflow-hidden min-w-0">
+            <header class="flex justify-between items-center px-6 md:px-10 py-6 backdrop-blur-xl border-b border-white/5 shrink-0">
+                <div class="flex flex-col">
+                    <h2 class="text-xl md:text-2xl font-black italic tracking-tighter text-white uppercase">Nxxt <span class="text-blue-500">AI</span></h2>
+                    <span class="text-[8px] font-bold text-blue-500/50 uppercase tracking-[0.3em]">V1 System Active</span>
+                </div>
+                <div class="flex bg-black/50 p-1 rounded-xl border border-white/5">
+                    <button id="modeStandard" class="px-4 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest text-white bg-blue-600">STD</button>
+                    <button id="modeFun" class="px-4 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest text-white/30">FUN</button>
+                </div>
+            </header>
+
+            <div id="aiThread" class="flex-1 overflow-y-auto px-6 md:px-12 py-8 space-y-8 scroll-smooth">
+                <div id="nxxtLanding" class="flex flex-col items-center justify-center min-h-full text-center space-y-8 animate-msg">
+                    <div class="w-32 h-32 md:w-40 md:h-40 rounded-full bg-gradient-to-tr from-blue-700 to-indigo-900 shadow-[0_0_80px_rgba(37,99,235,0.3)] flex items-center justify-center p-6">
+                        <img src="${NXXT_CONFIG.AI_LOGO}" class="w-full h-full object-contain">
+                    </div>
+                    <div class="max-w-xs mx-auto">
+                        <h1 class="text-2xl font-bold text-white mb-2 uppercase tracking-tighter">Engage Nxxt</h1>
+                        <p class="text-sm text-white/40 leading-relaxed font-light">HEY ASK AWAY.</p>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4 w-full max-w-md px-4 pb-12">
+                        <div class="bg-white/5 border border-white/5 p-6 rounded-[2rem] text-left hover:border-blue-500/50 transition-all cursor-pointer action-card" data-command="How are you doing?">
+                            <i class="fas fa-heart text-blue-500 mb-3 block"></i>
+                            <span class="text-[9px] font-black block uppercase tracking-widest">Chat Life</span>
+                        </div>
+                        <div class="bg-white/5 border border-white/5 p-6 rounded-[2rem] text-left hover:border-blue-500/50 transition-all cursor-pointer action-card" data-command="Generate a tactical dashboard UI">
+                            <i class="fas fa-image text-blue-400 mb-3 block"></i>
+                            <span class="text-[9px] font-black block uppercase tracking-widest">Gen Assets</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="nxxt-input-zone p-6 md:p-8 border-t border-white/5 bg-[#020408] shrink-0">
+                <div class="max-w-4xl mx-auto">
+                    <div class="relative flex items-center bg-white/[0.03] border border-white/10 rounded-full px-2 py-2 focus-within:border-blue-500/40 transition-all shadow-2xl">
+                        <input id="nxxtInput" type="text" placeholder="Ask Anything..." class="flex-1 bg-transparent border-none outline-none text-white px-6 py-3">
+                        <button id="nxxtSendBtn" class="w-12 h-12 rounded-full bg-blue-600 text-white flex items-center justify-center hover:scale-105 active:scale-95 transition-all">
+                            <i class="fas fa-arrow-up"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <aside class="hidden xl:flex w-80 border-l border-white/5 bg-black/40 flex-col overflow-hidden shrink-0">
+            <div class="p-6 border-b border-white/5 bg-black/20 shrink-0">
+                <h3 class="text-[10px] font-black text-blue-500 uppercase tracking-widest">Neural Logs</h3>
+            </div>
+            <div id="historyList" class="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar"></div>
+        </aside>
+        `;
+    }
+
+    // 3. CORE LOGIC
+    document.addEventListener('DOMContentLoaded', () => {
+        syncNeuralLogs();
+        window.nxxtMode = 'standard';
+
+        document.body.addEventListener('click', (e) => {
+            const target = e.target;
+            if (target.closest('#nxxtSendBtn')) sendMessage();
+            if (target.closest('#newChatBtn')) location.reload();
+            
+            const modeBtn = target.closest('#modeStandard') || target.closest('#modeFun');
+            if (modeBtn) switchMode(modeBtn.id === 'modeFun' ? 'fun' : 'standard');
+            
+            const actionCard = target.closest('.action-card');
+            if (actionCard) {
+                const input = document.getElementById('nxxtInput');
+                if(input) { input.value = actionCard.dataset.command; sendMessage(); }
+            }
+        });
+
+        document.body.addEventListener('keypress', (e) => {
+            if (e.target.id === 'nxxtInput' && e.key === 'Enter') {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+    });
+
+    async function sendMessage() {
+        const input = document.getElementById('nxxtInput');
+        const thread = document.getElementById('aiThread');
+        const landing = document.getElementById('nxxtLanding');
         
-        const modeBtn = target.closest('#modeStandard') || target.closest('#modeFun');
-        if (modeBtn) switchMode(modeBtn.id === 'modeFun' ? 'fun' : 'standard');
+        if (!input || !thread) return;
+        const prompt = input.value.trim();
+        if (!prompt) return;
+
+        if (landing) landing.remove();
+        input.value = '';
+        input.blur(); // Mobile keyboard fix
         
-        const actionCard = target.closest('.action-card');
-        if (actionCard) {
-            const input = document.getElementById('nxxtInput');
-            if(input) { 
-                input.value = actionCard.dataset.command; 
-                sendMessage(); 
+        renderUserMessage(prompt);
+        scrollThread();
+
+        const thinkId = 'think-' + Date.now();
+        showThinkingIndicator(thinkId);
+
+        setTimeout(() => {
+            const indicator = document.getElementById(thinkId);
+            if(indicator) indicator.remove();
+            
+            const isImage = /image|draw|generate|picture|art/i.test(prompt);
+            if (isImage) {
+                handleManualImage(prompt);
+            } else {
+                handleManualText(prompt);
+            }
+        }, 1000);
+    }
+
+    function handleManualText(prompt) {
+        const query = prompt.toLowerCase().trim();
+        let response = "";
+
+        const combinedReplies = {...NXXT_CONFIG.SYSTEM_REPLIES, ...NXXT_CONFIG.LIFE_REPLIES};
+        for (let key in combinedReplies) {
+            if (query.includes(key)) {
+                response = combinedReplies[key];
+                break;
             }
         }
-    });
 
-    document.body.addEventListener('keypress', (e) => {
-        if (e.target.id === 'nxxtInput' && e.key === 'Enter') {
-            e.preventDefault();
-            sendMessage();
+        if (!response) {
+            const isCoding = /code|html|css|js|react|tailwind|error|python|api/i.test(query);
+            if (isCoding || query.length > 10) {
+                const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+                response = `I'm currently processing this. Based on my neural training: <br><br> 
+                            <a href="${searchUrl}" target="_blank" class="inline-block px-5 py-3 bg-blue-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest mt-2 hover:bg-blue-500 shadow-lg">Open Documentation</a>. 
+                            <br><br>As I'm in beta, native deep-coding is arriving in the next system patch!`;
+            } else {
+                response = "I'm still learning that aspect. Ask me about coding, UI design, or how I can help with your Tech Nxxt projects!";
+            }
         }
-    });
-});
 
-async function sendMessage() {
-    const input = document.getElementById('nxxtInput');
-    const thread = document.getElementById('aiThread');
-    const landing = document.getElementById('nxxtLanding');
-    
-    if (!input || !thread) return;
-    const prompt = input.value.trim();
-    if (!prompt) return;
-
-    if (landing) landing.remove();
-    input.value = '';
-    renderUserMessage(prompt);
-    scrollThread();
-
-    const thinkId = 'think-' + Date.now();
-    showThinkingIndicator(thinkId);
-
-    setTimeout(() => {
-        const indicator = document.getElementById(thinkId);
-        if(indicator) indicator.remove();
-        
-        const isImage = /image|draw|generate|picture/i.test(prompt);
-        if (isImage) {
-            handleManualImage(prompt);
-        } else {
-            handleManualText(prompt);
-        }
-    }, 1200);
-}
-
-function handleManualText(prompt) {
-    const query = prompt.toLowerCase().trim();
-    let response = "";
-
-    // Search Logic
-    const combinedReplies = {...NXXT_CONFIG.SYSTEM_REPLIES, ...NXXT_CONFIG.LIFE_REPLIES};
-    for (let key in combinedReplies) {
-        if (query.includes(key)) {
-            response = combinedReplies[key];
-            break;
-        }
+        if(window.nxxtMode === 'fun') response = `🔥 [NEURAL_FUN]: ${response.toUpperCase()} 🚀`;
+        renderAiResponse(response, 'text');
     }
 
-    if (!response) {
-        const isCoding = /code|html|css|js|react|tailwind|function|error/i.test(query);
-        if (isCoding || query.length > 10) {
-            const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
-            response = `I'm analyzing your request. Based on my current training data: <br><br> 
-                        <a href="${searchUrl}" target="_blank" class="inline-block px-5 py-3 bg-blue-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest mt-2 hover:bg-blue-500 shadow-lg">Browse Documentation</a>. 
-                        <br><br>I'm the new Tech Nxxt model under testing—I'll handle this natively soon!`;
-        } else {
-            response = "I'm not quite sure about that yet. Since I'm under testing, try asking about coding, building projects, or just chat with me about your day!";
-        }
+    function handleManualImage(prompt) {
+        const seed = Math.floor(Math.random() * 9999);
+        const url = `${NXXT_CONFIG.IMG_GEN_URL}${encodeURIComponent(prompt)}?seed=${seed}&nologo=true`;
+        renderAiResponse(url, 'image');
     }
 
-    if(window.nxxtMode === 'fun') response = `🔥 [TEST_MODE]: ${response.toUpperCase()} 🚀`;
-    renderAiResponse(response, 'text');
-}
-
-function handleManualImage(prompt) {
-    const seed = Math.floor(Math.random() * 9999);
-    const url = `${NXXT_CONFIG.IMG_GEN_URL}${encodeURIComponent(prompt)}?seed=${seed}&nologo=true`;
-    renderAiResponse(url, 'image');
-}
-
-function renderUserMessage(text) {
-    const thread = document.getElementById('aiThread');
-    thread.insertAdjacentHTML('beforeend', `
-        <div class="flex justify-end mb-8 animate-in slide-in-from-right-4 duration-300">
-            <div class="max-w-[85%] md:max-w-[70%] bg-blue-600 text-white px-6 py-4 rounded-[2.5rem] rounded-tr-md shadow-xl border border-white/10">
-                <p class="text-[15px] font-medium leading-relaxed">${text}</p>
-            </div>
-        </div>
-    `);
-}
-
-function renderAiResponse(content, type) {
-    const thread = document.getElementById('aiThread');
-    const formatted = type === 'text' 
-        ? content.replace(/\*\*(.*?)\*\*/g, '<b class="text-blue-400">$1</b>').replace(/\n/g, '<br>') 
-        : `<div class="space-y-4"><img src="${content}" class="rounded-[2.5rem] border border-white/10 shadow-2xl w-full max-w-sm" /><p class="text-[8px] text-blue-500 font-black uppercase tracking-[0.4em]">Asset_Rendered_Nxxt</p></div>`;
-
-    thread.insertAdjacentHTML('beforeend', `
-        <div class="flex gap-4 md:gap-6 animate-in slide-in-from-left-4 duration-500 mb-10">
-            <div class="w-12 h-12 rounded-2xl bg-[#0d1117] border border-white/10 flex items-center justify-center p-2 shadow-lg shrink-0">
-                <img src="/assets/Logo.webp" class="w-full h-full object-contain">
-            </div>
-            <div class="flex-1 pt-1">
-                <div class="text-slate-300 text-[17px] font-light leading-relaxed max-w-2xl">
-                    ${formatted}
+    function renderUserMessage(text) {
+        const thread = document.getElementById('aiThread');
+        thread.insertAdjacentHTML('beforeend', `
+            <div class="flex justify-end mb-8 animate-msg">
+                <div class="max-w-[85%] md:max-w-[70%] bg-blue-600 text-white px-6 py-4 rounded-[2rem] rounded-tr-md shadow-xl border border-white/10">
+                    <p class="text-[15px] font-medium leading-relaxed">${text}</p>
                 </div>
             </div>
-        </div>
-    `);
-    scrollThread();
-    
-    const userMsgs = document.querySelectorAll('.justify-end p');
-    const lastMsg = userMsgs.length > 0 ? userMsgs[userMsgs.length - 1].innerText : "Chat Session";
-    saveToDatabase(lastMsg, thread.innerHTML);
-}
-
-function handleNewChatSequence() {
-    const thread = document.getElementById('aiThread');
-    location.reload(); // Simplest way to reset the neural state to landing
-}
-
-function showThinkingIndicator(id) {
-    const thread = document.getElementById('aiThread');
-    thread.insertAdjacentHTML('beforeend', `
-        <div id="${id}" class="flex gap-4 animate-in fade-in mb-8">
-            <div class="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center">
-                <div class="w-2 h-2 bg-blue-500 rounded-full animate-ping"></div>
-            </div>
-        </div>
-    `);
-}
-
-function scrollThread() {
-    const thread = document.getElementById('aiThread');
-    if (thread) requestAnimationFrame(() => thread.scrollTo({ top: thread.scrollHeight, behavior: 'smooth' }));
-}
-
-function saveToDatabase(title, html) {
-    if(html.includes('nxxtLanding')) return;
-    let logs = JSON.parse(localStorage.getItem('nxxt_logs') || '[]');
-    const existingIndex = logs.findIndex(l => l.title === title);
-    
-    if(existingIndex > -1) {
-        logs[existingIndex].data = html;
-    } else {
-        logs.unshift({ id: Date.now(), title, data: html, time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) });
+        `);
     }
-    
-    localStorage.setItem('nxxt_logs', JSON.stringify(logs.slice(0, 15)));
-    syncNeuralLogs();
-}
 
-function syncNeuralLogs() {
-    const list = document.getElementById('historyList');
-    if (!list) return;
-    const logs = JSON.parse(localStorage.getItem('nxxt_logs') || '[]');
-    
-    list.innerHTML = logs.length === 0 
-        ? `<div class="flex flex-col items-center justify-center h-full text-center space-y-4 opacity-20">
-             <i class="fas fa-database text-4xl"></i>
-             <p class="text-[10px] font-bold uppercase tracking-widest">No Active Logs</p>
-           </div>`
-        : logs.map(log => `
-            <div onclick="restoreNeuralLink(${log.id})" class="p-4 bg-white/[0.03] border border-white/5 rounded-2xl hover:border-blue-500/50 cursor-pointer transition-all group">
-                <p class="text-[11px] text-white/50 group-hover:text-blue-400 truncate font-medium uppercase tracking-tighter">${log.title}</p>
+    function renderAiResponse(content, type) {
+        const thread = document.getElementById('aiThread');
+        const formatted = type === 'text' 
+            ? content.replace(/\*\*(.*?)\*\*/g, '<b class="text-blue-400">$1</b>').replace(/\n/g, '<br>') 
+            : `<div class="space-y-4"><img src="${content}" class="rounded-[2.5rem] border border-white/10 shadow-2xl w-full" /><p class="text-[8px] text-blue-500 font-black uppercase tracking-[0.4em]">Neural_Asset_Rendered</p></div>`;
+
+        thread.insertAdjacentHTML('beforeend', `
+            <div class="flex gap-4 md:gap-6 animate-msg mb-10">
+                <div class="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center p-2 shrink-0">
+                    <img src="${NXXT_CONFIG.AI_LOGO}" class="w-full h-full object-contain">
+                </div>
+                <div class="flex-1 pt-1">
+                    <div class="text-slate-300 text-[17px] font-light leading-relaxed max-w-2xl">${formatted}</div>
+                </div>
+            </div>
+        `);
+        scrollThread();
+        
+        const userMsgs = document.querySelectorAll('.justify-end p');
+        const lastMsg = userMsgs.length > 0 ? userMsgs[userMsgs.length - 1].innerText : "Chat Session";
+        saveToDatabase(lastMsg, thread.innerHTML);
+    }
+
+    function showThinkingIndicator(id) {
+        document.getElementById('aiThread').insertAdjacentHTML('beforeend', `
+            <div id="${id}" class="flex gap-4 animate-msg mb-8">
+                <div class="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center">
+                    <div class="w-2 h-2 bg-blue-500 rounded-full animate-ping"></div>
+                </div>
+            </div>
+        `);
+    }
+
+    function scrollThread() {
+        const thread = document.getElementById('aiThread');
+        if (thread) thread.scrollTo({ top: thread.scrollHeight, behavior: 'smooth' });
+    }
+
+    function saveToDatabase(title, html) {
+        if(html.includes('nxxtLanding')) return;
+        let logs = JSON.parse(localStorage.getItem('nxxt_logs') || '[]');
+        const existingIndex = logs.findIndex(l => l.title === title);
+        if(existingIndex > -1) logs[existingIndex].data = html;
+        else logs.unshift({ id: Date.now(), title, data: html, time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) });
+        localStorage.setItem('nxxt_logs', JSON.stringify(logs.slice(0, 15)));
+        syncNeuralLogs();
+    }
+
+    function syncNeuralLogs() {
+        const list = document.getElementById('historyList');
+        if (!list) return;
+        const logs = JSON.parse(localStorage.getItem('nxxt_logs') || '[]');
+        list.innerHTML = logs.map(log => `
+            <div onclick="restoreNeuralLink(${log.id})" class="p-4 bg-white/[0.03] border border-white/5 rounded-2xl hover:border-blue-500/50 cursor-pointer transition-all">
+                <p class="text-[11px] text-white/50 truncate font-medium uppercase tracking-tighter">${log.title}</p>
                 <p class="text-[7px] text-white/10 font-bold mt-1 uppercase">${log.time}</p>
             </div>
-        `).join('');
-}
-
-window.restoreNeuralLink = (id) => {
-    const logs = JSON.parse(localStorage.getItem('nxxt_logs') || '[]');
-    const log = logs.find(l => l.id === id);
-    if (log) { 
-        const thread = document.getElementById('aiThread');
-        thread.innerHTML = log.data; 
-        scrollThread(); 
+        `).join('') || `<p class="text-center text-[10px] opacity-20 uppercase font-black">No Logs Found</p>`;
     }
-};
 
-function switchMode(mode) {
-    window.nxxtMode = mode;
-    const std = document.getElementById('modeStandard');
-    const fun = document.getElementById('modeFun');
-    if (!std || !fun) return;
-    
-    const active = "px-4 py-1.5 rounded-lg text-[9px] font-black uppercase text-white bg-blue-600 shadow-lg";
-    const inactive = "px-4 py-1.5 rounded-lg text-[9px] font-black uppercase text-white/30";
-    
-    std.className = mode === 'standard' ? active : inactive;
-    fun.className = mode === 'fun' ? active : inactive;
-}
+    window.restoreNeuralLink = (id) => {
+        const logs = JSON.parse(localStorage.getItem('nxxt_logs') || '[]');
+        const log = logs.find(l => l.id === id);
+        if (log) { document.getElementById('aiThread').innerHTML = log.data; scrollThread(); }
+    };
+
+    function switchMode(mode) {
+        window.nxxtMode = mode;
+        const std = document.getElementById('modeStandard');
+        const fun = document.getElementById('modeFun');
+        const active = "px-4 py-1.5 rounded-lg text-[9px] font-black uppercase text-white bg-blue-600 shadow-lg";
+        const inactive = "px-4 py-1.5 rounded-lg text-[9px] font-black uppercase text-white/30";
+        std.className = mode === 'standard' ? active : inactive;
+        fun.className = mode === 'fun' ? active : inactive;
+    }
+})();
 
 ////// FOR THE NXXT LAB
 
