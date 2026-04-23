@@ -29,6 +29,7 @@ function switchLessonSubTab(tab) {
     });
     switch(tab) {
         case 'Courses':   renderCourses(contentArea);   break;
+        case 'Videos':      renderVideos(contentArea);      break;
         case 'Exam':      renderExam(contentArea);      break;
         case 'Results':   renderResults(contentArea);   break;
         case 'Analytics': renderAnalytics(contentArea); break;
