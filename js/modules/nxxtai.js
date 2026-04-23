@@ -13,6 +13,8 @@ const NXXT_CONFIG = {
         "hey": "Hey! Ready to get to work? I'm Nxxt AI, your new learning assistant. What's on your mind?",
        
         "name": "My name is Nxxt AI. Born in the Tech Nxxt labs, currently evolving.",
+        "how are you": "i'm good  just here  wats up?.",
+        "how are you doing": "All good here  nothing much doing  wanna code?.",
         "who are you": "I am Nxxt AI, your learning assistant. I am the new model developed by Tech Nxxt. I'm currently in the testing phase, but I'm here to help you learn and build.",
         "what do you do": "I am Tech Nxxt's own AI. I help with studies, code debugging, asset generation, and keeping the Mikoko League data in check.",
         "who made you": "I was developed by the Tech Nxxt team to be the ultimate tactical learning companion.",
