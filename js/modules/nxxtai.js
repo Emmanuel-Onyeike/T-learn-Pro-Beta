@@ -1,6 +1,8 @@
 /**
  * TECH NXXT: NXXT AI LEARNING ASSISTANT
+ * V1 System Implementation
  */
+
 const NXXT_CONFIG = {
     IMG_GEN_URL: 'https://image.pollinations.ai/prompt/',
     AI_LOGO: '/assets/Logo.webp', 
@@ -21,7 +23,7 @@ const NXXT_CONFIG = {
         "good": "Glad to hear it! What's the plan for today?",
         "great": "Love that energy! Let's keep that momentum going. What are we building?",
         "i am bored": "Boredom is the enemy of progress! Let's generate some art or fix some code. What's the topic?",
-        "i'm bored": "sorry about that!",
+        "i'm bored": "Sorry about that! Let's find something productive to do.",
         "fine": "Just fine? We can do better than that! Tell me what's on your mind.",
         "check my account": "I am not integrated into the account system yet to reply to that. Very sorry! I'm still under testing.",
         "my profile": "I don't have access to your account details yet. Integration is pending in a future update.",
@@ -59,6 +61,107 @@ const NXXT_CONFIG = {
     }
 };
 
+// Initial View Setup
+const mainContainer = document.querySelector('.nxxt-main-wrapper');
+if (mainContainer) {
+    mainContainer.innerHTML = `
+    <aside class="hidden md:flex w-24 border-r border-white/5 bg-black/40 flex-col items-center py-8 gap-10 z-20 shrink-0">
+        <div class="w-12 h-12 rounded-2xl bg-blue-600 flex items-center justify-center shadow-[0_0_20px_rgba(37,99,235,0.4)] overflow-hidden">
+            <img src="/assets/Logo.webp" class="w-full h-full object-contain">
+        </div>
+        <nav class="flex flex-col gap-8 text-white/20 text-lg">
+            <i id="newChatBtn" class="fas fa-plus-circle hover:text-blue-500 cursor-pointer transition-all" title="New Chat"></i>
+            <i id="searchChatBtn" class="fas fa-search hover:text-blue-500 cursor-pointer transition-all" title="Search chat"></i>
+            <i class="fas fa-plug hover:text-blue-500 cursor-pointer transition-all" title="API Key"></i>
+            <div class="relative group">
+                <i class="fas fa-arrow-alt-circle-up text-white/5 cursor-not-allowed" title="Update Locked"></i>
+                <span class="absolute left-14 top-0 bg-red-600 text-[8px] px-2 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">LOCKED</span>
+            </div>
+        </nav>
+        <div class="mt-auto mb-6 vertical-text text-[9px] font-black tracking-[0.5em] text-white/5 uppercase select-none" style="writing-mode: vertical-rl;">
+            TECH NXXT COMPANY
+        </div>
+    </aside>
+
+    <main class="flex-1 flex flex-col relative z-10 overflow-hidden min-w-0">
+        <header class="flex justify-between items-center px-6 md:px-10 py-6 backdrop-blur-xl border-b border-white/5 shrink-0">
+            <div class="flex flex-col">
+                <h2 class="text-xl md:text-2xl font-black italic tracking-tighter text-white uppercase">Nxxt <span class="text-blue-500">AI</span></h2>
+                <span class="text-[8px] font-bold text-blue-500/50 uppercase tracking-[0.3em]">V1 System Active</span>
+            </div>
+            <div class="flex bg-black/50 p-1 rounded-xl border border-white/5">
+                <button id="modeStandard" class="px-4 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest text-white bg-blue-600 shadow-lg">STD</button>
+                <button id="modeFun" class="px-4 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest text-white/30">FUN</button>
+            </div>
+        </header>
+
+        <div id="aiThread" class="flex-1 overflow-y-auto px-6 md:px-12 py-8 space-y-8 custom-scrollbar scroll-smooth">
+            <div id="nxxtLanding" class="flex flex-col items-center justify-center min-h-full text-center space-y-8 animate-in fade-in zoom-in duration-700">
+                <div class="relative">
+                    <div class="w-32 h-32 md:w-40 md:h-40 rounded-full bg-gradient-to-tr from-blue-700 via-blue-400 to-indigo-900 shadow-[0_0_80px_rgba(37,99,235,0.4)] flex items-center justify-center animate-pulse overflow-hidden p-6">
+                        <img src="/assets/Logo.webp" class="w-full h-full object-contain">
+                    </div>
+                </div>
+                
+                <div class="max-w-xs mx-auto">
+                    <h1 class="text-2xl font-bold text-white mb-2 uppercase tracking-tighter">Engage Nxxt</h1>
+                    <p class="text-sm text-white/40 leading-relaxed font-light">HEY ASK AWAY.</p>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4 w-full max-w-md px-4">
+                    <div class="bg-gradient-to-br from-blue-600/10 to-blue-900/5 border border-white/5 p-6 rounded-[2rem] text-left hover:border-blue-500/50 transition-all cursor-pointer group action-card" data-command="Speak to AI">
+                        <i class="fas fa-microphone text-blue-500 mb-3 block"></i>
+                        <span class="text-xs font-bold block uppercase tracking-widest">Speak to AI</span>
+                    </div>
+                    <div class="bg-gradient-to-br from-indigo-600/10 to-indigo-900/5 border border-white/5 p-6 rounded-[2rem] text-left hover:border-blue-500/50 transition-all cursor-pointer group action-card" data-command="Chat Neural">
+                        <i class="fas fa-comment-dots text-indigo-500 mb-3 block"></i>
+                        <span class="text-xs font-bold block uppercase tracking-widest">Chat Neural</span>
+                    </div>
+                    <div class="bg-gradient-to-br from-slate-600/10 to-slate-900/5 border border-white/5 p-6 rounded-[2rem] text-left hover:border-blue-500/50 transition-all cursor-pointer group action-card" data-command="Generate Assets">
+                        <i class="fas fa-image text-slate-400 mb-3 block"></i>
+                        <span class="text-xs font-bold block uppercase tracking-widest">Generate Assets</span>
+                    </div>
+                    <div class="bg-gradient-to-br from-purple-600/10 to-purple-900/5 border border-white/5 p-6 rounded-[2rem] text-left hover:border-blue-500/50 transition-all cursor-pointer group action-card" data-command="Scan Logic">
+                        <i class="fas fa-expand text-purple-500 mb-3 block"></i>
+                        <span class="text-xs font-bold block uppercase tracking-widest">Scan Logic</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="p-6 md:p-8 border-t border-white/5 bg-[#020408] shrink-0">
+            <div class="max-w-4xl mx-auto">
+                <div class="relative flex items-center bg-white/[0.03] border border-white/10 rounded-full px-2 py-2 focus-within:border-blue-500/40 transition-all shadow-2xl">
+                    <input id="nxxtInput" type="text" placeholder="Ask Anything..." class="flex-1 bg-transparent border-none outline-none text-white px-6 py-3 text-[16px]">
+                    <button id="nxxtSendBtn" class="w-12 h-12 rounded-full bg-blue-600 text-white flex items-center justify-center hover:scale-105 transition-all">
+                        <i class="fas fa-arrow-up"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <aside class="hidden xl:flex w-80 border-l border-white/5 bg-black/40 flex-col overflow-hidden shrink-0">
+        <div class="p-6 border-b border-white/5 bg-black/20 shrink-0">
+            <h3 class="text-[10px] font-black text-blue-500 uppercase tracking-widest">Neural Logs</h3>
+        </div>
+        <div id="historyList" class="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar scroll-smooth">
+            <div id="historyNoState" class="flex flex-col items-center justify-center h-full text-center space-y-4 opacity-20">
+                <i class="fas fa-database text-4xl"></i>
+                <p class="text-[10px] font-bold uppercase tracking-widest">No Active Logs Found</p>
+            </div>
+        </div>
+        <div class="p-4 border-t border-white/5 bg-black/40 shrink-0">
+             <div class="flex items-center justify-between opacity-30">
+                <span class="text-[7px] font-black tracking-widest uppercase">System Memory</span>
+                <span class="text-[7px] text-blue-500 font-bold uppercase">Ready</span>
+             </div>
+        </div>
+    </aside>
+    `;
+}
+
+// Logic & Event Handling
 document.addEventListener('DOMContentLoaded', () => {
     syncNeuralLogs();
     window.nxxtMode = 'standard';
@@ -74,7 +177,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const actionCard = target.closest('.action-card');
         if (actionCard) {
             const input = document.getElementById('nxxtInput');
-            if(input) { input.value = actionCard.dataset.command; sendMessage(); }
+            if(input) { 
+                input.value = actionCard.dataset.command; 
+                sendMessage(); 
+            }
         }
     });
 
@@ -138,9 +244,7 @@ function handleManualText(prompt) {
 
     if (!response) {
         const isCoding = /code|html|css|js|java|python|error|react|tailwind/i.test(input);
-        const isFamous = /messi|ronaldo|neymar|football|who is|what is|search/i.test(input);
-
-        if (isCoding || isFamous || input.length > 8) {
+        if (isCoding || input.length > 8) {
             const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(input)}`;
             response = `I'm still learning, so I've looked this up for you! Based on my current training: <br><br> 
                         <a href="${searchUrl}" target="_blank" class="inline-block px-5 py-3 bg-blue-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest mt-2 hover:bg-blue-500 transition-all shadow-lg">View Results on Google</a>. 
@@ -193,16 +297,12 @@ function renderAiResponse(content, type) {
     `);
     scrollThread();
     
-    // Save to logs automatically after AI responds if it's the start of a thread
-    const firstMsg = document.querySelector('.justify-end p')?.innerText || "Chat Session";
-    saveToDatabase(firstMsg, thread.innerHTML);
+    const userMsgs = document.querySelectorAll('.justify-end p');
+    const lastMsg = userMsgs.length > 0 ? userMsgs[userMsgs.length - 1].innerText : "Chat Session";
+    saveToDatabase(lastMsg, thread.innerHTML);
 }
 
 function handleNewChatSequence() {
-    resetInterface();
-}
-
-function resetInterface() {
     const thread = document.getElementById('aiThread');
     thread.innerHTML = `
         <div id="nxxtLanding" class="flex flex-col items-center justify-center min-h-full text-center space-y-8 animate-in fade-in zoom-in duration-700">
@@ -247,10 +347,8 @@ function scrollThread() {
 
 function saveToDatabase(title, html) {
     let logs = JSON.parse(localStorage.getItem('nxxt_logs') || '[]');
-    // Only save or update if thread isn't empty
     if(html.includes('nxxtLanding')) return;
     
-    // Check if we are updating an existing session or creating new
     const existingIndex = logs.findIndex(l => l.title === title);
     if(existingIndex > -1) {
         logs[existingIndex].data = html;
@@ -267,12 +365,12 @@ function syncNeuralLogs() {
     if (!list) return;
     const logs = JSON.parse(localStorage.getItem('nxxt_logs') || '[]');
     if (logs.length === 0) {
-        list.innerHTML = \`
+        list.innerHTML = `
             <div id="historyNoState" class="flex flex-col items-center justify-center h-full text-center space-y-4 opacity-20">
                 <i class="fas fa-database text-4xl"></i>
                 <p class="text-[10px] font-bold uppercase tracking-widest">No Active Logs Found</p>
             </div>
-        \`;
+        `;
         return;
     }
     list.innerHTML = logs.map(log => `
@@ -286,7 +384,10 @@ function syncNeuralLogs() {
 window.restoreNeuralLink = (id) => {
     const logs = JSON.parse(localStorage.getItem('nxxt_logs') || '[]');
     const log = logs.find(l => l.id === id);
-    if (log) { document.getElementById('aiThread').innerHTML = log.data; scrollThread(); }
+    if (log) { 
+        document.getElementById('aiThread').innerHTML = log.data; 
+        scrollThread(); 
+    }
 };
 
 function switchMode(mode) {
@@ -299,6 +400,7 @@ function switchMode(mode) {
     std.className = mode === 'standard' ? active : inactive;
     fun.className = mode === 'fun' ? active : inactive;
 }
+
 ////// FOR THE NXXT LAB
 
     function showLabModal(title, msg, icon) {
