@@ -209,9 +209,9 @@
         }
 
         if (!response) {
-            const isCoding = /code|js|html|css|react|api|sql|tailwind/i.test(query);
+            const isCoding = /code|js|html|css|react|api|messi|ronaldo|sql|tailwind/i.test(query);
             if (isCoding) {
-                response = `Analyzing request... Based on my current training: <br><br> <a href="https://www.google.com/search?q=${encodeURIComponent(query)}" target="_blank" class="inline-block px-5 py-3 bg-blue-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest mt-2 hover:bg-blue-500 shadow-lg">Open Documentation</a>. <br><br>As I'm in beta, I'll handle deep coding natively in the next system patch!`;
+                response = `Analyzing request... Based on my current training: <br><br> <a href="https://www.google.com/search?q=${encodeURIComponent(query)}" target="_blank" class="inline-block px-5 py-3 bg-blue-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest mt-2 hover:bg-blue-500 shadow-lg">Check my result</a>. <br><br>As I'm in beta, I'll handle deep coding natively in the next system patch!`;
             } else {
                 response = "I'm still learning that. Ask me about coding, Tech Nxxt, or just say hello!";
             }
