@@ -145,6 +145,18 @@ views['Overview'] = `
     </div>
     <i class="fas fa-chess-knight absolute -right-4 -bottom-4 text-8xl text-white/[0.02] group-hover:text-cyan-500/[0.05] transition-all rotate-12"></i>
 </div>
+<div class="group relative overflow-hidden rounded-[2.5rem] border border-white/10 bg-[#050b1d] p-7 transition-all duration-500 hover:border-blue-400/40">
+    <div class="relative z-10 flex items-center gap-5">
+        <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-600/10 border border-blue-500/20 text-blue-400">
+            <i class="fas fa-tasks text-2xl"></i>
+        </div>
+        <div>
+            <p class="text-[11px] font-black uppercase tracking-widest text-gray-500">Tasks Completed</p>
+            <h3 id="tasksCount" class="mt-1 text-3xl font-black text-white">0</h3>
+        </div>
+    </div>
+    <i class="fas fa-award absolute -right-4 -bottom-4 text-8xl text-white/[0.02] group-hover:text-blue-500/[0.05] transition-all rotate-12"></i>
+</div>
         
     <!-- ── ROW 4: System Core (live project stream) ── -->
     <div class="group relative overflow-hidden rounded-[3rem] border border-white/5 bg-[#050b1d] p-8 transition-all duration-700 hover:border-emerald-500/20">
