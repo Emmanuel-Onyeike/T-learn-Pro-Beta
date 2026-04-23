@@ -20,7 +20,7 @@ views['Games'] = `
                     <i class="fas fa-gamepad text-cyan-400 text-xs"></i>
                     <div class="flex flex-col">
                         <span class="text-[7px] font-black text-cyan-500/60 uppercase">Active Games</span>
-                        <span id="gamesCount" class="text-[10px] font-black text-white uppercase">0</span>
+                        <span id="gamesCount" class="text-[10px] font-black text-white uppercase">2</span>
                     </div>
                 </div>
             </div>
@@ -35,10 +35,65 @@ views['Games'] = `
         </div>
 
         <div id="gamesGridContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-20">
-            <div class="col-span-full py-20 flex flex-col items-center justify-center opacity-20 space-y-4">
-                <i class="fas fa-circle-notch animate-spin text-4xl"></i>
-                <p class="text-[10px] font-black uppercase tracking-widest">Scanning Neural Modules...</p>
+            
+            <div class="group relative bg-gradient-to-br from-cyan-600/5 to-black border border-white/5 p-8 rounded-[2.5rem] hover:border-cyan-500/50 transition-all duration-500 overflow-hidden">
+                <div class="relative z-10">
+                    <div class="flex justify-between items-start mb-8">
+                        <div class="h-14 w-14 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400">
+                            <i class="fas fa-bullseye text-2xl"></i>
+                        </div>
+                        <span class="text-[8px] font-black px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 uppercase tracking-widest">Elite Module</span>
+                    </div>
+                    
+                    <h4 class="text-white font-black uppercase tracking-tight text-xl">Syntax Striker</h4>
+                    <p class="text-cyan-500/60 text-[9px] font-black uppercase tracking-widest mt-1">Regex Pattern Recognition</p>
+                    
+                    <p class="mt-6 text-gray-400 text-[11px] leading-relaxed font-medium">
+                        Neutralize security threats by writing precise <span class="text-white font-bold">Regex patterns</span>. Speed and pattern accuracy determine your security clearance.
+                    </p>
+
+                    <div class="mt-8 pt-6 border-t border-white/5 flex items-center justify-between">
+                        <div class="flex flex-col">
+                            <span class="text-[7px] font-black text-gray-600 uppercase">Tech Stack</span>
+                            <span class="text-[9px] font-bold text-white uppercase">JavaScript / RegExp</span>
+                        </div>
+                        <button onclick="launchMission('G-771')" class="px-6 py-3 rounded-xl bg-cyan-600 text-white text-[10px] font-black uppercase tracking-widest hover:bg-cyan-500 transition-all shadow-[0_0_20px_rgba(8,145,178,0.3)]">
+                            Sync Neural
+                        </button>
+                    </div>
+                </div>
+                <i class="fas fa-terminal absolute -right-4 -bottom-4 text-9xl text-white/[0.02] group-hover:text-cyan-500/[0.05] transition-all rotate-12"></i>
             </div>
+
+            <div class="group relative bg-gradient-to-br from-blue-600/5 to-black border border-white/5 p-8 rounded-[2.5rem] hover:border-blue-500/50 transition-all duration-500 overflow-hidden">
+                <div class="relative z-10">
+                    <div class="flex justify-between items-start mb-8">
+                        <div class="h-14 w-14 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400">
+                            <i class="fas fa-layer-group text-2xl"></i>
+                        </div>
+                        <span class="text-[8px] font-black px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 uppercase tracking-widest">Advanced</span>
+                    </div>
+                    
+                    <h4 class="text-white font-black uppercase tracking-tight text-xl">Stack Overflow</h4>
+                    <p class="text-blue-500/60 text-[9px] font-black uppercase tracking-widest mt-1">Memory & Data Structures</p>
+                    
+                    <p class="mt-6 text-gray-400 text-[11px] leading-relaxed font-medium">
+                        Manage high-traffic server buffers. Prevent memory leaks by correctly sorting <span class="text-white font-bold">LIFO and FIFO</span> data packets in real-time.
+                    </p>
+
+                    <div class="mt-8 pt-6 border-t border-white/5 flex items-center justify-between">
+                        <div class="flex flex-col">
+                            <span class="text-[7px] font-black text-gray-600 uppercase">Logic Type</span>
+                            <span class="text-[9px] font-bold text-white uppercase">Stacks / Queues</span>
+                        </div>
+                        <button onclick="launchMission('G-882')" class="px-6 py-3 rounded-xl bg-blue-600 text-white text-[10px] font-black uppercase tracking-widest hover:bg-blue-500 transition-all shadow-[0_0_20px_rgba(37,99,235,0.3)]">
+                            Sync Neural
+                        </button>
+                    </div>
+                </div>
+                <i class="fas fa-database absolute -right-4 -bottom-4 text-9xl text-white/[0.02] group-hover:text-blue-500/[0.05] transition-all rotate-12"></i>
+            </div>
+
         </div>
     </main>
 
