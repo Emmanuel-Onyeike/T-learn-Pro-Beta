@@ -27,15 +27,14 @@ function switchLessonSubTab(tab) {
         btn.classList.toggle('shadow-lg', active);
         btn.classList.toggle('text-white/30', !active);
     });
-    switch(tab) {
+ switch(tab) {
         case 'Courses':   renderCourses(contentArea);   break;
-        case 'Videos':      renderVideos(contentArea);      break;
+        case 'Videos':    renderVideos(contentArea);    break; // New Case
         case 'Exam':      renderExam(contentArea);      break;
         case 'Results':   renderResults(contentArea);   break;
         case 'Analytics': renderAnalytics(contentArea); break;
     }
 }
-
 // ── COURSES GRID ──────────────────────────────────────────────────────────────
 function renderCourses(el) {
     if (!window.curriculumData) {
@@ -816,6 +815,64 @@ async function _processPromotions(client, user, results) {
     }
 }
 
+//// for the videos 
+function renderVideos(container) {
+    // 1. Data Source (Empty array to trigger Empty State)
+    const videos = []; 
+
+    // 2. Tactical Empty State UI
+    if (videos.length === 0) {
+        container.innerHTML = `
+            <div class="flex flex-col items-center justify-center py-20 px-6 text-center animate-in fade-in zoom-in duration-500">
+                <div class="relative mb-8">
+                    <div class="h-24 w-24 bg-blue-600/5 border border-blue-500/20 rounded-[2rem] flex items-center justify-center text-blue-500/30">
+                        <i class="fas fa-video-slash text-4xl"></i>
+                    </div>
+                    <div class="absolute -top-2 -right-2 h-6 w-6 bg-blue-600/20 border border-blue-400/40 rounded-lg flex items-center justify-center">
+                        <div class="h-1.5 w-1.5 bg-blue-400 rounded-full animate-pulse"></div>
+                    </div>
+                </div>
+
+                <h3 class="text-xl font-black text-white uppercase italic tracking-tighter">No Media Uplink Found</h3>
+                <p class="mt-2 text-[10px] font-black text-white/20 uppercase tracking-[0.3em] max-w-[280px] leading-relaxed">
+                    The video archives for this semester have not been synchronized or are currently offline.
+                </p>
+
+                <button onclick="switchLessonSubTab('Courses')" 
+                    class="mt-10 px-8 py-3 bg-white/5 border border-white/10 rounded-2xl text-[9px] font-black text-white uppercase tracking-widest hover:bg-blue-600 hover:border-blue-500 transition-all duration-300">
+                    Return to Courses
+                </button>
+            </div>
+        `;
+        return;
+    }
+
+    // 3. Render Video Grid (If data exists)
+    container.innerHTML = `
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-in slide-in-from-bottom-4 duration-500">
+            ${videos.map(v => `
+                <div class="group relative overflow-hidden rounded-[2.5rem] border border-white/5 bg-[#0a1229]/40 p-5 transition-all hover:border-blue-500/40">
+                    <div class="relative aspect-video rounded-[1.5rem] overflow-hidden mb-5 bg-black border border-white/5">
+                        <img src="${v.thumb}" class="w-full h-full object-cover opacity-40 group-hover:opacity-60 transition-opacity" />
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="h-12 w-12 rounded-full bg-blue-600/20 border border-blue-500/40 flex items-center justify-center text-blue-400 backdrop-blur-sm group-hover:scale-110 transition-all">
+                                <i class="fas fa-play text-lg"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-[8px] font-black text-blue-500 uppercase tracking-[0.2em] mb-1">Session Data</span>
+                        <h4 class="text-xs font-black text-white uppercase tracking-tight truncate">${v.title}</h4>
+                    </div>
+                </div>
+            `).join('')}
+        </div>
+    `;
+}
+
+
+
+
 // ── ANALYTICS ────────────────────────────────────────────────────────────────
 async function renderAnalytics(el) {
     el.innerHTML = `
@@ -906,6 +963,7 @@ async function renderAnalytics(el) {
             <p class="text-red-400 font-black">${err.message}</p></div>`;
     }
 }
+
 
 // ── EXPOSE ────────────────────────────────────────────────────────────────────
 window.initLMS            = initLMS;
