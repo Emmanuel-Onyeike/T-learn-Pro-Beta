@@ -44,33 +44,36 @@ views['Nxxt AI'] = `
                     <p class="text-sm text-white/40 leading-relaxed font-light">HEY ASK AWAY.</p>
                 </div>
 
-                <div class="grid grid-cols-2 gap-4 w-full max-w-md px-4">
-                    <div class="bg-gradient-to-br from-blue-600/10 to-blue-900/5 border border-white/5 p-6 rounded-[2rem] text-left hover:border-blue-500/50 transition-all cursor-pointer group action-card" data-command="How are you doing?">
-                        <i class="fas fa-microphone text-blue-500 mb-3 block"></i>
-                        <span class="text-[10px] font-black block uppercase tracking-widest">Chat Life</span>
-                    </div>
-                    <div id="codesTrigger" class="relative bg-gradient-to-br from-indigo-600/10 to-indigo-900/5 border border-white/5 p-6 rounded-[2rem] text-left hover:border-blue-500/50 transition-all cursor-pointer group">
-                        <i class="fas fa-code text-indigo-500 mb-3 block"></i>
-                        <span class="text-[10px] font-black block uppercase tracking-widest">Check Codes</span>
-                        
-                        <div id="codesDropdown" class="hidden absolute bottom-full left-0 w-full mb-4 bg-[#0a0c10] border border-blue-500/20 rounded-2xl p-4 z-50 shadow-[0_10px_40px_rgba(0,0,0,0.8)] backdrop-blur-xl">
-                            <p class="text-[8px] font-black text-blue-500 mb-3 uppercase tracking-widest">Active Neural Keys</p>
-                            <ul class="space-y-2 text-[10px] font-bold text-white/40 uppercase">
-                                <li class="hover:text-blue-400 transition-colors cursor-default border-b border-white/5 pb-1">NXXT-BETA-01</li>
-                                <li class="hover:text-blue-400 transition-colors cursor-default border-b border-white/5 pb-1">MIKOKO-LGE</li>
-                                <li class="hover:text-blue-400 transition-colors cursor-default">T-LEARN-PRO</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="bg-gradient-to-br from-slate-600/10 to-slate-900/5 border border-white/5 p-6 rounded-[2rem] text-left hover:border-blue-500/50 transition-all cursor-pointer group action-card" data-command="Generate a tactical dashboard UI">
-                        <i class="fas fa-image text-slate-400 mb-3 block"></i>
-                        <span class="text-[10px] font-black block uppercase tracking-widest">Gen Assets</span>
-                    </div>
-                    <div id="scanLogicBtn" class="bg-gradient-to-br from-blue-900/10 to-black border border-white/5 p-6 rounded-[2rem] text-left hover:border-blue-500/50 transition-all cursor-pointer group">
-                        <i class="fas fa-expand text-blue-400 mb-3 block"></i>
-                        <span class="text-[10px] font-black block uppercase tracking-widest">Scan Logic</span>
-                    </div>
-                </div>
+            <div class="grid grid-cols-2 gap-4 w-full max-w-md px-4">
+    <div class="bg-gradient-to-br from-blue-600/10 to-blue-900/5 border border-white/5 p-6 rounded-[2rem] text-left hover:border-blue-500/50 transition-all cursor-pointer group action-card" data-command="How are you doing?">
+        <i class="fas fa-microphone text-blue-500 mb-3 block"></i>
+        <span class="text-[10px] font-black block uppercase tracking-widest">Chat Life</span>
+    </div>
+
+    <div id="codesTrigger" class="relative bg-gradient-to-br from-indigo-600/10 to-indigo-900/5 border border-white/5 p-6 rounded-[2rem] text-left hover:border-blue-500/50 transition-all cursor-pointer group">
+        <i class="fas fa-code text-indigo-500 mb-3 block"></i>
+        <span class="text-[10px] font-black block uppercase tracking-widest">Check Codes</span>
+        
+        <div id="codesDropdown" class="hidden absolute bottom-full left-0 w-full mb-4 bg-[#0a0c10] border border-blue-500/20 rounded-2xl p-4 z-50 shadow-[0_10px_40px_rgba(0,0,0,0.8)] backdrop-blur-xl">
+            <p class="text-[8px] font-black text-blue-500 mb-3 uppercase tracking-widest">Active Neural Keys</p>
+            <ul class="space-y-2 text-[10px] font-bold text-white/40 uppercase">
+                <li class="hover:text-blue-400 transition-colors cursor-default border-b border-white/5 pb-1">NXXT-BETA-01</li>
+                <li class="hover:text-blue-400 transition-colors cursor-default border-b border-white/5 pb-1">MIKOKO-LGE</li>
+                <li class="hover:text-blue-400 transition-colors cursor-default">T-LEARN-PRO</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="bg-gradient-to-br from-slate-600/10 to-slate-900/5 border border-white/5 p-6 rounded-[2rem] text-left hover:border-blue-500/50 transition-all cursor-pointer group action-card" data-command="Generate a tactical dashboard UI">
+        <i class="fas fa-image text-slate-400 mb-3 block"></i>
+        <span class="text-[10px] font-black block uppercase tracking-widest">Gen Assets</span>
+    </div>
+
+    <div id="scanLogicBtn" class="bg-gradient-to-br from-blue-900/10 to-black border border-white/5 p-6 rounded-[2rem] text-left hover:border-blue-500/50 transition-all cursor-pointer group">
+        <i class="fas fa-expand text-blue-400 mb-3 block"></i>
+        <span class="text-[10px] font-black block uppercase tracking-widest">Scan Logic</span>
+    </div>
+</div>
             </div>
         </div>
 
