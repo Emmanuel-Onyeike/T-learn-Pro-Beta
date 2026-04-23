@@ -3,64 +3,6 @@
  * V1 System Implementation - Full Build with Integrated Styling & Mobile Fixes
  */
 
-(function initNxxtSystem() {
-    // 1. INTEGRATED STYLING (Tactical Industrial Aesthetic)
-    const style = document.createElement('style');
-    style.innerHTML = `
-        :root {
-            --nxxt-blue: #2563eb;
-            --nxxt-electric: #3b82f6;
-            --nxxt-dark: #020408;
-            --nxxt-glass: rgba(255, 255, 255, 0.03);
-            --nxxt-border: rgba(255, 255, 255, 0.08);
-        }
-
-        .nxxt-main-wrapper {
-            background-color: var(--nxxt-dark);
-            color: white;
-            font-family: 'Inter', sans-serif;
-            display: flex;
-            height: 100vh;
-            overflow: hidden;
-        }
-
-        /* Mobile Fix: Ensure input is never covered */
-        .nxxt-input-zone {
-            position: relative;
-            z-index: 100;
-            background: var(--nxxt-dark);
-        }
-
-        #aiThread {
-            scrollbar-width: thin;
-            scrollbar-color: var(--nxxt-blue) transparent;
-        }
-
-        #aiThread::-webkit-scrollbar { width: 4px; }
-        #aiThread::-webkit-scrollbar-thumb { background: var(--nxxt-blue); border-radius: 10px; }
-
-        .vertical-text { writing-mode: vertical-rl; }
-
-        /* Animation for message entry */
-        .animate-msg {
-            animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @media (max-width: 768px) {
-            .nxxt-input-container {
-                margin-bottom: 10px;
-            }
-            #nxxtInput { font-size: 16px !important; } /* Prevents iOS zoom */
-            #nxxtSendBtn { width: 50px; height: 50px; pointer-events: auto !important; }
-        }
-    `;
-    document.head.appendChild(style);
-
     const NXXT_CONFIG = {
         IMG_GEN_URL: 'https://image.pollinations.ai/prompt/',
         AI_LOGO: '/assets/Logo.webp', 
