@@ -1,7 +1,6 @@
-
 /**
- * TECH NXXT: LEXICAL BREACH (V1.0)
- * Tactical Word Decryption Logic Engine
+ * TECH NXXT: LEXICAL BREACH (V1.1)
+ * Logic Engine + Supabase Cloud Persistence
  */
 
 const LEXICAL_LEVELS = [
@@ -23,29 +22,28 @@ let isSelecting = false;
 let selectedCells = [];
 
 /**
- * INITIALIZE ENGINE
+ * CORE: INITIALIZE ENGINE
  */
 function initLexicalGame() {
-    console.log(`NXXT_LOGIC: Decrypting Level ${currentLevel + 1}...`);
     const levelData = LEXICAL_LEVELS[currentLevel];
     foundWords = [];
     selectedCells = [];
+    
+    // Sync UI Count from Supabase on start
+    syncGamesCountUI();
     renderLevelUI(levelData);
 }
 
 /**
- * RENDER ENGINE
+ * UI: RENDER GRID
  */
 function renderLevelUI(data) {
     const gridContainer = document.getElementById('lexicalGrid');
     const wordList = document.getElementById('targetWords');
     if (!gridContainer || !wordList) return;
 
-    // Update Header UI
-    const levelDisplay = document.getElementById('currentLevelDisplay');
-    if (levelDisplay) levelDisplay.innerText = `L-${data.level < 10 ? '0' + data.level : data.level}`;
+    document.getElementById('currentLevelDisplay').innerText = `L-${data.level < 10 ? '0' + data.level : data.level}`;
     
-    // Scale grid size based on difficulty
     const size = data.level > 5 ? 14 : 12; 
     gridContainer.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
     gridContainer.innerHTML = '';
@@ -53,29 +51,19 @@ function renderLevelUI(data) {
     const totalCells = size * size;
     let gridArray = Array(totalCells).fill('').map(() => String.fromCharCode(65 + Math.floor(Math.random() * 26)));
 
-    // Inject Word Data into Grid
     data.words.forEach((word, index) => {
         let row = index; 
         let startCol = Math.floor(Math.random() * (size - word.length));
         let startPos = (row * size) + startCol;
-        
-        for (let i = 0; i < word.length; i++) {
-            gridArray[startPos + i] = word[i].toUpperCase();
-        }
+        for (let i = 0; i < word.length; i++) { gridArray[startPos + i] = word[i].toUpperCase(); }
     });
 
-    // Generate DOM Elements
     gridArray.forEach((letter, idx) => {
         const cell = document.createElement('div');
         cell.className = 'lex-cell h-8 w-8 md:h-10 md:w-10 flex items-center justify-center border border-white/5 text-[10px] font-black text-white/40 cursor-pointer hover:bg-cyan-500/20 transition-all select-none rounded-lg';
         cell.innerText = letter;
-        cell.dataset.index = idx;
-        
-        // Input Logic: Mouse
         cell.onmousedown = () => startSelection(cell);
         cell.onmouseenter = () => continueSelection(cell);
-        
-        // Input Logic: Touch
         cell.ontouchstart = (e) => { e.preventDefault(); startSelection(cell); };
         cell.ontouchmove = (e) => {
             e.preventDefault();
@@ -83,29 +71,26 @@ function renderLevelUI(data) {
             const target = document.elementFromPoint(touch.clientX, touch.clientY);
             if (target && target.classList.contains('lex-cell')) continueSelection(target);
         };
-
         gridContainer.appendChild(cell);
     });
 
-    // Global listeners to end selection
-    window.onmouseup = endSelection;
-    window.ontouchend = endSelection;
-
-    // Render Word List UI
     wordList.innerHTML = data.words.map(w => `
         <span id="word-${w}" class="text-[8px] md:text-[10px] font-black uppercase tracking-widest text-white/20 border border-white/5 px-3 py-1 rounded-full transition-all duration-500">
             ${w}
         </span>
     `).join('');
+
+    window.onmouseup = endSelection;
+    window.ontouchend = endSelection;
 }
 
 /**
- * SELECTION LOGIC
+ * LOGIC: SELECTION ENGINE
  */
 function startSelection(cell) {
     isSelecting = true;
     selectedCells = [cell];
-    cell.classList.add('bg-cyan-600', 'text-white', 'scale-90', 'shadow-[0_0_15px_rgba(8,145,178,0.4)]');
+    cell.classList.add('bg-cyan-600', 'text-white', 'scale-90');
 }
 
 function continueSelection(cell) {
@@ -117,53 +102,85 @@ function continueSelection(cell) {
 function endSelection() {
     if (!isSelecting) return;
     isSelecting = false;
-    
     const word = selectedCells.map(c => c.innerText).join('');
     const currentWords = LEXICAL_LEVELS[currentLevel].words;
 
     if (currentWords.includes(word) && !foundWords.includes(word)) {
-        // SUCCESS: Word Found
         foundWords.push(word);
-        const wordBadge = document.getElementById(`word-${word}`);
-        
-        if (wordBadge) {
-            wordBadge.classList.replace('text-white/20', 'text-green-400');
-            wordBadge.classList.add('border-green-500/50', 'bg-green-500/10', 'shadow-[0_0_15px_rgba(34,197,94,0.3)]');
-        }
+        const badge = document.getElementById(`word-${word}`);
+        if (badge) badge.className = 'text-[8px] md:text-[10px] font-black uppercase tracking-widest text-green-400 border border-green-500/50 bg-green-500/10 px-3 py-1 rounded-full shadow-[0_0_15px_rgba(34,197,94,0.3)]';
         
         selectedCells.forEach(c => {
             c.classList.remove('bg-cyan-600', 'scale-90');
             c.classList.add('bg-green-600/40', 'text-green-400', 'border-green-500/30');
-            c.onmousedown = null; // Disable further clicks on found letters
-            c.onmouseenter = null;
+            c.onmousedown = null; c.onmouseenter = null;
         });
         
-        // Check for Level Completion
-        if (foundWords.length === currentWords.length) {
-            setTimeout(proceedToNextNode, 800);
-        }
+        if (foundWords.length === currentWords.length) setTimeout(proceedToNextNode, 800);
     } else {
-        // FAIL: Incorrect word
         selectedCells.forEach(c => {
-            if (!c.classList.contains('text-green-400')) {
-                c.classList.remove('bg-cyan-600', 'text-white', 'scale-90', 'shadow-[0_0_15px_rgba(8,145,178,0.4)]');
-            }
+            if (!c.classList.contains('text-green-400')) c.classList.remove('bg-cyan-600', 'text-white', 'scale-90');
         });
     }
     selectedCells = [];
 }
 
 /**
- * PROGRESSION ENGINE
+ * PERSISTENCE: SUPABASE SYNC
+ */
+async function syncGamesCountUI() {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) {
+        const { data } = await supabase.from('profiles').select('games_completed').eq('id', user.id).single();
+        const display = document.getElementById('gamesCount');
+        if (display && data) display.innerText = data.games_completed || 0;
+    }
+}
+
+async function recordGameCompletion() {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+
+    const { data } = await supabase.from('profiles').select('games_completed').eq('id', user.id).single();
+    const newCount = (data?.games_completed || 0) + 1;
+
+    const { error } = await supabase.from('profiles').update({ games_completed: newCount }).eq('id', user.id);
+    
+    if (!error) {
+        const display = document.getElementById('gamesCount');
+        if (display) display.innerText = newCount;
+        showCompletionModal();
+    }
+}
+
+/**
+ * UI: MODAL FEEDBACK
+ */
+function showCompletionModal() {
+    const modal = document.createElement('div');
+    modal.className = 'fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-md px-6';
+    modal.innerHTML = `
+        <div class="bg-[#050b1d] border border-cyan-500/30 p-10 rounded-[3rem] text-center max-w-sm shadow-[0_0_50px_rgba(8,145,178,0.2)]">
+            <div class="h-20 w-20 bg-cyan-500/10 border border-cyan-500/20 rounded-3xl flex items-center justify-center text-cyan-400 mx-auto mb-6">
+                <i class="fas fa-trophy text-4xl"></i>
+            </div>
+            <h2 class="text-2xl font-black text-white uppercase italic tracking-tighter">Mission Complete</h2>
+            <p class="text-gray-500 text-[10px] font-black uppercase tracking-widest mt-2 mb-8">Neural Encryption Fully Decrypted</p>
+            <button onclick="this.parentElement.parentElement.remove()" class="w-full py-4 bg-cyan-600 text-white font-black uppercase tracking-widest rounded-2xl hover:bg-cyan-500 transition-all">Continue Mission</button>
+        </div>
+    `;
+    document.body.appendChild(modal);
+}
+
+/**
+ * PROGRESSION
  */
 function proceedToNextNode() {
     currentLevel++;
     if (currentLevel < LEXICAL_LEVELS.length) {
-        // Trigger visual feedback (could add a modal here later)
-        console.log("NXXT_SYSTEM: Node Decrypted. Leveling up...");
         initLexicalGame();
     } else {
-        alert("CRITICAL ACHIEVEMENT: All Neural Layers Decrypted. Master Developer Status Confirmed.");
+        recordGameCompletion();
         currentLevel = 0; 
         initLexicalGame();
     }
