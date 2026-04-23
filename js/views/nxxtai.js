@@ -3,7 +3,7 @@ views['Nxxt AI'] = `
     
     <aside class="hidden md:flex w-24 border-r border-white/5 bg-black/40 flex-col items-center py-8 gap-10 z-20 shrink-0 h-full">
         <div class="w-12 h-12 rounded-2xl bg-blue-600 flex items-center justify-center shadow-[0_0_20px_rgba(37,99,235,0.4)] overflow-hidden">
-            <img src="/assets/Logo.webp" class="w-full h-full object-contain">
+            <img src="/assets/aii3.png" class="w-full h-full object-contain">
         </div>
         <nav class="flex flex-col gap-8 text-white/20 text-lg">
             <i id="newChatBtn" class="fas fa-plus-circle hover:text-blue-500 cursor-pointer transition-all" title="New Chat"></i>
@@ -35,7 +35,7 @@ views['Nxxt AI'] = `
             <div id="nxxtLanding" class="flex flex-col items-center justify-center min-h-full text-center space-y-8 animate-in fade-in zoom-in duration-700">
                 <div class="relative">
                     <div class="w-32 h-32 md:w-40 md:h-40 rounded-full bg-gradient-to-tr from-blue-700 via-blue-400 to-indigo-900 shadow-[0_0_80px_rgba(37,99,235,0.4)] flex items-center justify-center animate-pulse overflow-hidden p-6">
-                        <img src="/assets/Logo.webp" class="w-full h-full object-contain">
+                        <img src="/assets/aii3.png" class="w-full h-full object-contain">
                     </div>
                 </div>
                 
