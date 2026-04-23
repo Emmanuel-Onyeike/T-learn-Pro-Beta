@@ -145,6 +145,8 @@ views['Overview'] = `
             </div>
             <i class="fas fa-cloud-upload-alt absolute -right-4 -bottom-4 text-8xl text-white/[0.02] group-hover:text-cyan-500/[0.05] transition-all rotate-12"></i>
         </div>
+        </div>
+        
     <!-- ── ROW 4: System Core (live project stream) ── -->
     <div class="group relative overflow-hidden rounded-[3rem] border border-white/5 bg-[#050b1d] p-8 transition-all duration-700 hover:border-emerald-500/20">
         <div class="flex justify-between items-center mb-8">
