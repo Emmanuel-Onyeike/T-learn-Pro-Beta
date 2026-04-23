@@ -36,7 +36,6 @@ const views = window.views;
 // ROUTER — FIX: view cache so HTML is only built once per visit
 // ─────────────────────────────────────────────────────────────────────────────
 const _viewCache = {};
-
 function updateView(viewName) {
     const title     = document.getElementById('viewTitle');
     const container = document.getElementById('dynamicContent');
@@ -48,7 +47,8 @@ function updateView(viewName) {
         title.innerText = viewName;
 
         // FIX: Views with live data must never be served from cache
-        const NO_CACHE = ['Projects', 'Overview', 'Notifications', 'Settings', 'Lessons', 'Leaderboard'];
+        // ADDED 'Games' to this list to ensure the grid resets correctly
+        const NO_CACHE = ['Projects', 'Overview', 'Notifications', 'Settings', 'Lessons', 'Leaderboard', 'Games'];
         const useCache = !NO_CACHE.includes(viewName);
 
         if (useCache && _viewCache[viewName]) {
@@ -70,6 +70,15 @@ function updateView(viewName) {
         document.querySelectorAll('.nav-item').forEach(item => {
             item.classList.toggle('active', item.innerText.includes(viewName));
         });
+
+        // Lexical Breach — Game Engine Init
+        if (viewName === 'Games') {
+            requestAnimationFrame(() => {
+                if (typeof initLexicalGame === 'function') {
+                    initLexicalGame();
+                }
+            });
+        }
 
         // Overview — full engine init (stats, nebula, streak, XP)
         if (viewName === 'Overview') {
@@ -118,6 +127,8 @@ function updateView(viewName) {
 
     }, 200);
 }
+
+
 
 // renderTab was called in Notifications view but never defined — now aliased
 const renderTab = updateView;
