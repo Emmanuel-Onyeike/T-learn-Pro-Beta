@@ -820,17 +820,25 @@ async function _processPromotions(client, user, results) {
 //// for the videos 
 /**
 /**
- * TECH NXXT: NEURAL VIDEO ARCHIVE ENGINE
- * Credentials Locked: UC4SVo0Ue36XCfOyb5Lh1viQ
- * Features: Centered Modal Player, Slide-out Library, Private Supabase Sync
- */
 /**
  * TECH NXXT: NEURAL VIDEO ARCHIVE ENGINE
  * Credentials Locked: UC4SVo0Ue36XCfOyb5Lh1viQ
  * Features: Centered Modal Player, Slide-out Library, Private Supabase Sync
+ * Version: 2.0.4 - Full Global Scoping Patch
  */
 
+// --- GLOBAL SYSTEM UPLINK ---
+// Explicitly attaching functions to the window object to prevent 'undefined' errors in HTML onclicks
+window.renderVideos = renderVideos;
+window.fetchSavedVideos = fetchSavedVideos;
+window.toggleSaveVideo = toggleSaveVideo;
+window.openVideoPlayer = openVideoPlayer;
+window.handleVideoSearch = handleVideoSearch;
+window.fetchLearningVideos = fetchLearningVideos;
+
 async function renderVideos(container) {
+    if (!container) return;
+    
     // 1. MASTER SHELL: Tactical Search Header & Control Bar
     container.innerHTML = `
         <div class="animate-in fade-in slide-in-from-bottom-4 duration-700">
@@ -917,6 +925,10 @@ function renderVideoCards(items, grid) {
                             <i class="fas fa-play text-xl ml-1"></i>
                         </div>
                     </button>
+
+                    <div class="absolute top-4 left-4 px-3 py-1 bg-black/60 backdrop-blur-md border border-white/10 rounded-lg text-[8px] font-black text-white/60 uppercase tracking-widest">
+                        Module Locked
+                    </div>
                 </div>
 
                 <div class="px-2">
@@ -970,8 +982,11 @@ function openVideoPlayer(videoId) {
  * SLIDE-OUT LIBRARY PANEL (RIGHT SIDE MODAL)
  */
 async function fetchSavedVideos() {
-    // Safety check for global Supabase instance
-    if (typeof supabase === 'undefined') return console.error("Supabase engine not found.");
+    // Critical safety check for Supabase
+    if (typeof supabase === 'undefined') {
+        console.error("TECH_NXXT_CORE_ERROR: Supabase global object is undefined.");
+        return alert("Neural Link Offline: Supabase not detected.");
+    }
 
     try {
         const { data: { user } } = await supabase.auth.getUser();
@@ -982,7 +997,7 @@ async function fetchSavedVideos() {
             .select('*')
             .order('created_at', { ascending: false });
 
-        // Clean existing panel
+        // Cleanup existing panel to prevent duplicates
         const existingPanel = document.getElementById('librarySidePanel');
         if (existingPanel) existingPanel.remove();
 
@@ -1042,13 +1057,15 @@ async function toggleSaveVideo(vid, title = '', thumb = '') {
 
         if (existing) {
             await supabase.from('user_videos').delete().eq('id', existing.id);
-            alert("Removed from Archive.");
+            // Non-blocking alert for tactical feel
+            console.log("Removed from Archive.");
             // Refresh library panel if it's currently open
             if(document.getElementById('librarySidePanel')) fetchSavedVideos();
         } else {
             await supabase.from('user_videos').insert([{
                 user_id: user.id, video_id: vid, video_title: title, thumbnail_url: thumb
             }]);
+            console.log("Synced to Archive.");
             alert("Synced to Archive.");
         }
     } catch (err) {
@@ -1077,6 +1094,9 @@ function renderEmptyVideoState(grid) {
     `;
 }
 
+/**
+ * UTILITY: SEARCH DEBOUNCE
+ */
 let searchTimer;
 function handleVideoSearch(val) {
     clearTimeout(searchTimer);
