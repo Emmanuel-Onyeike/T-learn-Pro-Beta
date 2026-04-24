@@ -815,59 +815,191 @@ async function _processPromotions(client, user, results) {
     }
 }
 
+
+
 //// for the videos 
-function renderVideos(container) {
-    // 1. Data Source (Empty array to trigger Empty State)
-    const videos = []; 
+/**
+ * TECH NXXT: VIDEO ARCHIVE SYSTEM
+ * Features: YouTube API Integration, Search Debouncing, Supabase Library Sync
+ */
+/**
+ * TECH NXXT: NEURAL VIDEO ARCHIVE ENGINE
+ * Credentials Locked: UC4SVo0Ue36XCfOyb5Lh1viQ
+ */
 
-    // 2. Tactical Empty State UI
-    if (videos.length === 0) {
-        container.innerHTML = `
-            <div class="flex flex-col items-center justify-center py-20 px-6 text-center animate-in fade-in zoom-in duration-500">
-                <div class="relative mb-8">
-                    <div class="h-24 w-24 bg-blue-600/5 border border-blue-500/20 rounded-[2rem] flex items-center justify-center text-blue-500/30">
-                        <i class="fas fa-video-slash text-4xl"></i>
-                    </div>
-                    <div class="absolute -top-2 -right-2 h-6 w-6 bg-blue-600/20 border border-blue-400/40 rounded-lg flex items-center justify-center">
-                        <div class="h-1.5 w-1.5 bg-blue-400 rounded-full animate-pulse"></div>
-                    </div>
-                </div>
-
-                <h3 class="text-xl font-black text-white uppercase italic tracking-tighter">No Media Uplink Found</h3>
-                <p class="mt-2 text-[10px] font-black text-white/20 uppercase tracking-[0.3em] max-w-[280px] leading-relaxed">
-                    The video archives for this semester have not been synchronized or are currently offline.
-                </p>
-
-                <button onclick="switchLessonSubTab('Courses')" 
-                    class="mt-10 px-8 py-3 bg-white/5 border border-white/10 rounded-2xl text-[9px] font-black text-white uppercase tracking-widest hover:bg-blue-600 hover:border-blue-500 transition-all duration-300">
-                    Return to Courses
-                </button>
-            </div>
-        `;
-        return;
-    }
-
-    // 3. Render Video Grid (If data exists)
+async function renderVideos(container) {
+    // 1. MASTER SHELL: Tactical Search Header & Control Bar
     container.innerHTML = `
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-in slide-in-from-bottom-4 duration-500">
-            ${videos.map(v => `
-                <div class="group relative overflow-hidden rounded-[2.5rem] border border-white/5 bg-[#0a1229]/40 p-5 transition-all hover:border-blue-500/40">
-                    <div class="relative aspect-video rounded-[1.5rem] overflow-hidden mb-5 bg-black border border-white/5">
-                        <img src="${v.thumb}" class="w-full h-full object-cover opacity-40 group-hover:opacity-60 transition-opacity" />
-                        <div class="absolute inset-0 flex items-center justify-center">
-                            <div class="h-12 w-12 rounded-full bg-blue-600/20 border border-blue-500/40 flex items-center justify-center text-blue-400 backdrop-blur-sm group-hover:scale-110 transition-all">
-                                <i class="fas fa-play text-lg"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flex flex-col">
-                        <span class="text-[8px] font-black text-blue-500 uppercase tracking-[0.2em] mb-1">Session Data</span>
-                        <h4 class="text-xs font-black text-white uppercase tracking-tight truncate">${v.title}</h4>
-                    </div>
+        <div class="animate-in fade-in slide-in-from-bottom-4 duration-700">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
+                <div class="relative w-full md:w-[450px]">
+                    <i class="fas fa-search absolute left-5 top-1/2 -translate-y-1/2 text-blue-500/40 text-[10px]"></i>
+                    <input type="text" id="videoSearchInput" 
+                        placeholder="SEARCH NEURAL ARCHIVES..." 
+                        class="w-full bg-white/[0.02] border border-white/5 rounded-2xl py-4 pl-14 pr-6 text-[10px] font-black text-white uppercase tracking-[0.2em] focus:border-blue-500/50 focus:bg-blue-500/5 focus:outline-none transition-all placeholder:text-white/10"
+                        onkeyup="handleVideoSearch(this.value)">
                 </div>
-            `).join('')}
+                
+                <div class="flex items-center gap-3">
+                    <button onclick="renderVideos(document.getElementById('lesson-sub-content'))" 
+                        class="px-5 py-3 bg-white/5 border border-white/5 rounded-xl text-[9px] font-black text-white/30 uppercase tracking-widest hover:text-white transition-all">
+                        <i class="fas fa-sync-alt mr-2"></i> Refresh
+                    </button>
+                    <button onclick="fetchSavedVideos()" 
+                        class="px-5 py-3 bg-blue-600/10 border border-blue-500/20 rounded-xl text-[9px] font-black text-blue-400 uppercase tracking-widest hover:bg-blue-600 hover:text-white transition-all">
+                        <i class="fas fa-bookmark mr-2"></i> My Library
+                    </button>
+                </div>
+            </div>
+
+            <div id="videoGridContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                ${Array(6).fill(0).map(() => `
+                    <div class="h-[350px] rounded-[2.5rem] bg-white/[0.01] border border-white/5 animate-pulse"></div>
+                `).join('')}
+            </div>
         </div>
     `;
+
+    // 2. INITIALIZE DATA FETCH
+    await fetchLearningVideos();
+}
+
+/**
+ * CORE LOGIC: API FETCHING & DATA BINDING
+ */
+async function fetchLearningVideos(query = '') {
+    const grid = document.getElementById('videoGridContainer');
+    if (!grid) return;
+
+    try {
+        // LOCKED CREDENTIALS
+        const API_KEY = 'AIzaSyAkZtg1ux1fYkIKFr3q8I1wX_PK-p31Uh4'; 
+        const CHANNEL_ID = 'UC4SVo0Ue36XCfOyb5Lh1viQ'; 
+        
+        let url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=12&type=video&channelId=${CHANNEL_ID}&key=${API_KEY}`;
+        if (query) url += `&q=${encodeURIComponent(query)}`;
+
+        const response = await fetch(url);
+        const data = await response.json();
+
+        if (data.items && data.items.length > 0) {
+            renderVideoCards(data.items, grid);
+        } else {
+            renderEmptyVideoState(grid);
+        }
+    } catch (error) {
+        console.error("NXXT_UPLINK_OFFLINE:", error);
+        renderEmptyVideoState(grid);
+    }
+}
+
+/**
+ * UI: CARD GENERATION (MATCHING SCREENSHOT AESTHETIC)
+ */
+function renderVideoCards(items, grid) {
+    grid.innerHTML = items.map(item => {
+        const v = item.snippet;
+        const videoId = item.id.videoId;
+        const thumb = v.thumbnails.high.url;
+        
+        return `
+            <div class="group relative overflow-hidden rounded-[2.5rem] border border-white/10 bg-[#050b1d] p-5 transition-all duration-500 hover:border-blue-500/40 hover:translate-y-[-5px] hover:shadow-[0_20px_50px_rgba(59,130,246,0.1)]">
+                
+                <div class="relative aspect-video rounded-[1.8rem] overflow-hidden mb-6 bg-black border border-white/5">
+                    <img src="${thumb}" class="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-all duration-700 group-hover:scale-105" />
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-80"></div>
+                    
+                    <button onclick="openVideoPlayer('${videoId}')" class="absolute inset-0 flex items-center justify-center">
+                        <div class="h-14 w-14 rounded-full bg-blue-600/20 border border-blue-500/40 flex items-center justify-center text-blue-400 backdrop-blur-md scale-90 group-hover:scale-110 opacity-0 group-hover:opacity-100 transition-all duration-500">
+                            <i class="fas fa-play text-xl ml-1"></i>
+                        </div>
+                    </button>
+
+                    <div class="absolute top-4 left-4 px-3 py-1 bg-black/60 backdrop-blur-md border border-white/10 rounded-lg text-[8px] font-black text-white/60 uppercase tracking-widest">
+                        Module Locked
+                    </div>
+                </div>
+
+                <div class="px-2">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-[9px] font-black text-blue-500 uppercase tracking-widest">Programming Node</span>
+                        <button onclick="toggleSaveVideo('${videoId}', '${v.title.replace(/'/g, "\\'")}', '${thumb}')" 
+                            class="text-white/20 hover:text-blue-400 transition-colors">
+                            <i class="far fa-bookmark text-sm"></i>
+                        </button>
+                    </div>
+
+                    <h4 class="text-xs font-black text-white uppercase tracking-tight line-clamp-2 leading-relaxed min-h-[2.8rem]">${v.title}</h4>
+                    <p class="mt-2 text-[10px] font-bold text-white/20 uppercase tracking-tight">System Authority: ${v.channelTitle}</p>
+                    
+                    <div class="mt-6 flex items-center justify-between border-t border-white/5 pt-5">
+                        <div class="flex items-center gap-4">
+                            <div class="flex items-center gap-1.5">
+                                <i class="fas fa-star text-blue-500 text-[9px]"></i>
+                                <span class="text-[10px] font-black text-white">4.9</span>
+                            </div>
+                            <span class="text-[10px] font-black text-white/30 uppercase tracking-tighter">1.2k Students</span>
+                        </div>
+                        <button onclick="openVideoPlayer('${videoId}')" 
+                            class="px-6 py-3 rounded-2xl border border-blue-500/20 text-[9px] font-black text-blue-400 uppercase tracking-widest hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-all">
+                            View Course
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+/**
+ * SYSTEM UI: EMPTY STATE
+ */
+function renderEmptyVideoState(grid) {
+    grid.innerHTML = `
+        <div class="col-span-full flex flex-col items-center justify-center py-24 text-center animate-in zoom-in duration-500">
+            <div class="relative mb-8">
+                <div class="h-24 w-24 bg-blue-600/5 border border-blue-500/20 rounded-[2rem] flex items-center justify-center text-blue-500/30">
+                    <i class="fas fa-video-slash text-4xl"></i>
+                </div>
+                <div class="absolute -top-2 -right-2 h-6 w-6 bg-blue-600/20 border border-blue-400/40 rounded-lg flex items-center justify-center">
+                    <div class="h-1.5 w-1.5 bg-blue-400 rounded-full animate-pulse"></div>
+                </div>
+            </div>
+            <h3 class="text-xl font-black text-white uppercase italic tracking-tighter">Neural Link Severed</h3>
+            <p class="mt-2 text-[10px] font-black text-white/20 uppercase tracking-[0.3em] max-w-[280px]"> Archive synchronization failed or the requested data node is offline.</p>
+            <button onclick="renderVideos(document.getElementById('lesson-sub-content'))" class="mt-10 px-8 py-3 bg-white/5 border border-white/10 rounded-2xl text-[9px] font-black text-white uppercase tracking-widest hover:bg-blue-600 transition-all">Retry Link</button>
+        </div>
+    `;
+}
+
+/**
+ * UTILITY: SEARCH DEBOUNCE
+ */
+let searchTimer;
+function handleVideoSearch(val) {
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(() => fetchLearningVideos(val), 600);
+}
+
+/**
+ * PERSISTENCE: DATABASE SYNC
+ */
+async function toggleSaveVideo(vid, title, thumb) {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return alert("System Auth Required.");
+
+    const { data: existing } = await supabase.from('user_videos')
+        .select('id').eq('user_id', user.id).eq('video_id', vid).single();
+
+    if (existing) {
+        await supabase.from('user_videos').delete().eq('id', existing.id);
+        alert("Archive Removed.");
+    } else {
+        await supabase.from('user_videos').insert([{
+            user_id: user.id, video_id: vid, video_title: title, thumbnail_url: thumb
+        }]);
+        alert("Archive Synced.");
+    }
 }
 
 
