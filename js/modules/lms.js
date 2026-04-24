@@ -819,7 +819,6 @@ async function _processPromotions(client, user, results) {
 
 //// for the videos 
 /**
-/**
  * TECH NXXT: NEURAL VIDEO ARCHIVE ENGINE
  * Credentials Locked: UC4SVo0Ue36XCfOyb5Lh1viQ
  * Features: Centered Modal Player, Slide-out Library, Private Supabase Sync
@@ -834,6 +833,18 @@ window.toggleSaveVideo = toggleSaveVideo;
 window.openVideoPlayer = openVideoPlayer;
 window.handleVideoSearch = handleVideoSearch;
 window.fetchLearningVideos = fetchLearningVideos;
+
+/**
+ * INTERNAL: VAULT RECOVERY
+ * Locates the Supabase client dynamically to prevent "undefined" reference errors
+ */
+const _getVault = () => {
+    const vault = window.supabase || (typeof supabase !== 'undefined' ? supabase : null);
+    if (!vault) {
+        console.error("TECH_NXXT_CORE_ERROR: Neural Link to Supabase could not be established.");
+    }
+    return vault;
+};
 
 async function renderVideos(container) {
     if (!container) return;
@@ -981,11 +992,8 @@ function openVideoPlayer(videoId) {
  * SLIDE-OUT LIBRARY PANEL (RIGHT SIDE MODAL)
  */
 async function fetchSavedVideos() {
-    // Critical safety check for Supabase
-    if (typeof supabase === 'undefined') {
-        console.error("TECH_NXXT_CORE_ERROR: Supabase global object is undefined.");
-        return alert("Neural Link Offline: Supabase not detected.");
-    }
+    const supabase = _getVault();
+    if (!supabase) return alert("System Link Offline: Supabase not detected.");
 
     try {
         const { data: { user } } = await supabase.auth.getUser();
@@ -996,7 +1004,6 @@ async function fetchSavedVideos() {
             .select('*')
             .order('created_at', { ascending: false });
 
-        // Cleanup existing panel to prevent duplicates
         const existingPanel = document.getElementById('librarySidePanel');
         if (existingPanel) existingPanel.remove();
 
@@ -1045,7 +1052,8 @@ async function fetchSavedVideos() {
  * PERSISTENCE: PRIVATE DATABASE SYNC
  */
 async function toggleSaveVideo(vid, title = '', thumb = '') {
-    if (typeof supabase === 'undefined') return;
+    const supabase = _getVault();
+    if (!supabase) return;
 
     try {
         const { data: { user } } = await supabase.auth.getUser();
@@ -1056,9 +1064,7 @@ async function toggleSaveVideo(vid, title = '', thumb = '') {
 
         if (existing) {
             await supabase.from('user_videos').delete().eq('id', existing.id);
-            // Non-blocking alert for tactical feel
             console.log("Removed from Archive.");
-            // Refresh library panel if it's currently open
             if(document.getElementById('librarySidePanel')) fetchSavedVideos();
         } else {
             await supabase.from('user_videos').insert([{
@@ -1101,9 +1107,6 @@ function handleVideoSearch(val) {
     clearTimeout(searchTimer);
     searchTimer = setTimeout(() => fetchLearningVideos(val), 600);
 }
-
-
-
 
 
 
