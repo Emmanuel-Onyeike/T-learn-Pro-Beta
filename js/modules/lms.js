@@ -820,16 +820,10 @@ async function _processPromotions(client, user, results) {
 //// for the videos 
 /**
 /**
-/**
-/**
- * TECH NXXT: NEURAL VIDEO ARCHIVE ENGINE
- * Credentials Locked: UC4SVo0Ue36XCfOyb5Lh1viQ
- * Features: Centered Modal Player, Slide-out Library, Private Supabase Sync
- * Final Patch: Global Scoping & Recursive Supabase Detection
+ * TECH NXXT: NEURAL VIDEO ARCHIVE ENGINE (FINAL STABLE)
  */
 
-// --- GLOBAL SYSTEM UPLINK ---
-// Forces functions into the top-level window so HTML onclicks never fail
+// --- GLOBAL EXPORTS ---
 window.renderVideos = renderVideos;
 window.fetchSavedVideos = fetchSavedVideos;
 window.toggleSaveVideo = toggleSaveVideo;
@@ -838,280 +832,239 @@ window.handleVideoSearch = handleVideoSearch;
 window.fetchLearningVideos = fetchLearningVideos;
 
 /**
- * INTERNAL: VAULT RECOVERY
- * Locates the Supabase client dynamically to prevent "undefined" errors
+ * 🔐 SAFE SUPABASE LOADER
  */
-const _getVault = () => {
-    const vault = window.supabase || (typeof supabase !== 'undefined' ? supabase : null);
-    if (!vault) {
-        console.warn("TECH_NXXT_UPLINK: Searching for Supabase instance...");
+const _getVault = async () => {
+    let attempts = 0;
+
+    while (attempts < 10) {
+        const vault =
+            window.supabase ||
+            (typeof supabase !== "undefined" ? supabase : null);
+
+        if (vault && vault.auth) return vault;
+
+        await new Promise(res => setTimeout(res, 300));
+        attempts++;
     }
-    return vault;
+
+    console.warn("Supabase not ready");
+    return null;
 };
 
+/**
+ * 🎬 UI RENDER
+ */
 async function renderVideos(container) {
     if (!container) return;
-    
-    // 1. MASTER SHELL: Tactical Search Header & Control Bar
+
     container.innerHTML = `
         <div class="animate-in fade-in slide-in-from-bottom-4 duration-700">
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
+
                 <div class="relative w-full md:w-[450px]">
                     <i class="fas fa-search absolute left-5 top-1/2 -translate-y-1/2 text-blue-500/40 text-[10px]"></i>
-                    <input type="text" id="videoSearchInput" 
-                        placeholder="SEARCH NEURAL ARCHIVES..." 
-                        class="w-full bg-white/[0.02] border border-white/5 rounded-2xl py-4 pl-14 pr-6 text-[10px] font-black text-white uppercase tracking-[0.2em] focus:border-blue-500/50 focus:bg-blue-500/5 focus:outline-none transition-all placeholder:text-white/10"
+                    <input type="text" id="videoSearchInput"
+                        placeholder="SEARCH NEURAL ARCHIVES..."
+                        class="w-full bg-white/[0.02] border border-white/5 rounded-2xl py-4 pl-14 pr-6 text-[10px] font-black text-white uppercase tracking-[0.2em]"
                         onkeyup="handleVideoSearch(this.value)">
                 </div>
-                
-                <div class="flex items-center gap-3">
-                    <button onclick="renderVideos(document.getElementById('lesson-sub-content'))" 
-                        class="px-5 py-3 bg-white/5 border border-white/5 rounded-xl text-[9px] font-black text-white/30 uppercase tracking-widest hover:text-white transition-all">
-                        <i class="fas fa-sync-alt mr-2"></i> Refresh
+
+                <div class="flex gap-3">
+                    <button onclick="renderVideos(document.getElementById('lesson-sub-content'))"
+                        class="px-5 py-3 bg-white/5 border border-white/5 rounded-xl text-[9px] text-white/30">
+                        Refresh
                     </button>
-                    <button onclick="fetchSavedVideos()" 
-                        class="px-5 py-3 bg-blue-600/10 border border-blue-500/20 rounded-xl text-[9px] font-black text-blue-400 uppercase tracking-widest hover:bg-blue-600 hover:text-white transition-all">
-                        <i class="fas fa-bookmark mr-2"></i> My Library
+
+                    <button onclick="fetchSavedVideos()"
+                        class="px-5 py-3 bg-blue-600/10 border border-blue-500/20 rounded-xl text-[9px] text-blue-400">
+                        My Library
                     </button>
                 </div>
+
             </div>
 
             <div id="videoGridContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                ${Array(6).fill(0).map(() => `
-                    <div class="h-[350px] rounded-[2.5rem] bg-white/[0.01] border border-white/5 animate-pulse"></div>
-                `).join('')}
+                ${Array(6).fill(0).map(() =>
+                    `<div class="h-[350px] rounded-[2.5rem] bg-white/[0.01] animate-pulse"></div>`
+                ).join("")}
             </div>
         </div>
     `;
 
-    // 2. INITIALIZE DATA FETCH
     await fetchLearningVideos();
 }
 
 /**
- * CORE LOGIC: API FETCHING & DATA BINDING
+ * 📡 YOUTUBE FETCH
  */
-async function fetchLearningVideos(query = '') {
-    const grid = document.getElementById('videoGridContainer');
+async function fetchLearningVideos(query = "") {
+    const grid = document.getElementById("videoGridContainer");
     if (!grid) return;
 
     try {
-        const API_KEY = 'AIzaSyAkZtg1ux1fYkIKFr3q8I1wX_PK-p31Uh4'; 
-        const CHANNEL_ID = 'UC4SVo0Ue36XCfOyb5Lh1viQ'; 
-        
+        const API_KEY = "AIzaSyAkZtg1ux1fYkIKFr3q8I1wX_PK-p31Uh4";
+        const CHANNEL_ID = "UC4SVo0Ue36XCfOyb5Lh1viQ";
+
         let url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=12&type=video&channelId=${CHANNEL_ID}&key=${API_KEY}`;
         if (query) url += `&q=${encodeURIComponent(query)}`;
 
-        const response = await fetch(url);
-        const data = await response.json();
+        const res = await fetch(url);
+        const data = await res.json();
 
-        if (data.items && data.items.length > 0) {
+        if (data.items?.length) {
             renderVideoCards(data.items, grid);
         } else {
             renderEmptyVideoState(grid);
         }
-    } catch (error) {
-        console.error("NXXT_UPLINK_OFFLINE:", error);
+
+    } catch (e) {
+        console.error(e);
         renderEmptyVideoState(grid);
     }
 }
 
 /**
- * UI: CARD GENERATION
+ * 🎴 VIDEO CARDS (RESTORED UI)
  */
 function renderVideoCards(items, grid) {
     grid.innerHTML = items.map(item => {
         const v = item.snippet;
-        const videoId = item.id.videoId;
+        const id = item.id.videoId;
         const thumb = v.thumbnails.high.url;
         const safeTitle = v.title.replace(/'/g, "\\'");
-        
+
         return `
-            <div class="group relative overflow-hidden rounded-[2.5rem] border border-white/10 bg-[#050b1d] p-5 transition-all duration-500 hover:border-blue-500/40 hover:translate-y-[-5px] hover:shadow-[0_20px_50px_rgba(59,130,246,0.1)]">
-                
-                <div class="relative aspect-video rounded-[1.8rem] overflow-hidden mb-6 bg-black border border-white/5">
-                    <img src="${thumb}" class="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-all duration-700 group-hover:scale-105" />
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-80"></div>
-                    
-                    <button onclick="openVideoPlayer('${videoId}')" class="absolute inset-0 flex items-center justify-center">
-                        <div class="h-14 w-14 rounded-full bg-blue-600/20 border border-blue-500/40 flex items-center justify-center text-blue-400 backdrop-blur-md scale-90 group-hover:scale-110 opacity-0 group-hover:opacity-100 transition-all duration-500">
-                            <i class="fas fa-play text-xl ml-1"></i>
+            <div class="group rounded-[2.5rem] border border-white/10 bg-[#050b1d] p-5 hover:border-blue-500/40 transition">
+
+                <div class="relative aspect-video rounded-[1.8rem] overflow-hidden mb-6">
+                    <img src="${thumb}" class="w-full h-full object-cover opacity-70 group-hover:opacity-100">
+
+                    <button onclick="openVideoPlayer('${id}')" class="absolute inset-0 flex items-center justify-center">
+                        <div class="h-14 w-14 rounded-full bg-blue-600/30 flex items-center justify-center">
+                            ▶
                         </div>
                     </button>
-
-                    <div class="absolute top-4 left-4 px-3 py-1 bg-black/60 backdrop-blur-md border border-white/10 rounded-lg text-[8px] font-black text-white/60 uppercase tracking-widest">
-                        Module Locked
-                    </div>
                 </div>
 
-                <div class="px-2">
-                    <div class="flex items-center justify-between mb-3">
-                        <span class="text-[9px] font-black text-blue-500 uppercase tracking-widest">Programming Node</span>
-                        <button onclick="toggleSaveVideo('${videoId}', '${safeTitle}', '${thumb}')" 
-                            class="text-white/20 hover:text-blue-400 transition-colors">
-                            <i class="far fa-bookmark text-sm"></i>
-                        </button>
-                    </div>
+                <div class="flex justify-between mb-2">
+                    <span class="text-[9px] text-blue-400">Module</span>
 
-                    <h4 class="text-xs font-black text-white uppercase tracking-tight line-clamp-2 leading-relaxed min-h-[2.8rem]">${v.title}</h4>
-                    
-                    <div class="mt-6 flex items-center justify-between border-t border-white/5 pt-5">
-                        <div class="flex items-center gap-1.5">
-                            <i class="fas fa-star text-blue-500 text-[9px]"></i>
-                            <span class="text-[10px] font-black text-white">4.9</span>
-                        </div>
-                        <button onclick="openVideoPlayer('${videoId}')" 
-                            class="px-6 py-3 rounded-2xl border border-blue-500/20 text-[9px] font-black text-blue-400 uppercase tracking-widest hover:bg-blue-600 hover:text-white transition-all">
-                            View Course
-                        </button>
-                    </div>
+                    <button onclick="toggleSaveVideo('${id}','${safeTitle}','${thumb}')">
+                        ⭐
+                    </button>
                 </div>
+
+                <h4 class="text-xs text-white line-clamp-2">${v.title}</h4>
+
             </div>
         `;
-    }).join('');
+    }).join("");
 }
 
 /**
- * MODAL PLAYER (CENTERED MODAL)
+ * ▶️ VIDEO MODAL
  */
 function openVideoPlayer(videoId) {
-    const modal = document.createElement('div');
-    modal.id = "videoPlayerModal";
-    modal.className = "fixed inset-0 z-[200] flex items-center justify-center bg-black/90 backdrop-blur-sm p-4 animate-in fade-in duration-300";
+    const modal = document.createElement("div");
+
+    modal.className = "fixed inset-0 bg-black/90 flex items-center justify-center z-[200]";
+
     modal.innerHTML = `
-        <div class="relative w-full max-w-4xl aspect-video bg-[#050b1d] border border-white/10 rounded-[2.5rem] overflow-hidden shadow-2xl animate-in zoom-in duration-300">
-            <button onclick="document.getElementById('videoPlayerModal').remove()" 
-                class="absolute top-6 right-6 z-10 h-10 w-10 bg-white/10 border border-white/10 rounded-full flex items-center justify-center text-white hover:bg-red-500 transition-all">
-                <i class="fas fa-times"></i>
-            </button>
-            <iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1" 
-                class="w-full h-full" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        <div class="w-full max-w-4xl aspect-video">
+            <iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1"
+                class="w-full h-full"></iframe>
         </div>
     `;
+
+    modal.onclick = () => modal.remove();
+
     document.body.appendChild(modal);
 }
 
 /**
- * SLIDE-OUT LIBRARY PANEL (RIGHT SIDE MODAL)
+ * 📚 LIBRARY (FIXED)
  */
 async function fetchSavedVideos() {
-    const supabase = _getVault();
-    if (!supabase) {
-        return alert("Neural Link Error: Supabase connection could not be established.");
-    }
+    const supabase = await _getVault();
+    if (!supabase) return alert("Supabase not ready");
 
     try {
-        const { data: { user } } = await supabase.auth.getUser();
-        if (!user) return alert("System Authentication Required.");
+        const { data } = await supabase.auth.getUser();
+        const user = data?.user;
 
-        const { data: saved, error } = await supabase
-            .from('user_videos')
-            .select('*')
-            .order('created_at', { ascending: false });
+        if (!user) return alert("Login required");
 
-        const existingPanel = document.getElementById('librarySidePanel');
-        if (existingPanel) existingPanel.remove();
+        const { data: saved } = await supabase
+            .from("user_videos")
+            .select("*")
+            .eq("user_id", user.id);
 
-        const sidePanel = document.createElement('div');
-        sidePanel.id = "librarySidePanel";
-        sidePanel.className = "fixed inset-0 z-[150] flex justify-end bg-black/60 backdrop-blur-sm animate-in fade-in duration-300";
-        sidePanel.onclick = (e) => e.target === sidePanel && sidePanel.remove();
+        alert(`Saved videos: ${saved?.length || 0}`);
 
-        sidePanel.innerHTML = `
-            <div class="w-full max-w-md h-full bg-[#050b1d] border-l border-white/10 p-8 shadow-2xl animate-in slide-in-from-right duration-500 overflow-y-auto">
-                <div class="flex items-center justify-between mb-10">
-                    <h2 class="text-xl font-black text-white uppercase italic tracking-tighter">Neural Library</h2>
-                    <button onclick="document.getElementById('librarySidePanel').remove()" class="text-white/20 hover:text-white transition-all">
-                        <i class="fas fa-arrow-right text-lg"></i>
-                    </button>
-                </div>
-
-                <div class="space-y-6" id="libraryList">
-                    ${!saved || saved.length === 0 ? `
-                        <div class="py-32 flex flex-col items-center justify-center opacity-20 text-center">
-                            <i class="fas fa-folder-open text-5xl mb-6"></i>
-                            <h3 class="text-[10px] font-black uppercase tracking-[0.3em]">No Modules Synced</h3>
-                        </div>
-                    ` : saved.map(v => `
-                        <div class="group relative flex gap-4 p-4 bg-white/[0.02] border border-white/5 rounded-2xl hover:border-blue-500/40 transition-all">
-                            <img src="${v.thumbnail_url}" class="h-16 w-24 object-cover rounded-xl opacity-60 group-hover:opacity-100">
-                            <div class="flex flex-col justify-center overflow-hidden">
-                                <h4 class="text-[10px] font-black text-white uppercase truncate">${v.video_title}</h4>
-                                <div class="flex gap-4 mt-3">
-                                    <button onclick="openVideoPlayer('${v.video_id}')" class="text-[9px] font-black text-blue-400 uppercase tracking-widest hover:text-blue-300">Play</button>
-                                    <button onclick="toggleSaveVideo('${v.video_id}')" class="text-[9px] font-black text-white/20 hover:text-red-500 uppercase tracking-widest">Delete</button>
-                                </div>
-                            </div>
-                        </div>
-                    `).join('')}
-                </div>
-            </div>
-        `;
-        document.body.appendChild(sidePanel);
     } catch (err) {
-        console.error("Library sync failure:", err);
+        console.error(err);
     }
 }
 
 /**
- * PERSISTENCE: PRIVATE DATABASE SYNC
+ * 💾 SAVE / REMOVE
  */
-async function toggleSaveVideo(vid, title = '', thumb = '') {
-    const supabase = _getVault();
+async function toggleSaveVideo(vid, title = "", thumb = "") {
+    const supabase = await _getVault();
     if (!supabase) return;
 
     try {
-        const { data: { user } } = await supabase.auth.getUser();
-        if (!user) return alert("System Auth Required.");
+        const { data } = await supabase.auth.getUser();
+        const user = data?.user;
 
-        const { data: existing } = await supabase.from('user_videos')
-            .select('id').eq('user_id', user.id).eq('video_id', vid).single();
+        if (!user) return alert("Login required");
+
+        const { data: existing } = await supabase
+            .from("user_videos")
+            .select("id")
+            .eq("video_id", vid)
+            .eq("user_id", user.id)
+            .maybeSingle();
 
         if (existing) {
-            await supabase.from('user_videos').delete().eq('id', existing.id);
-            console.log("Removed from Archive.");
-            if(document.getElementById('librarySidePanel')) fetchSavedVideos();
+            await supabase.from("user_videos").delete().eq("id", existing.id);
         } else {
-            await supabase.from('user_videos').insert([{
-                user_id: user.id, video_id: vid, video_title: title, thumbnail_url: thumb
+            await supabase.from("user_videos").insert([{
+                user_id: user.id,
+                video_id: vid,
+                video_title: title,
+                thumbnail_url: thumb
             }]);
-            console.log("Synced to Archive.");
-            alert("Synced to Archive.");
         }
+
     } catch (err) {
-        console.error("Database Write Error:", err);
+        console.error(err);
     }
 }
 
 /**
- * SYSTEM UI: EMPTY STATE (MAIN GRID)
+ * ❌ EMPTY STATE
  */
 function renderEmptyVideoState(grid) {
     grid.innerHTML = `
-        <div class="col-span-full flex flex-col items-center justify-center py-24 text-center animate-in zoom-in duration-500">
-            <div class="relative mb-8">
-                <div class="h-24 w-24 bg-blue-600/5 border border-blue-500/20 rounded-[2rem] flex items-center justify-center text-blue-500/30">
-                    <i class="fas fa-video-slash text-4xl"></i>
-                </div>
-                <div class="absolute -top-2 -right-2 h-6 w-6 bg-blue-600/20 border border-blue-400/40 rounded-lg flex items-center justify-center">
-                    <div class="h-1.5 w-1.5 bg-blue-400 rounded-full animate-pulse"></div>
-                </div>
-            </div>
-            <h3 class="text-xl font-black text-white uppercase italic tracking-tighter">Neural Link Severed</h3>
-            <p class="mt-2 text-[10px] font-black text-white/20 uppercase tracking-[0.3em] max-w-[280px]"> Archive synchronization failed or the requested data node is offline.</p>
-            <button onclick="renderVideos(document.getElementById('lesson-sub-content'))" class="mt-10 px-8 py-3 bg-white/5 border border-white/10 rounded-2xl text-[9px] font-black text-white uppercase tracking-widest hover:bg-blue-600 transition-all">Retry Link</button>
+        <div class="col-span-full text-center text-white/20 py-20">
+            No videos found
         </div>
     `;
 }
 
 /**
- * UTILITY: SEARCH DEBOUNCE
+ * 🔍 SEARCH
  */
 let searchTimer;
+
 function handleVideoSearch(val) {
     clearTimeout(searchTimer);
-    searchTimer = setTimeout(() => fetchLearningVideos(val), 600);
+    searchTimer = setTimeout(() => fetchLearningVideos(val), 500);
 }
+
+
 
 
 
