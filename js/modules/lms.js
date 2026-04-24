@@ -824,6 +824,11 @@ async function _processPromotions(client, user, results) {
  * Credentials Locked: UC4SVo0Ue36XCfOyb5Lh1viQ
  * Features: Centered Modal Player, Slide-out Library, Private Supabase Sync
  */
+/**
+ * TECH NXXT: NEURAL VIDEO ARCHIVE ENGINE
+ * Credentials Locked: UC4SVo0Ue36XCfOyb5Lh1viQ
+ * Features: Centered Modal Player, Slide-out Library, Private Supabase Sync
+ */
 
 async function renderVideos(container) {
     // 1. MASTER SHELL: Tactical Search Header & Control Bar
@@ -912,10 +917,6 @@ function renderVideoCards(items, grid) {
                             <i class="fas fa-play text-xl ml-1"></i>
                         </div>
                     </button>
-
-                    <div class="absolute top-4 left-4 px-3 py-1 bg-black/60 backdrop-blur-md border border-white/10 rounded-lg text-[8px] font-black text-white/60 uppercase tracking-widest">
-                        Module Locked
-                    </div>
                 </div>
 
                 <div class="px-2">
@@ -928,18 +929,14 @@ function renderVideoCards(items, grid) {
                     </div>
 
                     <h4 class="text-xs font-black text-white uppercase tracking-tight line-clamp-2 leading-relaxed min-h-[2.8rem]">${v.title}</h4>
-                    <p class="mt-2 text-[10px] font-bold text-white/20 uppercase tracking-tight">System Authority: ${v.channelTitle}</p>
                     
                     <div class="mt-6 flex items-center justify-between border-t border-white/5 pt-5">
-                        <div class="flex items-center gap-4">
-                            <div class="flex items-center gap-1.5">
-                                <i class="fas fa-star text-blue-500 text-[9px]"></i>
-                                <span class="text-[10px] font-black text-white">4.9</span>
-                            </div>
-                            <span class="text-[10px] font-black text-white/30 uppercase tracking-tighter">Advanced</span>
+                        <div class="flex items-center gap-1.5">
+                            <i class="fas fa-star text-blue-500 text-[9px]"></i>
+                            <span class="text-[10px] font-black text-white">4.9</span>
                         </div>
                         <button onclick="openVideoPlayer('${videoId}')" 
-                            class="px-6 py-3 rounded-2xl border border-blue-500/20 text-[9px] font-black text-blue-400 uppercase tracking-widest hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-all">
+                            class="px-6 py-3 rounded-2xl border border-blue-500/20 text-[9px] font-black text-blue-400 uppercase tracking-widest hover:bg-blue-600 hover:text-white transition-all">
                             View Course
                         </button>
                     </div>
@@ -957,7 +954,7 @@ function openVideoPlayer(videoId) {
     modal.id = "videoPlayerModal";
     modal.className = "fixed inset-0 z-[200] flex items-center justify-center bg-black/90 backdrop-blur-sm p-4 animate-in fade-in duration-300";
     modal.innerHTML = `
-        <div class="relative w-full max-w-4xl aspect-video bg-[#050b1d] border border-white/10 rounded-[2.5rem] overflow-hidden shadow-2xl scale-in-center">
+        <div class="relative w-full max-w-4xl aspect-video bg-[#050b1d] border border-white/10 rounded-[2.5rem] overflow-hidden shadow-2xl animate-in zoom-in duration-300">
             <button onclick="document.getElementById('videoPlayerModal').remove()" 
                 class="absolute top-6 right-6 z-10 h-10 w-10 bg-white/10 border border-white/10 rounded-full flex items-center justify-center text-white hover:bg-red-500 transition-all">
                 <i class="fas fa-times"></i>
@@ -973,54 +970,94 @@ function openVideoPlayer(videoId) {
  * SLIDE-OUT LIBRARY PANEL (RIGHT SIDE MODAL)
  */
 async function fetchSavedVideos() {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return alert("System Authentication Required.");
+    // Safety check for global Supabase instance
+    if (typeof supabase === 'undefined') return console.error("Supabase engine not found.");
 
-    const { data: saved, error } = await supabase
-        .from('user_videos')
-        .select('*')
-        .order('created_at', { ascending: false });
+    try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) return alert("System Authentication Required.");
 
-    const sidePanel = document.createElement('div');
-    sidePanel.id = "librarySidePanel";
-    sidePanel.className = "fixed inset-0 z-[150] flex justify-end bg-black/60 backdrop-blur-sm animate-in fade-in duration-300";
-    sidePanel.onclick = (e) => e.target === sidePanel && sidePanel.remove();
+        const { data: saved, error } = await supabase
+            .from('user_videos')
+            .select('*')
+            .order('created_at', { ascending: false });
 
-    sidePanel.innerHTML = `
-        <div class="w-full max-w-md h-full bg-[#050b1d] border-l border-white/10 p-8 shadow-2xl animate-in slide-in-from-right duration-500 overflow-y-auto">
-            <div class="flex items-center justify-between mb-10">
-                <h2 class="text-xl font-black text-white uppercase italic tracking-tighter">Neural Library</h2>
-                <button onclick="document.getElementById('librarySidePanel').remove()" class="text-white/20 hover:text-white transition-all">
-                    <i class="fas fa-arrow-right text-lg"></i>
-                </button>
-            </div>
+        // Clean existing panel
+        const existingPanel = document.getElementById('librarySidePanel');
+        if (existingPanel) existingPanel.remove();
 
-            <div class="space-y-6" id="libraryList">
-                ${!saved || saved.length === 0 ? `
-                    <div class="py-20 text-center opacity-20">
-                        <i class="fas fa-folder-open text-4xl mb-4"></i>
-                        <p class="text-[10px] font-black uppercase tracking-widest">No Modules Synced</p>
-                    </div>
-                ` : saved.map(v => `
-                    <div class="group relative flex gap-4 p-4 bg-white/[0.02] border border-white/5 rounded-2xl hover:border-blue-500/40 transition-all">
-                        <img src="${v.thumbnail_url}" class="h-16 w-24 object-cover rounded-xl opacity-60 group-hover:opacity-100">
-                        <div class="flex flex-col justify-center overflow-hidden">
-                            <h4 class="text-[10px] font-black text-white uppercase truncate">${v.video_title}</h4>
-                            <div class="flex gap-4 mt-3">
-                                <button onclick="openVideoPlayer('${v.video_id}')" class="text-[9px] font-black text-blue-400 uppercase tracking-widest hover:text-blue-300">Play</button>
-                                <button onclick="toggleSaveVideo('${v.video_id}')" class="text-[9px] font-black text-white/20 hover:text-red-500 uppercase tracking-widest">Delete</button>
+        const sidePanel = document.createElement('div');
+        sidePanel.id = "librarySidePanel";
+        sidePanel.className = "fixed inset-0 z-[150] flex justify-end bg-black/60 backdrop-blur-sm animate-in fade-in duration-300";
+        sidePanel.onclick = (e) => e.target === sidePanel && sidePanel.remove();
+
+        sidePanel.innerHTML = `
+            <div class="w-full max-w-md h-full bg-[#050b1d] border-l border-white/10 p-8 shadow-2xl animate-in slide-in-from-right duration-500 overflow-y-auto">
+                <div class="flex items-center justify-between mb-10">
+                    <h2 class="text-xl font-black text-white uppercase italic tracking-tighter">Neural Library</h2>
+                    <button onclick="document.getElementById('librarySidePanel').remove()" class="text-white/20 hover:text-white transition-all">
+                        <i class="fas fa-arrow-right text-lg"></i>
+                    </button>
+                </div>
+
+                <div class="space-y-6" id="libraryList">
+                    ${!saved || saved.length === 0 ? `
+                        <div class="py-32 flex flex-col items-center justify-center opacity-20 text-center">
+                            <i class="fas fa-folder-open text-5xl mb-6"></i>
+                            <h3 class="text-[10px] font-black uppercase tracking-[0.3em]">No Modules Synced</h3>
+                        </div>
+                    ` : saved.map(v => `
+                        <div class="group relative flex gap-4 p-4 bg-white/[0.02] border border-white/5 rounded-2xl hover:border-blue-500/40 transition-all">
+                            <img src="${v.thumbnail_url}" class="h-16 w-24 object-cover rounded-xl opacity-60 group-hover:opacity-100">
+                            <div class="flex flex-col justify-center overflow-hidden">
+                                <h4 class="text-[10px] font-black text-white uppercase truncate">${v.video_title}</h4>
+                                <div class="flex gap-4 mt-3">
+                                    <button onclick="openVideoPlayer('${v.video_id}')" class="text-[9px] font-black text-blue-400 uppercase tracking-widest hover:text-blue-300">Play</button>
+                                    <button onclick="toggleSaveVideo('${v.video_id}')" class="text-[9px] font-black text-white/20 hover:text-red-500 uppercase tracking-widest">Delete</button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                `).join('')}
+                    `).join('')}
+                </div>
             </div>
-        </div>
-    `;
-    document.body.appendChild(sidePanel);
+        `;
+        document.body.appendChild(sidePanel);
+    } catch (err) {
+        console.error("Library sync failure:", err);
+    }
 }
 
 /**
- * SYSTEM UI: EMPTY STATE
+ * PERSISTENCE: PRIVATE DATABASE SYNC
+ */
+async function toggleSaveVideo(vid, title = '', thumb = '') {
+    if (typeof supabase === 'undefined') return;
+
+    try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) return alert("System Auth Required.");
+
+        const { data: existing } = await supabase.from('user_videos')
+            .select('id').eq('user_id', user.id).eq('video_id', vid).single();
+
+        if (existing) {
+            await supabase.from('user_videos').delete().eq('id', existing.id);
+            alert("Removed from Archive.");
+            // Refresh library panel if it's currently open
+            if(document.getElementById('librarySidePanel')) fetchSavedVideos();
+        } else {
+            await supabase.from('user_videos').insert([{
+                user_id: user.id, video_id: vid, video_title: title, thumbnail_url: thumb
+            }]);
+            alert("Synced to Archive.");
+        }
+    } catch (err) {
+        console.error("Database Write Error:", err);
+    }
+}
+
+/**
+ * SYSTEM UI: EMPTY STATE (MAIN GRID)
  */
 function renderEmptyVideoState(grid) {
     grid.innerHTML = `
@@ -1040,37 +1077,12 @@ function renderEmptyVideoState(grid) {
     `;
 }
 
-/**
- * UTILITY: SEARCH DEBOUNCE
- */
 let searchTimer;
 function handleVideoSearch(val) {
     clearTimeout(searchTimer);
     searchTimer = setTimeout(() => fetchLearningVideos(val), 600);
 }
 
-/**
- * PERSISTENCE: PRIVATE DATABASE SYNC
- */
-async function toggleSaveVideo(vid, title = '', thumb = '') {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return alert("System Auth Required.");
-
-    const { data: existing } = await supabase.from('user_videos')
-        .select('id').eq('user_id', user.id).eq('video_id', vid).single();
-
-    if (existing) {
-        await supabase.from('user_videos').delete().eq('id', existing.id);
-        alert("Removed from Archive.");
-        // If the side panel is open, refresh it
-        if(document.getElementById('librarySidePanel')) fetchSavedVideos();
-    } else {
-        await supabase.from('user_videos').insert([{
-            user_id: user.id, video_id: vid, video_title: title, thumbnail_url: thumb
-        }]);
-        alert("Synced to Archive.");
-    }
-}
 
 
 
