@@ -1,6 +1,6 @@
 /**
- * TECH NXXT: ELITE ACADEMY ENGINE (LOCAL-STORAGE EDITION)
- * Individual 21-Day Trial Logic & Course Management
+ * TECH NXXT: ELITE ACADEMY ENGINE (MAX VOLUME EDITION)
+ * 60+ Modules across 4 Providers
  */
 
 const ACADEMY_CONFIG = {
@@ -9,127 +9,145 @@ const ACADEMY_CONFIG = {
     STORAGE_KEY: 'tech_nxxt_academy_trial'
 };
 
-// Local Course Registry
+// --- DATA REPOSITORY: 15+ Modules Per Category ---
 const ACADEMY_TRACKS = [
-    { title: "Neural UI Design", provider: "T-LEARN", difficulty_level: 1, credit_cost: 250, icon_type: "fa-brain", url: "#" },
-    { title: "Advanced React Ops", provider: "UDEMY", difficulty_level: 2, credit_cost: 450, icon_type: "fa-microchip", url: "#" },
-    { title: "Supabase Security", provider: "CODECAMP", difficulty_level: 3, credit_cost: 600, icon_type: "fa-shield-halved", url: "#" },
-    { title: "Full-Stack Deployment", provider: "COURSERA", difficulty_level: 2, credit_cost: 300, icon_type: "fa-server", url: "#" }
+    // T-LEARN (Neural & Internal Systems)
+    ...Array.from({length: 15}, (_, i) => ({
+        title: `Neural Core ${i + 1}: ${['Logic', 'Interface', 'Data', 'Sync'][i % 4]}`,
+        provider: "T-LEARN",
+        difficulty_level: (i % 5) + 1,
+        credit_cost: 100 * (i + 1),
+        icon_type: "fa-brain",
+        url: "https://t-learn.pro"
+    })),
+    // UDEMY (Tactical Development)
+    ...Array.from({length: 15}, (_, i) => ({
+        title: `Tactical Dev: ${['React', 'Tailwind', 'NextJS', 'Node'][i % 4]} Mastery`,
+        provider: "UDEMY",
+        difficulty_level: (i % 3) + 2,
+        credit_cost: 150 * (i + 1),
+        icon_type: "fa-code",
+        url: "https://udemy.com"
+    })),
+    // CODECAMP (Security & Backend)
+    ...Array.from({length: 15}, (_, i) => ({
+        title: `Protocol ${i + 1}: ${['Encryption', 'Database', 'API', 'Auth'][i % 4]}`,
+        provider: "CODECAMP",
+        difficulty_level: (i % 4) + 2,
+        credit_cost: 200 * (i + 1),
+        icon_type: "fa-shield-halved",
+        url: "https://freecodecamp.org"
+    })),
+    // COURSERA (Professional Ops)
+    ...Array.from({length: 15}, (_, i) => ({
+        title: `Ops Level ${i + 1}: ${['Scalability', 'Cloud', 'DevOps', 'Architecture'][i % 4]}`,
+        provider: "COURSERA",
+        difficulty_level: (i % 2) + 4,
+        credit_cost: 300 * (i + 1),
+        icon_type: "fa-server",
+        url: "https://coursera.org"
+    }))
 ];
 
 /**
- * Main Entry Point: Synchronizes Trial Status from LocalStorage
+ * Main Entry Point
  */
 async function initEliteAcademy() {
     const grid = document.getElementById('courseGrid');
     
     try {
-        // 1. Sync Trial Clock
-        let trialStart = localStorage.getItem(ACADEMY_CONFIG.STORAGE_KEY);
+        // 1. Sync Trial
+        let trialStart = localStorage.getItem(ACADEMY_CONFIG.STORAGE_KEY) || new Date().toISOString();
+        if (!localStorage.getItem(ACADEMY_CONFIG.STORAGE_KEY)) localStorage.setItem(ACADEMY_CONFIG.STORAGE_KEY, trialStart);
 
-        if (!trialStart) {
-            trialStart = new Date().toISOString();
-            localStorage.setItem(ACADEMY_CONFIG.STORAGE_KEY, trialStart);
-            console.log("Academy Protocol: Local Trial Initialized.");
-        }
-
-        // 2. Calculations
         const startDate = new Date(trialStart);
         const expiryDate = new Date(startDate.getTime() + (ACADEMY_CONFIG.TRIAL_DAYS * ACADEMY_CONFIG.MS_PER_DAY));
-        const today = new Date();
-        
-        const isExpired = today > expiryDate;
-        const timeLeftMs = expiryDate - today;
-        const daysLeft = Math.max(0, Math.ceil(timeLeftMs / ACADEMY_CONFIG.MS_PER_DAY));
+        const isExpired = new Date() > expiryDate;
+        const daysLeft = Math.max(0, Math.ceil((expiryDate - new Date()) / ACADEMY_CONFIG.MS_PER_DAY));
 
-        // 3. Update UI Shell
+        // 2. Header Update
         updateAcademyHeader(isExpired, daysLeft, startDate, expiryDate);
 
-        // 4. Populate Tracks
+        // 3. Render Initial Grid
         renderAcademyTracks(isExpired);
 
     } catch (err) {
         console.error("Academy Engine Failure:", err);
-        if (grid) grid.innerHTML = `<p class="col-span-full text-center text-red-500 text-[10px] font-black uppercase">Critical Engine Failure</p>`;
     }
 }
 
 /**
- * Updates Header Components
+ * UI Header Management
  */
 function updateAcademyHeader(isExpired, daysLeft, start, end) {
     const timerText = document.getElementById('trialCountdown');
     const badge = document.getElementById('trialBadge');
     const progress = document.getElementById('trialProgressBar');
 
-    if (isExpired) {
-        if (timerText) {
-            timerText.innerText = "Trial Concluded // Premium Required";
-            timerText.classList.add('text-red-500');
-        }
-        if (badge) {
-            badge.innerText = "LOCKED";
-            badge.className = "px-2 py-0.5 rounded border border-red-500/30 text-[7px] font-black text-red-500 uppercase tracking-widest";
-        }
-        if (progress) {
-            progress.style.width = "100%";
-            progress.classList.replace('bg-blue-600', 'bg-red-600');
-        }
-    } else {
-        if (timerText) timerText.innerText = `${daysLeft} Days of Free Access Remaining`;
-        if (badge) badge.innerText = "TRIAL ACTIVE";
-        if (progress) {
-            const percent = ((new Date() - start) / (end - start)) * 100;
-            progress.style.width = `${percent}%`;
-        }
+    if (timerText) {
+        timerText.innerText = isExpired ? "TRIAL CONCLUDED // ACCESS RESTRICTED" : `${daysLeft} Days of Elite Access Remaining`;
+        if (isExpired) timerText.classList.add('text-red-500');
+    }
+    
+    if (badge) {
+        badge.innerText = isExpired ? "LOCKED" : "TRIAL ACTIVE";
+        badge.className = isExpired ? "px-2 py-0.5 rounded border border-red-500/30 text-[7px] font-black text-red-500 uppercase tracking-widest" : "px-2 py-0.5 rounded border border-blue-500/30 text-[7px] font-black text-blue-400 uppercase tracking-widest";
+    }
+
+    if (progress) {
+        const percent = isExpired ? 100 : ((new Date() - start) / (end - start)) * 100;
+        progress.style.width = `${percent}%`;
+        if (isExpired) progress.classList.add('bg-red-600');
     }
 }
 
 /**
- * Renders Local Track Data
+ * Massive Render Engine
  */
 function renderAcademyTracks(isExpired, providerFilter = 'all') {
     const grid = document.getElementById('courseGrid');
     if (!grid) return;
 
+    // Filter Logic
     const filteredTracks = providerFilter === 'all' 
         ? ACADEMY_TRACKS 
-        : ACADEMY_TRACKS.filter(t => t.provider.toLowerCase().includes(providerFilter.toLowerCase()));
+        : ACADEMY_TRACKS.filter(t => t.provider.toUpperCase() === providerFilter.toUpperCase());
 
+    // Generate HTML
     grid.innerHTML = filteredTracks.map(track => {
         const isFree = !isExpired || track.credit_cost === 0;
         
         return `
-        <div class="group p-6 rounded-[2.5rem] bg-[#050b1d]/40 border border-white/5 hover:border-blue-500/30 transition-all duration-500 relative overflow-hidden">
+        <div class="group p-6 rounded-[2.5rem] bg-[#050b1d]/60 border border-white/5 hover:border-blue-500/30 transition-all duration-500 relative overflow-hidden backdrop-blur-md">
             <div class="flex justify-between items-start mb-6">
-                <div class="h-12 w-12 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center">
-                    <i class="fas ${track.icon_type} text-blue-500"></i>
+                <div class="h-10 w-10 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center">
+                    <i class="fas ${track.icon_type} text-blue-500 text-sm"></i>
                 </div>
-                <span class="text-[7px] font-black text-white/30 uppercase tracking-widest px-3 py-1 bg-white/5 rounded-full border border-white/5">
+                <span class="text-[6px] font-black text-white/30 uppercase tracking-widest px-2 py-1 bg-white/5 rounded-md border border-white/5">
                     ${track.provider}
                 </span>
             </div>
 
-            <h3 class="text-white font-black italic uppercase tracking-tighter text-lg mb-4 group-hover:text-blue-400 transition-colors">
+            <h3 class="text-white font-black italic uppercase tracking-tighter text-md mb-4 leading-tight group-hover:text-blue-400 transition-colors">
                 ${track.title}
             </h3>
             
-            <div class="space-y-3 mb-6">
-                <div class="flex justify-between text-[8px] font-black uppercase tracking-widest">
+            <div class="space-y-2 mb-6">
+                <div class="flex justify-between text-[7px] font-black uppercase tracking-widest">
                     <span class="text-white/20">Clearance</span>
-                    <span class="text-blue-500 italic">LVL ${track.difficulty_level.toString().padStart(2, '0')}</span>
+                    <span class="text-blue-500">LVL ${track.difficulty_level.toString().padStart(2, '0')}</span>
                 </div>
-                <div class="flex justify-between text-[8px] font-black uppercase tracking-widest">
+                <div class="flex justify-between text-[7px] font-black uppercase tracking-widest">
                     <span class="text-white/20">Protocol Cost</span>
-                    <span class="${isFree ? 'text-green-400 font-bold' : 'text-white'}">
-                        ${isFree ? 'FREE (TRIAL)' : track.credit_cost + ' Credits'}
+                    <span class="${isFree ? 'text-green-400' : 'text-white'}">
+                        ${isFree ? 'FREE ACCESS' : track.credit_cost + ' CR'}
                     </span>
                 </div>
             </div>
 
             <button onclick="handleAccess('${track.url}', ${track.credit_cost}, ${isExpired})" 
-                class="w-full py-4 rounded-2xl bg-white/[0.03] border border-white/10 text-[9px] font-black text-white uppercase tracking-widest hover:bg-blue-600 hover:border-blue-500 transition-all">
-                ${isFree ? 'Access Hub' : 'Unlock Protocol'}
+                class="w-full py-3 rounded-xl bg-white/[0.03] border border-white/10 text-[8px] font-black text-white uppercase tracking-widest hover:bg-blue-600 hover:border-blue-500 hover:shadow-[0_0_15px_rgba(37,99,235,0.2)] transition-all">
+                ${isFree ? 'Initialize Track' : 'Unlock Hub'}
             </button>
         </div>
         `;
@@ -137,15 +155,11 @@ function renderAcademyTracks(isExpired, providerFilter = 'all') {
 }
 
 /**
- * Access Logic
+ * Action Handler
  */
 function handleAccess(url, cost, isExpired) {
     if (isExpired && cost > 0) {
-        if (typeof showSystemAlert === 'function') {
-            showSystemAlert(`ACCESS DENIED: Trial period expired. This track requires ${cost} credits.`);
-        } else {
-            alert(`TRIAL EXPIRED: ${cost} Credits required.`);
-        }
+        alert(`SECURITY BREACH: Access to this hub requires ${cost} Neural Credits.`);
         return;
     }
     window.open(url, '_blank');
@@ -155,23 +169,18 @@ function handleAccess(url, cost, isExpired) {
  * Filter Controller
  */
 window.filterClasses = (provider) => {
-    // 1. Update Buttons
+    // 1. Button Feedback
     document.querySelectorAll('.class-filter-btn').forEach(btn => {
-        const isMatch = btn.innerText.toLowerCase().includes(provider.toLowerCase()) || 
+        const isMatch = btn.innerText.toUpperCase().includes(provider.toUpperCase()) || 
                        (provider === 'all' && btn.innerText.includes('ALL'));
         
-        if (isMatch) {
-            btn.classList.add('bg-blue-600', 'text-white');
-            btn.classList.remove('text-white/40');
-        } else {
-            btn.classList.remove('bg-blue-600', 'text-white');
-            btn.classList.add('text-white/40');
-        }
+        btn.className = isMatch 
+            ? "class-filter-btn px-6 py-2 rounded-full bg-blue-600 text-white text-[9px] font-black uppercase tracking-widest transition-all"
+            : "class-filter-btn px-6 py-2 rounded-full text-white/40 text-[9px] font-black uppercase tracking-widest transition-all";
     });
 
-    // 2. Re-check Expiry from LocalStorage and re-render
+    // 2. Render
     const trialStart = localStorage.getItem(ACADEMY_CONFIG.STORAGE_KEY);
     const isExpired = new Date() > new Date(new Date(trialStart).getTime() + (ACADEMY_CONFIG.TRIAL_DAYS * ACADEMY_CONFIG.MS_PER_DAY));
-    
     renderAcademyTracks(isExpired, provider);
 };
