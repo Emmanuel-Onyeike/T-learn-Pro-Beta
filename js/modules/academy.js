@@ -1,6 +1,7 @@
 /**
  * TECH NXXT: ELITE ACADEMY ENGINE
  * Individual 21-Day Trial Logic & Course Management
+ * Author: Tech Nxxt Core
  */
 
 const ACADEMY_CONFIG = {
@@ -8,27 +9,34 @@ const ACADEMY_CONFIG = {
     MS_PER_DAY: 24 * 60 * 60 * 1000
 };
 
+/**
+ * Main Entry Point: Synchronizes User Profile and Trial Status
+ */
 async function initEliteAcademy() {
     try {
-        const { data: { user } } = await supabase.auth.getUser();
-        if (!user) return;
+        if (typeof supabase === 'undefined') throw new Error("Supabase not initialized");
+
+        const { data: { user }, error: authError } = await supabase.auth.getUser();
+        if (authError || !user) return;
 
         // 1. Fetch User Profile
-        let { data: profile, error } = await supabase
+        let { data: profile, error: profError } = await supabase
             .from('profiles')
             .select('neural_credits, academy_trial_started_at')
             .eq('id', user.id)
             .single();
 
-        if (error) throw error;
+        if (profError) throw profError;
 
-        // 2. Initial Trial Setup (First time access)
+        // 2. Initial Trial Setup (Triggers only on first access)
         if (!profile.academy_trial_started_at) {
             const now = new Date().toISOString();
-            await supabase
+            const { error: updateError } = await supabase
                 .from('profiles')
                 .update({ academy_trial_started_at: now })
                 .eq('id', user.id);
+            
+            if (updateError) throw updateError;
             profile.academy_trial_started_at = now;
         }
 
@@ -41,18 +49,22 @@ async function initEliteAcademy() {
         const timeLeftMs = expiryDate - today;
         const daysLeft = Math.max(0, Math.ceil(timeLeftMs / ACADEMY_CONFIG.MS_PER_DAY));
 
-        // 4. Update Header UI
+        // 4. Update Header Components
         updateAcademyHeader(isExpired, daysLeft, profile.neural_credits, startDate, expiryDate);
 
-        // 5. Load Content
+        // 5. Load Initial Course Grid
         await loadAcademyCourses(isExpired);
 
     } catch (err) {
         console.error("Academy Sync Failed:", err);
-        document.getElementById('academySystemMsg').innerText = "SYSTEM ERROR: AUTH_SYNC_FAILURE";
+        const sysMsg = document.getElementById('academySystemMsg');
+        if (sysMsg) sysMsg.innerText = "CRITICAL: ACADEMY_SYNC_FAILURE";
     }
 }
 
+/**
+ * Updates UI Header elements based on trial status
+ */
 function updateAcademyHeader(isExpired, daysLeft, credits, start, end) {
     const timerText = document.getElementById('trialCountdown');
     const badge = document.getElementById('trialBadge');
@@ -62,18 +74,21 @@ function updateAcademyHeader(isExpired, daysLeft, credits, start, end) {
     if (creditDisplay) creditDisplay.innerText = credits.toString().padStart(4, '0');
 
     if (isExpired) {
-        timerText.innerText = "Trial Concluded // Credits Required";
-        timerText.classList.add('text-red-500');
-        badge.innerText = "PREMIUM LOCKED";
-        badge.classList.replace('border-blue-500/30', 'border-red-500/30');
-        badge.classList.add('text-red-500');
+        if (timerText) {
+            timerText.innerText = "Trial Concluded // Credits Required";
+            timerText.classList.add('text-red-500');
+        }
+        if (badge) {
+            badge.innerText = "PREMIUM LOCKED";
+            badge.className = "px-2 py-0.5 rounded border border-red-500/30 text-[7px] font-black text-red-500 uppercase tracking-widest";
+        }
         if (progress) {
             progress.style.width = "100%";
             progress.classList.add('bg-red-600');
         }
     } else {
-        timerText.innerText = `${daysLeft} Days of Free Access Remaining`;
-        badge.innerText = "TRIAL ACTIVE";
+        if (timerText) timerText.innerText = `${daysLeft} Days of Free Access Remaining`;
+        if (badge) badge.innerText = "TRIAL ACTIVE";
         if (progress) {
             const now = new Date();
             const percent = ((now - start) / (end - start)) * 100;
@@ -82,6 +97,9 @@ function updateAcademyHeader(isExpired, daysLeft, credits, start, end) {
     }
 }
 
+/**
+ * Fetches courses and renders them to the DOM
+ */
 async function loadAcademyCourses(isExpired, providerFilter = 'all') {
     const grid = document.getElementById('courseGrid');
     if (!grid) return;
@@ -95,17 +113,20 @@ async function loadAcademyCourses(isExpired, providerFilter = 'all') {
     const { data: courses, error } = await query;
 
     if (error) {
-        grid.innerHTML = `<p class="text-red-500 text-[10px]">Failed to load tracks.</p>`;
+        grid.innerHTML = `<div class="col-span-full text-center text-red-500 text-[10px] uppercase font-black">Sync Failure: Database unreachable</div>`;
         return;
     }
 
-    grid.innerHTML = courses.map(course => `
-        <div class="group p-6 rounded-[2.5rem] bg-[#050b1d]/40 border border-white/5 hover:border-blue-500/30 transition-all duration-500 relative">
+    grid.innerHTML = courses.map(course => {
+        const isFree = !isExpired || course.credit_cost === 0;
+        
+        return `
+        <div class="group p-6 rounded-[2.5rem] bg-[#050b1d]/40 border border-white/5 hover:border-blue-500/30 transition-all duration-500 relative overflow-hidden">
             <div class="flex justify-between items-start mb-6">
                 <div class="h-12 w-12 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center">
-                    <i class="fas ${course.icon_type} text-blue-500"></i>
+                    <i class="fas ${course.icon_type || 'fa-code'} text-blue-500"></i>
                 </div>
-                <span class="text-[7px] font-black text-white/30 uppercase tracking-widest px-3 py-1 bg-white/5 rounded-full">
+                <span class="text-[7px] font-black text-white/30 uppercase tracking-widest px-3 py-1 bg-white/5 rounded-full border border-white/5">
                     ${course.provider}
                 </span>
             </div>
@@ -117,42 +138,50 @@ async function loadAcademyCourses(isExpired, providerFilter = 'all') {
             <div class="space-y-3 mb-6">
                 <div class="flex justify-between text-[8px] font-black uppercase tracking-widest">
                     <span class="text-white/20">Clearance</span>
-                    <span class="text-blue-500 italic">LVL ${course.difficulty_level}</span>
+                    <span class="text-blue-500 italic">LVL ${course.difficulty_level.toString().padStart(2, '0')}</span>
                 </div>
                 <div class="flex justify-between text-[8px] font-black uppercase tracking-widest">
                     <span class="text-white/20">Protocol Cost</span>
-                    <span class="${isExpired ? 'text-white' : 'text-green-400 font-bold'}">
-                        ${isExpired ? course.credit_cost + ' Credits' : 'FREE (TRIAL)'}
+                    <span class="${isFree ? 'text-green-400 font-bold' : 'text-white'}">
+                        ${isFree ? 'FREE (TRIAL)' : course.credit_cost + ' Credits'}
                     </span>
                 </div>
             </div>
 
             <button onclick="handleCourseAccess('${course.external_url}', ${course.credit_cost}, ${isExpired})" 
                 class="w-full py-4 rounded-2xl bg-white/[0.03] border border-white/10 text-[9px] font-black text-white uppercase tracking-widest hover:bg-blue-600 hover:border-blue-500 hover:shadow-[0_0_20px_rgba(37,99,235,0.3)] transition-all">
-                ${isExpired ? 'Unlock with Credits' : 'Access Hub'}
+                ${isFree ? 'Access Hub' : 'Unlock protocol'}
             </button>
         </div>
-    `).join('');
+        `;
+    }).join('');
 }
 
+/**
+ * Redirects or Triggers Unlock Modal
+ */
 function handleCourseAccess(url, cost, isExpired) {
-    if (isExpired) {
-        // Trigger your existing modal or alert for insufficient credits
-        showSystemAlert(`INSUFFICIENT CREDITS: Trial period expired. This track requires ${cost} credits.`);
+    if (isExpired && cost > 0) {
+        // Replace this with your specific modal logic if you have one
+        if (typeof showSystemAlert === 'function') {
+            showSystemAlert(`INSUFFICIENT CREDITS: Trial concluded. Unlock for ${cost} credits.`);
+        } else {
+            alert(`PREMIUM HUB LOCKED: ${cost} Credits required.`);
+        }
         return;
     }
     
-    // Track the click in analytics or logs if needed
-    console.log(`Accessing Course Hub: ${url}`);
     window.open(url, '_blank');
 }
 
-// Filter Function
-window.filterClasses = (provider) => {
-    // Update button UI
+/**
+ * Filter Controller
+ */
+window.filterClasses = async (provider) => {
+    // 1. Update UI Buttons
     document.querySelectorAll('.class-filter-btn').forEach(btn => {
-        const isMatch = btn.innerText.toLowerCase().includes(provider.toLowerCase()) || 
-                       (provider === 'all' && btn.innerText.includes('ALL'));
+        const text = btn.innerText.toLowerCase();
+        const isMatch = text.includes(provider.toLowerCase()) || (provider === 'all' && text.includes('ALL'));
         
         if (isMatch) {
             btn.classList.add('bg-blue-600', 'text-white');
@@ -163,12 +192,16 @@ window.filterClasses = (provider) => {
         }
     });
 
-    // Check expiration state again before filtering
-    supabase.auth.getUser().then(({data: {user}}) => {
-        supabase.from('profiles').select('academy_trial_started_at').eq('id', user.id).single()
-            .then(({data}) => {
-                const expiry = new Date(new Date(data.academy_trial_started_at).getTime() + (21 * 24 * 60 * 60 * 1000));
-                loadAcademyCourses(new Date() > expiry, provider);
-            });
-    });
+    // 2. Re-verify Expiration before Filtering
+    try {
+        const { data: { user } } = await supabase.auth.getUser();
+        const { data } = await supabase.from('profiles').select('academy_trial_started_at').eq('id', user.id).single();
+        
+        const expiry = new Date(new Date(data.academy_trial_started_at).getTime() + (ACADEMY_CONFIG.TRIAL_DAYS * ACADEMY_CONFIG.MS_PER_DAY));
+        const expired = new Date() > expiry;
+        
+        await loadAcademyCourses(expired, provider);
+    } catch (err) {
+        console.error("Filter logic failed:", err);
+    }
 };
