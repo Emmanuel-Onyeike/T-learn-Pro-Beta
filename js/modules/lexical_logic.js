@@ -1,24 +1,22 @@
 /**
- * TECH NXXT: OMNI-GAME KERNEL (V1.5)
- * Lexical Breach + GitHub Repo-Hunt + Judge0 Sandbox
- * Integration: Supabase Persistence & RapidAPI execution
+ * TECH NXXT: OMNI-KERNEL V2.0
+ * Logic: Puzzle Breach + Syntax Quiz + Velocity Terminal
+ * Persistence: Supabase Cloud +10/-10 Credit System
  */
 
-// --- CONFIGURATION ---
-const KERNEL_CONFIG = {
-    JUDGE0: {
-        API_KEY: 'YOUR_RAPID_API_KEY', // Replace with your actual key
-        HOST: 'judge0-ce.p.rapidapi.com'
-    },
-    MODES: {
-        LEXICAL: 'lexical',
-        REPO_HUNT: 'repo_hunt',
-        SANDBOX: 'sandbox'
-    }
-};
+const ARCADE_MODES = { PUZZLE: 'puzzle', QUIZ: 'quiz', TYPING: 'typing' };
+let activeMode = ARCADE_MODES.PUZZLE;
+let currentLevel = 0;
+let foundWords = [];
+let isSelecting = false;
+let selectedCells = [];
+let timer = null;
+let timeLeft = 60;
+
+// --- DATASETS ---
 
 const LEXICAL_LEVELS = [
-    { level: 1, words: ["CODE", "DATA", "GRID", "NXXT", "SYNC", "NODE", "HTML", "BASE", "LINK", "LOGS"], challenge: { title: "INIT_CORE", prompt: "Return 'ACTIVE'", test: "console.log(solution())", expected: "ACTIVE" } },
+    { level: 1, words: ["CODE", "DATA", "GRID", "NXXT", "SYNC", "NODE", "HTML", "BASE", "LINK", "LOGS"] },
     { level: 2, words: ["REACT", "LOGIC", "STACK", "ARRAY", "QUEUE", "BUILD", "FETCH", "CONST", "ASYNC", "SHIFT"] },
     { level: 3, words: ["PYTHON", "GITHUB", "ENGINE", "PROMPT", "SCRIPT", "DEPLOY", "KERNEL", "BINARY", "THREAD", "BUFFER"] },
     { level: 4, words: ["NETWORK", "FRONTEND", "BACKEND", "DATABASE", "FIREWALL", "RUNTIME", "TERMINAL", "PAYLOAD", "RECURSE", "COMPUTE"] },
@@ -30,64 +28,102 @@ const LEXICAL_LEVELS = [
     { level: 10, words: ["DEEPLEARNING", "REINFORCED", "QUANTUM", "SINGULARITY", "FULLSTACK", "ARCHITECTURE", "PROBABILISTIC", "CRYPTOGRAPHY", "ORCHESTRATION", "MORPHOLOGY"] }
 ];
 
-let currentLevel = 0;
-let foundWords = [];
-let isSelecting = false;
-let selectedCells = [];
-let activeMode = KERNEL_CONFIG.MODES.LEXICAL;
+const QUIZ_DATA = [
+    { q: "Which hook handles side effects in React?", a: "useEffect", o: ["useState", "useEffect", "useMemo", "useRef"] },
+    { q: "Which CSS property is used for glassmorphism?", a: "backdrop-filter", o: ["filter", "opacity", "backdrop-filter", "blur"] },
+    { q: "What is the default port for a Vite development server?", a: "5173", o: ["3000", "8080", "5173", "5000"] },
+    { q: "Which SQL command is used to add a new column?", a: "ALTER TABLE", o: ["ADD COLUMN", "UPDATE TABLE", "ALTER TABLE", "INSERT INTO"] },
+    { q: "In JavaScript, 'null' is what type of data?", a: "object", o: ["null", "undefined", "object", "string"] },
+    { q: "Which Supabase feature handles real-time data?", a: "Realtime", o: ["Edge Functions", "Storage", "Auth", "Realtime"] },
+    { q: "What does the 'A' in AJAX stand for?", a: "Asynchronous", o: ["Array", "Active", "Asynchronous", "Angular"] },
+    { q: "Which Git command combines two branches?", a: "merge", o: ["combine", "merge", "push", "pull"] },
+    { q: "Which HTTP method is typically used for updates?", a: "PATCH", o: ["GET", "POST", "PATCH", "DELETE"] },
+    { q: "What is the time complexity of a binary search?", a: "O(log n)", o: ["O(n)", "O(1)", "O(n^2)", "O(log n)"] }
+];
+
+const TYPING_DATA = [
+    { words: ["FUNCTION", "VARIABLE", "CONSTANT", "DATABASE", "FRONTEND", "BACKEND", "TERMINAL", "REACT", "NODE", "SUPABASE"] },
+    { words: ["ASYNC", "AWAIT", "PROMISE", "FETCH", "HEADER", "PAYLOAD", "GRID", "FLEXBOX", "TAILWIND", "VITE"] },
+    { words: ["COMPONENT", "PROPS", "STATE", "REDUCER", "CONTEXT", "ROUTER", "MAPPING", "FILTER", "REDUX", "ZUSTAND"] },
+    { words: ["INTERFACE", "TYPE", "STRING", "NUMBER", "BOOLEAN", "ARRAY", "OBJECT", "TUPLE", "ENUM", "GENERIC"] },
+    { words: ["ENCRYPTION", "DECRYPT", "HASHING", "TOKEN", "SESSION", "COOKIE", "AUTH", "OAUTH", "JWT", "BEYCRYPT"] },
+    { words: ["CONTAINER", "DOCKER", "IMAGE", "VOLUME", "NETWORK", "COMPOSE", "KUBERNETES", "POD", "CLUSTER", "YAML"] },
+    { words: ["QUERY", "MUTATION", "SCHEMA", "RESOLVER", "GRAPHQL", "ENDPOINT", "REQUEST", "RESPONSE", "STATUS", "METHOD"] },
+    { words: ["ALGORITHM", "RECURSION", "ITERATION", "POINTER", "STACK", "QUEUE", "BINARY", "HEX", "OCTAL", "BIT"] },
+    { words: ["REFACTOR", "DEBUG", "DEPLOY", "STAGING", "PRODUCTION", "CI/CD", "PIPELINE", "TESTING", "JEST", "CYPRESS"] },
+    { words: ["ARCHITECTURE", "MICROSERVICE", "MONOLITH", "SERVERLESS", "LAMBDA", "DYNAMO", "HYDRATION", "VIRTUAL", "DOM", "KERNEL"] }
+];
 
 /**
  * CORE: KERNEL ROUTING
  */
 function switchGameMode(mode) {
     activeMode = mode;
+    currentLevel = 0;
+    clearInterval(timer);
+    
     const viewport = document.getElementById('lexicalGrid');
     const wordList = document.getElementById('targetWords');
     const sysMsg = document.getElementById('systemMessage');
     
-    // Reset Viewport
     viewport.innerHTML = '';
     wordList.innerHTML = '';
     
-    switch(mode) {
-        case KERNEL_CONFIG.MODES.LEXICAL:
-            sysMsg.innerText = "DECRYPT TECHNICAL TERMS TO PROCEED";
-            initLexicalGame();
-            break;
-        case KERNEL_CONFIG.MODES.REPO_HUNT:
-            sysMsg.innerText = "ANALYZE REMOTE GITHUB REPOSITORIES";
-            initRepoHunt();
-            break;
-        case KERNEL_CONFIG.MODES.SANDBOX:
-            sysMsg.innerText = "EXECUTE NEURAL PAYLOADS";
-            const challenge = LEXICAL_LEVELS[currentLevel].challenge || { title: "SANDBOX", prompt: "Write code to log 'Hello Nxxt'" };
-            openCodingSandbox(challenge);
-            break;
+    if (mode === ARCADE_MODES.PUZZLE) {
+        sysMsg.innerText = "DECRYPT TECHNICAL TERMS TO PROCEED";
+        initLexicalGame();
+    } else if (mode === ARCADE_MODES.QUIZ) {
+        sysMsg.innerText = "SELECT THE CORRECT SYNTAX ARCHITECTURE";
+        initQuizGame();
+    } else if (mode === ARCADE_MODES.TYPING) {
+        sysMsg.innerText = "VELOCITY SPRINT: TYPE THE PAYLOADS";
+        initTypingGame();
     }
 }
 
 /**
- * MODULE 1: LEXICAL BREACH ENGINE
+ * PERSISTENCE: SUPABASE CREDIT ENGINE
+ */
+async function updateCredits(amount) {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+
+    const { data: profile } = await supabase.from('profiles').select('neural_credits').eq('id', user.id).single();
+    const newTotal = (profile?.neural_credits || 0) + amount;
+    
+    await supabase.from('profiles').update({ neural_credits: newTotal }).eq('id', user.id);
+    
+    const display = document.getElementById('gamesCount');
+    if (display) display.innerText = newTotal.toString().padStart(4, '0');
+    
+    showSystemMessage(amount < 0 ? `PENALTY: ${amount}` : `REWARD: +${amount}`, amount < 0 ? 'text-red-500' : 'text-green-500');
+}
+
+function showSystemMessage(msg, colorClass) {
+    const sys = document.getElementById('systemMessage');
+    sys.innerText = msg;
+    sys.className = `text-[9px] font-bold uppercase tracking-[0.2em] ${colorClass}`;
+}
+
+/**
+ * MODULE 1: LEXICAL BREACH (PUZZLE)
  */
 function initLexicalGame() {
     const levelData = LEXICAL_LEVELS[currentLevel];
     foundWords = [];
     selectedCells = [];
-    syncGamesCountUI();
-    renderLevelUI(levelData);
+    renderPuzzleUI(levelData);
 }
 
-function renderLevelUI(data) {
+function renderPuzzleUI(data) {
     const gridContainer = document.getElementById('lexicalGrid');
     const wordList = document.getElementById('targetWords');
-    if (!gridContainer || !wordList) return;
-
-    document.getElementById('currentLevelDisplay').innerText = `L-${data.level < 10 ? '0' + data.level : data.level}`;
+    document.getElementById('currentLevelDisplay').innerText = `L-${(data.level).toString().padStart(2, '0')}`;
+    
     const size = data.level > 5 ? 14 : 12; 
     gridContainer.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
     
-    const totalCells = size * size;
-    let gridArray = Array(totalCells).fill('').map(() => String.fromCharCode(65 + Math.floor(Math.random() * 26)));
+    let gridArray = Array(size * size).fill('').map(() => String.fromCharCode(65 + Math.floor(Math.random() * 26)));
 
     data.words.forEach((word, index) => {
         let row = index; 
@@ -98,24 +134,17 @@ function renderLevelUI(data) {
 
     gridArray.forEach((letter) => {
         const cell = document.createElement('div');
-        cell.className = 'lex-cell h-8 w-8 md:h-10 md:w-10 flex items-center justify-center border border-white/5 text-[10px] font-black text-white/40 cursor-pointer hover:bg-blue-500/20 transition-all select-none rounded-lg';
+        cell.className = 'lex-cell h-8 w-8 md:h-10 md:w-10 flex items-center justify-center border border-white/5 text-[10px] font-black text-white/40 cursor-pointer hover:bg-blue-500/20 rounded-lg transition-all';
         cell.innerText = letter;
-        cell.onmousedown = () => startSelection(cell);
-        cell.onmouseenter = () => continueSelection(cell);
-        cell.ontouchstart = (e) => { e.preventDefault(); startSelection(cell); };
+        cell.onmousedown = () => { isSelecting = true; selectedCells = [cell]; cell.classList.add('bg-blue-600', 'text-white'); };
+        cell.onmouseenter = () => { if (isSelecting && !selectedCells.includes(cell)) { selectedCells.push(cell); cell.classList.add('bg-blue-600', 'text-white'); } };
         gridContainer.appendChild(cell);
     });
 
-    wordList.innerHTML = data.words.map(w => `
-        <span id="word-${w}" class="text-[8px] md:text-[10px] font-black uppercase tracking-widest text-white/20 border border-white/5 px-3 py-1 rounded-full transition-all">
-            ${w}
-        </span>
-    `).join('');
+    wordList.innerHTML = data.words.map(w => `<span id="word-${w}" class="text-[8px] md:text-[10px] font-black uppercase tracking-widest text-white/20 border border-white/5 px-3 py-1 rounded-full">${w}</span>`).join('');
     window.onmouseup = endSelection;
 }
 
-function startSelection(cell) { isSelecting = true; selectedCells = [cell]; cell.classList.add('bg-blue-600', 'text-white'); }
-function continueSelection(cell) { if (!isSelecting || selectedCells.includes(cell)) return; selectedCells.push(cell); cell.classList.add('bg-blue-600', 'text-white'); }
 function endSelection() {
     if (!isSelecting) return;
     isSelecting = false;
@@ -124,146 +153,135 @@ function endSelection() {
 
     if (currentWords.includes(word) && !foundWords.includes(word)) {
         foundWords.push(word);
-        document.getElementById(`word-${word}`).className = 'text-[8px] md:text-[10px] font-black text-green-400 border border-green-500/50 bg-green-500/10 px-3 py-1 rounded-full shadow-[0_0_15px_rgba(34,197,94,0.3)]';
-        selectedCells.forEach(c => {
-            c.classList.remove('bg-blue-600');
-            c.classList.add('bg-green-600/40', 'text-green-400', 'border-green-500/30');
-            c.onmousedown = null;
-        });
-        if (foundWords.length === currentWords.length) setTimeout(proceedToNextNode, 800);
+        document.getElementById(`word-${word}`).className = 'text-[8px] md:text-[10px] font-black text-green-400 border border-green-500/50 bg-green-500/10 px-3 py-1 rounded-full';
+        selectedCells.forEach(c => { c.classList.remove('bg-blue-600'); c.classList.add('bg-green-600/40', 'text-green-400'); });
+        if (foundWords.length === currentWords.length) {
+            updateCredits(10);
+            currentLevel++;
+            currentLevel < 10 ? initLexicalGame() : switchGameMode(ARCADE_MODES.QUIZ);
+        }
     } else {
         selectedCells.forEach(c => { if (!c.classList.contains('text-green-400')) c.classList.remove('bg-blue-600', 'text-white'); });
+        updateCredits(-10);
     }
     selectedCells = [];
 }
 
 /**
- * MODULE 2: GITHUB REPO-HUNT
+ * MODULE 2: SYNTAX QUIZ (Q&A)
  */
-async function initRepoHunt() {
-    const grid = document.getElementById('lexicalGrid');
-    grid.style.gridTemplateColumns = '1fr';
-    grid.innerHTML = `<div class="p-20 text-center animate-pulse text-blue-500 font-black uppercase text-[10px] tracking-[0.4em]">Infiltrating GitHub API...</div>`;
+function initQuizGame() {
+    const levelData = QUIZ_DATA[currentLevel];
+    const viewport = document.getElementById('lexicalGrid');
+    const wordList = document.getElementById('targetWords');
     
-    try {
-        const res = await fetch('https://api.github.com/search/repositories?q=stars:>20000&sort=stars');
-        const data = await res.json();
-        const repo = data.items[Math.floor(Math.random() * data.items.length)];
-        
-        grid.innerHTML = `
-            <div class="p-8 bg-[#050b1d] border border-blue-500/20 rounded-[2rem] text-center animate-in zoom-in duration-500">
-                <p class="text-blue-500 text-[8px] font-black uppercase tracking-widest mb-4">Remote Source Detected</p>
-                <h3 class="text-2xl font-black text-white uppercase italic mb-2">${repo.name}</h3>
-                <p class="text-white/40 text-[9px] font-bold uppercase mb-8 leading-relaxed">${repo.description || 'No meta-data found.'}</p>
-                <div class="grid grid-cols-2 gap-4">
-                    <button onclick="verifyRepoGuess('${repo.language}', 'JavaScript')" class="py-4 border border-white/5 rounded-2xl text-[9px] font-black text-white/40 uppercase hover:border-blue-500 hover:text-white transition-all">JavaScript</button>
-                    <button onclick="verifyRepoGuess('${repo.language}', 'TypeScript')" class="py-4 border border-white/5 rounded-2xl text-[9px] font-black text-white/40 uppercase hover:border-blue-500 hover:text-white transition-all">TypeScript</button>
-                    <button onclick="verifyRepoGuess('${repo.language}', 'Python')" class="py-4 border border-white/5 rounded-2xl text-[9px] font-black text-white/40 uppercase hover:border-blue-500 hover:text-white transition-all">Python</button>
-                    <button onclick="verifyRepoGuess('${repo.language}', 'Other')" class="py-4 border border-white/5 rounded-2xl text-[9px] font-black text-white/40 uppercase hover:border-blue-500 hover:text-white transition-all">Other</button>
-                </div>
-            </div>
-        `;
-    } catch (e) { grid.innerHTML = `<p class="text-red-500 font-black">LINK FAILURE: API OFFLINE</p>`; }
-}
+    viewport.style.gridTemplateColumns = "1fr";
+    wordList.innerHTML = `<span class="text-blue-500 font-black italic">LEVEL ${currentLevel + 1} / 10</span>`;
 
-function verifyRepoGuess(actual, guess) {
-    if (actual === guess || (guess === 'Other' && !['JavaScript', 'TypeScript', 'Python'].includes(actual))) {
-        recordGameCompletion();
-        switchGameMode(KERNEL_CONFIG.MODES.REPO_HUNT);
-    } else {
-        alert("ANALYSIS INCORRECT: RETRYING...");
-    }
-}
-
-/**
- * MODULE 3: JUDGE0 CODING SANDBOX
- */
-function openCodingSandbox(challenge) {
-    const overlay = document.getElementById('gameOverlay');
-    overlay.classList.remove('hidden');
-    overlay.innerHTML = `
-        <div class="bg-[#050b1d] border border-blue-500/30 p-8 rounded-[2.5rem] w-full max-w-2xl">
-            <h3 class="text-blue-500 font-black uppercase text-[10px] tracking-widest mb-6">Neural Logic: ${challenge.title}</h3>
-            <p class="text-white text-xs font-black uppercase mb-6">${challenge.prompt}</p>
-            <textarea id="codeEditor" class="w-full h-40 bg-black border border-white/5 rounded-2xl p-4 text-cyan-400 font-mono text-xs outline-none" placeholder="function solution() { ... }"></textarea>
-            <div class="mt-6 flex gap-4">
-                <button onclick="submitSandboxCode()" id="runBtn" class="flex-1 py-4 bg-blue-600 text-white font-black uppercase rounded-2xl transition-all">Execute</button>
-                <button onclick="document.getElementById('gameOverlay').classList.add('hidden')" class="px-8 py-4 border border-white/10 text-white/40 font-black uppercase rounded-2xl">Abort</button>
+    viewport.innerHTML = `
+        <div class="p-8 space-y-6 animate-in fade-in duration-500">
+            <h3 class="text-white font-black text-center text-lg uppercase italic tracking-tighter">${levelData.q}</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                ${levelData.o.map(opt => `
+                    <button onclick="checkQuizAnswer('${opt}', '${levelData.a}')" class="py-4 border border-white/5 rounded-2xl text-[10px] font-black text-white/40 uppercase hover:border-blue-500 hover:text-white transition-all bg-white/[0.02]">
+                        ${opt}
+                    </button>
+                `).join('')}
             </div>
         </div>
     `;
 }
 
-async function submitSandboxCode() {
-    const code = document.getElementById('codeEditor').value;
-    const btn = document.getElementById('runBtn');
-    const challenge = LEXICAL_LEVELS[currentLevel].challenge || { expected: "ACTIVE", test: "console.log('ACTIVE')" };
-    
-    btn.innerText = "UPLOADING...";
-    
-    try {
-        const response = await fetch(`https://${KERNEL_CONFIG.JUDGE0.HOST}/submissions?wait=true`, {
-            method: 'POST',
-            headers: { 'x-rapidapi-key': KERNEL_CONFIG.JUDGE0.API_KEY, 'Content-Type': 'application/json' },
-            body: JSON.stringify({ source_code: btoa(`${code}\n${challenge.test}`), language_id: 63 })
-        });
-        const result = await response.json();
-        const output = result.stdout ? atob(result.stdout).trim() : "";
-
-        if (output === challenge.expected) {
-            btn.innerText = "SUCCESS";
-            setTimeout(() => {
-                document.getElementById('gameOverlay').classList.add('hidden');
-                proceedToNextNode();
-            }, 1000);
-        } else {
-            btn.innerText = "FAILED: RETRY";
-            setTimeout(() => btn.innerText = "Execute", 1500);
-        }
-    } catch (e) { btn.innerText = "UPLINK ERROR"; }
-}
-
-/**
- * PERSISTENCE & UTILS
- */
-async function syncGamesCountUI() {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (user) {
-        const { data } = await supabase.from('profiles').select('games_completed').eq('id', user.id).single();
-        const display = document.getElementById('gamesCount');
-        if (display && data) display.innerText = (data.games_completed || 0).toString().padStart(4, '0');
+function checkQuizAnswer(choice, answer) {
+    if (choice === answer) {
+        updateCredits(10);
+        currentLevel++;
+        currentLevel < 10 ? initQuizGame() : switchGameMode(ARCADE_MODES.TYPING);
+    } else {
+        updateCredits(-10);
+        initQuizGame();
     }
 }
 
-async function recordGameCompletion() {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return;
-    const { data } = await supabase.from('profiles').select('games_completed').eq('id', user.id).single();
-    const newCount = (data?.games_completed || 0) + 1;
-    await supabase.from('profiles').update({ games_completed: newCount }).eq('id', user.id);
-    syncGamesCountUI();
-    showCompletionModal();
+/**
+ * MODULE 3: VELOCITY TERMINAL (TYPING)
+ */
+function initTypingGame() {
+    clearInterval(timer);
+    timeLeft = 60;
+    const levelData = TYPING_DATA[currentLevel];
+    const viewport = document.getElementById('lexicalGrid');
+    const wordList = document.getElementById('targetWords');
+    
+    viewport.style.gridTemplateColumns = "1fr";
+    wordList.innerHTML = `<span class="text-blue-500 font-black italic">TIME: <span id="timerDisplay">60</span>s</span>`;
+
+    viewport.innerHTML = `
+        <div class="p-8 space-y-6 text-center animate-in zoom-in duration-500">
+            <div id="wordToType" class="text-4xl font-black text-white italic tracking-tighter uppercase mb-2">READY?</div>
+            <input type="text" id="typingInput" autocomplete="off" autofocus class="w-full bg-white/5 border border-white/10 rounded-2xl py-5 text-center text-cyan-400 font-mono text-xl outline-none focus:border-blue-500 transition-all" placeholder="...">
+            <div id="typingProgress" class="text-[8px] text-white/20 font-black tracking-widest uppercase">0 / 10 WORDS COMPLETED</div>
+        </div>
+    `;
+
+    const input = document.getElementById('typingInput');
+    let wordIndex = 0;
+    document.getElementById('wordToType').innerText = levelData.words[0];
+    
+    const startTimer = () => {
+        timer = setInterval(() => {
+            timeLeft--;
+            const display = document.getElementById('timerDisplay');
+            if(display) display.innerText = timeLeft;
+            if (timeLeft <= 0) {
+                clearInterval(timer);
+                updateCredits(-10);
+                initTypingGame(); 
+            }
+        }, 1000);
+    };
+
+    input.oninput = () => {
+        if (!timer) startTimer();
+        if (input.value.toUpperCase() === levelData.words[wordIndex].toUpperCase()) {
+            input.value = '';
+            wordIndex++;
+            document.getElementById('typingProgress').innerText = `${wordIndex} / 10 WORDS COMPLETED`;
+            
+            if (wordIndex >= 10) {
+                clearInterval(timer);
+                updateCredits(10);
+                currentLevel++;
+                if (currentLevel < 10) {
+                    initTypingGame();
+                } else {
+                    showCompletionModal("SYSTEM FULLY DECRYPTED");
+                }
+            } else {
+                document.getElementById('wordToType').innerText = levelData.words[wordIndex];
+            }
+        }
+    };
 }
 
-function showCompletionModal() {
+function showCompletionModal(msg) {
     const overlay = document.getElementById('gameOverlay');
     overlay.classList.remove('hidden');
     overlay.innerHTML = `
         <div class="bg-[#050b1d] border border-blue-500/30 p-10 rounded-[3rem] text-center max-w-sm">
-            <h2 class="text-2xl font-black text-white uppercase italic italic">Node Cleared</h2>
-            <p class="text-gray-500 text-[10px] font-black uppercase mt-2 mb-8">Neural Credits Uploaded</p>
-            <button onclick="document.getElementById('gameOverlay').classList.add('hidden')" class="w-full py-4 bg-blue-600 text-white font-black uppercase rounded-2xl">Proceed</button>
+            <h2 class="text-2xl font-black text-white uppercase italic tracking-tighter">${msg}</h2>
+            <p class="text-gray-500 text-[10px] font-black uppercase mt-2 mb-8">Neural Integrity Optimized</p>
+            <button onclick="location.reload()" class="w-full py-4 bg-blue-600 text-white font-black uppercase tracking-widest rounded-2xl">Restart Hub</button>
         </div>
     `;
 }
 
-function proceedToNextNode() {
-    currentLevel++;
-    if (currentLevel < LEXICAL_LEVELS.length) {
-        initLexicalGame();
-    } else {
-        recordGameCompletion();
-        currentLevel = 0;
-        initLexicalGame();
+// Initial Sync
+(async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) {
+        const { data } = await supabase.from('profiles').select('neural_credits').eq('id', user.id).single();
+        document.getElementById('gamesCount').innerText = (data?.neural_credits || 0).toString().padStart(4, '0');
     }
-}
+    initLexicalGame();
+})();
