@@ -1,7 +1,8 @@
 /**
- * TECH NXXT: OMNI-KERNEL V2.0
+ * TECH NXXT: OMNI-KERNEL V2.0 (STRIKE EDITION)
  * Logic: Puzzle Breach + Syntax Quiz + Velocity Terminal
  * Persistence: Supabase Cloud +10/-10 Credit System
+ * Velocity Specs: 30s Hard Limit | Persistent Timer | Auto-Restart
  */
 
 const ARCADE_MODES = { PUZZLE: 'puzzle', QUIZ: 'quiz', TYPING: 'typing' };
@@ -11,7 +12,7 @@ let foundWords = [];
 let isSelecting = false;
 let selectedCells = [];
 let timer = null;
-let timeLeft = 60;
+let timeLeft = 30;
 
 // --- DATASETS ---
 
@@ -61,6 +62,7 @@ function switchGameMode(mode) {
     activeMode = mode;
     currentLevel = 0;
     clearInterval(timer);
+    timer = null;
     
     const viewport = document.getElementById('lexicalGrid');
     const wordList = document.getElementById('targetWords');
@@ -205,22 +207,28 @@ function checkQuizAnswer(choice, answer) {
 
 /**
  * MODULE 3: VELOCITY TERMINAL (TYPING)
+ * 30s HARD LIMIT | PERSISTENT TIMER
  */
 function initTypingGame() {
     clearInterval(timer);
-    timeLeft = 60;
+    timer = null;
+    timeLeft = 30; // Hard limit: 30 seconds
     const levelData = TYPING_DATA[currentLevel];
     const viewport = document.getElementById('lexicalGrid');
     const wordList = document.getElementById('targetWords');
     
     viewport.style.gridTemplateColumns = "1fr";
-    wordList.innerHTML = `<span class="text-blue-500 font-black italic">TIME: <span id="timerDisplay">60</span>s</span>`;
+    wordList.innerHTML = `<span class="text-red-500 font-black italic animate-pulse">STRIKE TIME: <span id="timerDisplay">30</span>s</span>`;
 
     viewport.innerHTML = `
         <div class="p-8 space-y-6 text-center animate-in zoom-in duration-500">
+            <div id="typeInstructions">
+                <p class="text-[10px] font-black text-blue-400 uppercase tracking-[0.3em]">Protocol: Type 10 payloads</p>
+                <p class="text-[8px] text-white/30 uppercase mt-1 italic">Timer starts on first character</p>
+            </div>
             <div id="wordToType" class="text-4xl font-black text-white italic tracking-tighter uppercase mb-2">READY?</div>
-            <input type="text" id="typingInput" autocomplete="off" autofocus class="w-full bg-white/5 border border-white/10 rounded-2xl py-5 text-center text-cyan-400 font-mono text-xl outline-none focus:border-blue-500 transition-all" placeholder="...">
-            <div id="typingProgress" class="text-[8px] text-white/20 font-black tracking-widest uppercase">0 / 10 WORDS COMPLETED</div>
+            <input type="text" id="typingInput" autocomplete="off" autofocus class="w-full bg-white/5 border border-white/10 rounded-2xl py-5 text-center text-cyan-400 font-mono text-xl outline-none focus:border-blue-500 transition-all shadow-[0_0_20px_rgba(0,180,255,0.1)]" placeholder="TYPE TO START">
+            <div id="typingProgress" class="text-[8px] text-white/20 font-black tracking-widest uppercase">LEVEL ${currentLevel+1} // 0 / 10 COMPLETED</div>
         </div>
     `;
 
@@ -228,50 +236,71 @@ function initTypingGame() {
     let wordIndex = 0;
     document.getElementById('wordToType').innerText = levelData.words[0];
     
-    const startTimer = () => {
+    const startPersistentTimer = () => {
+        if (timer) return;
+        document.getElementById('typeInstructions').classList.add('opacity-0');
         timer = setInterval(() => {
             timeLeft--;
             const display = document.getElementById('timerDisplay');
-            if(display) display.innerText = timeLeft;
+            if(display) {
+                display.innerText = timeLeft;
+                if(timeLeft <= 10) display.parentElement.className = "text-red-600 font-black animate-bounce";
+            }
             if (timeLeft <= 0) {
                 clearInterval(timer);
-                updateCredits(-10);
-                initTypingGame(); 
+                handleTypingFailure();
             }
         }, 1000);
     };
 
     input.oninput = () => {
-        if (!timer) startTimer();
+        startPersistentTimer();
         if (input.value.toUpperCase() === levelData.words[wordIndex].toUpperCase()) {
             input.value = '';
             wordIndex++;
-            document.getElementById('typingProgress').innerText = `${wordIndex} / 10 WORDS COMPLETED`;
+            document.getElementById('typingProgress').innerText = `LEVEL ${currentLevel+1} // ${wordIndex} / 10 COMPLETED`;
             
             if (wordIndex >= 10) {
                 clearInterval(timer);
-                updateCredits(10);
-                currentLevel++;
-                if (currentLevel < 10) {
-                    initTypingGame();
-                } else {
-                    showCompletionModal("SYSTEM FULLY DECRYPTED");
-                }
+                handleTypingSuccess();
             } else {
                 document.getElementById('wordToType').innerText = levelData.words[wordIndex];
+                // Quick flash effect
+                document.getElementById('wordToType').classList.add('text-green-400');
+                setTimeout(() => document.getElementById('wordToType').classList.remove('text-green-400'), 100);
             }
         }
     };
+}
+
+async function handleTypingSuccess() {
+    await updateCredits(10);
+    currentLevel++;
+    if (currentLevel < 10) {
+        initTypingGame();
+    } else {
+        showCompletionModal("SYSTEM FULLY DECRYPTED");
+    }
+}
+
+async function handleTypingFailure() {
+    await updateCredits(-10);
+    const input = document.getElementById('typingInput');
+    if(input) {
+        input.classList.add('border-red-500', 'bg-red-500/10');
+        input.disabled = true;
+    }
+    setTimeout(() => initTypingGame(), 1000);
 }
 
 function showCompletionModal(msg) {
     const overlay = document.getElementById('gameOverlay');
     overlay.classList.remove('hidden');
     overlay.innerHTML = `
-        <div class="bg-[#050b1d] border border-blue-500/30 p-10 rounded-[3rem] text-center max-w-sm">
+        <div class="bg-[#050b1d] border border-blue-500/30 p-10 rounded-[3rem] text-center max-w-sm shadow-[0_0_100px_rgba(37,99,235,0.2)]">
             <h2 class="text-2xl font-black text-white uppercase italic tracking-tighter">${msg}</h2>
             <p class="text-gray-500 text-[10px] font-black uppercase mt-2 mb-8">Neural Integrity Optimized</p>
-            <button onclick="location.reload()" class="w-full py-4 bg-blue-600 text-white font-black uppercase tracking-widest rounded-2xl">Restart Hub</button>
+            <button onclick="location.reload()" class="w-full py-4 bg-blue-600 text-white font-black uppercase tracking-widest rounded-2xl hover:bg-blue-500 transition-colors">Restart Hub</button>
         </div>
     `;
 }
