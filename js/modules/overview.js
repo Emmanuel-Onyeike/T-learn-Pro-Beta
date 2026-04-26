@@ -741,35 +741,3 @@ window.initLeaderboard = initLeaderboard;
 
 
 
-///// for the right side modal
-function toggleRightModal() {
-    const overlay = document.getElementById('rightModalOverlay');
-    const content = document.getElementById('rightModalContent');
-    const isOpening = overlay.classList.contains('opacity-0');
-
-    if (isOpening) {
-        // Open
-        overlay.classList.remove('opacity-0', 'pointer-events-none');
-        content.classList.remove('translate-x-full');
-        
-        // Update credits in real-time when opening
-        syncModalCredits();
-    } else {
-        // Close
-        overlay.classList.add('opacity-0', 'pointer-events-none');
-        content.classList.add('translate-x-full');
-    }
-}
-
-async function syncModalCredits() {
-    if (typeof supabase !== 'undefined') {
-        const { data: { user } } = await supabase.auth.getUser();
-        if (user) {
-            const { data } = await supabase.from('profiles').select('neural_credits').eq('id', user.id).single();
-            const modalDisplay = document.getElementById('modalCredits');
-            if (modalDisplay) {
-                modalDisplay.innerText = (data?.neural_credits || 0).toString().padStart(4, '0');
-            }
-        }
-    }
-}
