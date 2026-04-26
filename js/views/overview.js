@@ -140,7 +140,7 @@ views['Overview'] = `
         </div>
         <div>
             <p class="text-[11px] font-black uppercase tracking-widest text-gray-500">Active Games</p>
-            <h3 id="gamesCount" class="mt-1 text-3xl font-black text-white">1</h3>
+            <h3 id="gamesCount" class="mt-1 text-3xl font-black text-white">3</h3>
         </div>
     </div>
     <i class="fas fa-chess-knight absolute -right-4 -bottom-4 text-8xl text-white/[0.02] group-hover:text-cyan-500/[0.05] transition-all rotate-12"></i>
