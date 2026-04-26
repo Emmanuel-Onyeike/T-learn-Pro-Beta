@@ -3,11 +3,11 @@ views['Classes'] = `
     <header class="p-6 border-b border-white/5 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-[#050b1d]/50 backdrop-blur-md">
         <div class="flex flex-col gap-1">
             <div class="flex items-center gap-3">
-                <h2 class="text-xl font-black italic text-white uppercase tracking-tighter">Elite <span class="text-blue-500">Academy</span></h2>
+                <h2 class="text-xl font-black italic text-white uppercase tracking-tighter">Nxxt <span class="text-blue-500">Academy</span></h2>
                 <span id="trialBadge" class="px-2 py-0.5 rounded border border-blue-500/30 text-[7px] font-black text-blue-400 uppercase tracking-widest animate-pulse">Initializing Trial</span>
             </div>
             <div class="flex items-center gap-3 mt-1">
-                <p id="trialCountdown" class="text-[8px] font-black text-blue-500 tracking-[0.3em] uppercase">Calculating Personal Grace Period...</p>
+                <p id="trialCountdown" class="text-[8px] font-black text-blue-500 tracking-[0.3em] uppercase">Nxxt Classes...</p>
                 <div class="h-1 w-24 bg-white/5 rounded-full overflow-hidden hidden md:block">
                     <div id="trialProgressBar" class="h-full bg-blue-600 transition-all duration-1000 w-0"></div>
                 </div>
@@ -22,7 +22,7 @@ views['Classes'] = `
 
         <div class="flex items-center gap-6">
             <div class="flex flex-col items-end">
-                <span class="text-[7px] font-black text-white/20 uppercase tracking-[0.2em]">Neural Credits</span>
+                <span class="text-[7px] font-black text-white/20 uppercase tracking-[0.2em]"> Credits</span>
                 <span id="academyCredits" class="text-xs font-black text-white italic tracking-tighter">0000</span>
             </div>
             <div class="h-10 w-10 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center">
