@@ -3,7 +3,7 @@ views['Games'] = `
     <header class="p-6 border-b border-white/5 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-[#050b1d]/50 backdrop-blur-md">
         <div>
             <div class="flex items-center gap-3">
-                <h2 class="text-xl font-black italic text-white uppercase tracking-tighter">Neural <span class="text-blue-500">Arcade</span></h2>
+                <h2 class="text-xl font-black italic text-white uppercase tracking-tighter">Game <span class="text-blue-500">Arcade</span></h2>
                 <span class="px-2 py-0.5 rounded border border-blue-500/30 text-[7px] font-black text-blue-400 uppercase tracking-widest">v1.5.0</span>
             </div>
             <p id="currentLevelDisplay" class="text-[8px] font-black text-blue-500 tracking-[0.3em] uppercase mt-1">L-01 // NODE_ACTIVE</p>
@@ -23,7 +23,7 @@ views['Games'] = `
 
         <div class="flex items-center gap-6">
             <div class="flex flex-col items-end">
-                <span class="text-[7px] font-black text-white/20 uppercase tracking-[0.2em]">Neural Credits</span>
+                <span class="text-[7px] font-black text-white/20 uppercase tracking-[0.2em]">Credits</span>
                 <span id="gamesCount" class="text-xs font-black text-white italic tracking-tighter">0000</span>
             </div>
             <div class="h-10 w-10 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center">
