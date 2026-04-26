@@ -817,299 +817,432 @@ async function _processPromotions(client, user, results) {
 
 
 
-//// for the videos 
-/**
- * TECH NXXT: NEURAL VIDEO ARCHIVE ENGINE
- * Credentials Locked: UC4SVo0Ue36XCfOyb5Lh1viQ
- * Features: Centered Modal Player, Slide-out Library, Private Supabase Sync
- * Version: 2.0.4 - Full Global Scoping Patch
- */
+// ─────────────────────────────────────────────────────────────────────────────
+// VIDEO ARCHIVE — YouTube integration with personal bookmarks (saved videos)
+// ─────────────────────────────────────────────────────────────────────────────
+// Required Supabase table: user_videos
+//   id uuid pk default gen_random_uuid(),
+//   user_id uuid references auth.users(id) on delete cascade,
+//   video_id text not null,
+//   video_title text,
+//   thumbnail_url text,
+//   created_at timestamptz default now(),
+//   unique (user_id, video_id)
+// RLS: enable; policy "users own bookmarks" on user_videos
+//   for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
 
-// --- GLOBAL SYSTEM UPLINK ---
-// Explicitly attaching functions to the window object to prevent 'undefined' errors in HTML onclicks
-window.renderVideos = renderVideos;
-window.fetchSavedVideos = fetchSavedVideos;
-window.toggleSaveVideo = toggleSaveVideo;
-window.openVideoPlayer = openVideoPlayer;
-window.handleVideoSearch = handleVideoSearch;
-window.fetchLearningVideos = fetchLearningVideos;
-
-/**
- * INTERNAL: VAULT RECOVERY
- * Locates the Supabase client dynamically to prevent "undefined" reference errors
- */
-const _getVault = () => {
-    const vault = window.supabase || (typeof supabase !== 'undefined' ? supabase : null);
-    if (!vault) {
-        console.error("TECH_NXXT_CORE_ERROR: Neural Link to Supabase could not be established.");
-    }
-    return vault;
+const VIDEO_CONFIG = {
+    // YouTube channel for the curriculum content
+    CHANNEL_ID: 'UC4SVo0Ue36XCfOyb5Lh1viQ',
+    // NOTE: API key is restricted to this domain in Google Cloud Console.
+    // For maximum security, move this fetch to a Vercel Edge Function.
+    API_KEY: window.CONFIG?.YOUTUBE_API_KEY || 'AIzaSyAkZtg1ux1fYkIKFr3q8I1wX_PK-p31Uh4',
+    MAX_RESULTS: 12,
 };
 
+// Cached: which videoIds the current user has bookmarked
+let _bookmarkedIds = new Set();
+let _videoSearchTimer = null;
+
+// ── HTML escaping (prevents XSS when rendering video titles) ───────────────
+function _escVideo(str) {
+    if (typeof str !== 'string') return '';
+    return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
+// ── Toast helper (uses _showToast if available, falls back inline) ────────
+function _videoToast(message, type = 'info') {
+    if (typeof _showToast === 'function') return _showToast(message, type);
+    const colors = { success: '#16a34a', error: '#dc2626', info: '#2563eb', warning: '#ca8a04' };
+    const t = document.createElement('div');
+    t.style.cssText = `position:fixed;top:24px;right:24px;z-index:99999;padding:12px 20px;
+        background:${colors[type] || colors.info};color:white;border-radius:12px;
+        font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:0.1em;
+        box-shadow:0 8px 32px rgba(0,0,0,0.3);transition:opacity 0.3s`;
+    t.textContent = message;
+    document.body.appendChild(t);
+    setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 300); }, 2500);
+}
+
+// ── Load bookmark IDs for current user (fills _bookmarkedIds) ─────────────
+async function _loadUserBookmarks() {
+    try {
+        const client = await getLMSClient();
+        const user   = await getLMSUser();
+        if (!user) { _bookmarkedIds = new Set(); return; }
+        const { data } = await client
+            .from('user_videos')
+            .select('video_id')
+            .eq('user_id', user.id);
+        _bookmarkedIds = new Set((data || []).map(v => v.video_id));
+    } catch (err) {
+        console.warn('[Videos] Could not load bookmarks:', err.message);
+        _bookmarkedIds = new Set();
+    }
+}
+
+// ── Render the Videos tab content ─────────────────────────────────────────
 async function renderVideos(container) {
     if (!container) return;
-    
-    // 1. MASTER SHELL: Tactical Search Header & Control Bar
+
     container.innerHTML = `
-        <div class="animate-in fade-in slide-in-from-bottom-4 duration-700">
-            <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
+        <div class="animate-in fade-in slide-in-from-bottom-4 duration-700 max-w-6xl mx-auto">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
                 <div class="relative w-full md:w-[450px]">
-                    <i class="fas fa-search absolute left-5 top-1/2 -translate-y-1/2 text-blue-500/40 text-[10px]"></i>
-                    <input type="text" id="videoSearchInput" 
-                        placeholder="SEARCH NEURAL ARCHIVES..." 
-                        class="w-full bg-white/[0.02] border border-white/5 rounded-2xl py-4 pl-14 pr-6 text-[10px] font-black text-white uppercase tracking-[0.2em] focus:border-blue-500/50 focus:bg-blue-500/5 focus:outline-none transition-all placeholder:text-white/10"
-                        onkeyup="handleVideoSearch(this.value)">
+                    <i class="fas fa-search absolute left-5 top-1/2 -translate-y-1/2 text-blue-500/40 text-xs"></i>
+                    <input type="text" id="videoSearchInput"
+                        placeholder="Search videos..."
+                        class="w-full bg-white/[0.02] border border-white/10 rounded-2xl py-3.5 pl-12 pr-5 text-sm text-white focus:border-blue-500/50 focus:bg-blue-500/5 focus:outline-none transition-all placeholder:text-white/30"
+                        oninput="handleVideoSearch(this.value)">
                 </div>
-                
-                <div class="flex items-center gap-3">
-                    <button onclick="renderVideos(document.getElementById('lesson-sub-content'))" 
-                        class="px-5 py-3 bg-white/5 border border-white/5 rounded-xl text-[9px] font-black text-white/30 uppercase tracking-widest hover:text-white transition-all">
-                        <i class="fas fa-sync-alt mr-2"></i> Refresh
+
+                <div class="flex items-center gap-2">
+                    <button onclick="renderVideos(document.getElementById('lesson-sub-content'))"
+                        class="px-4 py-3 bg-white/5 hover:bg-white/10 border border-white/5 rounded-xl text-[10px] font-black text-white/50 hover:text-white uppercase tracking-widest transition-all">
+                        <i class="fas fa-rotate mr-2"></i>Refresh
                     </button>
-                    <button onclick="fetchSavedVideos()" 
-                        class="px-5 py-3 bg-blue-600/10 border border-blue-500/20 rounded-xl text-[9px] font-black text-blue-400 uppercase tracking-widest hover:bg-blue-600 hover:text-white transition-all">
-                        <i class="fas fa-bookmark mr-2"></i> My Library
+                    <button onclick="openSavedVideos()"
+                        class="px-4 py-3 bg-blue-600/10 border border-blue-500/20 rounded-xl text-[10px] font-black text-blue-400 hover:bg-blue-600 hover:text-white uppercase tracking-widest transition-all">
+                        <i class="fas fa-bookmark mr-2"></i>My Bookmarks
                     </button>
                 </div>
             </div>
 
-            <div id="videoGridContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div id="videoGridContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 ${Array(6).fill(0).map(() => `
-                    <div class="h-[350px] rounded-[2.5rem] bg-white/[0.01] border border-white/5 animate-pulse"></div>
+                    <div class="h-[300px] rounded-3xl bg-white/[0.02] border border-white/5 animate-pulse"></div>
                 `).join('')}
             </div>
         </div>
     `;
 
-    // 2. INITIALIZE DATA FETCH
+    // Load user bookmarks first so the bookmark icons render correctly
+    await _loadUserBookmarks();
     await fetchLearningVideos();
 }
 
-/**
- * CORE LOGIC: API FETCHING & DATA BINDING
- */
+// ── Fetch videos from YouTube ─────────────────────────────────────────────
 async function fetchLearningVideos(query = '') {
     const grid = document.getElementById('videoGridContainer');
     if (!grid) return;
 
     try {
-        const API_KEY = 'AIzaSyAkZtg1ux1fYkIKFr3q8I1wX_PK-p31Uh4'; 
-        const CHANNEL_ID = 'UC4SVo0Ue36XCfOyb5Lh1viQ'; 
-        
-        let url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=12&type=video&channelId=${CHANNEL_ID}&key=${API_KEY}`;
+        let url = `https://www.googleapis.com/youtube/v3/search` +
+                  `?part=snippet&maxResults=${VIDEO_CONFIG.MAX_RESULTS}` +
+                  `&type=video&channelId=${VIDEO_CONFIG.CHANNEL_ID}` +
+                  `&key=${VIDEO_CONFIG.API_KEY}`;
         if (query) url += `&q=${encodeURIComponent(query)}`;
 
-        const response = await fetch(url);
-        const data = await response.json();
+        const res = await fetch(url);
+        if (!res.ok) throw new Error(`YouTube API: ${res.status}`);
+        const data = await res.json();
 
-        if (data.items && data.items.length > 0) {
+        if (data.items?.length) {
             renderVideoCards(data.items, grid);
         } else {
-            renderEmptyVideoState(grid);
+            renderEmptyVideoState(grid, query);
         }
-    } catch (error) {
-        console.error("NXXT_UPLINK_OFFLINE:", error);
-        renderEmptyVideoState(grid);
+    } catch (err) {
+        console.error('[Videos] Fetch failed:', err);
+        renderEmptyVideoState(grid, query);
     }
 }
 
-/**
- * UI: CARD GENERATION
- */
+// ── Render the video cards grid ───────────────────────────────────────────
 function renderVideoCards(items, grid) {
     grid.innerHTML = items.map(item => {
-        const v = item.snippet;
-        const videoId = item.id.videoId;
-        const thumb = v.thumbnails.high.url;
-        const safeTitle = v.title.replace(/'/g, "\\'");
-        
+        const v        = item.snippet;
+        const videoId  = item.id.videoId;
+        const title    = _escVideo(v.title);
+        const thumb    = _escVideo(v.thumbnails?.high?.url || v.thumbnails?.default?.url || '');
+        const isSaved  = _bookmarkedIds.has(videoId);
+
         return `
-            <div class="group relative overflow-hidden rounded-[2.5rem] border border-white/10 bg-[#050b1d] p-5 transition-all duration-500 hover:border-blue-500/40 hover:translate-y-[-5px] hover:shadow-[0_20px_50px_rgba(59,130,246,0.1)]">
-                
-                <div class="relative aspect-video rounded-[1.8rem] overflow-hidden mb-6 bg-black border border-white/5">
-                    <img src="${thumb}" class="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-all duration-700 group-hover:scale-105" />
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-80"></div>
-                    
-                    <button onclick="openVideoPlayer('${videoId}')" class="absolute inset-0 flex items-center justify-center">
-                        <div class="h-14 w-14 rounded-full bg-blue-600/20 border border-blue-500/40 flex items-center justify-center text-blue-400 backdrop-blur-md scale-90 group-hover:scale-110 opacity-0 group-hover:opacity-100 transition-all duration-500">
-                            <i class="fas fa-play text-xl ml-1"></i>
+            <div class="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.02] p-4 transition-all duration-300 hover:border-blue-500/40 hover:-translate-y-1 hover:shadow-2xl hover:shadow-blue-500/10">
+                <div class="relative aspect-video rounded-2xl overflow-hidden mb-4 bg-black border border-white/5">
+                    <img src="${thumb}" alt="${title}" loading="lazy"
+                        class="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-all duration-500 group-hover:scale-105">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
+                    <button onclick="openVideoPlayer('${videoId}')"
+                        aria-label="Play video"
+                        class="absolute inset-0 flex items-center justify-center">
+                        <div class="h-14 w-14 rounded-full bg-blue-600/20 border border-blue-500/40 flex items-center justify-center text-blue-400 backdrop-blur-md scale-90 group-hover:scale-110 opacity-60 group-hover:opacity-100 transition-all duration-300">
+                            <i class="fas fa-play text-lg ml-1"></i>
                         </div>
                     </button>
-
-                    <div class="absolute top-4 left-4 px-3 py-1 bg-black/60 backdrop-blur-md border border-white/10 rounded-lg text-[8px] font-black text-white/60 uppercase tracking-widest">
-                        Module Locked
-                    </div>
                 </div>
 
-                <div class="px-2">
-                    <div class="flex items-center justify-between mb-3">
-                        <span class="text-[9px] font-black text-blue-500 uppercase tracking-widest">Programming Node</span>
-                        <button onclick="toggleSaveVideo('${videoId}', '${safeTitle}', '${thumb}')" 
-                            class="text-white/20 hover:text-blue-400 transition-colors">
-                            <i class="far fa-bookmark text-sm"></i>
-                        </button>
-                    </div>
+                <div class="flex items-start justify-between gap-3 mb-3">
+                    <span class="text-[9px] font-black text-blue-400/60 uppercase tracking-widest">Lesson Video</span>
+                    <button onclick="toggleSaveVideo('${videoId}')"
+                        id="bookmark-btn-${videoId}"
+                        aria-label="${isSaved ? 'Remove bookmark' : 'Bookmark this video'}"
+                        class="text-${isSaved ? 'blue-400' : 'white/30'} hover:text-blue-400 transition-colors">
+                        <i class="${isSaved ? 'fas' : 'far'} fa-bookmark text-sm"></i>
+                    </button>
+                </div>
 
-                    <h4 class="text-xs font-black text-white uppercase tracking-tight line-clamp-2 leading-relaxed min-h-[2.8rem]">${v.title}</h4>
-                    
-                    <div class="mt-6 flex items-center justify-between border-t border-white/5 pt-5">
-                        <div class="flex items-center gap-1.5">
-                            <i class="fas fa-star text-blue-500 text-[9px]"></i>
-                            <span class="text-[10px] font-black text-white">4.9</span>
-                        </div>
-                        <button onclick="openVideoPlayer('${videoId}')" 
-                            class="px-6 py-3 rounded-2xl border border-blue-500/20 text-[9px] font-black text-blue-400 uppercase tracking-widest hover:bg-blue-600 hover:text-white transition-all">
-                            View Course
-                        </button>
-                    </div>
+                <h4 class="text-sm font-bold text-white line-clamp-2 leading-snug min-h-[2.5rem]" title="${title}">
+                    ${title}
+                </h4>
+
+                <div class="mt-4 pt-4 border-t border-white/5 flex items-center justify-between">
+                    <span class="text-[10px] text-white/30 font-bold">${new Date(v.publishedAt).toLocaleDateString('en-GB', { month: 'short', year: 'numeric' })}</span>
+                    <button onclick="openVideoPlayer('${videoId}')"
+                        class="px-4 py-2 rounded-xl border border-blue-500/20 bg-blue-500/5 text-[10px] font-black text-blue-400 uppercase tracking-widest hover:bg-blue-600 hover:text-white transition-all">
+                        Watch
+                    </button>
                 </div>
             </div>
         `;
     }).join('');
 }
 
-/**
- * MODAL PLAYER (CENTERED MODAL)
- */
+// ── Modal video player ────────────────────────────────────────────────────
 function openVideoPlayer(videoId) {
+    // Remove any existing player first
+    const existing = document.getElementById('videoPlayerModal');
+    if (existing) existing.remove();
+
     const modal = document.createElement('div');
-    modal.id = "videoPlayerModal";
-    modal.className = "fixed inset-0 z-[200] flex items-center justify-center bg-black/90 backdrop-blur-sm p-4 animate-in fade-in duration-300";
+    modal.id = 'videoPlayerModal';
+    modal.className = 'fixed inset-0 z-[600] flex items-center justify-center bg-black/95 backdrop-blur-sm p-4 animate-in fade-in duration-200';
+
+    // Close on backdrop click
+    modal.addEventListener('click', (e) => { if (e.target === modal) closeVideoPlayer(); });
+
     modal.innerHTML = `
-        <div class="relative w-full max-w-4xl aspect-video bg-[#050b1d] border border-white/10 rounded-[2.5rem] overflow-hidden shadow-2xl animate-in zoom-in duration-300">
-            <button onclick="document.getElementById('videoPlayerModal').remove()" 
-                class="absolute top-6 right-6 z-10 h-10 w-10 bg-white/10 border border-white/10 rounded-full flex items-center justify-center text-white hover:bg-red-500 transition-all">
+        <div class="relative w-full max-w-5xl aspect-video bg-black border border-white/10 rounded-2xl overflow-hidden shadow-2xl animate-in zoom-in-95 duration-300">
+            <button onclick="closeVideoPlayer()"
+                aria-label="Close video"
+                class="absolute top-4 right-4 z-10 h-10 w-10 bg-black/60 border border-white/20 rounded-full flex items-center justify-center text-white hover:bg-red-500 transition-all">
                 <i class="fas fa-times"></i>
             </button>
-            <iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1" 
-                class="w-full h-full" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+            <iframe src="https://www.youtube.com/embed/${encodeURIComponent(videoId)}?autoplay=1&rel=0"
+                class="w-full h-full" frameborder="0"
+                allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen></iframe>
         </div>
     `;
     document.body.appendChild(modal);
+    document.body.style.overflow = 'hidden';
+
+    // Close on Escape key
+    const escHandler = (e) => { if (e.key === 'Escape') closeVideoPlayer(); };
+    document.addEventListener('keydown', escHandler);
+    modal._escHandler = escHandler;
 }
 
-/**
- * SLIDE-OUT LIBRARY PANEL (RIGHT SIDE MODAL)
- */
-async function fetchSavedVideos() {
-    const supabase = _getVault();
-    if (!supabase) return alert("System Link Offline: Supabase not detected.");
+function closeVideoPlayer() {
+    const modal = document.getElementById('videoPlayerModal');
+    if (!modal) return;
+    if (modal._escHandler) document.removeEventListener('keydown', modal._escHandler);
+    modal.remove();
+    document.body.style.overflow = '';
+}
 
+// ── Saved bookmarks panel ─────────────────────────────────────────────────
+async function openSavedVideos() {
     try {
-        const { data: { user } } = await supabase.auth.getUser();
-        if (!user) return alert("System Authentication Required.");
+        const client = await getLMSClient();
+        const user   = await getLMSUser();
+        if (!user) {
+            _videoToast('Please log in to view bookmarks', 'warning');
+            return;
+        }
 
-        const { data: saved, error } = await supabase
+        const { data: saved } = await client
             .from('user_videos')
             .select('*')
+            .eq('user_id', user.id)
             .order('created_at', { ascending: false });
 
-        const existingPanel = document.getElementById('librarySidePanel');
-        if (existingPanel) existingPanel.remove();
+        // Sync the cache
+        _bookmarkedIds = new Set((saved || []).map(v => v.video_id));
 
-        const sidePanel = document.createElement('div');
-        sidePanel.id = "librarySidePanel";
-        sidePanel.className = "fixed inset-0 z-[150] flex justify-end bg-black/60 backdrop-blur-sm animate-in fade-in duration-300";
-        sidePanel.onclick = (e) => e.target === sidePanel && sidePanel.remove();
+        // Remove any existing panel
+        const existing = document.getElementById('librarySidePanel');
+        if (existing) existing.remove();
 
-        sidePanel.innerHTML = `
-            <div class="w-full max-w-md h-full bg-[#050b1d] border-l border-white/10 p-8 shadow-2xl animate-in slide-in-from-right duration-500 overflow-y-auto">
-                <div class="flex items-center justify-between mb-10">
-                    <h2 class="text-xl font-black text-white uppercase italic tracking-tighter">Neural Library</h2>
-                    <button onclick="document.getElementById('librarySidePanel').remove()" class="text-white/20 hover:text-white transition-all">
-                        <i class="fas fa-arrow-right text-lg"></i>
+        const panel = document.createElement('div');
+        panel.id = 'librarySidePanel';
+        panel.className = 'fixed inset-0 z-[550] flex justify-end bg-black/70 backdrop-blur-sm animate-in fade-in duration-300';
+        panel.addEventListener('click', (e) => { if (e.target === panel) closeSavedVideos(); });
+
+        panel.innerHTML = `
+            <div class="w-full max-w-md h-full bg-[#050b1d] border-l border-white/10 shadow-2xl animate-in slide-in-from-right duration-300 flex flex-col">
+                <!-- Header -->
+                <div class="px-6 py-5 border-b border-white/5 flex items-center justify-between">
+                    <div>
+                        <p class="text-[9px] font-black text-blue-400/60 uppercase tracking-[0.3em]">Your Library</p>
+                        <h2 class="text-lg font-black text-white mt-1">Saved Videos</h2>
+                    </div>
+                    <button onclick="closeSavedVideos()"
+                        aria-label="Close"
+                        class="w-9 h-9 rounded-xl bg-white/5 hover:bg-white/10 text-white/40 hover:text-white flex items-center justify-center transition-all">
+                        <i class="fas fa-times text-sm"></i>
                     </button>
                 </div>
 
-                <div class="space-y-6" id="libraryList">
+                <!-- Body -->
+                <div class="flex-1 overflow-y-auto p-5 space-y-3" id="libraryList">
                     ${!saved || saved.length === 0 ? `
-                        <div class="py-32 flex flex-col items-center justify-center opacity-20 text-center">
-                            <i class="fas fa-folder-open text-5xl mb-6"></i>
-                            <h3 class="text-[10px] font-black uppercase tracking-[0.3em]">No Modules Synced</h3>
+                        <div class="py-20 flex flex-col items-center justify-center text-center">
+                            <div class="w-16 h-16 rounded-2xl bg-white/5 flex items-center justify-center mb-4">
+                                <i class="far fa-bookmark text-white/20 text-2xl"></i>
+                            </div>
+                            <p class="text-white font-black text-sm mb-1">No bookmarks yet</p>
+                            <p class="text-white/40 text-xs">Tap the bookmark icon on any video to save it here.</p>
                         </div>
                     ` : saved.map(v => `
-                        <div class="group relative flex gap-4 p-4 bg-white/[0.02] border border-white/5 rounded-2xl hover:border-blue-500/40 transition-all">
-                            <img src="${v.thumbnail_url}" class="h-16 w-24 object-cover rounded-xl opacity-60 group-hover:opacity-100">
-                            <div class="flex flex-col justify-center overflow-hidden">
-                                <h4 class="text-[10px] font-black text-white uppercase truncate">${v.video_title}</h4>
-                                <div class="flex gap-4 mt-3">
-                                    <button onclick="openVideoPlayer('${v.video_id}')" class="text-[9px] font-black text-blue-400 uppercase tracking-widest hover:text-blue-300">Play</button>
-                                    <button onclick="toggleSaveVideo('${v.video_id}')" class="text-[9px] font-black text-white/20 hover:text-red-500 uppercase tracking-widest">Delete</button>
+                        <div class="group flex gap-3 p-3 bg-white/[0.02] border border-white/5 rounded-2xl hover:bg-white/[0.04] hover:border-white/10 transition-all">
+                            <button onclick="openVideoPlayer('${_escVideo(v.video_id)}')"
+                                class="shrink-0 w-24 h-16 rounded-lg overflow-hidden bg-black border border-white/5 relative">
+                                <img src="${_escVideo(v.thumbnail_url)}" alt="" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-all">
+                                <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 bg-black/40 transition-all">
+                                    <i class="fas fa-play text-white text-xs"></i>
+                                </div>
+                            </button>
+                            <div class="flex-1 min-w-0 flex flex-col">
+                                <h4 class="text-xs font-bold text-white line-clamp-2 leading-snug">${_escVideo(v.video_title || 'Untitled')}</h4>
+                                <div class="mt-auto flex items-center gap-3 pt-2">
+                                    <button onclick="openVideoPlayer('${_escVideo(v.video_id)}')"
+                                        class="text-[9px] font-black text-blue-400 hover:text-blue-300 uppercase tracking-widest">
+                                        Play
+                                    </button>
+                                    <button onclick="toggleSaveVideo('${_escVideo(v.video_id)}')"
+                                        class="text-[9px] font-black text-white/30 hover:text-red-400 uppercase tracking-widest">
+                                        Remove
+                                    </button>
                                 </div>
                             </div>
                         </div>
                     `).join('')}
                 </div>
+
+                <!-- Footer count -->
+                ${saved && saved.length > 0 ? `
+                    <div class="px-6 py-3 border-t border-white/5 text-center">
+                        <p class="text-white/30 text-[10px] font-black uppercase tracking-widest">${saved.length} ${saved.length === 1 ? 'video' : 'videos'} saved</p>
+                    </div>
+                ` : ''}
             </div>
         `;
-        document.body.appendChild(sidePanel);
+
+        document.body.appendChild(panel);
+        document.body.style.overflow = 'hidden';
     } catch (err) {
-        console.error("Library sync failure:", err);
+        console.error('[Videos] Bookmarks load failed:', err);
+        _videoToast('Could not load bookmarks: ' + err.message, 'error');
     }
 }
 
-/**
- * PERSISTENCE: PRIVATE DATABASE SYNC
- */
-async function toggleSaveVideo(vid, title = '', thumb = '') {
-    const supabase = _getVault();
-    if (!supabase) return;
+function closeSavedVideos() {
+    const panel = document.getElementById('librarySidePanel');
+    if (panel) panel.remove();
+    document.body.style.overflow = '';
+}
 
+// ── Toggle bookmark on a video ────────────────────────────────────────────
+async function toggleSaveVideo(videoId, title = '', thumb = '') {
     try {
-        const { data: { user } } = await supabase.auth.getUser();
-        if (!user) return alert("System Auth Required.");
+        const client = await getLMSClient();
+        const user   = await getLMSUser();
+        if (!user) {
+            _videoToast('Please log in to bookmark videos', 'warning');
+            return;
+        }
 
-        const { data: existing } = await supabase.from('user_videos')
-            .select('id').eq('user_id', user.id).eq('video_id', vid).single();
+        // Look up existing bookmark
+        const { data: existing } = await client
+            .from('user_videos')
+            .select('id')
+            .eq('user_id', user.id)
+            .eq('video_id', videoId)
+            .maybeSingle();
 
         if (existing) {
-            await supabase.from('user_videos').delete().eq('id', existing.id);
-            console.log("Removed from Archive.");
-            if(document.getElementById('librarySidePanel')) fetchSavedVideos();
+            // Already saved — remove it
+            const { error } = await client.from('user_videos').delete().eq('id', existing.id);
+            if (error) throw error;
+            _bookmarkedIds.delete(videoId);
+            _videoToast('Bookmark removed', 'info');
         } else {
-            await supabase.from('user_videos').insert([{
-                user_id: user.id, video_id: vid, video_title: title, thumbnail_url: thumb
-            }]);
-            console.log("Synced to Archive.");
-            alert("Synced to Archive.");
+            // Need title and thumb — if not passed, look them up from the card
+            if (!title || !thumb) {
+                const card = document.querySelector(`#bookmark-btn-${videoId}`)?.closest('.group');
+                title = title || card?.querySelector('h4')?.getAttribute('title') || 'Saved video';
+                thumb = thumb || card?.querySelector('img')?.src || '';
+            }
+
+            const { error } = await client.from('user_videos').insert({
+                user_id: user.id,
+                video_id: videoId,
+                video_title: title,
+                thumbnail_url: thumb,
+            });
+            if (error) throw error;
+            _bookmarkedIds.add(videoId);
+            _videoToast('✓ Video bookmarked', 'success');
         }
+
+        // Update the bookmark icon visually without re-rendering the whole grid
+        const btn = document.getElementById(`bookmark-btn-${videoId}`);
+        if (btn) {
+            const isSaved = _bookmarkedIds.has(videoId);
+            const icon = btn.querySelector('i');
+            if (icon) {
+                icon.className = `${isSaved ? 'fas' : 'far'} fa-bookmark text-sm`;
+            }
+            btn.className = `text-${isSaved ? 'blue-400' : 'white/30'} hover:text-blue-400 transition-colors`;
+            btn.setAttribute('aria-label', isSaved ? 'Remove bookmark' : 'Bookmark this video');
+        }
+
+        // Refresh open library panel if visible
+        if (document.getElementById('librarySidePanel')) openSavedVideos();
     } catch (err) {
-        console.error("Database Write Error:", err);
+        console.error('[Videos] Toggle save failed:', err);
+        _videoToast('Could not save: ' + err.message, 'error');
     }
 }
 
-/**
- * SYSTEM UI: EMPTY STATE (MAIN GRID)
- */
-function renderEmptyVideoState(grid) {
+// ── Empty state ──────────────────────────────────────────────────────────
+function renderEmptyVideoState(grid, query = '') {
     grid.innerHTML = `
-        <div class="col-span-full flex flex-col items-center justify-center py-24 text-center animate-in zoom-in duration-500">
-            <div class="relative mb-8">
-                <div class="h-24 w-24 bg-blue-600/5 border border-blue-500/20 rounded-[2rem] flex items-center justify-center text-blue-500/30">
-                    <i class="fas fa-video-slash text-4xl"></i>
-                </div>
-                <div class="absolute -top-2 -right-2 h-6 w-6 bg-blue-600/20 border border-blue-400/40 rounded-lg flex items-center justify-center">
-                    <div class="h-1.5 w-1.5 bg-blue-400 rounded-full animate-pulse"></div>
-                </div>
+        <div class="col-span-full flex flex-col items-center justify-center py-20 text-center">
+            <div class="w-16 h-16 rounded-2xl bg-white/5 flex items-center justify-center mb-4">
+                <i class="fas fa-${query ? 'search' : 'video-slash'} text-white/20 text-2xl"></i>
             </div>
-            <h3 class="text-xl font-black text-white uppercase italic tracking-tighter">Neural Link Severed</h3>
-            <p class="mt-2 text-[10px] font-black text-white/20 uppercase tracking-[0.3em] max-w-[280px]"> Archive synchronization failed or the requested data node is offline.</p>
-            <button onclick="renderVideos(document.getElementById('lesson-sub-content'))" class="mt-10 px-8 py-3 bg-white/5 border border-white/10 rounded-2xl text-[9px] font-black text-white uppercase tracking-widest hover:bg-blue-600 transition-all">Retry Link</button>
+            <p class="text-white font-black text-base mb-1">${query ? `No videos found for "${_escVideo(query)}"` : 'No videos available'}</p>
+            <p class="text-white/40 text-xs mb-6">${query ? 'Try a different search term' : 'Check your connection and try again'}</p>
+            <button onclick="renderVideos(document.getElementById('lesson-sub-content'))"
+                class="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-black text-[10px] uppercase tracking-widest transition-all">
+                <i class="fas fa-rotate mr-2"></i>Try Again
+            </button>
         </div>
     `;
 }
 
-/**
- * UTILITY: SEARCH DEBOUNCE
- */
-let searchTimer;
-function handleVideoSearch(val) {
-    clearTimeout(searchTimer);
-    searchTimer = setTimeout(() => fetchLearningVideos(val), 600);
+// ── Debounced search ─────────────────────────────────────────────────────
+function handleVideoSearch(value) {
+    clearTimeout(_videoSearchTimer);
+    _videoSearchTimer = setTimeout(() => fetchLearningVideos(value.trim()), 500);
 }
 
-
-
+// ── Expose to window ─────────────────────────────────────────────────────
+window.renderVideos      = renderVideos;
+window.openSavedVideos   = openSavedVideos;
+window.closeSavedVideos  = closeSavedVideos;
+window.toggleSaveVideo   = toggleSaveVideo;
+window.openVideoPlayer   = openVideoPlayer;
+window.closeVideoPlayer  = closeVideoPlayer;
+window.handleVideoSearch = handleVideoSearch;
+window.fetchLearningVideos = fetchLearningVideos;
 
 // ── ANALYTICS ────────────────────────────────────────────────────────────────
 async function renderAnalytics(el) {
