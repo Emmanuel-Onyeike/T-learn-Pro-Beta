@@ -17,8 +17,6 @@ views['Classes'] = `
         <div id="providerSelector" class="flex items-center gap-2 p-1 bg-white/[0.02] border border-white/5 rounded-2xl overflow-x-auto max-w-full">
             <button onclick="filterClasses('all')" class="class-filter-btn px-4 py-2 bg-blue-600 rounded-xl text-[7px] font-black text-white uppercase tracking-widest transition-all">All Tracks</button>
             <button onclick="filterClasses('Udemy')" class="class-filter-btn px-4 py-2 hover:bg-white/5 rounded-xl text-[7px] font-black text-white/40 uppercase tracking-widest transition-all hover:text-white">Udemy</button>
-            <button onclick="filterClasses('T-Learn Pro')" class="class-filter-btn px-4 py-2 hover:bg-white/5 rounded-xl text-[7px] font-black text-white/40 uppercase tracking-widest transition-all hover:text-white">T-Learn</button>
-            <button onclick="filterClasses('FreeCodeCamp')" class="class-filter-btn px-4 py-2 hover:bg-white/5 rounded-xl text-[7px] font-black text-white/40 uppercase tracking-widest transition-all hover:text-white">CodeCamp</button>
             <button onclick="filterClasses('Coursera')" class="class-filter-btn px-4 py-2 hover:bg-white/5 rounded-xl text-[7px] font-black text-white/40 uppercase tracking-widest transition-all hover:text-white">Coursera</button>
         </div>
 
