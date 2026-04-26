@@ -49,9 +49,6 @@ views['Games'] = `
                 <i class="fas fa-terminal text-[10px] text-blue-500"></i>
                 <p id="systemMessage" class="text-[9px] font-bold text-white/40 uppercase tracking-[0.2em]">Ready to start...</p>
             </div>
-            <div class="w-48 h-1 bg-white/5 rounded-full overflow-hidden">
-                <div id="gameProgress" class="h-full bg-blue-600 w-0 transition-all duration-500 shadow-[0_0_10px_#2563eb]"></div>
-            </div>
         </div>
     </main>
 
