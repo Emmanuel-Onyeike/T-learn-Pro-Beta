@@ -1,7 +1,7 @@
 /**
  * TECH NXXT: NXXT AI LEARNING ASSISTANT
- * V1.4 Neural Engine Integration - GPT RESTORATION
- * Status: FINAL PRODUCTION FIX - OpenAI Model Re-mapped
+ * V1.4 Neural Engine Integration - OPENAI RESTORATION
+ * Status: FINAL PRODUCTION FIX - GPT-4o Integration
  */
 
 (function initNxxtSystem() {
@@ -12,8 +12,8 @@
     const NXXT_CONFIG = {
         IMG_GEN_URL: 'https://image.pollinations.ai/prompt/',
         AI_LOGO: '/assets/Logo.webp',
-        // REPLACE WITH YOUR OPENAI KEY
-        OPENAI_API_KEY: "YOUR_OPENAI_API_KEY_HERE", 
+        // INTEGRATED GPT KEY
+        OPENAI_API_KEY: "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", 
         SYSTEM_IDENTITY: "You are Nxxt AI, a tactical learning assistant for Tech Nxxt. Be professional, witty, and concise. Style: Industrial. Use bolding for emphasis.",
     };
 
@@ -39,7 +39,7 @@
             <header class="flex justify-between items-center px-6 md:px-10 py-6 backdrop-blur-xl border-b border-white/5 shrink-0">
                 <div class="flex flex-col">
                     <h2 class="text-xl md:text-2xl font-black italic text-white uppercase tracking-tighter">Nxxt <span class="text-blue-500">AI</span></h2>
-                    <span id="systemStatus" class="text-[8px] font-bold text-emerald-500 uppercase tracking-[0.3em]">GPT Uplink Active</span>
+                    <span id="systemStatus" class="text-[8px] font-bold text-emerald-500 uppercase tracking-[0.3em]">GPT-4o Uplink Active</span>
                 </div>
                 <div class="flex bg-black/50 p-1 rounded-xl border border-white/5">
                     <button onclick="switchMode('standard')" id="btnStd" class="px-4 py-1.5 rounded-lg text-[9px] font-black uppercase text-white bg-blue-600">STD</button>
@@ -52,14 +52,14 @@
                     <div class="w-32 h-32 rounded-full bg-blue-600/10 flex items-center justify-center p-6 border border-blue-500/20 animate-pulse">
                         <img src="${NXXT_CONFIG.AI_LOGO}" class="w-full h-full object-contain opacity-50">
                     </div>
-                    <h1 class="text-2xl font-bold text-white uppercase tracking-widest opacity-20">GPT Engine Standby</h1>
+                    <h1 class="text-2xl font-bold text-white uppercase tracking-widest opacity-20">GPT Neural Standby</h1>
                 </div>
             </div>
 
             <div class="p-6 md:p-8 border-t border-white/5 bg-[#020408] shrink-0">
                 <div class="max-w-4xl mx-auto">
                     <div class="relative flex items-center bg-white/[0.03] border border-white/10 rounded-full px-2 py-2 focus-within:border-blue-500/50 transition-all">
-                        <input id="nxxtInput" type="text" placeholder="Query Neural Engine..." class="flex-1 bg-transparent border-none outline-none text-white px-6 py-3 text-[16px]">
+                        <input id="nxxtInput" type="text" placeholder="Access GPT Intelligence..." class="flex-1 bg-transparent border-none outline-none text-white px-6 py-3 text-[16px]">
                         <button id="nxxtSendBtn" class="w-12 h-12 rounded-full bg-blue-600 text-white flex items-center justify-center hover:scale-105 transition-transform shadow-lg shadow-blue-600/20">
                             <i class="fas fa-arrow-up"></i>
                         </button>
@@ -70,7 +70,7 @@
         `;
     }
 
-    // 3. CORE NEURAL LOGIC (GPT INTEGRATION)
+    // 3. CORE GPT LOGIC
     async function sendMessage() {
         const input = document.getElementById('nxxtInput');
         const prompt = input.value.trim();
@@ -84,23 +84,21 @@
         const thinkId = 'think-' + Date.now();
         showThinkingIndicator(thinkId);
 
+        // Image handling remains the same (Pollinations)
         if (/image|draw|generate|picture/i.test(prompt)) {
             handleImageRequest(prompt, thinkId);
             return;
         }
 
         try {
-            // GPT API ENDPOINT
-            const API_URL = "https://api.openai.com/v1/chat/completions";
-
-            const response = await fetch(API_URL, {
+            const response = await fetch("https://api.openai.com/v1/chat/completions", {
                 method: 'POST',
                 headers: { 
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${NXXT_CONFIG.OPENAI_API_KEY}`
                 },
                 body: JSON.stringify({
-                    model: "gpt-4o", // Or "gpt-3.5-turbo"
+                    model: "gpt-4o",
                     messages: [
                         { role: "system", content: NXXT_CONFIG.SYSTEM_IDENTITY },
                         { role: "user", content: prompt }
@@ -113,13 +111,13 @@
             document.getElementById(thinkId)?.remove();
 
             if (!response.ok) {
-                throw new Error(data.error?.message || "GPT Connection Error");
+                throw new Error(data.error?.message || "GPT Uplink Failed");
             }
 
             let aiText = data.choices[0].message.content;
             
             if(window.nxxtMode === 'fun') {
-                aiText = `🚀 [GPT_STREAM]: ${aiText.toUpperCase()} 🔥`;
+                aiText = `🚀 [GPT_PROT]: ${aiText.toUpperCase()} 🔥`;
             }
 
             renderAiResponse(aiText, 'text');
@@ -127,8 +125,8 @@
 
         } catch (err) {
             document.getElementById(thinkId)?.remove();
-            console.error("GPT_UPLINK_ERROR:", err);
-            renderAiResponse(`CRITICAL ERROR: ${err.message}. <br><br><b>Tactical Advice:</b> Ensure your OpenAI API key is valid and has sufficient credits.`, 'text');
+            console.error("GPT_ERROR:", err);
+            renderAiResponse(`CRITICAL ERROR: ${err.message}.`, 'text');
         }
     }
 
@@ -138,7 +136,7 @@
         renderAiResponse(url, 'image');
     }
 
-    // 4. RENDERING HELPERS
+    // 4. UI HELPERS
     function renderUserMessage(text) {
         document.getElementById('aiThread').insertAdjacentHTML('beforeend', `
             <div class="flex justify-end mb-8 animate-in fade-in slide-in-from-right-4 duration-300">
@@ -186,7 +184,7 @@
         if (thread) thread.scrollTo({ top: thread.scrollHeight, behavior: 'smooth' });
     }
 
-    // 5. GLOBAL INTERFACE CONTROLS
+    // 5. MODES & EVENTS
     window.switchMode = function(mode) {
         window.nxxtMode = mode;
         const s = document.getElementById('btnStd');
@@ -200,7 +198,6 @@
         }
     }
 
-    // 6. EVENT BINDINGS
     document.addEventListener('click', (e) => {
         if (e.target.closest('#nxxtSendBtn')) sendMessage();
         if (e.target.closest('#newChatBtn')) location.reload();
