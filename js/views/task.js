@@ -135,5 +135,5 @@ views['Task'] = `
     </div>
 
    
-    </script>
+
 `;
