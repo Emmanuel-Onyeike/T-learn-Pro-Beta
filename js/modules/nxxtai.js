@@ -1,7 +1,7 @@
 /**
  * TECH NXXT: NXXT AI LEARNING ASSISTANT
- * V1.4 Neural Engine Integration - FULL RESTORATION
- * Status: FINAL PRODUCTION FIX - Model ID Re-mapped
+ * V1.4 Neural Engine Integration - GPT RESTORATION
+ * Status: FINAL PRODUCTION FIX - OpenAI Model Re-mapped
  */
 
 (function initNxxtSystem() {
@@ -12,7 +12,8 @@
     const NXXT_CONFIG = {
         IMG_GEN_URL: 'https://image.pollinations.ai/prompt/',
         AI_LOGO: '/assets/Logo.webp',
-        GOOGLE_API_KEY: "AIzaSyD-idqPEz9XD_0RLnSUDgMUKD_tohTrsEI", 
+        // REPLACE WITH YOUR OPENAI KEY
+        OPENAI_API_KEY: "YOUR_OPENAI_API_KEY_HERE", 
         SYSTEM_IDENTITY: "You are Nxxt AI, a tactical learning assistant for Tech Nxxt. Be professional, witty, and concise. Style: Industrial. Use bolding for emphasis.",
     };
 
@@ -38,7 +39,7 @@
             <header class="flex justify-between items-center px-6 md:px-10 py-6 backdrop-blur-xl border-b border-white/5 shrink-0">
                 <div class="flex flex-col">
                     <h2 class="text-xl md:text-2xl font-black italic text-white uppercase tracking-tighter">Nxxt <span class="text-blue-500">AI</span></h2>
-                    <span id="systemStatus" class="text-[8px] font-bold text-emerald-500 uppercase tracking-[0.3em]">Neural Uplink Active</span>
+                    <span id="systemStatus" class="text-[8px] font-bold text-emerald-500 uppercase tracking-[0.3em]">GPT Uplink Active</span>
                 </div>
                 <div class="flex bg-black/50 p-1 rounded-xl border border-white/5">
                     <button onclick="switchMode('standard')" id="btnStd" class="px-4 py-1.5 rounded-lg text-[9px] font-black uppercase text-white bg-blue-600">STD</button>
@@ -51,14 +52,14 @@
                     <div class="w-32 h-32 rounded-full bg-blue-600/10 flex items-center justify-center p-6 border border-blue-500/20 animate-pulse">
                         <img src="${NXXT_CONFIG.AI_LOGO}" class="w-full h-full object-contain opacity-50">
                     </div>
-                    <h1 class="text-2xl font-bold text-white uppercase tracking-widest opacity-20">System Standby</h1>
+                    <h1 class="text-2xl font-bold text-white uppercase tracking-widest opacity-20">GPT Engine Standby</h1>
                 </div>
             </div>
 
             <div class="p-6 md:p-8 border-t border-white/5 bg-[#020408] shrink-0">
                 <div class="max-w-4xl mx-auto">
                     <div class="relative flex items-center bg-white/[0.03] border border-white/10 rounded-full px-2 py-2 focus-within:border-blue-500/50 transition-all">
-                        <input id="nxxtInput" type="text" placeholder="Access Neural Engine..." class="flex-1 bg-transparent border-none outline-none text-white px-6 py-3 text-[16px]">
+                        <input id="nxxtInput" type="text" placeholder="Query Neural Engine..." class="flex-1 bg-transparent border-none outline-none text-white px-6 py-3 text-[16px]">
                         <button id="nxxtSendBtn" class="w-12 h-12 rounded-full bg-blue-600 text-white flex items-center justify-center hover:scale-105 transition-transform shadow-lg shadow-blue-600/20">
                             <i class="fas fa-arrow-up"></i>
                         </button>
@@ -69,7 +70,7 @@
         `;
     }
 
-    // 3. CORE NEURAL LOGIC (THE 404 FIX)
+    // 3. CORE NEURAL LOGIC (GPT INTEGRATION)
     async function sendMessage() {
         const input = document.getElementById('nxxtInput');
         const prompt = input.value.trim();
@@ -89,32 +90,36 @@
         }
 
         try {
-            // UPDATED MODEL IDENTIFIER: gemini-1.5-flash is the standard for free-tier browser keys
-            const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${NXXT_CONFIG.GOOGLE_API_KEY}`;
+            // GPT API ENDPOINT
+            const API_URL = "https://api.openai.com/v1/chat/completions";
 
             const response = await fetch(API_URL, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${NXXT_CONFIG.OPENAI_API_KEY}`
+                },
                 body: JSON.stringify({
-                    contents: [{
-                        parts: [{ text: `${NXXT_CONFIG.SYSTEM_IDENTITY}\n\nUser Question: ${prompt}` }]
-                    }]
+                    model: "gpt-4o", // Or "gpt-3.5-turbo"
+                    messages: [
+                        { role: "system", content: NXXT_CONFIG.SYSTEM_IDENTITY },
+                        { role: "user", content: prompt }
+                    ],
+                    temperature: 0.7
                 })
             });
 
             const data = await response.json();
             document.getElementById(thinkId)?.remove();
 
-            if (!response.ok || data.error) {
-                // Check if it's specifically a 404/Not Found issue
-                const errorMsg = data.error?.message || "Uplink Error";
-                throw new Error(errorMsg);
+            if (!response.ok) {
+                throw new Error(data.error?.message || "GPT Connection Error");
             }
 
-            let aiText = data.candidates[0].content.parts[0].text;
+            let aiText = data.choices[0].message.content;
             
             if(window.nxxtMode === 'fun') {
-                aiText = `🚀 [STREAM_MOD]: ${aiText.toUpperCase()} 🔥`;
+                aiText = `🚀 [GPT_STREAM]: ${aiText.toUpperCase()} 🔥`;
             }
 
             renderAiResponse(aiText, 'text');
@@ -122,10 +127,8 @@
 
         } catch (err) {
             document.getElementById(thinkId)?.remove();
-            console.error("NEURAL_UPLINK_ERROR:", err);
-            
-            // If it still 404s, provide actionable advice
-            renderAiResponse(`CRITICAL ERROR: ${err.message}. <br><br><b>Tactical Advice:</b> Log into <a href="https://aistudio.google.com/" target="_blank" class="text-blue-500">Google AI Studio</a> and ensure you have enabled the "Generative Language API" for this project.`, 'text');
+            console.error("GPT_UPLINK_ERROR:", err);
+            renderAiResponse(`CRITICAL ERROR: ${err.message}. <br><br><b>Tactical Advice:</b> Ensure your OpenAI API key is valid and has sufficient credits.`, 'text');
         }
     }
 
@@ -150,7 +153,7 @@
     function renderAiResponse(content, type) {
         const formatted = type === 'text' 
             ? content.replace(/\*\*(.*?)\*\*/g, '<b class="text-blue-400">$1</b>').replace(/\n/g, '<br>')
-            : `<div class="space-y-4"><img src="${content}" class="rounded-[2.5rem] border border-white/10 w-full" /><p class="text-[8px] text-blue-500 font-black uppercase tracking-[0.4em]">Asset_Rendered_Nxxt</p></div>`;
+            : `<div class="space-y-4"><img src="${content}" class="rounded-[2.5rem] border border-white/10 w-full" /><p class="text-[8px] text-blue-500 font-black uppercase tracking-[0.4em]">Asset_Rendered_GPT</p></div>`;
 
         document.getElementById('aiThread').insertAdjacentHTML('beforeend', `
             <div class="flex gap-4 md:gap-6 mb-10 animate-in fade-in duration-500">
@@ -203,7 +206,7 @@
         if (e.target.closest('#newChatBtn')) location.reload();
     });
 
-    document.addEventListener('keypress', (e) => {
+    document.addEventListener('keydown', (e) => {
         if (e.target.id === 'nxxtInput' && e.key === 'Enter') sendMessage();
     });
 
