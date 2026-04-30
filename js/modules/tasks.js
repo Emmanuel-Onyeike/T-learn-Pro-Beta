@@ -11,6 +11,26 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /**
+ * Priority Selection Logic
+ * Handles the visual state of priority buttons in the creation modal
+ */
+window.currentPriority = 'med'; // Default state
+
+window.setPriority = function(level) {
+    window.currentPriority = level;
+    const buttons = document.querySelectorAll('.priority-btn');
+    
+    buttons.forEach(btn => {
+        const text = btn.innerText.toLowerCase();
+        if (text.includes(level)) {
+            btn.className = "priority-btn py-3 rounded-xl bg-blue-600 text-white text-[9px] font-black uppercase transition-all";
+        } else {
+            btn.className = "priority-btn py-3 rounded-xl bg-white/5 border border-white/5 text-white/40 text-[9px] font-black uppercase hover:border-blue-500/50 transition-all";
+        }
+    });
+};
+
+/**
  * Switch between Sectors
  * Updated to include 'Created' sector and dynamic empty states
  */
@@ -34,13 +54,16 @@ window.switchTaskTab = function(tab) {
         activeBtn.className = "px-6 py-2.5 rounded-full bg-blue-600 text-white text-[10px] font-black uppercase tracking-widest shadow-lg shadow-blue-600/20 transition-all";
     }
 
-    // 3. Update the content area
+    // 3. Update the content area with Sector-specific data
     let icon = "fa-layer-group";
     let message = "Neural link synchronized. Sector data currently null.";
     
     if (tab === 'created') {
         icon = "fa-plus-circle";
         message = "Scanning for tasks initialized by your signature...";
+    } else if (tab === 'timeline') {
+        icon = "fa-stream";
+        message = "Project timeline visualization offline.";
     }
 
     container.innerHTML = `
@@ -62,7 +85,7 @@ window.switchTaskTab = function(tab) {
  */
 window.processTaskCreation = function() {
     const overlay = document.getElementById('statusOverlay');
-    const loader = document.getElementById('statusLoader');
+    const loader = document.getElementById('statusLoading'); // Fixed ID from view
     const success = document.getElementById('statusSuccess');
     const createModal = document.getElementById('createTaskModal');
 
@@ -88,7 +111,13 @@ window.processTaskCreation = function() {
                 // Switch to created tab to show the new entry
                 switchTaskTab('created');
                 
-                // Optional: Clear form inputs here if needed
+                // Clear Form Fields for next use
+                document.getElementById('inpTaskName').value = '';
+                document.getElementById('inpTaskWorkers').value = '';
+                document.getElementById('inpTaskDuration').value = '';
+                document.getElementById('inpTaskDesc').value = '';
+                setPriority('med');
+                
                 console.log("Task Deployment: Complete");
             }, 2000);
         }, 5000);
