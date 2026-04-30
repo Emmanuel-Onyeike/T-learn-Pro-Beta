@@ -48,7 +48,7 @@ window.switchTaskTab = function(tab) {
 };
 
 /**
- * Triggers the central system modal
+ * Triggers the central system modal (Alerts/Info)
  * @param {string} title - The title to display in the modal
  */
 window.openTaskModal = function(title) {
@@ -63,10 +63,33 @@ window.openTaskModal = function(title) {
 };
 
 /**
- * Closes the active system modal
+ * Closes the active system alert modal
  */
 window.closeTaskModal = function() {
     const modal = document.getElementById('taskModal');
+    if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+    }
+};
+
+/**
+ * Specialized logic for the Create Task Modal
+ */
+window.openCreateTaskModal = function() {
+    const modal = document.getElementById('createTaskModal');
+    if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        console.log("Task Creation Protocol: Initiated");
+    }
+};
+
+/**
+ * Closes the Create Task Modal
+ */
+window.closeCreateTaskModal = function() {
+    const modal = document.getElementById('createTaskModal');
     if (modal) {
         modal.classList.add('hidden');
         modal.classList.remove('flex');
@@ -84,11 +107,9 @@ window.toggleTimeView = function(view) {
     if (!btnW || !btnD) return;
     
     if (view === 'working') {
-        // Set Working to Blue, Reset Due
         btnW.className = "flex-1 py-2 rounded-full bg-blue-600 text-white text-[10px] font-black uppercase tracking-widest transition-all";
         btnD.className = "flex-1 py-2 rounded-full text-white/40 text-[10px] font-black uppercase tracking-widest transition-all";
     } else {
-        // Set Due to Blue, Reset Working
         btnD.className = "flex-1 py-2 rounded-full bg-blue-600 text-white text-[10px] font-black uppercase tracking-widest transition-all";
         btnW.className = "flex-1 py-2 rounded-full text-white/40 text-[10px] font-black uppercase tracking-widest transition-all";
     }
