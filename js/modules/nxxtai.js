@@ -1,7 +1,7 @@
 /**
  * TECH NXXT: NXXT AI LEARNING ASSISTANT
  * V1.4 Neural Engine Integration - FULL RESTORATION
- * Status: FINAL PRODUCTION FIX - Endpoint Mapping Standardized
+ * Status: FINAL PRODUCTION FIX - Model ID Re-mapped
  */
 
 (function initNxxtSystem() {
@@ -18,7 +18,7 @@
 
     window.nxxtMode = 'standard';
 
-    // 2. VIEW RENDERER (FULL UI INJECTION)
+    // 2. VIEW RENDERER (UI INJECTION)
     const mainContainer = document.querySelector('.nxxt-main-wrapper');
     if (mainContainer) {
         mainContainer.innerHTML = `
@@ -69,7 +69,7 @@
         `;
     }
 
-    // 3. CORE NEURAL LOGIC (REPAIRED ENDPOINT)
+    // 3. CORE NEURAL LOGIC (THE 404 FIX)
     async function sendMessage() {
         const input = document.getElementById('nxxtInput');
         const prompt = input.value.trim();
@@ -83,25 +83,21 @@
         const thinkId = 'think-' + Date.now();
         showThinkingIndicator(thinkId);
 
-        // Image Generation Shortcut
         if (/image|draw|generate|picture/i.test(prompt)) {
             handleImageRequest(prompt, thinkId);
             return;
         }
 
         try {
-            /** 
-             * THE FIX: We use 'gemini-pro' as it is the most stable globally available identifier.
-             * We use v1beta as it handles direct browser-based POST requests more reliably.
-             */
-            const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${NXXT_CONFIG.GOOGLE_API_KEY}`;
+            // UPDATED MODEL IDENTIFIER: gemini-1.5-flash is the standard for free-tier browser keys
+            const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${NXXT_CONFIG.GOOGLE_API_KEY}`;
 
             const response = await fetch(API_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     contents: [{
-                        parts: [{ text: `${NXXT_CONFIG.SYSTEM_IDENTITY}\n\nUser: ${prompt}` }]
+                        parts: [{ text: `${NXXT_CONFIG.SYSTEM_IDENTITY}\n\nUser Question: ${prompt}` }]
                     }]
                 })
             });
@@ -110,12 +106,13 @@
             document.getElementById(thinkId)?.remove();
 
             if (!response.ok || data.error) {
-                throw new Error(data.error?.message || "Uplink Denied by Neural Controller.");
+                // Check if it's specifically a 404/Not Found issue
+                const errorMsg = data.error?.message || "Uplink Error";
+                throw new Error(errorMsg);
             }
 
             let aiText = data.candidates[0].content.parts[0].text;
             
-            // FUN MODE Transformation
             if(window.nxxtMode === 'fun') {
                 aiText = `🚀 [STREAM_MOD]: ${aiText.toUpperCase()} 🔥`;
             }
@@ -126,7 +123,9 @@
         } catch (err) {
             document.getElementById(thinkId)?.remove();
             console.error("NEURAL_UPLINK_ERROR:", err);
-            renderAiResponse(`CRITICAL ERROR: ${err.message}. Solution: Check Google Cloud Console to ensure the 'Generative Language API' is enabled for this project.`, 'text');
+            
+            // If it still 404s, provide actionable advice
+            renderAiResponse(`CRITICAL ERROR: ${err.message}. <br><br><b>Tactical Advice:</b> Log into <a href="https://aistudio.google.com/" target="_blank" class="text-blue-500">Google AI Studio</a> and ensure you have enabled the "Generative Language API" for this project.`, 'text');
         }
     }
 
