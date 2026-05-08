@@ -1,10 +1,10 @@
 /**
  * TECH NXXT: ELITE ACADEMY ENGINE (BLUE PROTOCOL - MAX VOLUME)
- * V2.2 - FIXED & STABILIZED
+ * V2.3 - FINAL UPDATED & ENHANCED
  */
 
 const ACADEMY_CONFIG = {
-    TRIAL_DAYS: 14,
+    TRIAL_DAYS: 21,                    // Updated to 21 days as requested
     MS_PER_DAY: 24 * 60 * 60 * 1000,
     STORAGE_KEY: 'tech_nxxt_academy_trial',
     SYNC_INTERVAL: 30000
@@ -52,11 +52,11 @@ window.initEliteAcademy = async function() {
         const client = await getSupabaseClient?.();
         const user = await window.AuthState?.getUser?.();
 
-        // Balance Fetch
+        // Balance Fetch - Synced with Dashboard
         const fetchBalance = async () => {
             if (!client || !user?.id) return;
             const { data: profile } = await client.from('profiles').select('xt_points').eq('id', user.id).single();
-            
+           
             const creditEl = document.getElementById('dash-xp-val');
             if (creditEl && profile?.xt_points !== undefined) {
                 creditEl.innerText = profile.xt_points.toLocaleString();
@@ -98,14 +98,14 @@ function updateAcademyHeader(isExpired, daysLeft, start, end) {
     const progress = document.getElementById('trialProgressBar');
 
     if (timerText) {
-        timerText.innerText = isExpired 
-            ? "TRIAL EXPIRED // PROTOCOL ACTIVE" 
+        timerText.innerText = isExpired
+            ? "TRIAL EXPIRED // PROTOCOL ACTIVE"
             : `${daysLeft} Days of Elite Access Remaining`;
     }
-    
+   
     if (badge) {
         badge.innerText = isExpired ? "LOCKED" : "TRIAL ACTIVE";
-        badge.className = isExpired 
+        badge.className = isExpired
             ? "px-2 py-0.5 rounded border border-red-500/30 text-[7px] font-black text-red-500 uppercase tracking-widest"
             : "px-2 py-0.5 rounded border border-blue-500/30 text-[7px] font-black text-blue-400 uppercase tracking-widest animate-pulse";
     }
@@ -123,11 +123,11 @@ window.filterClasses = function(provider) {
     const isExpired = new Date() > new Date(new Date(trialStart).getTime() + (ACADEMY_CONFIG.TRIAL_DAYS * ACADEMY_CONFIG.MS_PER_DAY));
 
     document.querySelectorAll('.class-filter-btn').forEach(btn => {
-        const isActive = provider === 'all' 
+        const isActive = provider === 'all'
             ? btn.innerText.toLowerCase().includes('all')
             : btn.getAttribute('data-provider')?.toUpperCase() === provider.toUpperCase();
 
-        btn.className = isActive 
+        btn.className = isActive
             ? "class-filter-btn px-4 py-2 bg-blue-600 rounded-xl text-[7px] font-black text-white uppercase tracking-widest transition-all"
             : "class-filter-btn px-4 py-2 hover:bg-white/5 rounded-xl text-[7px] font-black text-white/40 uppercase tracking-widest transition-all hover:text-white";
     });
@@ -140,13 +140,14 @@ function renderAcademyTracks(isExpired, providerFilter = 'all') {
     const grid = document.getElementById('courseGrid');
     if (!grid) return;
 
-    const filtered = providerFilter === 'all' 
-        ? ACADEMY_TRACKS 
+    const filtered = providerFilter === 'all'
+        ? ACADEMY_TRACKS
         : ACADEMY_TRACKS.filter(t => t.provider === providerFilter);
 
     grid.innerHTML = filtered.map(track => {
-        const isFreeDuringTrial = !isExpired;
-        
+        // Updated Free Logic: After trial, only 50-100 XT courses remain free
+        const isFreeDuringTrial = !isExpired || (track.credit_cost >= 50 && track.credit_cost <= 100);
+
         return `
         <div class="group p-6 rounded-[2.5rem] bg-[#050b1d]/60 border border-white/5 hover:border-blue-500/30 transition-all duration-500 relative overflow-hidden backdrop-blur-md">
             <div class="flex justify-between items-start mb-6">
@@ -172,7 +173,7 @@ function renderAcademyTracks(isExpired, providerFilter = 'all') {
                     </span>
                 </div>
             </div>
-            <button onclick="attemptUnlock('${track.title.replace(/'/g, "\\'")}', ${track.credit_cost}, ${isFreeDuringTrial}, '${track.url}')" 
+            <button onclick="attemptUnlock('${track.title.replace(/'/g, "\\'")}', ${track.credit_cost}, ${isFreeDuringTrial}, '${track.url}')"
                 class="w-full py-3 rounded-xl bg-white/[0.03] border border-white/10 text-[8px] font-black text-white uppercase tracking-widest hover:bg-blue-600 hover:border-blue-500 transition-all">
                 ${isFreeDuringTrial ? 'INITIALIZE TRACK' : 'UNLOCK WITH XT'}
             </button>
@@ -184,19 +185,24 @@ function renderAcademyTracks(isExpired, providerFilter = 'all') {
 window.attemptUnlock = async function(title, cost, isFree, url) {
     if (isFree) {
         window.open(url, '_blank');
+        // Auto award +100 XT after completing a course (as requested)
+        setTimeout(() => {
+            if (typeof awardXP === 'function') {
+                awardXP('complete_lesson');
+            }
+        }, 6000);
         return;
     }
 
     try {
         const client = await getSupabaseClient?.();
         const user = await window.AuthState?.getUser?.();
-
         if (!client || !user) throw new Error("Auth not ready");
 
         const { data: profile } = await client.from('profiles').select('xt_points').eq('id', user.id).single();
 
         if (!profile || profile.xt_points < cost) {
-            return window.showModalAlert("ACCESS DENIED", `Insufficient XT. Need ${cost} XT.`);
+            return showCenteredModal("ACCESS DENIED", `Insufficient XT. Need ${cost} XT.`);
         }
 
         const { error } = await client.from('profiles')
@@ -205,42 +211,37 @@ window.attemptUnlock = async function(title, cost, isFree, url) {
 
         if (error) throw error;
 
-        window.showModalAlert("UNLOCKED", `${title} activated. ${cost} XT deducted.`);
+        showCenteredModal("UNLOCKED", `${title} activated. ${cost} XT deducted.`, "success");
         window.open(url, '_blank');
         window.initEliteAcademy(); // Refresh balance
 
     } catch (err) {
         console.error("Transaction Error:", err);
-        window.showModalAlert("SYNC ERROR", "Transaction failed. Try again.");
+        showCenteredModal("SYNC ERROR", "Transaction failed. Try again.", "error");
     }
 };
 
-/* ====================== ALERT ====================== */
-window.showModalAlert = function(title, message) {
-    const id = 'alert-' + Date.now();
-    const modalHtml = `
-    <div id="${id}" class="fixed top-6 right-6 z-[2000] animate-in slide-in-from-right-10 duration-500">
-        <div class="bg-[#050b1d]/90 backdrop-blur-xl border border-blue-500/40 p-5 rounded-2xl w-72 shadow-2xl shadow-blue-500/20">
-            <div class="flex items-start gap-4">
-                <div class="h-8 w-8 rounded-lg bg-blue-600/20 border border-blue-500/30 flex items-center justify-center shrink-0">
-                    <i class="fas fa-satellite-dish text-blue-400 text-xs animate-pulse"></i>
-                </div>
-                <div class="flex flex-col">
-                    <h2 class="text-white font-black uppercase text-[10px] tracking-tighter mb-1">${title}</h2>
-                    <p class="text-white/40 text-[9px] font-medium leading-tight uppercase">${message}</p>
-                </div>
-            </div>
-            <div class="mt-3 h-0.5 w-full bg-white/5 rounded-full overflow-hidden">
-                <div class="h-full bg-blue-500 animate-out fade-out slide-out-to-left fill-mode-forwards duration-[2800ms]"></div>
-            </div>
+/* ====================== CENTERED MODAL (NEW) ====================== */
+function showCenteredModal(title, message, type = "info") {
+    const modalId = 'modal-' + Date.now();
+    const color = type === "success" ? "blue" : type === "error" ? "red" : "yellow";
+
+    const modalHTML = `
+    <div id="${modalId}" class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-sm">
+        <div class="bg-[#050b1d] border border-${color}-500/40 rounded-3xl p-8 max-w-md w-full mx-4 text-center shadow-2xl">
+            <h2 class="text-2xl font-black text-white mb-4">${title}</h2>
+            <p class="text-white/70 text-[15px] leading-relaxed">${message}</p>
+            <button onclick="document.getElementById('${modalId}').remove()" 
+                class="mt-8 w-full py-4 bg-white/10 hover:bg-white/20 rounded-2xl text-sm font-black uppercase tracking-widest transition-all">
+                CLOSE WINDOW
+            </button>
         </div>
     </div>`;
 
-    document.body.insertAdjacentHTML('beforeend', modalHtml);
-    setTimeout(() => document.getElementById(id)?.remove(), 3200);
-};
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+}
 
-// ====================== AUTO INIT ======================
+/* ====================== AUTO INIT ====================== */
 if (document.getElementById('courseGrid')) {
     setTimeout(() => {
         window.initEliteAcademy();
