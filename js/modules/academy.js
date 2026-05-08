@@ -1,18 +1,61 @@
 /**
- * TECH NXXT: ELITE ACADEMY ENGINE (BLUE PROTOCOL)
- * Final Production Build
+ * TECH NXXT: ELITE ACADEMY ENGINE (BLUE PROTOCOL - MAX VOLUME)
+ * Integrated Production Build: Data + Logic
  */
 
 const ACADEMY_CONFIG = {
-    TRIAL_DAYS: 14, 
+    TRIAL_DAYS: 14,
     MS_PER_DAY: 24 * 60 * 60 * 1000,
     STORAGE_KEY: 'tech_nxxt_academy_trial',
     COMPLETION_REWARD: 100
 };
 
-// Ensure this is globally accessible
+// --- DATA REPOSITORY: 60+ Modules ---
+const ACADEMY_TRACKS = [
+    // T-LEARN (Neural & Internal Systems)
+    ...Array.from({length: 15}, (_, i) => ({
+        title: `Neural Core ${i + 1}: ${['Logic', 'Interface', 'Data', 'Sync'][i % 4]}`,
+        provider: "T-LEARN",
+        difficulty_level: (i % 5) + 1,
+        credit_cost: 100 * (i + 1),
+        icon_type: "fa-brain",
+        url: "https://t-learn.pro"
+    })),
+    // UDEMY (Tactical Development)
+    ...Array.from({length: 15}, (_, i) => ({
+        title: `Tactical Dev: ${['React', 'Tailwind', 'NextJS', 'Node'][i % 4]} Mastery`,
+        provider: "UDEMY",
+        difficulty_level: (i % 3) + 2,
+        credit_cost: 150 * (i + 1),
+        icon_type: "fa-code",
+        url: "https://udemy.com"
+    })),
+    // CODECAMP (Security & Backend)
+    ...Array.from({length: 15}, (_, i) => ({
+        title: `Protocol ${i + 1}: ${['Encryption', 'Database', 'API', 'Auth'][i % 4]}`,
+        provider: "CODECAMP",
+        difficulty_level: (i % 4) + 2,
+        credit_cost: 200 * (i + 1),
+        icon_type: "fa-shield-halved",
+        url: "https://freecodecamp.org"
+    })),
+    // COURSERA (Professional Ops)
+    ...Array.from({length: 15}, (_, i) => ({
+        title: `Ops Level ${i + 1}: ${['Scalability', 'Cloud', 'DevOps', 'Architecture'][i % 4]}`,
+        provider: "COURSERA",
+        difficulty_level: (i % 2) + 4,
+        credit_cost: 300 * (i + 1),
+        icon_type: "fa-server",
+        url: "https://coursera.org"
+    }))
+];
+
+/**
+ * Main Entry Point
+ */
 window.initEliteAcademy = async function() {
     try {
+        // 1. Sync Trial Local State
         let trialStart = localStorage.getItem(ACADEMY_CONFIG.STORAGE_KEY) || new Date().toISOString();
         if (!localStorage.getItem(ACADEMY_CONFIG.STORAGE_KEY)) {
             localStorage.setItem(ACADEMY_CONFIG.STORAGE_KEY, trialStart);
@@ -23,10 +66,12 @@ window.initEliteAcademy = async function() {
         const isExpired = new Date() > expiryDate;
         const daysLeft = Math.max(0, Math.ceil((expiryDate - new Date()) / ACADEMY_CONFIG.MS_PER_DAY));
 
+        // 2. Fetch User Profile (Supabase Integration)
         const client = await getSupabaseClient();
         const user = await window.AuthState.getUser();
         const { data: profile } = await client.from('profiles').select('xt_points').eq('id', user.id).single();
         
+        // 3. UI Updates
         if(document.getElementById('academyCredits')) {
             document.getElementById('academyCredits').innerText = profile?.xt_points || 0;
         }
@@ -39,6 +84,9 @@ window.initEliteAcademy = async function() {
     }
 };
 
+/**
+ * UI Header Management
+ */
 function updateAcademyHeader(isExpired, daysLeft, start, end) {
     const timerText = document.getElementById('trialCountdown');
     const badge = document.getElementById('trialBadge');
@@ -58,16 +106,21 @@ function updateAcademyHeader(isExpired, daysLeft, start, end) {
     if (progress) {
         const percent = isExpired ? 100 : ((new Date() - start) / (end - start)) * 100;
         progress.style.width = `${percent}%`;
+        if (isExpired) progress.classList.add('bg-red-600');
     }
 }
 
+/**
+ * Filter Controller
+ */
 window.filterClasses = function(provider) {
     const trialStart = localStorage.getItem(ACADEMY_CONFIG.STORAGE_KEY);
     const isExpired = new Date() > new Date(new Date(trialStart).getTime() + (ACADEMY_CONFIG.TRIAL_DAYS * ACADEMY_CONFIG.MS_PER_DAY));
     
     // Update Button Styles
     document.querySelectorAll('.class-filter-btn').forEach(btn => {
-        if (btn.innerText.toLowerCase().includes(provider.toLowerCase()) || (provider === 'all' && btn.innerText.toLowerCase().includes('all'))) {
+        const btnLabel = btn.innerText.toLowerCase();
+        if (btnLabel.includes(provider.toLowerCase()) || (provider === 'all' && btnLabel.includes('all'))) {
             btn.className = "class-filter-btn px-4 py-2 bg-blue-600 rounded-xl text-[7px] font-black text-white uppercase tracking-widest transition-all";
         } else {
             btn.className = "class-filter-btn px-4 py-2 hover:bg-white/5 rounded-xl text-[7px] font-black text-white/40 uppercase tracking-widest transition-all hover:text-white";
@@ -77,6 +130,9 @@ window.filterClasses = function(provider) {
     renderAcademyTracks(isExpired, provider);
 };
 
+/**
+ * Rendering Engine
+ */
 function renderAcademyTracks(isExpired, providerFilter = 'all') {
     const grid = document.getElementById('courseGrid');
     if (!grid) return;
@@ -86,6 +142,7 @@ function renderAcademyTracks(isExpired, providerFilter = 'all') {
         : ACADEMY_TRACKS.filter(t => t.provider.toUpperCase() === providerFilter.toUpperCase());
 
     grid.innerHTML = filteredTracks.map(track => {
+        // Eligibility Logic: Free if trial is active OR if it falls within the 'Intro' price bracket (50-100)
         let isActuallyFree = !isExpired || (track.credit_cost >= 50 && track.credit_cost <= 100);
 
         return `
@@ -103,13 +160,17 @@ function renderAcademyTracks(isExpired, providerFilter = 'all') {
             </h3>
             <div class="space-y-2 mb-6">
                 <div class="flex justify-between text-[7px] font-black uppercase tracking-widest">
+                    <span class="text-white/20">Clearance</span>
+                    <span class="text-blue-500">LVL ${track.difficulty_level.toString().padStart(2, '0')}</span>
+                </div>
+                <div class="flex justify-between text-[7px] font-black uppercase tracking-widest">
                     <span class="text-white/20">Protocol Cost</span>
                     <span class="${isActuallyFree ? 'text-green-400' : 'text-yellow-500'}">
                         ${isActuallyFree ? 'FREE ACCESS' : track.credit_cost + ' XT'}
                     </span>
                 </div>
             </div>
-            <button onclick="attemptUnlock('${track.title}', ${track.credit_cost}, ${isActuallyFree}, '${track.url}')" 
+            <button onclick="attemptUnlock('${track.title.replace(/'/g, "\\'")}', ${track.credit_cost}, ${isActuallyFree}, '${track.url}')" 
                 class="w-full py-3 rounded-xl bg-white/[0.03] border border-white/10 text-[8px] font-black text-white uppercase tracking-widest hover:bg-blue-600 hover:border-blue-500 transition-all">
                 ${isActuallyFree ? 'Initialize Track' : 'Unlock with XT'}
             </button>
@@ -117,6 +178,9 @@ function renderAcademyTracks(isExpired, providerFilter = 'all') {
     }).join('');
 }
 
+/**
+ * Access & Transaction Handler
+ */
 window.attemptUnlock = async function(title, cost, isFree, url) {
     if (isFree) {
         window.open(url, '_blank');
@@ -129,17 +193,25 @@ window.attemptUnlock = async function(title, cost, isFree, url) {
         const { data: profile } = await client.from('profiles').select('xt_points').eq('id', user.id).single();
 
         if (profile.xt_points < cost) {
-            showModalAlert("ACCESS DENIED", `Insufficient XT. Need ${cost} XT.`);
+            window.showModalAlert("ACCESS DENIED", `Insufficient XT. Need ${cost} XT.`);
             return;
         }
 
+        // Deduct points and refresh
         await client.from('profiles').update({ xt_points: profile.xt_points - cost }).eq('id', user.id);
-        showModalAlert("UNLOCKED", `Hub decrypted. ${cost} XT consumed.`);
+        window.showModalAlert("UNLOCKED", `Hub decrypted. ${cost} XT consumed.`);
+        
+        // Refresh local UI
         window.initEliteAcademy();
         window.open(url, '_blank');
-    } catch (err) { console.error(err); }
+    } catch (err) { 
+        console.error("Transaction Error:", err); 
+    }
 };
 
+/**
+ * Global Alert UI
+ */
 window.showModalAlert = function(title, message) {
     const id = 'alert-' + Date.now();
     const modalHtml = `
