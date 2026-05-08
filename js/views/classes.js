@@ -26,7 +26,8 @@ views['Classes'] = `
             <div class="flex flex-col items-end">
                 <span class="text-[7px] font-black text-white/20 uppercase tracking-[0.2em]">Available Balance</span>
                 <div class="flex items-center gap-1">
-                    <span id="academyCredits" class="text-xs font-black text-white italic tracking-tighter">0000</span>
+                    <!-- SYNCED ID: dash-xp-val -->
+                    <span id="dash-xp-val" class="text-xs font-black text-white italic tracking-tighter">0000</span>
                     <span class="text-[8px] font-black text-yellow-500">XT</span>
                 </div>
             </div>
