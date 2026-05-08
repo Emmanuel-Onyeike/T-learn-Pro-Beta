@@ -1,122 +1,65 @@
 /**
- * TECH NXXT: ELITE ACADEMY ENGINE (MAX VOLUME EDITION)
- * 60+ Modules across 4 Providers
+ * TECH NXXT: ELITE ACADEMY ENGINE (BLUE PROTOCOL)
  */
 
 const ACADEMY_CONFIG = {
-    TRIAL_DAYS: 21,
+    TRIAL_DAYS: 14, // 2 Weeks as per request
     MS_PER_DAY: 24 * 60 * 60 * 1000,
-    STORAGE_KEY: 'tech_nxxt_academy_trial'
+    STORAGE_KEY: 'tech_nxxt_academy_trial',
+    COMPLETION_REWARD: 100 // +100 XT points
 };
 
-// --- DATA REPOSITORY: 15+ Modules Per Category ---
-const ACADEMY_TRACKS = [
-    // T-LEARN (Neural & Internal Systems)
-    ...Array.from({length: 15}, (_, i) => ({
-        title: `Neural Core ${i + 1}: ${['Logic', 'Interface', 'Data', 'Sync'][i % 4]}`,
-        provider: "T-LEARN",
-        difficulty_level: (i % 5) + 1,
-        credit_cost: 100 * (i + 1),
-        icon_type: "fa-brain",
-        url: "https://t-learn.pro"
-    })),
-    // UDEMY (Tactical Development)
-    ...Array.from({length: 15}, (_, i) => ({
-        title: `Tactical Dev: ${['React', 'Tailwind', 'NextJS', 'Node'][i % 4]} Mastery`,
-        provider: "UDEMY",
-        difficulty_level: (i % 3) + 2,
-        credit_cost: 150 * (i + 1),
-        icon_type: "fa-code",
-        url: "https://udemy.com"
-    })),
-    // CODECAMP (Security & Backend)
-    ...Array.from({length: 15}, (_, i) => ({
-        title: `Protocol ${i + 1}: ${['Encryption', 'Database', 'API', 'Auth'][i % 4]}`,
-        provider: "CODECAMP",
-        difficulty_level: (i % 4) + 2,
-        credit_cost: 200 * (i + 1),
-        icon_type: "fa-shield-halved",
-        url: "https://freecodecamp.org"
-    })),
-    // COURSERA (Professional Ops)
-    ...Array.from({length: 15}, (_, i) => ({
-        title: `Ops Level ${i + 1}: ${['Scalability', 'Cloud', 'DevOps', 'Architecture'][i % 4]}`,
-        provider: "COURSERA",
-        difficulty_level: (i % 2) + 4,
-        credit_cost: 300 * (i + 1),
-        icon_type: "fa-server",
-        url: "https://coursera.org"
-    }))
-];
-
-/**
- * Main Entry Point
- */
 async function initEliteAcademy() {
     const grid = document.getElementById('courseGrid');
     
     try {
-        // 1. Sync Trial
+        // 1. Sync Trial & Points
         let trialStart = localStorage.getItem(ACADEMY_CONFIG.STORAGE_KEY) || new Date().toISOString();
-        if (!localStorage.getItem(ACADEMY_CONFIG.STORAGE_KEY)) localStorage.setItem(ACADEMY_CONFIG.STORAGE_KEY, trialStart);
+        if (!localStorage.getItem(ACADEMY_CONFIG.STORAGE_KEY)) {
+            localStorage.setItem(ACADEMY_CONFIG.STORAGE_KEY, trialStart);
+        }
 
         const startDate = new Date(trialStart);
         const expiryDate = new Date(startDate.getTime() + (ACADEMY_CONFIG.TRIAL_DAYS * ACADEMY_CONFIG.MS_PER_DAY));
         const isExpired = new Date() > expiryDate;
         const daysLeft = Math.max(0, Math.ceil((expiryDate - new Date()) / ACADEMY_CONFIG.MS_PER_DAY));
 
-        // 2. Header Update
+        // 2. Fetch User Profile for XT Points
+        const client = await getSupabaseClient();
+        const user = await window.AuthState.getUser();
+        const { data: profile } = await client.from('profiles').select('xt_points').eq('id', user.id).single();
+        
+        // Update Header UI
+        if(document.getElementById('academyCredits')) {
+            document.getElementById('academyCredits').innerText = profile?.xt_points || 0;
+        }
+
         updateAcademyHeader(isExpired, daysLeft, startDate, expiryDate);
 
-        // 3. Render Initial Grid
-        renderAcademyTracks(isExpired);
+        // 3. Render Tracks
+        renderAcademyTracks(isExpired, 'all', profile?.xt_points || 0);
 
     } catch (err) {
         console.error("Academy Engine Failure:", err);
     }
 }
 
-/**
- * UI Header Management
- */
-function updateAcademyHeader(isExpired, daysLeft, start, end) {
-    const timerText = document.getElementById('trialCountdown');
-    const badge = document.getElementById('trialBadge');
-    const progress = document.getElementById('trialProgressBar');
-
-    if (timerText) {
-        timerText.innerText = isExpired ? "TRIAL CONCLUDED // ACCESS RESTRICTED" : `${daysLeft} Days of Elite Access Remaining`;
-        if (isExpired) timerText.classList.add('text-red-500');
-    }
-    
-    if (badge) {
-        badge.innerText = isExpired ? "LOCKED" : "TRIAL ACTIVE";
-        badge.className = isExpired ? "px-2 py-0.5 rounded border border-red-500/30 text-[7px] font-black text-red-500 uppercase tracking-widest" : "px-2 py-0.5 rounded border border-blue-500/30 text-[7px] font-black text-blue-400 uppercase tracking-widest";
-    }
-
-    if (progress) {
-        const percent = isExpired ? 100 : ((new Date() - start) / (end - start)) * 100;
-        progress.style.width = `${percent}%`;
-        if (isExpired) progress.classList.add('bg-red-600');
-    }
-}
-
-/**
- * Massive Render Engine
- */
-function renderAcademyTracks(isExpired, providerFilter = 'all') {
+function renderAcademyTracks(isExpired, providerFilter = 'all', currentXP = 0) {
     const grid = document.getElementById('courseGrid');
     if (!grid) return;
 
-    // Filter Logic
     const filteredTracks = providerFilter === 'all' 
         ? ACADEMY_TRACKS 
         : ACADEMY_TRACKS.filter(t => t.provider.toUpperCase() === providerFilter.toUpperCase());
 
-    // Generate HTML
     grid.innerHTML = filteredTracks.map(track => {
-        const isFree = !isExpired || track.credit_cost === 0;
-        
+        // LOGIC: During trial, everything is free. 
+        // After trial, only courses 50-100 XT are free.
+        let isActuallyFree = !isExpired; 
+        if (isExpired && track.credit_cost >= 50 && track.credit_cost <= 100) {
+            isActuallyFree = true;
+        }
+
         return `
         <div class="group p-6 rounded-[2.5rem] bg-[#050b1d]/60 border border-white/5 hover:border-blue-500/30 transition-all duration-500 relative overflow-hidden backdrop-blur-md">
             <div class="flex justify-between items-start mb-6">
@@ -134,53 +77,105 @@ function renderAcademyTracks(isExpired, providerFilter = 'all') {
             
             <div class="space-y-2 mb-6">
                 <div class="flex justify-between text-[7px] font-black uppercase tracking-widest">
-                    <span class="text-white/20">Clearance</span>
-                    <span class="text-blue-500">LVL ${track.difficulty_level.toString().padStart(2, '0')}</span>
-                </div>
-                <div class="flex justify-between text-[7px] font-black uppercase tracking-widest">
                     <span class="text-white/20">Protocol Cost</span>
-                    <span class="${isFree ? 'text-green-400' : 'text-white'}">
-                        ${isFree ? 'FREE ACCESS' : track.credit_cost + ' CR'}
+                    <span class="${isActuallyFree ? 'text-green-400' : 'text-yellow-500'}">
+                        ${isActuallyFree ? 'FREE ACCESS' : track.credit_cost + ' XT'}
                     </span>
                 </div>
             </div>
 
-            <button onclick="handleAccess('${track.url}', ${track.credit_cost}, ${isExpired})" 
-                class="w-full py-3 rounded-xl bg-white/[0.03] border border-white/10 text-[8px] font-black text-white uppercase tracking-widest hover:bg-blue-600 hover:border-blue-500 hover:shadow-[0_0_15px_rgba(37,99,235,0.2)] transition-all">
-                ${isFree ? 'Initialize Track' : 'Unlock Hub'}
+            <button onclick="attemptUnlock('${track.title}', ${track.credit_cost}, ${isActuallyFree}, '${track.url}')" 
+                class="w-full py-3 rounded-xl bg-white/[0.03] border border-white/10 text-[8px] font-black text-white uppercase tracking-widest hover:bg-blue-600 hover:border-blue-500 transition-all">
+                ${isActuallyFree ? 'Initialize Track' : 'Unlock with XT'}
             </button>
-        </div>
-        `;
+        </div>`;
     }).join('');
 }
 
 /**
- * Action Handler
+ * Handle Unlocking and Point Deduction
  */
-function handleAccess(url, cost, isExpired) {
-    if (isExpired && cost > 0) {
-        alert(`SECURITY BREACH: Access to this hub requires ${cost} Neural Credits.`);
+async function attemptUnlock(title, cost, isFree, url) {
+    if (isFree) {
+        window.open(url, '_blank');
         return;
     }
-    window.open(url, '_blank');
+
+    try {
+        const client = await getSupabaseClient();
+        const user = await window.AuthState.getUser();
+        
+        const { data: profile } = await client.from('profiles').select('xt_points').eq('id', user.id).single();
+
+        if (profile.xt_points < cost) {
+            showModalAlert("INSUFFICIENT FUNDS", `You need ${cost} XT Points to unlock this hub. Keep participating to earn more.`);
+            return;
+        }
+
+        // Deduct Points
+        const newTotal = profile.xt_points - cost;
+        await client.from('profiles').update({ xt_points: newTotal }).eq('id', user.id);
+        
+        // Log enrollment
+        await client.from('course_enrollments').insert({ 
+            user_id: user.id, 
+            course_title: title, 
+            provider: 'ACADEMY' 
+        });
+
+        showModalAlert("ACCESS GRANTED", `Neural link established. ${cost} XT deducted from your core.`);
+        initEliteAcademy(); // Refresh UI
+        window.open(url, '_blank');
+
+    } catch (err) {
+        console.error("Unlock Error:", err);
+    }
 }
 
 /**
- * Filter Controller
+ * Completion Reward Engine
+ * Call this when a user finishes a course
  */
-window.filterClasses = (provider) => {
-    // 1. Button Feedback
-    document.querySelectorAll('.class-filter-btn').forEach(btn => {
-        const isMatch = btn.innerText.toUpperCase().includes(provider.toUpperCase()) || 
-                       (provider === 'all' && btn.innerText.includes('ALL'));
-        
-        btn.className = isMatch 
-            ? "class-filter-btn px-6 py-2 rounded-full bg-blue-600 text-white text-[9px] font-black uppercase tracking-widest transition-all"
-            : "class-filter-btn px-6 py-2 rounded-full text-white/40 text-[9px] font-black uppercase tracking-widest transition-all";
-    });
+async function completeCourse(courseTitle) {
+    try {
+        const client = await getSupabaseClient();
+        const user = await window.AuthState.getUser();
 
-    // 2. Render
-    const trialStart = localStorage.getItem(ACADEMY_CONFIG.STORAGE_KEY);
-    const isExpired = new Date() > new Date(new Date(trialStart).getTime() + (ACADEMY_CONFIG.TRIAL_DAYS * ACADEMY_CONFIG.MS_PER_DAY));
-    renderAcademyTracks(isExpired, provider);
-};
+        // 1. Mark as completed in DB
+        await client.from('course_enrollments')
+            .update({ is_completed: true, completed_at: new Date() })
+            .eq('user_id', user.id)
+            .eq('course_title', courseTitle);
+
+        // 2. Award Points (+100 XT)
+        await awardXP('complete_lesson'); // This triggers your existing awardXP function
+        
+        // 3. Explicit Bonus for Premium Completion
+        const { data: profile } = await client.from('profiles').select('xt_points').eq('id', user.id).single();
+        const bonusTotal = profile.xt_points + ACADEMY_CONFIG.COMPLETION_REWARD;
+        
+        await client.from('profiles').update({ xt_points: bonusTotal }).eq('id', user.id);
+
+        showModalAlert("COURSE COMPLETE", "Protocol finished successfully. +100 XT Points awarded to your profile.");
+        initEliteAcademy();
+
+    } catch (err) {
+        console.error("Completion Error:", err);
+    }
+}
+
+/**
+ * Centered Modal Alert System
+ */
+function showModalAlert(title, message) {
+    const modalHtml = `
+    <div id="nxxtAlert" class="fixed inset-0 z-[1000] flex items-center justify-center bg-black/80 backdrop-blur-sm animate-in fade-in duration-300">
+        <div class="bg-[#050b1d] border border-blue-500/30 p-8 rounded-[2.5rem] max-w-sm w-full text-center shadow-[0_0_50px_-12px_rgba(59,130,246,0.5)]">
+            <i class="fas fa-shield-check text-blue-500 text-4xl mb-4"></i>
+            <h2 class="text-white font-black uppercase italic tracking-tighter text-xl mb-2">${title}</h2>
+            <p class="text-white/40 text-[10px] font-bold uppercase tracking-widest leading-relaxed mb-6">${message}</p>
+            <button onclick="document.getElementById('nxxtAlert').remove()" class="w-full py-3 bg-blue-600 rounded-xl text-white text-[9px] font-black uppercase tracking-[0.3em] hover:bg-blue-500 transition-all">Acknowledge</button>
+        </div>
+    </div>`;
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+}
