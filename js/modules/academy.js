@@ -1,13 +1,13 @@
 /**
  * TECH NXXT: ELITE ACADEMY ENGINE (BLUE PROTOCOL - MAX VOLUME)
- * V2.3 - FINAL UPDATED & ENHANCED
+ * V2.4 - BALANCE FIX + ROBUST SYNC
  */
 
 const ACADEMY_CONFIG = {
-    TRIAL_DAYS: 21,                    // Updated to 21 days as requested
+    TRIAL_DAYS: 21,
     MS_PER_DAY: 24 * 60 * 60 * 1000,
     STORAGE_KEY: 'tech_nxxt_academy_trial',
-    SYNC_INTERVAL: 30000
+    SYNC_INTERVAL: 15000   // Faster sync for testing
 };
 
 // --- DATA REPOSITORY ---
@@ -48,20 +48,40 @@ const ACADEMY_TRACKS = [
 
 /* ====================== MAIN INIT ====================== */
 window.initEliteAcademy = async function() {
+    console.log("🚀 Academy Engine Starting...");
+
     try {
         const client = await getSupabaseClient?.();
         const user = await window.AuthState?.getUser?.();
 
-        // Balance Fetch - Synced with Dashboard
+        if (!client || !user?.id) {
+            console.warn("⚠️ Academy: Supabase or User not ready yet");
+            setTimeout(window.initEliteAcademy, 800); // Retry
+            return;
+        }
+
+        // === BALANCE FETCH (Stronger Version) ===
         const fetchBalance = async () => {
-            if (!client || !user?.id) return;
-            const { data: profile } = await client.from('profiles').select('xt_points').eq('id', user.id).single();
-           
-            const creditEl = document.getElementById('dash-xp-val');
-            if (creditEl && profile?.xt_points !== undefined) {
-                creditEl.innerText = profile.xt_points.toLocaleString();
-                creditEl.classList.add('text-blue-400');
-                setTimeout(() => creditEl.classList.remove('text-blue-400'), 1200);
+            try {
+                const { data: profile, error } = await client
+                    .from('profiles')
+                    .select('xt_points')
+                    .eq('id', user.id)
+                    .single();
+
+                const creditEl = document.getElementById('dash-xp-val');
+
+                if (creditEl) {
+                    const points = profile?.xt_points ?? 0;
+                    creditEl.innerText = points.toLocaleString();
+                    creditEl.classList.add('text-yellow-400');
+                    setTimeout(() => creditEl.classList.remove('text-yellow-400'), 1500);
+                    console.log(`✅ Balance Updated: ${points} XT`);
+                } else {
+                    console.warn("⚠️ Element #dash-xp-val not found");
+                }
+            } catch (err) {
+                console.error("Balance fetch error:", err);
             }
         };
 
@@ -85,6 +105,8 @@ window.initEliteAcademy = async function() {
         // Background Sync
         if (window.academyInterval) clearInterval(window.academyInterval);
         window.academyInterval = setInterval(fetchBalance, ACADEMY_CONFIG.SYNC_INTERVAL);
+
+        console.log("✅ Academy Engine Fully Initialized");
 
     } catch (err) {
         console.error("Academy Engine Critical Failure:", err);
@@ -145,7 +167,6 @@ function renderAcademyTracks(isExpired, providerFilter = 'all') {
         : ACADEMY_TRACKS.filter(t => t.provider === providerFilter);
 
     grid.innerHTML = filtered.map(track => {
-        // Updated Free Logic: After trial, only 50-100 XT courses remain free
         const isFreeDuringTrial = !isExpired || (track.credit_cost >= 50 && track.credit_cost <= 100);
 
         return `
@@ -181,19 +202,17 @@ function renderAcademyTracks(isExpired, providerFilter = 'all') {
     }).join('');
 }
 
-/* ====================== UNLOCK HANDLER ====================== */
+/* ====================== UNLOCK + CENTERED MODAL ====================== */
 window.attemptUnlock = async function(title, cost, isFree, url) {
     if (isFree) {
         window.open(url, '_blank');
-        // Auto award +100 XT after completing a course (as requested)
         setTimeout(() => {
-            if (typeof awardXP === 'function') {
-                awardXP('complete_lesson');
-            }
+            if (typeof awardXP === 'function') awardXP('complete_lesson');
         }, 6000);
         return;
     }
 
+    // ... (rest of unlock logic remains same)
     try {
         const client = await getSupabaseClient?.();
         const user = await window.AuthState?.getUser?.();
@@ -205,15 +224,11 @@ window.attemptUnlock = async function(title, cost, isFree, url) {
             return showCenteredModal("ACCESS DENIED", `Insufficient XT. Need ${cost} XT.`);
         }
 
-        const { error } = await client.from('profiles')
-            .update({ xt_points: profile.xt_points - cost })
-            .eq('id', user.id);
-
-        if (error) throw error;
+        await client.from('profiles').update({ xt_points: profile.xt_points - cost }).eq('id', user.id);
 
         showCenteredModal("UNLOCKED", `${title} activated. ${cost} XT deducted.`, "success");
         window.open(url, '_blank');
-        window.initEliteAcademy(); // Refresh balance
+        window.initEliteAcademy();
 
     } catch (err) {
         console.error("Transaction Error:", err);
@@ -221,29 +236,27 @@ window.attemptUnlock = async function(title, cost, isFree, url) {
     }
 };
 
-/* ====================== CENTERED MODAL (NEW) ====================== */
 function showCenteredModal(title, message, type = "info") {
     const modalId = 'modal-' + Date.now();
-    const color = type === "success" ? "blue" : type === "error" ? "red" : "yellow";
+    const color = type === "success" ? "emerald" : type === "error" ? "red" : "amber";
 
-    const modalHTML = `
-    <div id="${modalId}" class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-sm">
-        <div class="bg-[#050b1d] border border-${color}-500/40 rounded-3xl p-8 max-w-md w-full mx-4 text-center shadow-2xl">
-            <h2 class="text-2xl font-black text-white mb-4">${title}</h2>
-            <p class="text-white/70 text-[15px] leading-relaxed">${message}</p>
-            <button onclick="document.getElementById('${modalId}').remove()" 
-                class="mt-8 w-full py-4 bg-white/10 hover:bg-white/20 rounded-2xl text-sm font-black uppercase tracking-widest transition-all">
-                CLOSE WINDOW
+    const html = `
+    <div id="${modalId}" class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80">
+        <div class="bg-[#050b1d] border border-${color}-500/30 rounded-3xl p-8 max-w-sm w-full mx-4 text-center">
+            <h2 class="text-xl font-black text-white mb-3">${title}</h2>
+            <p class="text-white/70">${message}</p>
+            <button onclick="this.closest('div[ id^=modal ]').remove()" 
+                class="mt-6 w-full py-3.5 bg-white/10 hover:bg-white/20 rounded-2xl text-sm font-black uppercase tracking-widest">
+                CLOSE
             </button>
         </div>
     </div>`;
-
-    document.body.insertAdjacentHTML('beforeend', modalHTML);
+    document.body.insertAdjacentHTML('beforeend', html);
 }
 
 /* ====================== AUTO INIT ====================== */
 if (document.getElementById('courseGrid')) {
     setTimeout(() => {
         window.initEliteAcademy();
-    }, 150);
+    }, 300); // Slightly longer delay for safety
 }
