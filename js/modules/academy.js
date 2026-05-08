@@ -1,17 +1,16 @@
 /**
  * TECH NXXT: ELITE ACADEMY ENGINE (BLUE PROTOCOL - MAX VOLUME)
- * V2.1 PRODUCTION BUILD: REAL-TIME XT SYNC & DATA PERSISTENCE
+ * V2.2 - FIXED & STABILIZED
  */
 
 const ACADEMY_CONFIG = {
     TRIAL_DAYS: 14,
     MS_PER_DAY: 24 * 60 * 60 * 1000,
     STORAGE_KEY: 'tech_nxxt_academy_trial',
-    COMPLETION_REWARD: 100,
-    SYNC_INTERVAL: 30000 // 30s Background Pulse
+    SYNC_INTERVAL: 30000
 };
 
-// --- DATA REPOSITORY: 60+ Modules ---
+// --- DATA REPOSITORY ---
 const ACADEMY_TRACKS = [
     ...Array.from({length: 15}, (_, i) => ({
         title: `Neural Core ${i + 1}: ${['Logic', 'Interface', 'Data', 'Sync'][i % 4]}`,
@@ -47,29 +46,31 @@ const ACADEMY_TRACKS = [
     }))
 ];
 
-/**
- * Main Entry Point: Optimized for Immediate Balance Display
- */
+/* ====================== MAIN INIT ====================== */
 window.initEliteAcademy = async function() {
     try {
-        const client = await getSupabaseClient();
-        const user = await window.AuthState.getUser();
-        
+        const client = await getSupabaseClient?.();
+        const user = await window.AuthState?.getUser?.();
+
+        // Balance Fetch
         const fetchBalance = async () => {
+            if (!client || !user?.id) return;
             const { data: profile } = await client.from('profiles').select('xt_points').eq('id', user.id).single();
-            // UPDATED: Now targeting the shared dash-xp-val ID
+            
             const creditEl = document.getElementById('dash-xp-val');
-            if (creditEl && profile) {
+            if (creditEl && profile?.xt_points !== undefined) {
                 creditEl.innerText = profile.xt_points.toLocaleString();
                 creditEl.classList.add('text-blue-400');
-                setTimeout(() => creditEl.classList.remove('text-blue-400'), 1000);
+                setTimeout(() => creditEl.classList.remove('text-blue-400'), 1200);
             }
         };
 
         await fetchBalance();
 
-        let trialStart = localStorage.getItem(ACADEMY_CONFIG.STORAGE_KEY) || new Date().toISOString();
-        if (!localStorage.getItem(ACADEMY_CONFIG.STORAGE_KEY)) {
+        // Trial Management
+        let trialStart = localStorage.getItem(ACADEMY_CONFIG.STORAGE_KEY);
+        if (!trialStart) {
+            trialStart = new Date().toISOString();
             localStorage.setItem(ACADEMY_CONFIG.STORAGE_KEY, trialStart);
         }
 
@@ -81,6 +82,7 @@ window.initEliteAcademy = async function() {
         updateAcademyHeader(isExpired, daysLeft, startDate, expiryDate);
         renderAcademyTracks(isExpired, 'all');
 
+        // Background Sync
         if (window.academyInterval) clearInterval(window.academyInterval);
         window.academyInterval = setInterval(fetchBalance, ACADEMY_CONFIG.SYNC_INTERVAL);
 
@@ -89,65 +91,62 @@ window.initEliteAcademy = async function() {
     }
 };
 
-/**
- * UI Header Management
- */
+/* ====================== HEADER ====================== */
 function updateAcademyHeader(isExpired, daysLeft, start, end) {
     const timerText = document.getElementById('trialCountdown');
     const badge = document.getElementById('trialBadge');
     const progress = document.getElementById('trialProgressBar');
 
     if (timerText) {
-        timerText.innerText = isExpired ? "TRIAL EXPIRED // PROTOCOL ACTIVE" : `${daysLeft} Days of Elite Access Remaining`;
+        timerText.innerText = isExpired 
+            ? "TRIAL EXPIRED // PROTOCOL ACTIVE" 
+            : `${daysLeft} Days of Elite Access Remaining`;
     }
     
     if (badge) {
         badge.innerText = isExpired ? "LOCKED" : "TRIAL ACTIVE";
         badge.className = isExpired 
-            ? "px-2 py-0.5 rounded border border-red-500/30 text-[7px] font-black text-red-500 uppercase tracking-widest" 
+            ? "px-2 py-0.5 rounded border border-red-500/30 text-[7px] font-black text-red-500 uppercase tracking-widest"
             : "px-2 py-0.5 rounded border border-blue-500/30 text-[7px] font-black text-blue-400 uppercase tracking-widest animate-pulse";
     }
 
     if (progress) {
-        const percent = isExpired ? 100 : ((new Date() - start) / (end - start)) * 100;
+        const percent = isExpired ? 100 : Math.min(100, ((Date.now() - start) / (end - start)) * 100);
         progress.style.width = `${percent}%`;
-        if (isExpired) progress.classList.add('bg-red-600');
+        progress.classList.toggle('bg-red-600', isExpired);
     }
 }
 
-/**
- * Filter Controller
- */
+/* ====================== FILTER ====================== */
 window.filterClasses = function(provider) {
     const trialStart = localStorage.getItem(ACADEMY_CONFIG.STORAGE_KEY);
     const isExpired = new Date() > new Date(new Date(trialStart).getTime() + (ACADEMY_CONFIG.TRIAL_DAYS * ACADEMY_CONFIG.MS_PER_DAY));
-    
+
     document.querySelectorAll('.class-filter-btn').forEach(btn => {
-        const btnLabel = btn.innerText.toLowerCase();
-        if (btnLabel.includes(provider.toLowerCase()) || (provider === 'all' && btnLabel.includes('all'))) {
-            btn.className = "class-filter-btn px-4 py-2 bg-blue-600 rounded-xl text-[7px] font-black text-white uppercase tracking-widest transition-all";
-        } else {
-            btn.className = "class-filter-btn px-4 py-2 hover:bg-white/5 rounded-xl text-[7px] font-black text-white/40 uppercase tracking-widest transition-all hover:text-white";
-        }
+        const isActive = provider === 'all' 
+            ? btn.innerText.toLowerCase().includes('all')
+            : btn.getAttribute('data-provider')?.toUpperCase() === provider.toUpperCase();
+
+        btn.className = isActive 
+            ? "class-filter-btn px-4 py-2 bg-blue-600 rounded-xl text-[7px] font-black text-white uppercase tracking-widest transition-all"
+            : "class-filter-btn px-4 py-2 hover:bg-white/5 rounded-xl text-[7px] font-black text-white/40 uppercase tracking-widest transition-all hover:text-white";
     });
 
     renderAcademyTracks(isExpired, provider);
 };
 
-/**
- * Rendering Engine
- */
+/* ====================== RENDER ====================== */
 function renderAcademyTracks(isExpired, providerFilter = 'all') {
     const grid = document.getElementById('courseGrid');
     if (!grid) return;
 
-    const filteredTracks = providerFilter === 'all' 
+    const filtered = providerFilter === 'all' 
         ? ACADEMY_TRACKS 
-        : ACADEMY_TRACKS.filter(t => t.provider.toUpperCase() === providerFilter.toUpperCase());
+        : ACADEMY_TRACKS.filter(t => t.provider === providerFilter);
 
-    grid.innerHTML = filteredTracks.map(track => {
-        let isActuallyFree = !isExpired || (track.credit_cost >= 50 && track.credit_cost <= 100);
-
+    grid.innerHTML = filtered.map(track => {
+        const isFreeDuringTrial = !isExpired;
+        
         return `
         <div class="group p-6 rounded-[2.5rem] bg-[#050b1d]/60 border border-white/5 hover:border-blue-500/30 transition-all duration-500 relative overflow-hidden backdrop-blur-md">
             <div class="flex justify-between items-start mb-6">
@@ -168,49 +167,55 @@ function renderAcademyTracks(isExpired, providerFilter = 'all') {
                 </div>
                 <div class="flex justify-between">
                     <span class="text-white/20">Protocol Cost</span>
-                    <span class="${isActuallyFree ? 'text-green-400' : 'text-yellow-500'}">
-                        ${isActuallyFree ? 'FREE ACCESS' : track.credit_cost + ' XT'}
+                    <span class="${isFreeDuringTrial ? 'text-green-400' : 'text-yellow-500'}">
+                        ${isFreeDuringTrial ? 'FREE ACCESS' : track.credit_cost + ' XT'}
                     </span>
                 </div>
             </div>
-            <button onclick="attemptUnlock('${track.title.replace(/'/g, "\\'")}', ${track.credit_cost}, ${isActuallyFree}, '${track.url}')" 
+            <button onclick="attemptUnlock('${track.title.replace(/'/g, "\\'")}', ${track.credit_cost}, ${isFreeDuringTrial}, '${track.url}')" 
                 class="w-full py-3 rounded-xl bg-white/[0.03] border border-white/10 text-[8px] font-black text-white uppercase tracking-widest hover:bg-blue-600 hover:border-blue-500 transition-all">
-                ${isActuallyFree ? 'Initialize Track' : 'Unlock with XT'}
+                ${isFreeDuringTrial ? 'INITIALIZE TRACK' : 'UNLOCK WITH XT'}
             </button>
         </div>`;
     }).join('');
 }
 
-/**
- * Access & Transaction Handler
- */
+/* ====================== UNLOCK HANDLER ====================== */
 window.attemptUnlock = async function(title, cost, isFree, url) {
-    if (isFree) return window.open(url, '_blank');
+    if (isFree) {
+        window.open(url, '_blank');
+        return;
+    }
 
     try {
-        const client = await getSupabaseClient();
-        const user = await window.AuthState.getUser();
+        const client = await getSupabaseClient?.();
+        const user = await window.AuthState?.getUser?.();
+
+        if (!client || !user) throw new Error("Auth not ready");
+
         const { data: profile } = await client.from('profiles').select('xt_points').eq('id', user.id).single();
 
-        if (profile.xt_points < cost) {
+        if (!profile || profile.xt_points < cost) {
             return window.showModalAlert("ACCESS DENIED", `Insufficient XT. Need ${cost} XT.`);
         }
 
-        const { error } = await client.from('profiles').update({ xt_points: profile.xt_points - cost }).eq('id', user.id);
+        const { error } = await client.from('profiles')
+            .update({ xt_points: profile.xt_points - cost })
+            .eq('id', user.id);
+
         if (error) throw error;
 
-        window.showModalAlert("UNLOCKED", `Hub decrypted. ${cost} XT consumed.`);
-        window.initEliteAcademy();
+        window.showModalAlert("UNLOCKED", `${title} activated. ${cost} XT deducted.`);
         window.open(url, '_blank');
-    } catch (err) { 
-        console.error("Transaction Error:", err); 
-        window.showModalAlert("SYNC ERROR", "Could not verify XT transaction.");
+        window.initEliteAcademy(); // Refresh balance
+
+    } catch (err) {
+        console.error("Transaction Error:", err);
+        window.showModalAlert("SYNC ERROR", "Transaction failed. Try again.");
     }
 };
 
-/**
- * Global Alert UI
- */
+/* ====================== ALERT ====================== */
 window.showModalAlert = function(title, message) {
     const id = 'alert-' + Date.now();
     const modalHtml = `
@@ -226,10 +231,18 @@ window.showModalAlert = function(title, message) {
                 </div>
             </div>
             <div class="mt-3 h-0.5 w-full bg-white/5 rounded-full overflow-hidden">
-                <div class="h-full bg-blue-500 animate-out fade-out slide-out-to-left fill-mode-forwards duration-[3000ms]"></div>
+                <div class="h-full bg-blue-500 animate-out fade-out slide-out-to-left fill-mode-forwards duration-[2800ms]"></div>
             </div>
         </div>
     </div>`;
+
     document.body.insertAdjacentHTML('beforeend', modalHtml);
-    setTimeout(() => { if(document.getElementById(id)) document.getElementById(id).remove(); }, 3000);
+    setTimeout(() => document.getElementById(id)?.remove(), 3200);
 };
+
+// ====================== AUTO INIT ======================
+if (document.getElementById('courseGrid')) {
+    setTimeout(() => {
+        window.initEliteAcademy();
+    }, 150);
+}
