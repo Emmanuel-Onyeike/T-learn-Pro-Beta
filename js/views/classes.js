@@ -15,7 +15,7 @@ views['Classes'] = `
             </div>
         </div>
 
-        <!-- Filter Buttons (Fixed ReferenceError) -->
+        <!-- Filter Buttons: Refined to active providers -->
         <div id="providerSelector" class="flex items-center gap-2 p-1 bg-white/[0.02] border border-white/5 rounded-2xl overflow-x-auto max-w-full">
             <button onclick="window.filterClasses('all')" class="class-filter-btn px-4 py-2 bg-blue-600 rounded-xl text-[7px] font-black text-white uppercase tracking-widest transition-all">All Tracks</button>
             <button onclick="window.filterClasses('Udemy')" class="class-filter-btn px-4 py-2 hover:bg-white/5 rounded-xl text-[7px] font-black text-white/40 uppercase tracking-widest transition-all hover:text-white">Udemy Hub</button>
