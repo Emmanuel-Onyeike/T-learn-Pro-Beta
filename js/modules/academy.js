@@ -1,7 +1,6 @@
 /**
  * TECH NXXT: ELITE ACADEMY ENGINE (BLUE PROTOCOL - MAX VOLUME)
  * V2.1 PRODUCTION BUILD: REAL-TIME XT SYNC & DATA PERSISTENCE
- * TOTAL LINE COUNT: 250 (STRICT CALIBRATION)
  */
 
 const ACADEMY_CONFIG = {
@@ -53,24 +52,22 @@ const ACADEMY_TRACKS = [
  */
 window.initEliteAcademy = async function() {
     try {
-        // 1. Immediate Balance Sync (Priority 1)
         const client = await getSupabaseClient();
         const user = await window.AuthState.getUser();
         
         const fetchBalance = async () => {
             const { data: profile } = await client.from('profiles').select('xt_points').eq('id', user.id).single();
-            const creditEl = document.getElementById('academyCredits');
+            // UPDATED: Now targeting the shared dash-xp-val ID
+            const creditEl = document.getElementById('dash-xp-val');
             if (creditEl && profile) {
                 creditEl.innerText = profile.xt_points.toLocaleString();
-                // Visual feedback that sync occurred
                 creditEl.classList.add('text-blue-400');
                 setTimeout(() => creditEl.classList.remove('text-blue-400'), 1000);
             }
         };
 
-        await fetchBalance(); // Initial Fetch
+        await fetchBalance();
 
-        // 2. Sync Trial Local State
         let trialStart = localStorage.getItem(ACADEMY_CONFIG.STORAGE_KEY) || new Date().toISOString();
         if (!localStorage.getItem(ACADEMY_CONFIG.STORAGE_KEY)) {
             localStorage.setItem(ACADEMY_CONFIG.STORAGE_KEY, trialStart);
@@ -81,11 +78,9 @@ window.initEliteAcademy = async function() {
         const isExpired = new Date() > expiryDate;
         const daysLeft = Math.max(0, Math.ceil((expiryDate - new Date()) / ACADEMY_CONFIG.MS_PER_DAY));
 
-        // 3. UI Renders
         updateAcademyHeader(isExpired, daysLeft, startDate, expiryDate);
         renderAcademyTracks(isExpired, 'all');
 
-        // 4. Background Pulse to prevent "Stale Balance"
         if (window.academyInterval) clearInterval(window.academyInterval);
         window.academyInterval = setInterval(fetchBalance, ACADEMY_CONFIG.SYNC_INTERVAL);
 
@@ -140,7 +135,7 @@ window.filterClasses = function(provider) {
 };
 
 /**
- * Rendering Engine (The Matrix)
+ * Rendering Engine
  */
 function renderAcademyTracks(isExpired, providerFilter = 'all') {
     const grid = document.getElementById('courseGrid');
@@ -214,7 +209,7 @@ window.attemptUnlock = async function(title, cost, isFree, url) {
 };
 
 /**
- * Global Alert UI (The Notifier)
+ * Global Alert UI
  */
 window.showModalAlert = function(title, message) {
     const id = 'alert-' + Date.now();
@@ -238,5 +233,3 @@ window.showModalAlert = function(title, message) {
     document.body.insertAdjacentHTML('beforeend', modalHtml);
     setTimeout(() => { if(document.getElementById(id)) document.getElementById(id).remove(); }, 3000);
 };
-
-// End of Academy Engine Build
